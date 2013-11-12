@@ -1,9 +1,10 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.iterators.core;
+package gaj.iterators.io;
 
-import gaj.common.io.UncheckedIOException;
+import gaj.iterators.core.IterableIterator;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Iterator;
@@ -49,7 +50,7 @@ public abstract class ResourceIterator<T> extends IterableIterator<T> implements
             try {
                 closeResource();
             } catch (IOException e) {
-                throw UncheckedIOException.create(e);
+                throw failure(e);
             }
         }
     }
@@ -76,4 +77,23 @@ public abstract class ResourceIterator<T> extends IterableIterator<T> implements
         return hasNext() ? iterator.next() : halt("End of resource iteration");
     }
 
+    /**
+     * Wraps a checked exception, typically an IOException, as an unchecked IO exception.
+     * 
+     * @param e - The underlying exception.
+     * @return UncheckedIOException The wrapped exception.
+     */
+    protected RuntimeException failure(Throwable e) {
+    	return new UncheckedIOException(e);
+    }
+    
+    /**
+     * Creates an unchecked IO exception.
+     * 
+     * @param message - A description of the cause of the exception.
+     * @return UncheckedIOException The exception.
+     */
+    protected RuntimeException failure(String message) {
+    	return new UncheckedIOException(message);
+    }
 }

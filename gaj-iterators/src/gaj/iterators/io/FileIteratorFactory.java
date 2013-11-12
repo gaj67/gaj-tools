@@ -3,10 +3,8 @@
  */
 package gaj.iterators.io;
 
-import gaj.common.io.UncheckedIOException;
 import gaj.iterators.core.IterableIterator;
 import gaj.iterators.core.IteratorFactory;
-import gaj.iterators.core.ResourceIterator;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
@@ -26,7 +24,7 @@ public abstract class FileIteratorFactory {
             protected Iterator<? extends File> openResource() {
                 File[] listFiles = dirPath.listFiles();
                 if (listFiles == null)
-                    throw UncheckedIOException.create("Non-directory path: " + dirPath);
+                    throw new UncheckedIOException("Non-directory path: " + dirPath);
                 return IteratorFactory.newIterator(listFiles);
             }
 
@@ -51,7 +49,7 @@ public abstract class FileIteratorFactory {
                 Collection<File> files = new LinkedList<>();
                 File[] listFiles = dirPath.listFiles();
                 if (listFiles == null)
-                    throw UncheckedIOException.create("Non-directory path: " + dirPath);
+                    throw failure("Non-directory path: " + dirPath);
                 for (File elem : listFiles) {
                     if (elem.isDirectory()) {
                         iterables.add(newDeepDirectoryIterator(elem));

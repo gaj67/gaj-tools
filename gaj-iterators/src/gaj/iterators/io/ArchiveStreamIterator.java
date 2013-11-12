@@ -3,10 +3,8 @@
  */
 package gaj.iterators.io;
 
-import gaj.common.io.UncheckedIOException;
 import gaj.iterators.core.Filter;
 import gaj.iterators.core.IteratorFactory;
-import gaj.iterators.core.ResourceIterator;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +42,7 @@ public abstract class ArchiveStreamIterator extends ResourceIterator<InputStream
                         try {
                             return (subiterator != null && accept(entry)) ? subiterator.getInputStream() : null;
                         } catch (IOException e) {
-                            throw UncheckedIOException.create(e);
+                            throw failure(e);
                         }
                     }
                 });

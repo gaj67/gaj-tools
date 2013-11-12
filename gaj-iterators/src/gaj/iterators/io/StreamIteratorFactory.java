@@ -3,9 +3,7 @@
  */
 package gaj.iterators.io;
 
-import gaj.common.io.UncheckedIOException;
 import gaj.iterators.core.IteratorFactory;
-import gaj.iterators.core.ResourceIterator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,7 +33,7 @@ public abstract class StreamIteratorFactory {
                     stream = new FileInputStream(filePath);
                     return IteratorFactory.newIterator(stream);
                 } catch (FileNotFoundException e) {
-                    throw UncheckedIOException.create(e);
+                    throw failure(e);
                 }
             }
 
@@ -46,7 +44,7 @@ public abstract class StreamIteratorFactory {
                         stream.close();
                         stream = null;
                     } catch (IOException e) {
-                        throw UncheckedIOException.create(e);
+                        throw failure(e);
                     }
                 }
             }
@@ -65,7 +63,7 @@ public abstract class StreamIteratorFactory {
                     archive = new ZipFile(archivePath);
                     return IteratorFactory.newIterator(archive.entries());
                 } catch (IOException e) {
-                    throw UncheckedIOException.create(e);
+                    throw failure(e);
                 }
             }
 
@@ -77,7 +75,7 @@ public abstract class StreamIteratorFactory {
                         archive.close();
                         archive = null;
                     } catch (IOException e) {
-                        throw UncheckedIOException.create(e);
+                        throw failure(e);
                     }
                 }
             }

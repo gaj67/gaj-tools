@@ -3,10 +3,8 @@
  */
 package gaj.iterators.io;
 
-import gaj.common.io.UncheckedIOException;
 import gaj.iterators.core.Filter;
 import gaj.iterators.core.IteratorFactory;
-import gaj.iterators.core.ResourceIterator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -53,7 +51,7 @@ public abstract class DirectoryStreamIterator extends ResourceIterator<InputStre
                         try {
                             return accept(file) ? getInputStream(file) : null;
                         } catch (IOException e) {
-                            throw UncheckedIOException.create(e);
+                            throw failure(e);
                         }
                     }
                 });
@@ -77,7 +75,7 @@ public abstract class DirectoryStreamIterator extends ResourceIterator<InputStre
         try {
             closeStream();
         } catch (IOException e) {
-            throw UncheckedIOException.create(e);
+            throw failure(e);
         }
     }
 

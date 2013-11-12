@@ -5,7 +5,6 @@ package gaj.iterators.io;
 
 import gaj.iterators.core.Filter;
 import gaj.iterators.core.IteratorFactory;
-import gaj.iterators.core.ResourceIterator;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Iterator;
