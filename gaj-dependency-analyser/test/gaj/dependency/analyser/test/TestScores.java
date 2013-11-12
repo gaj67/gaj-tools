@@ -36,7 +36,7 @@ public class TestScores {
         MetricsFactory.setUseSAP(USE_SAP);
         MetricsFactory.setUseADP(USE_ADP);
         MetricsFactory.setUseDIP(USE_DIP);
-        analyseProject(new File(args[0]), args[1]);
+        analyseProject(new File("."), "gaj.dependency.analyser.metrics");
     }
 
     private static void analyseProject(File projectPath, String packageName) throws IOException {
