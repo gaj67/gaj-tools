@@ -3,11 +3,14 @@
  */
 package gaj.config.serial;
 
+import gaj.config.annotations.Singleton;
+
 /**
  * Provides a Serialiser for String objects. Does not add type information,
  * except in special cases where disambiguation is required between the
  * unserialised and serialised strings.
  */
+@Singleton
 /*package-private*/ class StringSerialiser extends ConfigurableSerialiser<String> {
 
 	private String LITERAL_NULL_MARKER;

@@ -3,9 +3,12 @@
  */
 package gaj.config.serial;
 
+import gaj.config.annotations.Singleton;
+
 /**
  * Provides a Serialiser for Double objects. Does not add type information.
  */
+@Singleton
 /*package-private*/ class DoubleSerialiser extends ConfigurableSerialiser<Double> {
 
 	/*package-private*/ DoubleSerialiser() {

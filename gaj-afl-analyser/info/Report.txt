@@ -1,0 +1,144 @@
+1. Background
+
+2. Data Sets
+
+3. Modelling Approach
+
+3.x The Classifier
+
+3.y Handling Draws
+
+The classifier model discussed in Section 3.x is designed to predict the probability of a win for team x over team y, 
+given that ordering of the two teams. Thus, if p = P(win[x]|x,y,e) > 0.5, then the prediction is that team x will win, and if 
+p < 0.5, then it is predicted that team y will win. However, what happens when p = 0.5?
+
+Also, for each match in the sample data, an error score of 0 may be assigned if the predicted team won, 
+and an error score of 1 assigned if the predicted team lost. The error rate of the classifier on the sample data is then
+the average of the individual error scores. However, what error score should be assigned for a draw?
+ 
+In order to investigate the handling of draws, let the proportions of wins, losses and draws for team x in the sample set be 
+w, ell and d, respectively, such that w+ell+d = 1.
+Now, in principle a draw may be considered as both a partial win and a partial loss for both teams. So, let us assign a proportion
+lambda of draws as wins to team x and losses to team y, and the remaining proportion (1-lambda) of draws as losses to
+team x and wins to team y. Hence, under a model that always predicts team x to win, the error rate will be
+ell+(1-lambda)d, and under a model that always predicts team y to win, the error rate will be w+lambda d.
+The unbiased average of these extremes then gives a baseline error rate of
+
+0.5[ell+(1-lambda)d]+0.5[w+lambda d] = 0.5[w+ell+d] = 0.5 .
+
+In other words, if the classifier cannot clearly predict a winner for any given match, i.e. p approx. 0.5, then an error
+score of 0.5 should be assigned to that match, regardless of the actual outcome. 
+
+For matches where a prediction is clear, we still have to deal with how to score a drawn outcome. However, the above reasoning still holds. 
+Thus, for a model that always predicts team x to win, a proportion (1-lambda)d of draws are assigned as losses to x, 
+and for a model that always predicts team y to win, a proportion lambda d of draws are assigned as losses to y. The unbiased average of these
+extremes then gives a baseline error rate for drawn matches of
+
+(0.5[(1-lambda)d]+0.5[lambda d]) / d = 0.5. 
+
+Thus, the predicted winning team should be given an error score of 0.5 for a drawn match. Note that the use of an unbiased average is based
+on the fact that the classifier model of Section 3.x allows the order of teams x and y to be switched without affecting the probabilities
+that team x or team y will win (only the ordering of these probabilities will change).
+
+
+4. Environmental Factors
+
+4.1 Home-ground Advantage
+
+In many sports, the team playing on its home ground has a slight advantage over the team playing away.
+This can be understood in two ways. Firstly, the away-team has the stress and fatigue of travelling to a distant
+venue, which the home-team does not have to suffer (at least as much). Secondly, the home-team can be expected to
+know its own ground better (e.g. the size of the oval, the hardness of the surface, etc.), 
+and to therefore be both more relaxed and more able playing on it. 
+
+In order to test the strength of any home-ground advantage, the non-finals rounds of football from the 2008 and 2009 seasons
+were analysed. The home-team was chosen as specified in the data, and a win by the home-team scored 1, a loss scored 0, and
+a draw scored 0.5. The results showed that the average proportion of wins by the home-team was 0.57, with an 
+approximate\footnote{Assuming a Normal distribution and two standard deviations} confidence interval of $[0.53,0.60]$.
+Since this interval does not contain the null-hypothesis mean of 0.5, it is concluded that there is a small but statistically 
+significant advantage to the home-team. 
+
+Unfortunately, the assumption of knowing the home-team is slightly too simplistic. It turns out that each team is designated
+as playing at home or away based upon pre-determined allocations in each round. 
+Thus, for example, Port Power might be designated as having a home game against the Adelaide Crows at AAMI Stadium. 
+However, AAMI Stadium is also the home ground of the Crows, and so neither team can be said to enjoy the home-ground advantage in such 
+derby matches. In fact, over the 2008 and 2009 non-finals seasons, the Crows won or drew an average of 50% of their games against 
+the Power (and vice versa), according to the aforementioned scoring system. Furthermore, the approximate confidence interval
+of $[0.15,0.85]$ indicates that such derbies are fiercely contested, with highly variable outcomes, and so, statistically, no significant
+home-team advantage can be assigned to either the Adelaide Crows or Port Power.
+
+The way out of this dilemma is to assign both the home-team and the away-team an advantage measure 
+based upon the ground at which each team plays its home matches.
+Note that this assignment is complicated by the fact that some teams have more than one 'home' ground. 
+As a result, upon taking the data-designated 
+home-team indicator as the truth, the various teams were found to have played the following proportions of their home games 
+at the following venues:
+
+	Adelaide			  & AAMI Stadium (1.00)\\
+	Brisbane Lions   & Gabba (1.00)\\
+   Carlton          & Etihad Stadium (0.55)\
+                    & Melbourne Cricket Ground (0.41)\\
+                    & Gold Coast Stadium (0.05)\\
+   Collingwood      & Melbourne Cricket Ground (0.82)\\
+                    & Etihad Stadium (0.18)\\
+	Essendon         & Etihad Stadium (0.64)\\
+	                 & Melbourne Cricket Ground (0.36)\\
+	Fremantle        & Subiaco Oval (1.00)\\
+   Geelong          & Skilled Stadium (0.73)\\
+                    & Etihad Stadium (0.18)\\
+                    & Melbourne Cricket Ground (0.09)\\
+   Hawthorn         & Melbourne Cricket Ground (0.64)\\
+                    & Aurora Stadium (0.36)\\
+   Melbourne        & Melbourne Cricket Ground (0.91)\\
+                    & Manuka Oval (0.09)\\
+   North Melbourne  & Etihad Stadium (0.73)\\
+                    & Melbourne Cricket Ground (0.14)\\
+                    & Gold Coast Stadium (0.14)\\
+	Port Adelaide    & AAMI Stadium (1.00)\\
+	Richmond         & Melbourne Cricket Ground (0.73)\\
+						  & Etihad Stadium (0.23)\\
+	                 & Gold Coast Stadium (0.05)\\ 
+	St Kilda         & Etihad Stadium (0.95)\\
+						  & Gold Coast Stadium (0.05)\\
+	Sydney           & Sydney Cricket Ground (0.64)\\
+	                 & ANZ Stadium (0.36)\\
+	West Coast       & Subiaco Oval (1.00)\\
+	Western Bulldogs & Etihad Stadium (0.73)\\
+						  & Melbourne Cricket Ground (0.09)\\
+						  & TIO Stadium=0.09\\
+						  & Manuka Oval (0.09)\\
+						  
+In order to test these assignments of home-ground advantage, a simple logistic classifier was trained on the 2008 and 2009 pre-finals seasons
+data, using a single feature consisting of the assigned advantage of the (data-designated) home-team minus the advantage of the away-team.
+Leave-one-out cross-validation then revealed an average error-rate of 0.435, with an approximate confidence interval of $[0.384,0.486]$.
+Next, in order to try to detect spurious home-ground assignments, infrequent home-grounds (i.e. those with proportions less than 0.10) 
+were removed, and the remaining advantage measures were renormalised. Upon retraining the classifier, 
+leave-one-out cross-validation gave an average error-rate of 0.438, with an approximate confidence interval of $[0.387,0.489]$.
+The slight increase in the average error-rate is clearly not significant, since the new estimate remains inside the original confidence
+interval. Hence, the new proportions are taken to be:
+
+	Adelaide			  & AAMI Stadium (1.00)\\
+	Brisbane Lions   & Gabba (1.00)\\
+   Carlton          & Etihad Stadium (0.57)\
+                    & Melbourne Cricket Ground (0.43)\\
+   Collingwood      & Melbourne Cricket Ground (0.82)\\
+                    & Etihad Stadium (0.18)\\
+	Essendon         & Etihad Stadium (0.64)\\
+	                 & Melbourne Cricket Ground (0.36)\\
+	Fremantle        & Subiaco Oval (1.00)\\
+   Geelong          & Skilled Stadium (0.80)\\
+                    & Etihad Stadium (0.20)\\
+   Hawthorn         & Melbourne Cricket Ground (0.64)\\
+                    & Aurora Stadium (0.36)\\
+   Melbourne        & Melbourne Cricket Ground (1.00)\\
+   North Melbourne  & Etihad Stadium (0.73)\\
+                    & Melbourne Cricket Ground (0.14)\\
+                    & Gold Coast Stadium (0.14)\\
+	Port Adelaide    & AAMI Stadium (1.00)\\
+	Richmond         & Melbourne Cricket Ground (0.76)\\
+						  & Etihad Stadium (0.24)\\
+	St Kilda         & Etihad Stadium (1.00)\\
+	Sydney           & Sydney Cricket Ground (0.64)\\
+	                 & ANZ Stadium (0.36)\\
+	West Coast       & Subiaco Oval (1.00)\\
+	Western Bulldogs & Etihad Stadium (1.00)\\

@@ -3,9 +3,12 @@
  */
 package gaj.config.serial;
 
+import gaj.config.annotations.Singleton;
+
 /**
  * Provides a Serialiser for Short objects. Does not add type information.
  */
+@Singleton
 /*package-private*/ class ShortSerialiser extends ConfigurableSerialiser<Short> {
 
 	/*package-private*/ ShortSerialiser() {

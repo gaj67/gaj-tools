@@ -3,9 +3,12 @@
  */
 package gaj.config.serial;
 
+import gaj.config.annotations.Singleton;
+
 /**
  * Provides a Serialiser for Integer objects. Does not add type information.
  */
+@Singleton
 /*package-private*/ class IntegerSerialiser extends ConfigurableSerialiser<Integer> {
 
 	/*package-private*/ IntegerSerialiser() {

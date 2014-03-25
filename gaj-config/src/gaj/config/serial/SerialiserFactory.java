@@ -142,21 +142,17 @@ public class SerialiserFactory {
 	}
 
 	/**
-	 * Creates a typed serialiser configured for the standard String, Boolean and numerical classes.
+	 * Creates a multi-serialiser, optionally pre-configured 
+	 * with standard serialisers for the String, 
+	 * Boolean and various numerical classes.
 	 *
-	 * @return A pre-configured serialiser manager.
+	 * @param preConfigure - A flag indicating whether
+	 * (true) or not (false) to pre-configure
+	 * the multi-serialiser. 
+	 * @return A multi-serialiser manager.
 	 */
-	public SerialiserManager newBuiltInManager() {
-		return new SerialiserManagerImpl(config, true);
-	}
-
-	/**
-	 * Creates a typed serialiser.
-	 *
-	 * @return An unconfigured serialiser manager.
-	 */
-	public SerialiserManager newEmptyManager() {
-		return new SerialiserManagerImpl(config, false);
+	public MultiSerialiser newMultiSerialiser(boolean preConfigure) {
+		return new MultiSerialiserImpl(config, preConfigure);
 	}
 
 }

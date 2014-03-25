@@ -3,9 +3,12 @@
  */
 package gaj.config.serial;
 
+import gaj.config.annotations.Singleton;
+
 /**
  * Provides a Serialiser for Float objects. Does not add type information.
  */
+@Singleton
 /*package-private*/ class FloatSerialiser extends ConfigurableSerialiser<Float> {
 
 	/*package-private*/ FloatSerialiser() {

@@ -13,12 +13,12 @@ public interface Serialiser<T> extends Cloneable {
 	 * Serialises object data, or throws an exception if the object
 	 * cannot be serialised.
 	 *
-	 * @param obj - The object to be serialised.
+	 * @param value - The object to be serialised.
 	 * @return A string representation of the object data.
 	 * @throws InvalidSerialisationException If an error occurs during
 	 * serialisation.
 	 */
-	public String serialise(/*@Nullable*/ T obj) throws InvalidSerialisationException;
+	public String serialise(/*@Nullable*/ T value) throws InvalidSerialisationException;
 
 	/**
 	 * Indicates whether or not the supplied serialisation data

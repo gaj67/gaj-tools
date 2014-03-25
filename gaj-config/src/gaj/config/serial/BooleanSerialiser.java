@@ -3,9 +3,12 @@
  */
 package gaj.config.serial;
 
+import gaj.config.annotations.Singleton;
+
 /**
  * Provides a Serialiser for Boolean objects. Does not add type information.
  */
+@Singleton
 /*package-private*/ class BooleanSerialiser extends ConfigurableSerialiser<Boolean> {
 
 	/*package-private*/ BooleanSerialiser() {

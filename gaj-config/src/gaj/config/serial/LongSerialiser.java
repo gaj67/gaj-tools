@@ -3,9 +3,12 @@
  */
 package gaj.config.serial;
 
+import gaj.config.annotations.Singleton;
+
 /**
  * Provides a Serialiser for Long objects. Does not add type information.
  */
+@Singleton
 /*package-private*/ class LongSerialiser extends ConfigurableSerialiser<Long> {
 
 	/*package-private*/ LongSerialiser() {
