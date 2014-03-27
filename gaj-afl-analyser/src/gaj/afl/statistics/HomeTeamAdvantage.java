@@ -1,19 +1,21 @@
 package gaj.afl.statistics;
+
 import gaj.afl.data.Team;
-import gaj.afl.data.finalsiren.OldFinalSirenScraper;
-import gaj.afl.datatype.MatchLocation;
-import gaj.afl.datatype.MatchRecord;
+import gaj.afl.data.DataFactory;
+import gaj.afl.data.Fixture;
+import gaj.afl.data.Location;
+import gaj.afl.data.Match;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 
 
 public class HomeTeamAdvantage {
@@ -25,31 +27,31 @@ public class HomeTeamAdvantage {
       double sumHomeWins = 0, sumSqHomeWins = 0;
       int numCrowsPowerMatches = 0;
       double sumCrowsWins = 0, sumSqCrowsWins = 0;
-      Map<Team, Map<MatchLocation,Integer>> map = new HashMap<Team, Map<MatchLocation,Integer>>();
-      List<MatchRecord> records = OldFinalSirenScraper.scrapeFolder(new File("data/finalsiren/match"), 2008, 2009);
-      for (MatchRecord match : records) {
-         if (!match.round.startsWith("R")) continue;
+      Map<Team, Map<Location,Integer>> map = new HashMap<Team, Map<Location,Integer>>();
+      Collection<Match> records = DataFactory.newManager().getAllMatches();
+      for (Match match : records) {
+    	  Fixture fixture = match.getFixture();
+         if (!fixture.getRound().toString().startsWith("R")) continue;
          numData++;
          double homeWin = getHomeWin(match);
          sumHomeWins += homeWin;
          sumSqHomeWins += homeWin * homeWin;
-         if (match.homeTeam.team == Team.Adelaide && match.awayTeam.team == Team.Port_Adelaide) {
+         Team homeTeam = fixture.getHomeTeam();
+         if (homeTeam == Team.Adelaide && fixture.getAwayTeam() == Team.Port_Adelaide) {
             numCrowsPowerMatches++;
             sumCrowsWins += homeWin;
             sumSqCrowsWins += homeWin * homeWin;
-         } else if (match.homeTeam.team == Team.Port_Adelaide && match.awayTeam.team == Team.Adelaide) {
+         } else if (homeTeam == Team.Port_Adelaide && fixture.getAwayTeam() == Team.Adelaide) {
             numCrowsPowerMatches++;
             sumCrowsWins += 1 - homeWin;
             sumSqCrowsWins += (1 - homeWin) * (1 - homeWin);
          }
-         Map<MatchLocation, Integer> locs = map.get(match.homeTeam.team);
+         Map<Location, Integer> locs = map.get(homeTeam);
          if (locs == null)
-            map.put(match.homeTeam.team, locs = new HashMap<MatchLocation,Integer>());
-         Integer count = locs.get(match.location);
-         if (count == null)
-            locs.put(match.location, 1);
-         else
-            locs.put(match.location, count+1);
+            map.put(homeTeam, locs = new HashMap<Location,Integer>());
+         Location location = fixture.getLocation();
+         Integer count = locs.get(location);
+         locs.put(location, (count == null) ? 1 : (count+1));
       }
       double meanHomeWins = sumHomeWins / numData;
       double varHomeWins = sumSqHomeWins / numData - meanHomeWins * meanHomeWins;
@@ -68,11 +70,11 @@ public class HomeTeamAdvantage {
       Collections.sort(teams);
       System.out.printf("Proportion of home games played at each location, per team:\n");
       for (Team team : teams) {
-         Map<MatchLocation, Integer> locs = map.get(team);
-         MatchLocation home = null;
+         Map<Location, Integer> locs = map.get(team);
+         Location home = null;
          int maxCount = 0;
          int sumCount = 0;
-         for (Entry<MatchLocation, Integer> entry : locs.entrySet()) {
+         for (Entry<Location, Integer> entry : locs.entrySet()) {
             int count = entry.getValue();
             sumCount += count;
             if (count > maxCount) {
@@ -83,9 +85,9 @@ public class HomeTeamAdvantage {
          //System.out.printf("%s -> %s [%4.2f]\n", team, home, 1.0*maxCount/sumCount);
          System.out.printf("%s -> [ ", team);
          out.printf("%s", team.name());
-         for (Entry<MatchLocation, Integer> entry : locs.entrySet()) {
+         for (Entry<Location, Integer> entry : locs.entrySet()) {
             int count = entry.getValue();
-            MatchLocation loc = entry.getKey();
+            Location loc = entry.getKey();
             if (loc == home) System.out.printf("*");
             double prob = (double)count/sumCount;
             System.out.printf("%s=%4.2f ", loc.name(), prob);
@@ -97,16 +99,16 @@ public class HomeTeamAdvantage {
       out.close();
    }
 
-   private static double getHomeWin(MatchRecord record) {
-      switch (record.homeTeamResult) {
-      case draw:
+   private static double getHomeWin(Match record) {
+      switch (record.getOutcome()) {
+      case Draw:
          return 0.5;
-      case loss:
+      case Loss:
          return 0.0;
-      case win:
+      case Win:
          return 1.0;
       default:
-         throw new IllegalArgumentException("Unknown result: " + record.homeTeamResult);
+         throw new IllegalArgumentException("Unknown result: " + record.getOutcome());
       }
    }
 
