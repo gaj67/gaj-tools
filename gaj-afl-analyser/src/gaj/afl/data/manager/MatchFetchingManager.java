@@ -1,19 +1,21 @@
-package gaj.afl.data.match;
+package gaj.afl.data.manager;
 
+
+import gaj.afl.data.match.Match;
 
 import java.util.Collection;
 
 /**
  * Describes the interface for obtaining historical match records.
  */
-public interface DataManager {
+public interface MatchFetchingManager {
 
 	/**
 	 * Obtains all historical match records.
 	 * 
 	 * @return A collection of match records.
 	 */
-	public Collection<Match> getAllMatches();
+	public Collection<Match> getMatches();
 
 	/**
 	 * Obtains the historical match records for the given years.

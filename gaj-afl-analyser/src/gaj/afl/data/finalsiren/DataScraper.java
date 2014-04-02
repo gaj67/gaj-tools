@@ -1,6 +1,6 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.match.DataManager;
+import gaj.afl.data.manager.MatchFetchingManager;
 import gaj.afl.data.match.Match;
 
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Scrapes match data from FinalSiren-format HTML files.
  */
-public class DataScraper implements DataManager {
+public class DataScraper implements MatchFetchingManager {
 
 	private static final File PATH_TO_DATA = new File("data/finalsiren/match");
 
@@ -28,7 +28,7 @@ public class DataScraper implements DataManager {
 	 * @throws IllegalParseException If the format of any input is invalid.
 	 */
 	@Override
-	public Collection<Match> getAllMatches() throws UncheckedIOException, IllegalParseException {
+	public Collection<Match> getMatches() throws UncheckedIOException, IllegalParseException {
 		List<Match> records = new ArrayList<>();
 		DataParser parser = new DataParser();
 		for (String subdir : PATH_TO_DATA.list()) {
@@ -82,9 +82,9 @@ public class DataScraper implements DataManager {
 	}
 
 	public static void main(String[] args) throws IOException {
-		DataManager scraper = new DataScraper();
+		MatchFetchingManager scraper = new DataScraper();
 		int i = 0;
-		for (Match rec : scraper.getAllMatches())
+		for (Match rec : scraper.getMatches())
 			System.out.printf("Record %d: %s%n", ++i, rec);
 	}
 

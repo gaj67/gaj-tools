@@ -136,7 +136,7 @@ import java.util.Set;
 	}
 
 	private static Collection<Match> getData() {
-		return DataFactory.newManager().getAllMatches();
+		return DataFactory.newManager().getMatches();
 	}
 	
 	private static Map<Team, Map<Location, Integer>> getTeamLocationCounts(Collection<Match> matches) {
