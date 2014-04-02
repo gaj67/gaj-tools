@@ -1,7 +1,7 @@
 package gaj.afl.statistics;
 import gaj.afl.data.DataFactory;
-import gaj.afl.datatype.Match;
-import gaj.afl.datatype.Team;
+import gaj.afl.data.match.Match;
+import gaj.afl.data.match.Team;
 
 import java.util.Collection;
 

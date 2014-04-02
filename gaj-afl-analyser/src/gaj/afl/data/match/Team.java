@@ -1,4 +1,4 @@
-package gaj.afl.datatype;
+package gaj.afl.data.match;
 
 /**
  * Enumerates the various AFL teams.

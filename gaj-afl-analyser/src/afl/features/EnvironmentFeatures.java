@@ -1,8 +1,8 @@
 package afl.features;
 
-import gaj.afl.datatype.MatchDateTime;
-import gaj.afl.datatype.MatchLocation;
-import gaj.afl.datatype.ShortMonth;
+import gaj.afl.data.match.MatchDateTime;
+import gaj.afl.data.match.MatchLocation;
+import gaj.afl.data.match.ShortMonth;
 
 /**
  * Encapsulates known information about the environment

@@ -1,7 +1,7 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.datatype.DataManager;
-import gaj.afl.datatype.Match;
+import gaj.afl.data.match.DataManager;
+import gaj.afl.data.match.Match;
 
 import java.io.File;
 import java.io.FileInputStream;

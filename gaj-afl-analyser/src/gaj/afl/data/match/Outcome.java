@@ -1,4 +1,4 @@
-package gaj.afl.datatype;
+package gaj.afl.data.match;
 
 /**
  * Specifies the outcome of a match, relative to the ordering

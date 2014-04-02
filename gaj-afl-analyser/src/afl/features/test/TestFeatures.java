@@ -1,9 +1,9 @@
 package afl.features.test;
 
-import gaj.afl.datatype.MatchDateTime;
-import gaj.afl.datatype.MatchLocation;
-import gaj.afl.datatype.ShortMonth;
-import gaj.afl.datatype.Team;
+import gaj.afl.data.match.MatchDateTime;
+import gaj.afl.data.match.MatchLocation;
+import gaj.afl.data.match.ShortMonth;
+import gaj.afl.data.match.Team;
 
 import org.junit.Test;
 

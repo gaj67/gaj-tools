@@ -1,4 +1,4 @@
-package gaj.afl.datatype;
+package gaj.afl.data.match;
 
 /**
  * Specifies the round of the year.

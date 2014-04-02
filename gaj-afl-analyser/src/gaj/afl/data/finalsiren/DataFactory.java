@@ -1,6 +1,6 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.datatype.DataManager;
+import gaj.afl.data.match.DataManager;
 
 /**
  * Provides access to Final Siren match data.

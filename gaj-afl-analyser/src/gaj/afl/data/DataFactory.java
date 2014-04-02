@@ -1,6 +1,6 @@
 package gaj.afl.data;
 
-import gaj.afl.datatype.DataManager;
+import gaj.afl.data.match.DataManager;
 
 /**
  * Provides access to historical match data.

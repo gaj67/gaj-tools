@@ -1,6 +1,6 @@
 package afl.features;
 
-import gaj.afl.datatype.Team;
+import gaj.afl.data.match.Team;
 
 /**
  * Encapsulates known information about the team,

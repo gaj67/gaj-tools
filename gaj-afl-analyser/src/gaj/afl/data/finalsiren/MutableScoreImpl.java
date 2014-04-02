@@ -1,7 +1,7 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.datatype.MutableScore;
-import gaj.afl.datatype.Score;
+import gaj.afl.data.match.MutableScore;
+import gaj.afl.data.match.Score;
 
 
 public class MutableScoreImpl implements MutableScore {
