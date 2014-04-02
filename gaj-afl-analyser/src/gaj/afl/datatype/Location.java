@@ -1,4 +1,4 @@
-package gaj.afl.data;
+package gaj.afl.datatype;
 
 /**
  * Specifies the location (ground) of a match.
@@ -41,6 +41,7 @@ public enum Location {
 		return name().replace("___", ".").replace("__", "'").replace('_', ' ');
 	}
 
+	@Override
 	public String toString() {
 		return toExternal();
 	}

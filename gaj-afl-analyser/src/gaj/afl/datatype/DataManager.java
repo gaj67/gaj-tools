@@ -1,4 +1,4 @@
-package gaj.afl.data;
+package gaj.afl.datatype;
 
 
 import java.util.Collection;

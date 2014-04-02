@@ -1,43 +1,25 @@
 package gaj.afl.datatype;
 
 /**
- * Specifies a score consisting of goals and behinds.
- * This could be a quarter-time score or a total score.
+ * Defines the score of a single team at some point in time,
+ * either a partial score (e.g. for each quarter) or a total
+ * score (e.g. at the end of a match).
  */
-public class Score {
+public interface Score {
 
-   public final int goals;
-   public final int behinds;
-   public final int points;
+	/**
+	 * @return The number of goals scored.
+	 */
+	public int numGoals();
 
-   public Score(int goals, int behinds) {
-      this.goals = goals;
-      this.behinds = behinds;
-      this.points = behinds + 6 * goals;
-   }
+	/**
+	 * @return The number of behinds scored.
+	 */
+	public int numBehinds();
 
-   /**
-    * @param strings - a pair of strings specifying the number of goals
-    * and the number of behinds scored.
-    */
-   public Score(String...strings) {
-      this(Integer.valueOf(strings[0]), Integer.valueOf(strings[1]));
-   }
-
-   /**
-    * @param score - a string in the format: "&lt;goals&gt;.&lt;behinds&gt;".
-    */
-   public Score(String score) {
-      this(score.split("[.]"));
-   }
-
-   public String toString() {
-	   return String.format("%d.%d (%d)", goals, behinds, points);
-   }
-
-   public Score subtract(Score score) {
-      if (score == null) return this;
-      return new Score(this.goals - score.goals, this.behinds - score.behinds);
-   }
+	/**
+	 * @return The number of points scored.
+	 */
+	public int numPoints();
 
 }

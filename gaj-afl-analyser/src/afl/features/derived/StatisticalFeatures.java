@@ -1,7 +1,7 @@
 package afl.features.derived;
 
-import gaj.afl.data.Team;
 import gaj.afl.datatype.MatchLocation;
+import gaj.afl.datatype.Team;
 import gaj.afl.statistics.HomeTeamAdvantage;
 
 import java.io.BufferedReader;

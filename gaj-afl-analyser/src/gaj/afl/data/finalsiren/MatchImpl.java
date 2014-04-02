@@ -1,9 +1,9 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.Fixture;
-import gaj.afl.data.Match;
-import gaj.afl.data.Outcome;
-import gaj.afl.data.Scores;
+import gaj.afl.datatype.Fixture;
+import gaj.afl.datatype.Match;
+import gaj.afl.datatype.Outcome;
+import gaj.afl.datatype.Scores;
 
 /*package-private*/ class MatchImpl implements Match {
 

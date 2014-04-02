@@ -1,4 +1,4 @@
-package gaj.afl.data;
+package gaj.afl.datatype;
 
 /**
  * Specifies which quarter of a match is of interest.

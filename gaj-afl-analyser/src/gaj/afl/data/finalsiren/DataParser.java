@@ -1,15 +1,14 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.Fixture;
-import gaj.afl.data.Location;
-import gaj.afl.data.Match;
-import gaj.afl.data.MutableScore;
-import gaj.afl.data.Outcome;
-import gaj.afl.data.Round;
-import gaj.afl.data.Score;
-import gaj.afl.data.Scores;
-import gaj.afl.data.ShortMonth;
-import gaj.afl.data.Team;
+import gaj.afl.datatype.Fixture;
+import gaj.afl.datatype.Location;
+import gaj.afl.datatype.Match;
+import gaj.afl.datatype.Outcome;
+import gaj.afl.datatype.Round;
+import gaj.afl.datatype.Score;
+import gaj.afl.datatype.Scores;
+import gaj.afl.datatype.ShortMonth;
+import gaj.afl.datatype.Team;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -194,7 +193,7 @@ import java.util.List;
 
 	private static Score parseScore(String score) {
 		String[] parts = score.split("[.]");
-		return new MutableScore(Integer.valueOf(parts[0]), Integer.valueOf(parts[1]));
+		return new MutableScoreImpl(Integer.valueOf(parts[0]), Integer.valueOf(parts[1]));
 	}
 
 	private static String stripTags(String data) {

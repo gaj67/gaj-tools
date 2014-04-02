@@ -1,7 +1,10 @@
-package gaj.afl.data;
+package gaj.afl.data.finalsiren;
+
+import gaj.afl.datatype.MutableScore;
+import gaj.afl.datatype.Score;
 
 
-public class MutableScore implements Score {
+public class MutableScoreImpl implements MutableScore {
 
 	private int numGoals = 0;
 	private int numBehinds = 0;
@@ -9,14 +12,14 @@ public class MutableScore implements Score {
 	/**
 	 * Initialises a mutable score with zero goals and behinds.
 	 */
-	public MutableScore() {}
+	public MutableScoreImpl() {}
 
 	/**
 	 * Initialises a mutable score from the given score.
 	 * 
 	 * @param score - The given score.
 	 */
-	public MutableScore(Score score) {
+	public MutableScoreImpl(Score score) {
 		numGoals = score.numGoals();
 		numBehinds = score.numBehinds();
 	}
@@ -27,19 +30,21 @@ public class MutableScore implements Score {
 	 * @param numGoals - The number of goals.
 	 * @param numBehinds - The number of behinds.
 	 */
-	public MutableScore(int numGoals, int numBehinds) {
+	public MutableScoreImpl(int numGoals, int numBehinds) {
 		this.numGoals = numGoals;
 		this.numBehinds = numBehinds;
 	}
 
-	/**
-	 * Adds the given score to the current score.
-	 * 
-	 * @param score - The incremental score.
-	 */
+	@Override
 	public void add(Score score) {
 		numGoals += score.numGoals();
 		numBehinds += score.numBehinds();
+	}
+
+	@Override
+	public void add(int numGoals, int numBehinds) {
+		numGoals += numGoals;
+		numBehinds += numBehinds;
 	}
 
 	@Override

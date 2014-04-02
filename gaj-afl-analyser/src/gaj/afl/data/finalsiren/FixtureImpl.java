@@ -2,10 +2,10 @@ package gaj.afl.data.finalsiren;
 
 import java.util.Date;
 
-import gaj.afl.data.Fixture;
-import gaj.afl.data.Location;
-import gaj.afl.data.Round;
-import gaj.afl.data.Team;
+import gaj.afl.datatype.Fixture;
+import gaj.afl.datatype.Location;
+import gaj.afl.datatype.Round;
+import gaj.afl.datatype.Team;
 
 /*package-private*/ class FixtureImpl implements Fixture {
 
