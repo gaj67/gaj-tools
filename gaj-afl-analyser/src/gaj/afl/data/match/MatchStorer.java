@@ -1,14 +1,12 @@
-package gaj.afl.data.manager;
+package gaj.afl.data.match;
 
-
-import gaj.afl.data.match.Match;
 
 import java.util.Collection;
 
 /**
  * Describes the interface for storing historical match records.
  */
-public interface MatchStorageManager {
+public interface MatchStorer {
 
 	/**
 	 * Stores the given match records.

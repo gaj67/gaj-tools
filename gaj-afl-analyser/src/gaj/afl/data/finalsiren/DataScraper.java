@@ -1,7 +1,7 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.manager.MatchFetchingManager;
 import gaj.afl.data.match.Match;
+import gaj.afl.data.match.MatchFetcher;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Scrapes match data from FinalSiren-format HTML files.
  */
-public class DataScraper implements MatchFetchingManager {
+public class DataScraper implements MatchFetcher {
 
 	private static final File PATH_TO_DATA = new File("data/finalsiren/match");
 
@@ -82,7 +82,7 @@ public class DataScraper implements MatchFetchingManager {
 	}
 
 	public static void main(String[] args) throws IOException {
-		MatchFetchingManager scraper = new DataScraper();
+		MatchFetcher scraper = new DataScraper();
 		int i = 0;
 		for (Match rec : scraper.getMatches())
 			System.out.printf("Record %d: %s%n", ++i, rec);
