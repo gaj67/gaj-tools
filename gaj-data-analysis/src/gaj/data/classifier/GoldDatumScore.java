@@ -14,12 +14,26 @@ public interface GoldDatumScore {
 	GoldDatum getGoldDatum();
 
 	/**
-	 * Obtains the unweighted score of the data point.
+	 * Obtains the weighted score of the data point.
 	 * <p/>The score of the entire data set is the 
 	 * weight-normalised sum of the weighted data point scores.
 	 * 
+	 * @return The weighted but unnormalised score.
+	 */
+	double getWeightedScore();
+
+	/**
+	 * Obtains the unweighted score of the data point.
+	 * 
 	 * @return The unweighted score.
 	 */
-	double getScore();
+	double getUnweightedScore();
+
+	/**
+	 * Obtains the weight of the data point.
+	 * 
+	 * @return The score weighting.
+	 */
+	double getWeight();
 
 }

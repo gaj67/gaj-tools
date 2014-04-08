@@ -1,5 +1,7 @@
 package gaj.data.classifier;
 
+import gaj.data.numeric.DataVector;
+
 /**
  * Specifies the classification accuracy score of a single data
  * point <em>x</em> from a set of gold-standard data, 

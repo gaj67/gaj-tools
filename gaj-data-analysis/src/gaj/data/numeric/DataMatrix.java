@@ -1,12 +1,11 @@
-package gaj.afl.data.features;
+package gaj.data.numeric;
 
 import java.util.Iterator;
 
 /**
- * Provides access to features that encode
- * information as an array of numbers.
+ * Provides access to numerical data as an array.
  */
-public interface FeatureMatrix extends Iterable<FeatureVector> {
+public interface DataMatrix extends Iterable<DataVector> {
 
 	/**
 	 * @return The number of rows in the matrix.
@@ -19,18 +18,24 @@ public interface FeatureMatrix extends Iterable<FeatureVector> {
 	int numColumns();
 
 	/**
+	 * Obtains a row of the matrix.
+	 * 
 	 * @param row - The index of the row in the matrix (counting from 0). 
 	 * @return The desired row.
 	 */
-	FeatureVector getRow(int row);
+	DataVector getRow(int row);
 
 	/**
+	 * Obtains a column of the matrix.
+	 * 
 	 * @param col - The index of the column in the matrix (counting from 0). 
 	 * @return The desired column.
 	 */
-	FeatureVector getColumn(int col);
+	DataVector getColumn(int col);
 
 	/**
+	 * Obtains an element of the matrix.
+	 * 
 	 * @param row - The index of the matrix row.
 	 * @param col - The index of the matrix column.
 	 * @return The value of specified matrix element.
@@ -43,7 +48,7 @@ public interface FeatureMatrix extends Iterable<FeatureVector> {
 	 * @param vector - The vector multiplier. 
 	 * @return The resulting length-M vector.
 	 */
-	FeatureVector dotColumns(FeatureVector vector);
+	DataVector dotColumns(DataVector vector);
 	
 	/**
 	 * Post-multiplies the NxM matrix by the given length-M vector.
@@ -51,13 +56,13 @@ public interface FeatureMatrix extends Iterable<FeatureVector> {
 	 * @param vector - The vector multiplier. 
 	 * @return The resulting length-N vector.
 	 */
-	FeatureVector dotRows(FeatureVector vector);
+	DataVector dotRows(DataVector vector);
 	
 	/**
-	 * Allows iteration over all rows of the feature matrix.
+	 * Allows iteration over all rows of the data matrix.
 	 * 
 	 * @return A row iterator.
 	 */
-	Iterator<FeatureVector> iterator();
+	Iterator<DataVector> iterator();
 
 }

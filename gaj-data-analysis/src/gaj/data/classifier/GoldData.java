@@ -9,7 +9,19 @@ import java.util.Iterator;
  */
 public interface GoldData extends Iterable<GoldDatum> {
 
+	/**
+	 * Indicates the total number C of classes in the classification scheme.
+	 * 
+	 * @return The number of classes.
+	 */
 	int numClasses();
+
+	/**
+	 * Indicates the number F of numerical features in any feature vector
+	 * to be classified.
+	 * 
+	 * @return The number of feature elements.
+	 */
 	int numFeatures();
 
 	/**
