@@ -14,23 +14,22 @@ public interface GoldDataScorer {
 	GoldData getGoldData();
 
 	/**
-	 * Computes the partial, unweighted accuracy scores of the given 
-	 * classifier against each
+	 * Computes the individual accuracy scores of the given classifier against each 
 	 * data point in the gold standard data set.
 	 * 
 	 * @param classifier - A trained classifier.
-	 * @return The weighted score.
+	 * @return A sequence of individual scores.
 	 */
 	Iterable<GoldDatumScore> scores(Classifier classifier);
 
 	/**
-	 * Computes the overall, weighted accuracy score of the given 
+	 * Computes the overall, weighted average score of the given 
 	 * classifier against the gold standard data set.
 	 * <p/>This should only be called if the individual data point scores are
 	 * not required, e.g. for testing data.
 	 * 
 	 * @param classifier - A trained classifier.
-	 * @return The weighted score.
+	 * @return The weighted average score.
 	 */
 	double score(Classifier classifier);
 

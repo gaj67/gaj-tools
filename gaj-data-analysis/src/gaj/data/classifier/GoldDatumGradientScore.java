@@ -15,7 +15,7 @@ public interface GoldDatumGradientScore extends GoldDatumScore {
 	 * Obtains the gradient of the score with respect to the 
 	 * posterior probability <em>P(c|x)</em> of each class c.
 	 * 
-	 * @return
+	 * @return The class-posterior gradient vector.
 	 */
 	DataVector getGradient();
 	
