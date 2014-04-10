@@ -20,7 +20,7 @@ public interface GoldDataScorer {
 	 * @param classifier - A trained classifier.
 	 * @return A sequence of individual scores.
 	 */
-	Iterable<GoldDatumScore> scores(Classifier classifier);
+	Iterable<? extends GoldDatumScore> scores(Classifier classifier);
 
 	/**
 	 * Computes the overall, weighted average score of the given 
