@@ -5,14 +5,15 @@ import java.util.Iterator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- * Implements the scaling of a data vector by a multiplicative factor.
+ * Implements the (deferred) scaling of a data vector by a multiplicative factor.
+ * Suited to scaling a compound vector.
  */
-/*package-private*/ class ScaledDataVectorImpl implements DataVector {
+/*package-private*/ class ScaledDataVector implements CompoundDataVector {
 
 	private final DataVector vector;
 	private final double multiplier;
 
-	/*package-private*/ ScaledDataVectorImpl(DataVector vector, double multiplier) {
+	/*package-private*/ ScaledDataVector(DataVector vector, double multiplier) {
 		this.vector = vector;
 		this.multiplier = multiplier;
 	}

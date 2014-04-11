@@ -6,14 +6,14 @@ import java.util.NoSuchElementException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- * Implements the concatenation of multiple data vectors together into a single vector.
+ * Implements the (deferred) concatenation of multiple data vectors together into a single, compound vector.
  */
-/*package-private*/ class MultiDataVectorImpl implements DataVector {
+/*package-private*/ class ConcatenatedDataVector implements CompoundDataVector {
 
 	private final DataVector[] vectors;
 	private final int length;
 
-	/*package-private*/ MultiDataVectorImpl(DataVector[] vectors) {
+	/*package-private*/ ConcatenatedDataVector(DataVector[] vectors) {
 		this.vectors = vectors;
 		int _length = 0;
 		for (DataVector vector : vectors)

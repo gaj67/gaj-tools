@@ -22,7 +22,7 @@ public abstract class NumericDataFactory {
 	 * Wraps the given data into a vector.
 	 * <p/>Note: The data must not be modified!
 	 * 
-	 * @param data - A sequence of index/value pairs.
+	 * @param data - A sequence of index/value pairs, with ascending indices.
 	 * @return The data vector.
 	 */
 	public static DataVector newSparseVector(int length, double... data) {
@@ -30,10 +30,14 @@ public abstract class NumericDataFactory {
 			throw new IllegalArgumentException("Odd length - expected index/value pairs");
 		int[] indices = new int[data.length / 2];
 		double[] values = new double[data.length / 2];
+		int maxIndex = Integer.MIN_VALUE;
 		for (int j = 0, i = 0; i < data.length;) {
-			/*if (data[i] != (int)data[i])
-				throw new IllegalArgumentException("Expected index at position " + i);*/
-			indices[j] = (int) data[i++];
+			int index = indices[j] = (int) data[i++];
+			if (index < 0 || index >= length)
+				throw new IndexOutOfBoundsException("Invalid index: " + index);
+			if (index <= maxIndex)
+				throw new IndexOutOfBoundsException("Invalid non-ascending index: " + index);
+			maxIndex = index;
 			values[j++] = data[i++];
 		}
 		return new SparseDataVector(length, indices, values);
@@ -46,7 +50,7 @@ public abstract class NumericDataFactory {
 	 * @return The concatenated data vector.
 	 */
 	public static DataVector concatenate(DataVector... vectors) {
-		return new MultiDataVectorImpl(vectors);
+		return new ConcatenatedDataVector(vectors);
 	}
 
 	/**
@@ -57,7 +61,7 @@ public abstract class NumericDataFactory {
 	 * @return The scaled data vector.
 	 */
 	public static DataVector scale(DataVector vector, double multiplier) {
-		return new ScaledDataVectorImpl(vector, multiplier);
+		return new ScaledDataVector(vector, multiplier);
 	}
 
 }
