@@ -14,8 +14,34 @@ public interface DataScorer {
 	GoldData getGoldData();
 
 	/**
-	 * Computes the individual accuracy scores of the given classifier against each 
-	 * data point in the gold standard data set.
+	 * Indicates the total number C of classes in the classification scheme.
+	 * 
+	 * @return The number of classes.
+	 */
+	int numClasses();
+
+	/**
+	 * Indicates the number F of numerical features in any feature vector
+	 * to be classified.
+	 * 
+	 * @return The number of feature elements.
+	 */
+	int numFeatures();
+
+	/**
+	 * Indicates whether or not the scorer computes gradient
+	 * information.
+	 * 
+	 * @return A value of true (or false) if it is (or is not)
+	 * safe to call the DatumScore.getGradient() method.
+	 */
+	boolean hasGradient();
+	
+	/**
+	 * Computes the individual accuracy scores 
+	 * (and any other required information) 
+	 * of the given classifier against each 
+	 * data point in the gold-standard data set.
 	 * 
 	 * @param classifier - A trained classifier.
 	 * @return A sequence of individual scores.

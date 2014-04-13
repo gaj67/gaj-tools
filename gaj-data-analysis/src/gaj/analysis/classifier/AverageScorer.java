@@ -18,6 +18,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * where <tt>s_d</tt> is the unweighted score of the <tt>d</tt>-th data-point, computed from knowing
  * the posterior class probabilities P(c|x_d) for feature vector x_d, 
  * along with the true class index c_d. 
+ * <p/>Also, by default, no gradient or other information 
+ * is computed. If this is required, override {@link #hasGradient}()
+ * and {@link #gradient}().
  */
 public abstract class AverageScorer implements DataScorer {
 
@@ -32,6 +35,15 @@ public abstract class AverageScorer implements DataScorer {
 	 */
 	protected abstract double score(DataVector probs, int classIndex);
 
+	@Override
+	public boolean hasGradient() {
+		return false;
+	}
+
+	protected DataVector gradient(DataVector probs, int classIndex) {
+		throw new NotImplementedException();
+	}
+
 	/**
 	 * Binds the given data to the scorer.
 	 * 
@@ -44,6 +56,16 @@ public abstract class AverageScorer implements DataScorer {
 	@Override
 	public GoldData getGoldData() {
 		return data;
+	}
+
+	@Override
+	public int numClasses() {
+		return data.numClasses();
+	}
+
+	@Override
+	public int numFeatures() {
+		return data.numFeatures();
 	}
 
 	@Override
@@ -67,13 +89,15 @@ public abstract class AverageScorer implements DataScorer {
 						final GoldDatum datum = iter.next();
 						final double weight = datum.getWeight(); 
 						sumWeights += weight;
-						DataVector probs = classifier.classify(datum.getFeatures());
+						final DataVector probs = classifier.classify(datum.getFeatures());
 						final double score = weight * score(probs, datum.getClassIndex());
 						sumScores += score;
 						final double averageScore = 
 								(sumWeights <= 0) ? Double.NEGATIVE_INFINITY 
 										: (sumScores / sumWeights); 
 						return new DatumScore() {
+							private /*@Nullable*/ DataVector gradient = null;
+
 							@Override
 							public GoldDatum getGoldDatum() {
 								return datum;
@@ -92,6 +116,18 @@ public abstract class AverageScorer implements DataScorer {
 							@Override
 							public double getWeight() {
 								return weight;
+							}
+
+							@Override
+							public boolean hasGradient() {
+								return AverageScorer.this.hasGradient();
+							}
+
+							@Override
+							public DataVector getGradient() {
+								if (gradient == null)
+									gradient = gradient(probs, datum.getClassIndex());
+								return gradient;
 							}
 						};
 					}
