@@ -18,6 +18,6 @@ public interface TrainableClassifier extends Classifier {
 	 * @param testingScorers - The optional, current scores of testing data.
 	 * @return A summary of the training iterations performed.
 	 */
-	TrainingSummary train(TrainingParams params, GoldDataScorer trainingScorer, GoldDataScorer... testingScorers);
+	TrainingSummary train(TrainingParams params, DataScorer trainingScorer, DataScorer... testingScorers);
 
 }

@@ -47,6 +47,14 @@ public class VectorTest {
 			Iterator<Double> iter2 = vec2.iterator();
 			for (int i = 0; i < 13; i++)
 				assertTrue(isEqual(iter1.next(), iter2.next()));
+			int i = 0;
+			System.out.printf("vec1 = [ ");
+			for (double value : vec1) {
+				System.out.printf("%f ", value );
+				i++;
+			}
+			System.out.println("]");
+			assertEquals(13, i);
 		}
 	}
 

@@ -3,7 +3,7 @@ package gaj.analysis.classifier;
 import gaj.data.classifier.GoldData;
 import gaj.data.numeric.DataVector;
 
-public class LogProbScorer extends WeightedAverageScorer {
+public class LogProbScorer extends AverageScorer {
 
 	protected LogProbScorer(GoldData goldStandard) {
 		super(goldStandard);

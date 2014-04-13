@@ -1,11 +1,23 @@
 package gaj.data.numeric;
 
+import java.util.Iterator;
+
 /**
  * Provides access to read-only numerical data objects.
  */
 public abstract class NumericDataFactory {
 
 	private NumericDataFactory() {}
+
+	/**
+	 * Creates a vector of the required length, full of zeroes.
+	 * 
+	 * @param length - The vector length.
+	 * @return The zero-data vector.
+	 */
+	public static DataVector newZeroVector(int length) {
+		return new ZeroDataVector(length);
+	}
 
 	/**
 	 * Wraps the given data into a vector.
@@ -15,12 +27,11 @@ public abstract class NumericDataFactory {
 	 * @return The data vector.
 	 */
 	public static DataVector newDenseVector(double... data) {
-		return new DenseDataVector(data);
+		return new DenseDataVectorImpl(data);
 	}
-	
+
 	/**
-	 * Wraps the given data into a vector.
-	 * <p/>Note: The data must not be modified!
+	 * Creates a sparse vector from the given index/value pairs.
 	 * 
 	 * @param data - A sequence of index/value pairs, with ascending indices.
 	 * @return The data vector.
@@ -40,9 +51,9 @@ public abstract class NumericDataFactory {
 			maxIndex = index;
 			values[j++] = data[i++];
 		}
-		return new SparseDataVector(length, indices, values);
+		return new SparseDataVectorImpl(length, indices, values);
 	}
-	
+
 	/**
 	 * Concatenates multiple data vectors together into a single vector.
 	 * 
@@ -62,6 +73,31 @@ public abstract class NumericDataFactory {
 	 */
 	public static DataVector scale(DataVector vector, double multiplier) {
 		return new ScaledDataVector(vector, multiplier);
+	}
+
+	/**
+	 * Computes the dot product of two vectors.
+	 * 
+	 * @param vec1 - The first vector.
+	 * @param vec2 - The second vector.
+	 * @return The dot product.
+	 */
+	public static double dot(DataVector vec1, DataVector vec2) {
+		if (vec1 instanceof SparseDataVector)
+			return ((SparseDataVector) vec1).dot(vec2);
+		if (vec2 instanceof SparseDataVector)
+			return ((SparseDataVector) vec2).dot(vec1);
+		if (vec1 instanceof DenseDataVector)
+			return ((DenseDataVector) vec1).dot(vec2);
+		if (vec2 instanceof DenseDataVector)
+			return ((DenseDataVector) vec2).dot(vec1);
+		// Compound vectors - do it the hard way!
+		double sum = 0;
+		final Iterator<Double> iter1 = vec1.iterator();
+		final Iterator<Double> iter2 = vec2.iterator();
+		while (iter1.hasNext() && iter2.hasNext())
+			sum += iter1.next() * iter2.next();
+		return sum;
 	}
 
 }
