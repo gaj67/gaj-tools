@@ -6,6 +6,13 @@ package gaj.data.numeric;
 public interface DenseDataVector extends DataVector {
 	
 	/**
+	 * Obtains a representation of the dense values.
+	 * 
+	 * @return An array of values.
+	 */
+	double[] getValues();
+
+	/**
 	 * Calculates the dot-product of the dense vector with
 	 * the given vector.
 	 * 

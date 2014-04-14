@@ -6,14 +6,7 @@ import gaj.data.numeric.DataVector;
  * Specifies the classification accuracy score of a single data
  * point from a set of gold-standard data.
  */
-public interface DatumScore {
-
-	/**
-	 * Obtains the gold-standard data point used for scoring.
-	 * 
-	 * @return The gold standard.
-	 */
-	GoldDatum getGoldDatum();
+public interface DatumScore extends GoldDatum {
 
 	/**
 	 * Obtains the weighted average score of all data points up to

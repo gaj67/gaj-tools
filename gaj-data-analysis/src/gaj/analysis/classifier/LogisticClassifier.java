@@ -1,36 +1,20 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.DataScorer;
-import gaj.data.classifier.TrainableClassifier;
-import gaj.data.classifier.TrainingParams;
-import gaj.data.classifier.TrainingSummary;
+import gaj.data.numeric.DataMatrix;
 import gaj.data.numeric.DataVector;
 import gaj.data.numeric.NumericDataFactory;
 
-public class LogisticClassifier implements TrainableClassifier {
+public class LogisticClassifier extends GradientTrainer {
 
-	private final int numClasses;
 	private final int Cm1;
-	private final int numFeatures;
 	private final DataVector[] params;
 
 	public LogisticClassifier(int numClasses, int numFeatures) {
-		this.numClasses = numClasses;
+		super(numClasses, numFeatures, numFeatures*(numClasses-1));
 		Cm1 = numClasses - 1;
-		this.numFeatures = numFeatures;
-		params = new DataVector[numClasses-1];
+		params = new DataVector[Cm1];
 		for (int c = 0; c < numClasses; c++)
 			params[c] = NumericDataFactory.newZeroVector(numFeatures);
-	}
-
-	@Override
-	public int numClasses() {
-		return numClasses;
-	}
-
-	@Override
-	public int numFeatures() {
-		return numFeatures;
 	}
 
 	@Override
@@ -50,8 +34,7 @@ public class LogisticClassifier implements TrainableClassifier {
 	}
 
 	@Override
-	public TrainingSummary train(TrainingParams params,
-			DataScorer trainingScorer, DataScorer... testingScorers) {
+	protected DataMatrix gradient(DataVector features) {
 		// TODO Auto-generated method stub
 		return null;
 	}

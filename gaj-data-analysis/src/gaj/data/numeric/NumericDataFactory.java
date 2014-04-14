@@ -83,6 +83,12 @@ public abstract class NumericDataFactory {
 	 * @return The dot product.
 	 */
 	public static double dot(DataVector vec1, DataVector vec2) {
+		if (vec1.length() != vec2.length())
+			throw new IllegalArgumentException("Incompatible lengths: " + vec1.length() + " and " + vec2.length());
+		return _dot(vec1, vec2);
+	}
+
+	private static double _dot(DataVector vec1, DataVector vec2) {
 		if (vec1 instanceof SparseDataVector)
 			return ((SparseDataVector) vec1).dot(vec2);
 		if (vec2 instanceof SparseDataVector)
@@ -98,6 +104,63 @@ public abstract class NumericDataFactory {
 		while (iter1.hasNext() && iter2.hasNext())
 			sum += iter1.next() * iter2.next();
 		return sum;
+	}
+
+	/**
+	 * Post-multiplies a matrix by a vector.
+	 *  
+	 * @param matrix - An N x M matrix, A.
+	 * @param vector - A length-M vector, x.
+	 * @return A length-N vector, y = A*x.
+	 */
+	public static DataVector multiply(DataMatrix matrix, DataVector vector) {
+		if (matrix.numColumns() != vector.length())
+			throw new IllegalArgumentException("Incompatible lengths");
+		final int numRows = matrix.numRows();
+		if (vector instanceof ZeroDataVector) 
+			return new ZeroDataVector(numRows);
+		double[] prod = new double[numRows];
+		for (int row = 0; row < numRows; row++)
+			prod[row] = _dot(vector, matrix.getRow(row));
+		return new DenseDataVectorImpl(prod);
+	}
+
+	/**
+	 * Sums two vectors.
+	 * 
+	 * @param vec1 - The first vector.
+	 * @param vec2 - The second vector.
+	 * @return The summed vector.
+	 */
+	public static DataVector add(DataVector vec1, DataVector vec2) {
+		final int length = vec1.length();
+		if (length != vec2.length())
+			throw new IllegalArgumentException("Incompatible lengths: " + length + " and " + vec2.length());
+		if (vec1 instanceof ZeroDataVector) return vec2;
+		if (vec2 instanceof ZeroDataVector) return vec1;
+		// TODO Optimise for two sparse vectors, etc.
+		double[] sum = new double[length];
+		if (vec1 instanceof SparseDataVector 
+				&& vec2 instanceof DenseDataVector) {
+			_addSparseDense(sum, (SparseDataVector)vec1, (DenseDataVector)vec2);
+		} else if (vec2 instanceof SparseDataVector
+				&& vec1 instanceof DenseDataVector) {
+			_addSparseDense(sum, (SparseDataVector)vec2, (DenseDataVector)vec1);
+		} else {
+			final Iterator<Double> iter1 = vec1.iterator();
+			final Iterator<Double> iter2 = vec2.iterator();
+			for (int i = 0; i < length; i++)
+				sum[i] = iter1.next() + iter2.next();
+		}
+		return new DenseDataVectorImpl(sum);
+	}
+
+	private static void _addSparseDense(final double[] sum, SparseDataVector vec1, DenseDataVector vec2) {
+		System.arraycopy(vec2.getValues(), 0, sum, 0, sum.length);
+		int[] indices = vec1.getIndices();
+		double[] values = vec1.getValues();
+		for (int i = 0; i < indices.length; i++)
+			sum[indices[i]] += values[i];
 	}
 
 }

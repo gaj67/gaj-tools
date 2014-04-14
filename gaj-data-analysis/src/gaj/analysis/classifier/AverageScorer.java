@@ -99,11 +99,6 @@ public abstract class AverageScorer implements DataScorer {
 							private /*@Nullable*/ DataVector gradient = null;
 
 							@Override
-							public GoldDatum getGoldDatum() {
-								return datum;
-							}
-
-							@Override
 							public double getAverageScore() {
 								return averageScore;
 							}
@@ -128,6 +123,16 @@ public abstract class AverageScorer implements DataScorer {
 								if (gradient == null)
 									gradient = gradient(probs, datum.getClassIndex());
 								return gradient;
+							}
+
+							@Override
+							public DataVector getFeatures() {
+								return datum.getFeatures();
+							}
+
+							@Override
+							public int getClassIndex() {
+								return datum.getClassIndex();
 							}
 						};
 					}

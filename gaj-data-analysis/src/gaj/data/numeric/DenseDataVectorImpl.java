@@ -58,4 +58,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 		return sum;
 	}
 
+	@Override
+	public double[] getValues() {
+		return values;
+	}
+
 }
