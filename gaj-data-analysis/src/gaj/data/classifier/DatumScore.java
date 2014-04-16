@@ -9,6 +9,13 @@ import gaj.data.numeric.DataVector;
 public interface DatumScore extends GoldDatum {
 
 	/**
+	 * Obtains the posterior class probabilities, P(c|x_d).
+	 * 
+	 * @return The length-C vector of class probabilities.
+	 */
+	DataVector getPosteriors();
+
+	/**
 	 * Obtains the weighted average score of all data points up to
 	 * and including the current one.
 	 * 

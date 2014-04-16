@@ -134,6 +134,11 @@ public abstract class AverageScorer implements DataScorer {
 							public int getClassIndex() {
 								return datum.getClassIndex();
 							}
+
+							@Override
+							public DataVector getPosteriors() {
+								return probs;
+							}
 						};
 					}
 

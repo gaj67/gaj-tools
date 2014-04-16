@@ -39,24 +39,68 @@ public abstract class GradientTrainer implements TrainableClassifier {
 			DataScorer trainingScorer, DataScorer... testingScorers) {
 		if (!trainingScorer.hasGradient())
 			throw new IllegalArgumentException("Gradient trainer requires gradient scorer");
-		double[] trainingScore = new double[1];
-		DataVector gradient = computeScoreGradient(trainingScore, trainingScorer);
-		double[] testingScores = new double[testingScorers.length];
-		computeScores(testingScores, testingScorers);
+		double[] scores = new double[testingScorers.length + 1];
+		DataVector gradient = computeScoresAndGradient(scores, trainingScorer, testingScorers);
+		final double scoreTolerance = params.scoreTolerance();
+		final int maxIterations = params.maxIterations();
 		int numIterations = 0;
+		double[] newScores = new double[testingScorers.length + 1];
+		double stepSize = 0.5;
+		while (true) {
+			if (!update(NumericDataFactory.scale(gradient, stepSize))) break;
+			if (++numIterations >= maxIterations) break;
+			gradient = computeScoresAndGradient(newScores, trainingScorer, testingScorers);
+			double diffScore = newScores[0] - scores[0];
+			if (diffScore < 0) { // Over-shot target?
+				stepSize *= 0.5; // Attempt to correct on next iteration.
+				continue;
+			}
+			if (diffScore <= scoreTolerance) break;
+			if (terminate(scores, newScores)) break;
+			stepSize = 0.5;
+			double[] tmp = scores;
+			scores = newScores;
+			newScores = tmp;
+		}
 		return null;
 	}
 
-	private DataVector computeScoreGradient(double[] score, DataScorer scorer) {
-		score[0] = Double.NEGATIVE_INFINITY;
+	/**
+	 * Attempts to update the classifier parameters by the 
+	 * given increments. If the parameters do not change,
+	 * then iterative training will cease.
+	 * 
+	 * @param deltaParams - The length-V vector of
+	 * parameter value increments.
+	 * @return A value of true (or false) if the parameters
+	 * have (or have not) been updated.
+	 */
+	protected abstract boolean update(DataVector deltaParams);
+
+	/**
+	 * Checks whether or not iterative training should cease
+	 * given the change in scores.
+	 * 
+	 * @param prevScores - The classifier scores prior to the parameter update.
+	 * @param newScores - The classifier scores after the update.
+	 * @return A value of true (or false) if training
+	 * should (or should not) cease.
+	 */
+	protected boolean terminate(double[] prevScores, double[] newScores) {
+		// TODO Check if avg. testing score has decreased.
+		return false;
+	}
+
+	private DataVector computeScoresAndGradient(double[] scores, DataScorer trainingScorer, DataScorer... testingScorers) {
+		scores[0] = Double.NEGATIVE_INFINITY;
 		double sumWeights = 0;
 		DataVector sumGradient = NumericDataFactory.newZeroVector(numParameters);
-		for (DatumScore datumScore : scorer.scores(this)) {
-			score[0] = datumScore.getAverageScore();
+		for (DatumScore datumScore : trainingScorer.scores(this)) {
+			scores[0] = datumScore.getAverageScore();
 			final double weight = datumScore.getWeight();
 			sumWeights += weight;
 			DataVector scoreGradient = datumScore.getGradient();
-			DataMatrix probsGradient = gradient(datumScore.getFeatures());
+			DataMatrix probsGradient = getGradient(datumScore.getFeatures());
 			DataVector datumGradient = NumericDataFactory.scale(
 					NumericDataFactory.multiply(probsGradient, scoreGradient),
 					weight);
@@ -64,6 +108,8 @@ public abstract class GradientTrainer implements TrainableClassifier {
 		}
 		if (sumWeights > 0)
 			sumGradient = NumericDataFactory.scale(sumGradient, 1 / sumWeights);
+		for (int i = 0; i < testingScorers.length; i++)
+			scores[i+1] = testingScorers[i].score(this);
 		return sumGradient;
 	}
 
@@ -79,11 +125,6 @@ public abstract class GradientTrainer implements TrainableClassifier {
 	 * @param features - The feature vector, x.
 	 * @return The V x C matrix of derivatives.
 	 */
-	protected abstract DataMatrix gradient(DataVector features);
-
-	private void computeScores(double[] scores, DataScorer[] scorers) {
-		for (int i = 0; i < scorers.length; i++)
-			scores[i] = scorers[i].score(this);
-	}
+	protected abstract DataMatrix getGradient(DataVector features);
 
 }
