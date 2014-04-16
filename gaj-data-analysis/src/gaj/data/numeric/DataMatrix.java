@@ -43,22 +43,6 @@ public interface DataMatrix extends Iterable<DataVector> {
 	double get(int row, int col);
 
 	/**
-	 * Pre-multiplies the NxM matrix by the given length-N vector.
-	 * 
-	 * @param vector - The vector multiplier. 
-	 * @return The resulting length-M vector.
-	 */
-	DataVector dotColumns(DataVector vector);
-	
-	/**
-	 * Post-multiplies the NxM matrix by the given length-M vector.
-	 * 
-	 * @param vector - The vector multiplier. 
-	 * @return The resulting length-N vector.
-	 */
-	DataVector dotRows(DataVector vector);
-	
-	/**
 	 * Allows iteration over all rows of the data matrix.
 	 * 
 	 * @return A row iterator.
