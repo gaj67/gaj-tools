@@ -64,4 +64,14 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 		return 0;
 	}
 
+	@Override
+	public double norm() {
+		return 0;
+	}
+
+	@Override
+	public DataVector scale(double multiplier) {
+		return this;
+	}
+
 }

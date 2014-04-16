@@ -21,4 +21,19 @@ public interface DenseDataVector extends DataVector {
 	 */
 	double dot(DataVector vector);
 
+	/**
+	 * Calculates the Euclidean norm of the vector.
+	 * 
+	 * @return The vector norm.
+	 */
+	double norm();
+
+	/**
+	 * Scales the dense vector by the given non-zero multiplier.
+	 * 
+	 * @param multiplier - The multiplier.
+	 * @return The scaled dense vector.
+	 */
+	DataVector scale(double multiplier);
+
 }

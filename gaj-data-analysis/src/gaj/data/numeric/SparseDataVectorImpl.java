@@ -87,4 +87,20 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 		return sum;
 	}
 
+	@Override
+	public double norm() {
+		double sum = 0;
+		for (double value : values)
+			sum += value * value;
+		return Math.sqrt(sum);
+	}
+
+	@Override
+	public DataVector scale(double multiplier) {
+		double[] newValues = new double[values.length];
+		for (int i = 0; i < values.length; i++)
+			newValues[i] = multiplier * values[i];
+		return new SparseDataVectorImpl(length, indices, newValues);
+	}
+
 }

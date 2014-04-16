@@ -72,6 +72,11 @@ public abstract class NumericDataFactory {
 	 * @return The scaled data vector.
 	 */
 	public static DataVector scale(DataVector vector, double multiplier) {
+		if (multiplier == 0) return new ZeroDataVector(vector.length());
+		if (vector instanceof SparseDataVector)
+			return ((SparseDataVector) vector).scale(multiplier);
+		if (vector instanceof DenseDataVector)
+			return ((DenseDataVector) vector).scale(multiplier);
 		return new ScaledDataVector(vector, multiplier);
 	}
 
@@ -161,6 +166,23 @@ public abstract class NumericDataFactory {
 		double[] values = vec1.getValues();
 		for (int i = 0; i < indices.length; i++)
 			sum[indices[i]] += values[i];
+	}
+
+	/**
+	 * Computes the Euclidean norm of a vector.
+	 * 
+	 * @param vector - The vector.
+	 * @return he vecor norm.
+	 */
+	public static double norm(DataVector vector) {
+		if (vector instanceof SparseDataVector)
+			return ((SparseDataVector) vector).norm();
+		if (vector instanceof DenseDataVector)
+			return ((DenseDataVector) vector).norm();
+		double sum = 0;
+		for (double value : vector)
+			sum += value * value;
+		return Math.sqrt(sum);
 	}
 
 }

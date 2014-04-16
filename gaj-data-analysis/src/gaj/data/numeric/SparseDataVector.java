@@ -28,4 +28,19 @@ package gaj.data.numeric;
 	 */
 	double dot(DataVector vector);
 
+	/**
+	 * Calculates the Euclidean norm of the vector.
+	 * 
+	 * @return The vector norm.
+	 */
+	double norm();
+
+	/**
+	 * Scales the sparse vector by the given non-zero multiplier.
+	 * 
+	 * @param multiplier - The multiplier.
+	 * @return The scaled sparse vector.
+	 */
+	DataVector scale(double multiplier);
+
 }
