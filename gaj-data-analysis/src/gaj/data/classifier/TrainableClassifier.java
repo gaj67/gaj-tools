@@ -14,10 +14,9 @@ public interface TrainableClassifier extends Classifier {
 	 * testing data.
 	 * 
 	 * @param params - The parameters controlling termination of iterative training.
-	 * @param trainingScorer - The current score of the training data.
-	 * @param testingScorers - The optional, current scores of testing data.
+	 * @param scorers - The data scorers used to test classifier performance.
 	 * @return A summary of the training iterations performed.
 	 */
-	TrainingSummary train(TrainingParams params, DataScorer trainingScorer, DataScorer... testingScorers);
+	TrainingSummary train(TrainingParams params, DataScorer... scorers);
 
 }

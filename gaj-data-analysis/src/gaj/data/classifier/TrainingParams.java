@@ -13,11 +13,19 @@ public interface TrainingParams {
 	int maxIterations();
 	
 	/**
-	 * Specifies the smallest difference in accuracy scores between update iterations, below which
-	 * training will cease. 
+	 * Specifies the smallest absolute difference in accuracy scores between update iterations, 
+	 * at or below which training will cease. 
 	 * 
 	 * @return The minimum score tolerance.
 	 */
 	double scoreTolerance();
 	
+	/**
+	 * Specifies the smallest feasible norm of the score gradient, at or below which
+	 * training will cease. 
+	 * 
+	 * @return The minimum score gradient tolerance.
+	 */
+	double gradientTolerance();
+
 }
