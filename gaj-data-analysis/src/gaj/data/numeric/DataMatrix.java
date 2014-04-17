@@ -1,11 +1,10 @@
 package gaj.data.numeric;
 
-import java.util.Iterator;
 
 /**
  * Provides access to numerical data as an array.
  */
-public interface DataMatrix extends Iterable<DataVector> {
+public interface DataMatrix extends DataObject {
 
 	/**
 	 * @return The number of rows in the matrix.
@@ -41,12 +40,5 @@ public interface DataMatrix extends Iterable<DataVector> {
 	 * @return The value of specified matrix element.
 	 */
 	double get(int row, int col);
-
-	/**
-	 * Allows iteration over all rows of the data matrix.
-	 * 
-	 * @return A row iterator.
-	 */
-	Iterator<DataVector> iterator();
 
 }

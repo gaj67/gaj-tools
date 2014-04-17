@@ -3,7 +3,7 @@ package gaj.data.numeric;
 /**
  * Marks a vector as being dense.
  */
-public interface DenseDataVector extends DataVector {
+public interface DenseVector extends DataVector {
 	
 	/**
 	 * Obtains a representation of the dense values.
@@ -34,6 +34,7 @@ public interface DenseDataVector extends DataVector {
 	 * @param multiplier - The multiplier.
 	 * @return The scaled dense vector.
 	 */
-	DataVector scale(double multiplier);
+	@Override
+	DenseVector scale(double multiplier);
 
 }

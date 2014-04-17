@@ -6,12 +6,19 @@ import java.util.Iterator;
 /**
  * Provides access to numerical data as a vector.
  */
-public interface DataVector extends Iterable<Double> {
+public interface DataVector extends DataObject, Iterable<Double> {
 
 	/**
 	 * @return The length of the vector.
 	 */
 	int length();
+
+	/**
+	 * Calculates the Euclidean norm of the vector.
+	 * 
+	 * @return The vector norm.
+	 */
+	double norm();
 
 	/**
 	 * @param pos - The position of the desired element (counting from 0).
@@ -25,5 +32,13 @@ public interface DataVector extends Iterable<Double> {
 	 * @return An element iterator.
 	 */
 	Iterator<Double> iterator();
+
+	/**
+	 * Scales the vector by the given non-zero multiplier.
+	 * 
+	 * @param multiplier - The multiplier.
+	 * @return The scaled vector.
+	 */
+	DataVector scale(double multiplier);
 
 }

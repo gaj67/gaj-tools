@@ -1,4 +1,7 @@
-package gaj.data.numeric;
+package gaj.analysis.numeric;
+
+import gaj.data.numeric.DataVector;
+import gaj.data.numeric.DenseVector;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -8,7 +11,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  * Implements a data vector as a true array of numbers.
  */
-/*package-private*/ class DenseDataVectorImpl implements DenseDataVector {
+/*package-private*/ class DenseDataVectorImpl implements DenseVector {
 
 	/*package-private*/ final double[] values;
 

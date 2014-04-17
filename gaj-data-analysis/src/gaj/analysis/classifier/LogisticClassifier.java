@@ -1,10 +1,10 @@
 package gaj.analysis.classifier;
 
+import gaj.analysis.numeric.NumericDataFactory;
 import gaj.data.numeric.DataMatrix;
 import gaj.data.numeric.DataVector;
-import gaj.data.numeric.NumericDataFactory;
 
-public class LogisticClassifier extends GradientTrainer {
+public class LogisticClassifier extends GradientAscentTrainer {
 
 	private final int Cm1;
 	private final DataVector[] params;
@@ -34,9 +34,19 @@ public class LogisticClassifier extends GradientTrainer {
 	}
 
 	@Override
-	protected DataMatrix gradient(DataVector features) {
+	protected DataMatrix getGradient(DataVector features) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected boolean update(DataVector deltaParams) {
+		for (int i = 0; i < numParameters; i++) {
+			int f = i % numFeatures;
+			int c = i / numFeatures;
+			params
+		}
+		return true;
 	}
 
 }

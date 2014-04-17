@@ -1,4 +1,7 @@
-package gaj.data.numeric;
+package gaj.analysis.numeric;
+
+import gaj.data.numeric.CompoundVector;
+import gaj.data.numeric.DataVector;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -8,7 +11,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  * Implements the (deferred) concatenation of multiple data vectors together into a single, compound vector.
  */
-/*package-private*/ class ConcatenatedDataVector implements CompoundDataVector {
+/*package-private*/ class ConcatenatedDataVector implements CompoundVector {
 
 	private final DataVector[] vectors;
 	private final int length;
@@ -64,6 +67,16 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 				throw new NotImplementedException();
 			}
 		};
+	}
+
+	@Override
+	public double norm() {
+		double sum = 0;
+		for (DataVector vector : vectors) {
+			double norm = vector.norm();
+			sum += norm * norm;
+		}
+		return Math.sqrt(sum);
 	}
 
 }

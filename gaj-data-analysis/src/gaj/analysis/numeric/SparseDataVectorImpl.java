@@ -1,4 +1,7 @@
-package gaj.data.numeric;
+package gaj.analysis.numeric;
+
+import gaj.data.numeric.DataVector;
+import gaj.data.numeric.SparseVector;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -8,7 +11,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  * Implements a data vector as an array of index/value pairs, with ascending indices.
  */
-/*package-private*/ class SparseDataVectorImpl implements SparseDataVector {
+/*package-private*/ class SparseDataVectorImpl implements SparseVector {
 
 	private final int length;
 	private final int[] indices;

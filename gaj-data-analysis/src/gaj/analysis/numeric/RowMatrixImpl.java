@@ -1,17 +1,20 @@
-package gaj.data.numeric;
+package gaj.analysis.numeric;
+
+import gaj.data.numeric.DataVector;
+import gaj.data.numeric.RowMatrix;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-/*package-private*/ class RowDataMatrix implements DataMatrix {
+/*package-private*/ class RowMatrixImpl implements RowMatrix {
 
 	private final DataVector[] rows;
 	private final int numRows;
 	private final int numColumns;
 
-	/*package-private*/ RowDataMatrix(DataVector[] rows) {
+	/*package-private*/ RowMatrixImpl(DataVector[] rows) {
 		this.rows = rows;
 		numRows = rows.length;
 		numColumns = rows[0].length();

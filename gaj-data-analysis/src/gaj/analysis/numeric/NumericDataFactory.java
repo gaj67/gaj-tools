@@ -1,4 +1,10 @@
-package gaj.data.numeric;
+package gaj.analysis.numeric;
+
+import gaj.data.numeric.CompoundVector;
+import gaj.data.numeric.DataVector;
+import gaj.data.numeric.DenseVector;
+import gaj.data.numeric.RowMatrix;
+import gaj.data.numeric.SparseVector;
 
 import java.util.Iterator;
 
@@ -15,7 +21,7 @@ public abstract class NumericDataFactory {
 	 * @param length - The vector length.
 	 * @return The zero-data vector.
 	 */
-	public static DataVector newZeroVector(int length) {
+	public static SparseVector newZeroVector(int length) {
 		return new ZeroDataVector(length);
 	}
 
@@ -26,7 +32,7 @@ public abstract class NumericDataFactory {
 	 * @param data - The array of data.
 	 * @return The data vector.
 	 */
-	public static DataVector newDenseVector(double... data) {
+	public static DenseVector newDenseVector(double... data) {
 		return new DenseDataVectorImpl(data);
 	}
 
@@ -36,7 +42,7 @@ public abstract class NumericDataFactory {
 	 * @param data - A sequence of index/value pairs, with ascending indices.
 	 * @return The data vector.
 	 */
-	public static DataVector newSparseVector(int length, double... data) {
+	public static SparseVector newSparseVector(int length, double... data) {
 		if (data.length % 2 != 0)
 			throw new IllegalArgumentException("Odd length - expected index/value pairs");
 		int[] indices = new int[data.length / 2];
@@ -60,7 +66,7 @@ public abstract class NumericDataFactory {
 	 * @param vectors - The data vectors to be concatenated.
 	 * @return The concatenated data vector.
 	 */
-	public static DataVector concatenate(DataVector... vectors) {
+	public static CompoundVector concatenate(DataVector... vectors) {
 		return new ConcatenatedDataVector(vectors);
 	}
 
@@ -73,10 +79,10 @@ public abstract class NumericDataFactory {
 	 */
 	public static DataVector scale(DataVector vector, double multiplier) {
 		if (multiplier == 0) return new ZeroDataVector(vector.length());
-		if (vector instanceof SparseDataVector)
-			return ((SparseDataVector) vector).scale(multiplier);
-		if (vector instanceof DenseDataVector)
-			return ((DenseDataVector) vector).scale(multiplier);
+		if (vector instanceof SparseVector)
+			return ((SparseVector) vector).scale(multiplier);
+		if (vector instanceof DenseVector)
+			return ((DenseVector) vector).scale(multiplier);
 		return new ScaledDataVector(vector, multiplier);
 	}
 
@@ -94,14 +100,14 @@ public abstract class NumericDataFactory {
 	}
 
 	private static double _dot(DataVector vec1, DataVector vec2) {
-		if (vec1 instanceof SparseDataVector)
-			return ((SparseDataVector) vec1).dot(vec2);
-		if (vec2 instanceof SparseDataVector)
-			return ((SparseDataVector) vec2).dot(vec1);
-		if (vec1 instanceof DenseDataVector)
-			return ((DenseDataVector) vec1).dot(vec2);
-		if (vec2 instanceof DenseDataVector)
-			return ((DenseDataVector) vec2).dot(vec1);
+		if (vec1 instanceof SparseVector)
+			return ((SparseVector) vec1).dot(vec2);
+		if (vec2 instanceof SparseVector)
+			return ((SparseVector) vec2).dot(vec1);
+		if (vec1 instanceof DenseVector)
+			return ((DenseVector) vec1).dot(vec2);
+		if (vec2 instanceof DenseVector)
+			return ((DenseVector) vec2).dot(vec1);
 		// Compound vectors - do it the hard way!
 		double sum = 0;
 		final Iterator<Double> iter1 = vec1.iterator();
@@ -118,7 +124,7 @@ public abstract class NumericDataFactory {
 	 * @param vector - A length-M vector, x.
 	 * @return A length-N vector, y = A*x.
 	 */
-	public static DataVector multiply(DataMatrix matrix, DataVector vector) {
+	public static DataVector multiply(RowMatrix matrix, DataVector vector) {
 		if (matrix.numColumns() != vector.length())
 			throw new IllegalArgumentException("Incompatible lengths");
 		final int numRows = matrix.numRows();
@@ -145,12 +151,12 @@ public abstract class NumericDataFactory {
 		if (vec2 instanceof ZeroDataVector) return vec1;
 		// TODO Optimise for two sparse vectors, etc.
 		double[] sum = new double[length];
-		if (vec1 instanceof SparseDataVector 
-				&& vec2 instanceof DenseDataVector) {
-			_addSparseDense(sum, (SparseDataVector)vec1, (DenseDataVector)vec2);
-		} else if (vec2 instanceof SparseDataVector
-				&& vec1 instanceof DenseDataVector) {
-			_addSparseDense(sum, (SparseDataVector)vec2, (DenseDataVector)vec1);
+		if (vec1 instanceof SparseVector 
+				&& vec2 instanceof DenseVector) {
+			_addSparseDense(sum, (SparseVector)vec1, (DenseVector)vec2);
+		} else if (vec2 instanceof SparseVector
+				&& vec1 instanceof DenseVector) {
+			_addSparseDense(sum, (SparseVector)vec2, (DenseVector)vec1);
 		} else {
 			final Iterator<Double> iter1 = vec1.iterator();
 			final Iterator<Double> iter2 = vec2.iterator();
@@ -160,7 +166,7 @@ public abstract class NumericDataFactory {
 		return new DenseDataVectorImpl(sum);
 	}
 
-	private static void _addSparseDense(final double[] sum, SparseDataVector vec1, DenseDataVector vec2) {
+	private static void _addSparseDense(final double[] sum, SparseVector vec1, DenseVector vec2) {
 		System.arraycopy(vec2.getValues(), 0, sum, 0, sum.length);
 		int[] indices = vec1.getIndices();
 		double[] values = vec1.getValues();
@@ -175,10 +181,10 @@ public abstract class NumericDataFactory {
 	 * @return he vecor norm.
 	 */
 	public static double norm(DataVector vector) {
-		if (vector instanceof SparseDataVector)
-			return ((SparseDataVector) vector).norm();
-		if (vector instanceof DenseDataVector)
-			return ((DenseDataVector) vector).norm();
+		if (vector instanceof SparseVector)
+			return ((SparseVector) vector).norm();
+		if (vector instanceof DenseVector)
+			return ((DenseVector) vector).norm();
 		double sum = 0;
 		for (double value : vector)
 			sum += value * value;

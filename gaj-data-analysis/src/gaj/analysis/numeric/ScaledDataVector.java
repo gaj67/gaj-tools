@@ -1,4 +1,7 @@
-package gaj.data.numeric;
+package gaj.analysis.numeric;
+
+import gaj.data.numeric.CompoundVector;
+import gaj.data.numeric.DataVector;
 
 import java.util.Iterator;
 
@@ -8,7 +11,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * Implements the (deferred) scaling of a data vector by a multiplicative factor.
  * Suited to scaling a compound vector.
  */
-/*package-private*/ class ScaledDataVector implements CompoundDataVector {
+/*package-private*/ class ScaledDataVector implements CompoundVector {
 
 	private final DataVector vector;
 	private final double multiplier;

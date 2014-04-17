@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.Iterator;
 
+import gaj.analysis.numeric.NumericDataFactory;
 import gaj.data.numeric.DataVector;
-import gaj.data.numeric.NumericDataFactory;
 
 import org.junit.Test;
 

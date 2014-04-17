@@ -3,7 +3,7 @@ package gaj.data.numeric;
 /**
  * Marks a vector as being sparse.
  */
-/*package-private*/ interface SparseDataVector extends DataVector {
+public interface SparseVector extends DataVector {
 
 	/**
 	 * Obtains a representation of the sparse indices.
@@ -29,18 +29,12 @@ package gaj.data.numeric;
 	double dot(DataVector vector);
 
 	/**
-	 * Calculates the Euclidean norm of the vector.
-	 * 
-	 * @return The vector norm.
-	 */
-	double norm();
-
-	/**
 	 * Scales the sparse vector by the given non-zero multiplier.
 	 * 
 	 * @param multiplier - The multiplier.
 	 * @return The scaled sparse vector.
 	 */
-	DataVector scale(double multiplier);
+	@Override
+	SparseVector scale(double multiplier);
 
 }

@@ -1,11 +1,14 @@
-package gaj.data.numeric;
+package gaj.analysis.numeric;
+
+import gaj.data.numeric.DataVector;
+import gaj.data.numeric.SparseVector;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-/*package-private*/ class ZeroDataVector implements SparseDataVector {
+/*package-private*/ class ZeroDataVector implements SparseVector {
 
 	private final int length;
 

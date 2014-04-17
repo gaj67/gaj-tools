@@ -1,8 +1,8 @@
 package gaj.analysis.classifier;
 
+import gaj.analysis.numeric.NumericDataFactory;
 import gaj.data.classifier.GoldData;
 import gaj.data.numeric.DataVector;
-import gaj.data.numeric.NumericDataFactory;
 
 /**
  * Implements a log-likelihood scoring function:
