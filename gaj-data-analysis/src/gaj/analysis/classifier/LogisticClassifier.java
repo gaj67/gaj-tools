@@ -1,52 +1,62 @@
 package gaj.analysis.classifier;
 
-import gaj.analysis.numeric.NumericDataFactory;
-import gaj.data.numeric.DataMatrix;
-import gaj.data.numeric.DataVector;
+import gaj.analysis.matrix.MatrixFactory;
+import gaj.analysis.vector.VectorFactory;
+import gaj.data.classifier.DatumScore;
+import gaj.data.matrix.DataMatrix;
+import gaj.data.matrix.WritableMatrix;
+import gaj.data.numeric.DataObject;
+import gaj.data.vector.DataVector;
+import gaj.data.vector.WritableVector;
 
 public class LogisticClassifier extends GradientAscentTrainer {
 
 	private final int Cm1;
-	private final DataVector[] params;
+	private final WritableMatrix params;
 
 	public LogisticClassifier(int numClasses, int numFeatures) {
-		super(numClasses, numFeatures, numFeatures*(numClasses-1));
+		super(numClasses, numFeatures);
 		Cm1 = numClasses - 1;
-		params = new DataVector[Cm1];
-		for (int c = 0; c < numClasses; c++)
-			params[c] = NumericDataFactory.newZeroVector(numFeatures);
+		params = MatrixFactory.newWritableMatrix(Cm1, numFeatures);
 	}
 
 	@Override
 	public DataVector classify(DataVector features) {
+		DataVector weights = MatrixFactory.multiply(params, features);
 		double[] posteriors = new double[numClasses];
 		posteriors[Cm1] = 1;
 		double norm = 1;
 		for (int c = 0; c < Cm1; c++) {
-			double p = Math.exp(NumericDataFactory.dot(params[c], features));
+			double p = Math.exp(weights.get(c));
 			posteriors[c] = p;
 			norm += p;
 		}
 		norm = 1 / norm;
 		for (int c = 0; c < numClasses; c++)
 			posteriors[c] *= norm;
-		return NumericDataFactory.newDenseVector(posteriors);
+		return VectorFactory.newVector(posteriors);
 	}
 
 	@Override
-	protected DataMatrix getGradient(DataVector features) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected boolean update(DataVector deltaParams) {
-		for (int i = 0; i < numParameters; i++) {
-			int f = i % numFeatures;
-			int c = i / numFeatures;
-			params
-		}
+	protected boolean updateParams(DataObject deltaParams) {
+		((DataMatrix) deltaParams).addTo(params);
 		return true;
+	}
+
+	@Override
+	protected DataObject getGradient(DatumScore datumScore) {
+		WritableMatrix gradient = MatrixFactory.newWritableMatrix(Cm1, numFeatures);
+		DataVector probs = datumScore.getPosteriors();
+		// classRow = row of param. matrix corresp. to class.
+		for (int classRow = 0; classRow < Cm1; classRow++) {
+			WritableVector classWeights = VectorFactory.newWritableVector(numClasses);
+			classWeights.add(VectorFactory.scale(probs, -probs.get(classRow)));
+			classWeights.add(classRow, probs.get(classRow));
+			double classWeight = VectorFactory.dot(classWeights, datumScore.getGradient());
+			DataVector featureWeights = VectorFactory.scale(datumScore.getFeatures(), classWeight);
+			gradient.addRow(classRow, featureWeights);
+		}
+		return gradient;
 	}
 
 }

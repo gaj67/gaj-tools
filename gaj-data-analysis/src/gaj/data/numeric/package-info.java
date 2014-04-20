@@ -1,4 +1,4 @@
 /**
- * Classes and interfaces for generic manipulation of numerical data. 
+ * Interfaces for representing and manipulating numerical data. 
  */
 package gaj.data.numeric;

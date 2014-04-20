@@ -1,8 +1,8 @@
 package gaj.analysis.classifier;
 
-import gaj.analysis.numeric.NumericDataFactory;
+import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.GoldData;
-import gaj.data.numeric.DataVector;
+import gaj.data.vector.DataVector;
 
 /**
  * Implements a log-likelihood scoring function:
@@ -32,7 +32,7 @@ public class LogProbScorer extends AverageScorer {
 
 	@Override
 	protected DataVector gradient(DataVector probs, int classIndex) {
-		return NumericDataFactory.newSparseVector(numClasses(), classIndex, 1. / probs.get(classIndex));
+		return VectorFactory.newVector(numClasses(), classIndex, 1. / probs.get(classIndex));
 	}
 
 }

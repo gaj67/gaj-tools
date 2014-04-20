@@ -5,4 +5,4 @@
  * @author User
  *
  */
-package gaj.analysis.numeric;
+package gaj.analysis.matrix;

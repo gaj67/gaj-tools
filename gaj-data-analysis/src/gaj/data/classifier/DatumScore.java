@@ -1,6 +1,6 @@
 package gaj.data.classifier;
 
-import gaj.data.numeric.DataVector;
+import gaj.data.vector.DataVector;
 
 /**
  * Specifies the classification accuracy score of a single data

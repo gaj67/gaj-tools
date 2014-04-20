@@ -5,7 +5,7 @@ import gaj.data.classifier.GoldData;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.GoldDatum;
 import gaj.data.classifier.DatumScore;
-import gaj.data.numeric.DataVector;
+import gaj.data.vector.DataVector;
 
 import java.util.Iterator;
 

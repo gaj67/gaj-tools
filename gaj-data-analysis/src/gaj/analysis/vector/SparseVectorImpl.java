@@ -1,0 +1,104 @@
+package gaj.analysis.vector;
+
+import gaj.data.vector.DataVector;
+import gaj.data.vector.SparseVector;
+import gaj.data.vector.WritableVector;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+/**
+ * Implements a data vector as an array of index/value pairs, with ascending indices.
+ */
+/*package-private*/ class SparseVectorImpl implements SparseVector {
+
+	private final int length;
+	/*package-private*/ final int[] indices;
+	/*package-private*/ final double[] values;
+
+	/*package-private*/ SparseVectorImpl(int length, int[] indices, double[] values) {
+		this.length = length;
+		this.indices = indices;
+		this.values = values;
+	}
+
+	/*package-private*/ SparseVectorImpl(int length) {
+		this.length = length;
+		this.indices = new int[0];
+		this.values = new double[0];
+	}
+
+	/*package-private*/ SparseVectorImpl(SparseVector vector) {
+		SparseVectorImpl sVec = (SparseVectorImpl) vector;
+		this.length = sVec.length;
+		this.indices = sVec.indices;
+		this.values = sVec.values;
+	}
+
+	@Override
+	public int length() {
+		return length;
+	}
+
+	@Override
+	public double get(int pos) {
+		if (pos < 0 && pos >= length)
+			throw new IndexOutOfBoundsException("Bad index: " + pos);
+		for (int i = 0; i < indices.length; i++) {
+			if (pos < indices[i]) return 0;
+			if (pos == indices[i]) return values[i];
+		}
+		return 0;
+	}
+
+	@Override
+	public Iterator<Double> iterator() {
+		return new DataIterator() {
+			/** Global position in the full vector. */
+			private int pos = 0;
+			/** Local position in the index table. */
+			private int index = 0;
+
+			@Override
+			public boolean hasNext() {
+				return (pos < length);
+			}
+
+			@Override
+			public Double next() {
+				if (pos >= length) throw new NoSuchElementException("End of iteration");
+				while (index < indices.length && pos > indices[index]) index++;
+				try {
+					if (index >= indices.length) return 0.0;
+					if (pos < indices[index]) return 0.0;
+					return values[index++];
+				} finally {
+					pos++;
+				}
+			}
+		};
+	}
+
+	@Override
+	public double dot(DataVector vector) {
+		double sum = 0;
+		for (int i = 0; i < indices.length; i++)
+			sum += values[i] * vector.get(indices[i]);
+		return sum;
+	}
+
+	@Override
+	public double norm() {
+		double sum = 0;
+		for (double value : values)
+			sum += value * value;
+		return Math.sqrt(sum);
+	}
+
+	@Override
+	public void addTo(WritableVector vector) {
+		for (int i = 0; i < values.length; i++)
+			vector.add(indices[i], values[i]);
+	}
+
+}
