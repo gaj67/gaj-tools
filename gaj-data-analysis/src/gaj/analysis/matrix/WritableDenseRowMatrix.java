@@ -8,7 +8,7 @@ import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 
-/*package-private*/ class WritableDenseRowMatrix extends IterativeMatrix<WritableVector> implements DenseMatrix, WritableMatrix, RowMatrix {
+/*package-private*/ class WritableDenseRowMatrix extends BaseMatrix<WritableVector> implements DenseMatrix, WritableMatrix, RowMatrix {
 
 	private final double[][] data;
 

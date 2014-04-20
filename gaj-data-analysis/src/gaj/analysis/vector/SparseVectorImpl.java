@@ -5,7 +5,6 @@ import gaj.data.vector.SparseVector;
 import gaj.data.vector.WritableVector;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * Implements a data vector as an array of index/value pairs, with ascending indices.
@@ -53,28 +52,16 @@ import java.util.NoSuchElementException;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new DataIterator() {
-			/** Global position in the full vector. */
-			private int pos = 0;
+		return new VectorIterative(length) {
 			/** Local position in the index table. */
 			private int index = 0;
 
 			@Override
-			public boolean hasNext() {
-				return (pos < length);
-			}
-
-			@Override
-			public Double next() {
-				if (pos >= length) throw new NoSuchElementException("End of iteration");
+			protected double get(int pos) {
 				while (index < indices.length && pos > indices[index]) index++;
-				try {
-					if (index >= indices.length) return 0.0;
-					if (pos < indices[index]) return 0.0;
-					return values[index++];
-				} finally {
-					pos++;
-				}
+				if (index >= indices.length) return 0.0;
+				if (pos < indices[index]) return 0.0;
+				return values[index++];
 			}
 		};
 	}

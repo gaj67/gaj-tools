@@ -5,7 +5,6 @@ import gaj.data.vector.DenseVector;
 import gaj.data.vector.WritableVector;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * Implements a data vector as a true array of numbers.
@@ -38,18 +37,10 @@ import java.util.NoSuchElementException;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new DataIterator() {
-			private int index = 0;
-
+		return new VectorIterative(values.length) {
 			@Override
-			public boolean hasNext() {
-				return index < values.length;
-			}
-
-			@Override
-			public Double next() {
-				if (hasNext()) return values[index++];
-				throw new NoSuchElementException("End of iteration");
+			protected double get(int pos) {
+				return values[pos];
 			}
 		};
 	}

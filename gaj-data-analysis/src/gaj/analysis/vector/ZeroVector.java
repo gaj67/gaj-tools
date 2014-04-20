@@ -29,7 +29,12 @@ import java.util.NoSuchElementException;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new ZeroIterator(length);
+		return new VectorIterative(length) {
+			@Override
+			protected double get(int pos) {
+				return 0;
+			}
+		};
 	}
 
 	@Override

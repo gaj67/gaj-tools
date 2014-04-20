@@ -1,15 +1,14 @@
 package gaj.analysis.matrix;
 
-import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.DenseMatrix;
 
-/*package-private*/ class ScaledDenseMatrix extends WritableDenseRowMatrix implements DataMatrix {
-
-	private final double multiplier;
+/**
+ * Specifies that the scaling of a dense matrix is still a dense matrix.
+ */
+/*package-private*/ class ScaledDenseMatrix extends ScaledMatrix implements DenseMatrix {
 
 	/*package-private*/ ScaledDenseMatrix(DenseMatrix matrix, double multiplier) {
-		super(matrix);
-		this.multiplier = multiplier;
+		super(matrix, multiplier);
 	}
 
 }

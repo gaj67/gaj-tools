@@ -5,7 +5,7 @@ import gaj.data.matrix.SparseMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
 
-/*package-private*/ class ZeroMatrix extends IterativeMatrix<DataVector> implements SparseMatrix {
+/*package-private*/ class ZeroMatrix extends BaseMatrix<DataVector> implements SparseMatrix {
 
 	private final DataVector zeroRow;
 	private final DataVector zeroColumn;

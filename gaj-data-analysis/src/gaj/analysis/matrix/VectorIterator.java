@@ -1,13 +1,15 @@
-package gaj.analysis.vector;
+package gaj.analysis.matrix;
+
+import gaj.data.vector.DataVector;
 
 import java.util.Iterator;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- * Iterates over data elements.
+ * Iterates over a sequence of data vectors.
  */
-public abstract class DataIterator implements Iterator<Double> {
+public abstract class VectorIterator<T extends DataVector> implements Iterator<T> {
 
 	@Override
 	public void remove() {

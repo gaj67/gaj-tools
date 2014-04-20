@@ -1,68 +1,96 @@
 package gaj.analysis.matrix;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
+import gaj.analysis.vector.DataIterator;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 
+/**
+ * Wraps the specified column of a row-based, dense matrix. 
+ */
 /*package-private*/ class WritableColumnVector implements WritableVector {
 
+	private final double[][] data;
+	private final int column;
+	private final int numRows;
+
 	/*package-private*/ WritableColumnVector(double[][] data, int column) {
-		// TODO Auto-generated constructor stub
+		this.data = data;
+		this.column = column;
+		this.numRows = data.length;
 	}
 
 	@Override
 	public int length() {
-		// TODO Auto-generated method stub
-		return 0;
+		return numRows;
 	}
 
 	@Override
 	public double norm() {
-		// TODO Auto-generated method stub
-		return 0;
+		double sum = 0;
+		for (int row = 0; row < numRows; row++) {
+			double value = data[row][column];
+			sum += value * value;
+		}
+		return Math.sqrt(sum);
 	}
 
 	@Override
-	public double get(int pos) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double get(int row) {
+		return data[row][column];
 	}
 
 	@Override
 	public Iterator<Double> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return new DataIterator() {
+			private int row = 0;
+			
+			@Override
+			public boolean hasNext() {
+				return (row < numRows);
+			}
+
+			@Override
+			public Double next() {
+				if (row >= numRows)
+					throw new NoSuchElementException("End of iteration");
+				return data[row++][column];
+			}
+		};
 	}
 
 	@Override
 	public double dot(DataVector vector) {
-		// TODO Auto-generated method stub
-		return 0;
+		double sum = 0;
+		int row = 0;
+		for (double value : vector)
+			sum += value * data[row++][column];
+		return sum;
 	}
 
 	@Override
 	public void addTo(WritableVector vector) {
-		// TODO Auto-generated method stub
-
+		for (int row = 0; row < numRows; row++)
+			vector.add(row, data[row][column]);
 	}
 
 	@Override
-	public void set(int pos, double value) {
-		// TODO Auto-generated method stub
-
+	public void set(int row, double value) {
+		data[row][column] = value;
 	}
 
 	@Override
-	public void add(int pos, double value) {
-		// TODO Auto-generated method stub
-
+	public void add(int row, double value) {
+		data[row][column] += value;
 	}
 
 	@Override
 	public void add(DataVector vector) {
-		// TODO Auto-generated method stub
-
+		int row = 0;
+		for (double value : vector)
+			data[row++][column] += value;
 	}
 
 }

@@ -1,14 +1,11 @@
 package gaj.analysis.vector;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import gaj.data.vector.CompoundVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.SparseVector;
 import gaj.data.vector.WritableVector;
+
+import java.util.Iterator;
 
 /**
  * Provides a view onto part of another vector.
@@ -49,24 +46,10 @@ import gaj.data.vector.WritableVector;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new Iterator<Double>() {
-			private int pos = start;
-			
+		return new VectorIterative(length) {
 			@Override
-			public boolean hasNext() {
-				return pos < end;
-			}
-
-			@Override
-			public Double next() {
-				if (pos >= end)
-					throw new NoSuchElementException("End of iteration");
-				return vector.get(pos++);
-			}
-
-			@Override
-			public void remove() {
-				throw new NotImplementedException();
+			protected double get(int pos) {
+				return vector.get(start + pos);
 			}
 		};
 	}
