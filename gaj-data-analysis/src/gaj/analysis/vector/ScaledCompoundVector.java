@@ -32,7 +32,7 @@ import java.util.Iterator;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new DataIterator() {
+		return new DataIterator<Double>() {
 			final Iterator<Double> iter = vector.iterator();
 
 			@Override

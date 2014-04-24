@@ -46,9 +46,9 @@ import java.util.Iterator;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new VectorIterative(length) {
+		return new VectorIterative<Double>(length) {
 			@Override
-			protected double get(int pos) {
+			protected Double get(int pos) {
 				return vector.get(start + pos);
 			}
 		};

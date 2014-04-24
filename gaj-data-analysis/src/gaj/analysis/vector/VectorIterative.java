@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 /**
  * Provides an iterator over vector elements.
  */
-public abstract class VectorIterative extends DataIterator {
+public abstract class VectorIterative<T> extends DataIterator<T> {
 
 	private final int length;
 	private int pos = 0;
@@ -25,19 +25,19 @@ public abstract class VectorIterative extends DataIterator {
 	}
 
 	@Override
-	public Double next() {
+	public T next() {
 		if (pos >= length)
 			throw new NoSuchElementException("End of iteration");
 		return get(pos++);
 	}
 
 	/**
-	 * Obtains the vector element at the specified postion.
+	 * Obtains the vector element at the specified position.
 	 * 
 	 * @param pos - The index position of the element 
 	 * (starting from 0).
 	 * @return The element value.
 	 */
-	protected abstract double get(int pos);
+	protected abstract T get(int pos);
 
 }

@@ -1,5 +1,7 @@
 package gaj.analysis.matrix;
 
+import java.util.Iterator;
+
 import gaj.data.matrix.SparseMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
@@ -66,6 +68,18 @@ import gaj.data.vector.DataVector;
 	public void addTo(WritableMatrix matrix) {
 		for (int i = 0; i < size; i++)
 			matrix.add(rows[i], columns[i], values[i]);
+	}
+
+	@Override
+	public Iterator<? extends DataVector> getRows() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterator<? extends DataVector> getColumns() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

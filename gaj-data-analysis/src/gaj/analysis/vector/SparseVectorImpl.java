@@ -52,12 +52,12 @@ import java.util.Iterator;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new VectorIterative(length) {
+		return new VectorIterative<Double>(length) {
 			/** Local position in the index table. */
 			private int index = 0;
 
 			@Override
-			protected double get(int pos) {
+			protected Double get(int pos) {
 				while (index < indices.length && pos > indices[index]) index++;
 				if (index >= indices.length) return 0.0;
 				if (pos < indices[index]) return 0.0;

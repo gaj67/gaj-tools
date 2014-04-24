@@ -1,6 +1,7 @@
 package gaj.analysis.matrix;
 
 import gaj.analysis.vector.VectorFactory;
+import gaj.data.matrix.CompoundMatrix;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.DenseMatrix;
 import gaj.data.matrix.RowMatrix;
@@ -67,7 +68,9 @@ public class MatrixFactory {
 			return new ScaledSparseMatrix((SparseMatrix) matrix, multiplier);
 		if (matrix instanceof DenseMatrix)
 			return new ScaledDenseMatrix((DenseMatrix) matrix, multiplier);
-		return new ScaledCompoundMatrix(matrix, multiplier);
+		if (matrix instanceof CompoundMatrix)
+			return new ScaledCompoundMatrix((CompoundMatrix) matrix, multiplier);
+		return new ScaledMatrix(matrix, multiplier);
 	}
 
 	/**

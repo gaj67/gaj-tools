@@ -1,11 +1,10 @@
 package gaj.analysis.matrix;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
-import gaj.analysis.vector.DataIterator;
+import gaj.analysis.vector.VectorIterative;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
+
+import java.util.Iterator;
 
 /**
  * Wraps the specified column of a row-based, dense matrix. 
@@ -44,19 +43,10 @@ import gaj.data.vector.WritableVector;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new DataIterator() {
-			private int row = 0;
-			
+		return new VectorIterative<Double>(numRows) {
 			@Override
-			public boolean hasNext() {
-				return (row < numRows);
-			}
-
-			@Override
-			public Double next() {
-				if (row >= numRows)
-					throw new NoSuchElementException("End of iteration");
-				return data[row++][column];
+			protected Double get(int row) {
+				return data[row][column];
 			}
 		};
 	}

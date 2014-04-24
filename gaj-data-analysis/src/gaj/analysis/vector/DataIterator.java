@@ -7,7 +7,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  * Iterates over data elements.
  */
-public abstract class DataIterator implements Iterator<Double> {
+public abstract class DataIterator<T> implements Iterator<T> {
 
 	@Override
 	public void remove() {

@@ -23,7 +23,7 @@ import java.util.Iterator;
 	@Override
 	public Iterator<Double> iterator() {
 		final Iterator<Double> iter = super.iterator();
-		return new DataIterator() {
+		return new DataIterator<Double>() {
 			@Override
 			public boolean hasNext() {
 				return iter.hasNext();

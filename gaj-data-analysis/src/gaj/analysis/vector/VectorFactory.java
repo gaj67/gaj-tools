@@ -3,6 +3,7 @@ package gaj.analysis.vector;
 import gaj.data.vector.CompoundVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.DenseVector;
+import gaj.data.vector.IndexVector;
 import gaj.data.vector.SparseVector;
 import gaj.data.vector.WritableVector;
 
@@ -34,6 +35,17 @@ public abstract class VectorFactory {
 	 */
 	public static DataVector newVector(double... data) {
 		return new WritableDenseVector(data);
+	}
+
+	/**
+	 * Wraps the given integer data into a vector.
+	 * <p/>Warning: The data must not be modified!
+	 * 
+	 * @param data - The array of data.
+	 * @return The data vector.
+	 */
+	public static IndexVector newVector(int... data) {
+		return new DenseIndexVector(data);
 	}
 
 	/**

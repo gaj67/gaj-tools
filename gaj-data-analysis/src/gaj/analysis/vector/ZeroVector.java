@@ -5,7 +5,6 @@ import gaj.data.vector.SparseVector;
 import gaj.data.vector.WritableVector;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /*package-private*/ class ZeroVector implements SparseVector {
 
@@ -29,10 +28,10 @@ import java.util.NoSuchElementException;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new VectorIterative(length) {
+		return new VectorIterative<Double>(length) {
 			@Override
-			protected double get(int pos) {
-				return 0;
+			protected Double get(int pos) {
+				return 0.;
 			}
 		};
 	}

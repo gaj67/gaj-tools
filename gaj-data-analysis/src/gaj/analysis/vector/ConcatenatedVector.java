@@ -42,7 +42,7 @@ import java.util.NoSuchElementException;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new DataIterator() {
+		return new DataIterator<Double>() {
 			int i = 0;
 			Iterator<Double> iter = null;
 
