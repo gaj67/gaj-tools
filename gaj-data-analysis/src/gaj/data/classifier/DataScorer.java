@@ -7,13 +7,6 @@ package gaj.data.classifier;
 public interface DataScorer {
 
 	/**
-	 * Obtains the gold-standard data set used for scoring.
-	 * 
-	 * @return The gold standard.
-	 */
-	GoldData getGoldData();
-
-	/**
 	 * Indicates the total number C of classes in the classification scheme.
 	 * 
 	 * @return The number of classes.
@@ -46,7 +39,7 @@ public interface DataScorer {
 	 * @param classifier - A trained classifier.
 	 * @return A sequence of individual scores.
 	 */
-	Iterable<? extends DatumScore> scores(Classifier classifier);
+	Iterable<? extends DatumScore> getScores(Classifier classifier);
 
 	/**
 	 * Computes the overall, weighted average score of the given 
@@ -57,6 +50,6 @@ public interface DataScorer {
 	 * @param classifier - A trained classifier.
 	 * @return The weighted average score.
 	 */
-	double score(Classifier classifier);
+	double getScore(Classifier classifier);
 
 }

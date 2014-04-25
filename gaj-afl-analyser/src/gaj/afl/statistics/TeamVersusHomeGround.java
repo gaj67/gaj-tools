@@ -1,6 +1,6 @@
 package gaj.afl.statistics;
 
-import gaj.afl.data.DataFactory;
+import gaj.afl.data.MatchDataFactory;
 import gaj.afl.data.match.Location;
 import gaj.afl.data.match.Match;
 import gaj.afl.data.match.Round;
@@ -136,7 +136,7 @@ import java.util.Set;
 	}
 
 	private static Collection<Match> getData() {
-		return DataFactory.newManager().getMatches();
+		return MatchDataFactory.newManager().getMatches();
 	}
 	
 	private static Map<Team, Map<Location, Integer>> getTeamLocationCounts(Collection<Match> matches) {

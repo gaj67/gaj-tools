@@ -2,31 +2,22 @@ package gaj.analysis.vector;
 
 import gaj.data.vector.CompoundVector;
 import gaj.data.vector.DataVector;
-import gaj.data.vector.SparseVector;
 import gaj.data.vector.WritableVector;
-
-import java.util.Iterator;
 
 /**
  * Provides a view onto part of another vector.
  */
-/*package-private*/ class SubVector implements CompoundVector {
+/*package-private*/ class SubVector extends AbstractVector implements CompoundVector {
 
 	private final DataVector vector;
 	protected final int start;
-	private final int length;
 	private final int end;
 
 	/*package-private*/ public SubVector(DataVector vector, int start, int length) {
+		super(length);
 		this.vector = vector;
 		this.start = start;
-		this.length = length;
 		this.end = start + length;
-	}
-
-	@Override
-	public int length() {
-		return length;
 	}
 
 	@Override
@@ -45,19 +36,7 @@ import java.util.Iterator;
 	}
 
 	@Override
-	public Iterator<Double> iterator() {
-		return new VectorIterative<Double>(length) {
-			@Override
-			protected Double get(int pos) {
-				return vector.get(start + pos);
-			}
-		};
-	}
-
-	@Override
 	public double dot(DataVector vector) {
-		if (vector instanceof SparseVector)
-			return vector.dot(this);
 		double sum = 0;
 		int pos = start;
 		for (double value : vector)

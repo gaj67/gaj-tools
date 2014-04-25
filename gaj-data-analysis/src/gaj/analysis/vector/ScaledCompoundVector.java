@@ -10,19 +10,15 @@ import java.util.Iterator;
  * Implements the (deferred) scaling of a data vector by a multiplicative factor.
  * Suited to scaling a compound vector.
  */
-/*package-private*/ class ScaledCompoundVector implements CompoundVector {
+/*package-private*/ class ScaledCompoundVector extends AbstractVector implements CompoundVector {
 
 	private final DataVector vector;
 	private final double multiplier;
 
 	/*package-private*/ ScaledCompoundVector(DataVector vector, double multiplier) {
+		super(vector.length());
 		this.vector = vector;
 		this.multiplier = multiplier;
-	}
-
-	@Override
-	public int length() {
-		return vector.length();
 	}
 
 	@Override

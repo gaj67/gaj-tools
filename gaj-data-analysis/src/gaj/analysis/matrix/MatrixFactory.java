@@ -1,5 +1,6 @@
 package gaj.analysis.matrix;
 
+import gaj.analysis.vector.AbstractVector;
 import gaj.analysis.vector.VectorFactory;
 import gaj.data.matrix.CompoundMatrix;
 import gaj.data.matrix.DataMatrix;
@@ -79,10 +80,11 @@ public class MatrixFactory {
 	 * @param matrices - An array of matrices.
 	 * @return The summed matrix.
 	 */
+	@SuppressWarnings("unchecked")
 	public static WritableMatrix add(DataMatrix... matrices) {
 		WritableMatrix summedMatrix = newWritableMatrix(matrices[0].numRows(), matrices[0].numColumns());
 		for (DataMatrix matrix : matrices)
-			matrix.addTo(summedMatrix);
+			((AbstractMatrix<DataVector>) matrix).addTo(summedMatrix);
 		return summedMatrix;
 	}
 
@@ -127,7 +129,8 @@ public class MatrixFactory {
 		for (int row = 0; row < numRows; row++) {
 			double value = vector.get(row);
 			if (value == 0) continue;
-			VectorFactory.scale(matrix.getRow(row), value).addTo(result);
+			DataVector scaledVec = VectorFactory.scale(matrix.getRow(row), value);
+			((AbstractVector) scaledVec).addTo(result);
 		}
 		return result;
 	}

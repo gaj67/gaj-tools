@@ -26,7 +26,7 @@ public interface GoldDatum {
 	 * Specifies the index of the true class
 	 * of the corresponding feature vector. 
 	 * 
-	 * @return
+	 * @return The index of the true class.
 	 */
 	int getClassIndex();
 

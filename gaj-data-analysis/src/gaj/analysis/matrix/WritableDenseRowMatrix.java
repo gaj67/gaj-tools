@@ -1,5 +1,6 @@
 package gaj.analysis.matrix;
 
+import gaj.analysis.vector.AbstractVector;
 import gaj.analysis.vector.VectorFactory;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.DenseMatrix;
@@ -8,7 +9,7 @@ import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 
-/*package-private*/ class WritableDenseRowMatrix extends BaseMatrix<WritableVector> implements DenseMatrix, WritableMatrix, RowMatrix {
+/*package-private*/ class WritableDenseRowMatrix extends AbstractMatrix<WritableVector> implements DenseMatrix, WritableMatrix, RowMatrix {
 
 	private final double[][] data;
 
@@ -62,7 +63,7 @@ import gaj.data.vector.WritableVector;
 
 	@Override
 	public void addRow(int row, DataVector vector) {
-		vector.addTo(getRow(row));
+		((AbstractVector) vector).addTo(getRow(row));
 	}
 
 	@Override
@@ -75,13 +76,34 @@ import gaj.data.vector.WritableVector;
 	@Override
 	public void add(DataMatrix matrix) {
 		for (int row = 0; row < numRows; row++)
-			matrix.getRow(row).addTo(getRow(row));
+			addRow(row, matrix.getRow(row));
 	}
 
 	@Override
-	public void addTo(WritableMatrix matrix) {
+	protected void addTo(WritableMatrix matrix) {
 		for (int row = 0; row < numRows; row++)
 			matrix.addRow(row, getRow(row));
+	}
+
+	@Override
+	public void set(DataMatrix matrix) {
+		for (int row = 0; row < numRows; row++)
+			setRow(row, matrix.getRow(row));
+	}
+
+	@Override
+	public void setRow(int row, DataVector vector) {
+		final double[] theRow = data[row];
+		int column = 0;
+		for (double value : vector)
+			theRow[column++] = value;
+	}
+
+	@Override
+	public void setColumn(int column, DataVector vector) {
+		int row = 0;
+		for (double value : vector)
+			data[row++][column] = value;
 	}
 
 }

@@ -7,8 +7,8 @@ import java.util.NoSuchElementException;
  */
 public abstract class VectorIterative<T> extends DataIterator<T> {
 
-	private final int length;
-	private int pos = 0;
+	protected final int length;
+	protected int pos = 0;
 
 	/**
 	 * Specifies the length of the vector.
@@ -26,7 +26,7 @@ public abstract class VectorIterative<T> extends DataIterator<T> {
 
 	@Override
 	public T next() {
-		if (pos >= length)
+		if (!hasNext())
 			throw new NoSuchElementException("End of iteration");
 		return get(pos++);
 	}

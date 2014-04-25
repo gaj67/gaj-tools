@@ -1,10 +1,10 @@
 package gaj.data.classifier;
 
 
+
 /**
- * Specifies a probabilistic classifier
- * that can iteratively have its parameters updated
- * by measuring its accuracy against known classifications.
+ * Specifies a trainer for a probabilistic classifier
+ * that can iteratively have its parameters updated.
  */
 public interface TrainableClassifier extends Classifier {
 

@@ -4,19 +4,10 @@ import gaj.data.vector.DataVector;
 import gaj.data.vector.SparseVector;
 import gaj.data.vector.WritableVector;
 
-import java.util.Iterator;
-
-/*package-private*/ class ZeroVector implements SparseVector {
-
-	private final int length;
+/*package-private*/ class ZeroVector extends AbstractVector implements SparseVector {
 
 	/*package-private*/ ZeroVector(int length) {
-		this.length = length;
-	}
-
-	@Override
-	public int length() {
-		return length;
+		super(length);
 	}
 
 	@Override
@@ -24,16 +15,6 @@ import java.util.Iterator;
 		if (pos < 0 && pos >= length)
 			throw new IndexOutOfBoundsException("Bad index: " + pos);
 		return 0;
-	}
-
-	@Override
-	public Iterator<Double> iterator() {
-		return new VectorIterative<Double>(length) {
-			@Override
-			protected Double get(int pos) {
-				return 0.;
-			}
-		};
 	}
 
 	@Override

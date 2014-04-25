@@ -5,26 +5,23 @@ import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * Implements the (deferred) concatenation of multiple data vectors together into a single, compound vector.
  */
-/*package-private*/ class ConcatenatedVector implements CompoundVector {
+/*package-private*/ class ConcatenatedVector extends AbstractVector implements CompoundVector {
 
-	private final DataVector[] vectors;
-	private final int length;
+	private final AbstractVector[] vectors;
 
 	/*package-private*/ ConcatenatedVector(DataVector[] vectors) {
-		this.vectors = vectors;
-		int _length = 0;
-		for (DataVector vector : vectors)
-			_length += vector.length();
-		this.length = _length;
+		super(computeLength(vectors));
+		this.vectors = (AbstractVector[]) vectors;
 	}
 
-	@Override
-	public int length() {
+	private static int computeLength(DataVector[] vectors) {
+		int length = 0;
+		for (DataVector vector : vectors)
+			length += vector.length();
 		return length;
 	}
 
@@ -42,9 +39,9 @@ import java.util.NoSuchElementException;
 
 	@Override
 	public Iterator<Double> iterator() {
-		return new DataIterator<Double>() {
-			int i = 0;
-			Iterator<Double> iter = null;
+		return new VectorIterative<Double>(length) {
+			private Iterator<Double> iter = null;
+			private int i = 0;
 
 			@Override
 			public boolean hasNext() {
@@ -56,8 +53,7 @@ import java.util.NoSuchElementException;
 			}
 
 			@Override
-			public Double next() {
-				if (!hasNext()) throw new NoSuchElementException("End of iteration"); 
+			protected Double get(int pos) {
 				return iter.next();
 			}
 		};
@@ -88,7 +84,7 @@ import java.util.NoSuchElementException;
 	@Override
 	public void addTo(WritableVector vector) {
 		int pos = 0;
-		for (DataVector vector1 : vectors) {
+		for (AbstractVector vector1 : vectors) {
 			WritableVector vector2 = new WritableSubVector(vector, pos, vector1.length());
 			vector1.addTo(vector2);
 			pos += vector1.length();

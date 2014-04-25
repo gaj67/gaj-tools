@@ -1,5 +1,6 @@
 package gaj.analysis.classifier;
 
+import gaj.analysis.vector.DataIterator;
 import gaj.data.classifier.Classifier;
 import gaj.data.classifier.GoldData;
 import gaj.data.classifier.DataScorer;
@@ -22,9 +23,18 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * is computed. If this is required, override {@link #hasGradient}()
  * and {@link #gradient}().
  */
-public abstract class AverageScorer implements DataScorer {
+public abstract class GoldDataScorer implements DataScorer {
 
 	private final GoldData data;
+
+	/**
+	 * Binds the given data to the scorer.
+	 * 
+	 * @param data - The gold standard data set.
+	 */
+	protected GoldDataScorer(GoldData data) {
+		this.data = data;
+	}
 
 	/**
 	 * Computes the unweighted accuracy score of the given classification of feature vector x.
@@ -33,29 +43,23 @@ public abstract class AverageScorer implements DataScorer {
 	 * @param classIndex - The index of the true class for x.
 	 * @return The unweighted score.
 	 */
-	protected abstract double score(DataVector probs, int classIndex);
+	protected abstract double getScore(DataVector probs, int classIndex);
 
 	@Override
 	public boolean hasGradient() {
 		return false;
 	}
 
-	protected DataVector gradient(DataVector probs, int classIndex) {
-		throw new NotImplementedException();
-	}
-
 	/**
-	 * Binds the given data to the scorer.
+	 * Computes the unweighted gradient of the classification score with respect to
+	 * the posterior classification probabilities.
 	 * 
-	 * @param data - The gold standard data set.
+	 * @param probs - The vector of posterior class probabilities, P(c|x).
+	 * @param classIndex - The index of the true class for x.
+	 * @return The unweighted score gradient.
 	 */
-	protected AverageScorer(GoldData data) {
-		this.data = data;
-	}
-
-	@Override
-	public GoldData getGoldData() {
-		return data;
+	protected DataVector getGradient(DataVector probs, int classIndex) {
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -69,14 +73,14 @@ public abstract class AverageScorer implements DataScorer {
 	}
 
 	@Override
-	public Iterable<? extends DatumScore> scores(final Classifier classifier) {
+	public Iterable<? extends DatumScore> getScores(final Classifier classifier) {
 		return new Iterable<DatumScore>() {
 			private double sumWeights = 0;
 			private double sumScores = 0;
 
 			@Override
 			public Iterator<DatumScore> iterator() {
-				return new Iterator<DatumScore>() {
+				return new DataIterator<DatumScore>() {
 					private final Iterator<GoldDatum> iter = data.iterator();
 
 					@Override
@@ -90,7 +94,7 @@ public abstract class AverageScorer implements DataScorer {
 						final double weight = datum.getWeight(); 
 						sumWeights += weight;
 						final DataVector probs = classifier.classify(datum.getFeatures());
-						final double score = weight * score(probs, datum.getClassIndex());
+						final double score = weight * getScore(probs, datum.getClassIndex());
 						sumScores += score;
 						final double averageScore = 
 								(sumWeights <= 0) ? Double.NEGATIVE_INFINITY 
@@ -115,13 +119,13 @@ public abstract class AverageScorer implements DataScorer {
 
 							@Override
 							public boolean hasGradient() {
-								return AverageScorer.this.hasGradient();
+								return GoldDataScorer.this.hasGradient();
 							}
 
 							@Override
 							public DataVector getGradient() {
 								if (gradient == null)
-									gradient = gradient(probs, datum.getClassIndex());
+									gradient = GoldDataScorer.this.getGradient(probs, datum.getClassIndex());
 								return gradient;
 							}
 
@@ -141,25 +145,20 @@ public abstract class AverageScorer implements DataScorer {
 							}
 						};
 					}
-
-					@Override
-					public void remove() {
-						throw new NotImplementedException();
-					}
 				};
 			}
 		};
 	}
 
 	@Override
-	public double score(Classifier classifier) {
+	public double getScore(Classifier classifier) {
 		double sumWeights = 0;
 		double sumScores = 0;
 		for (GoldDatum datum : data) {
 			final double weight = datum.getWeight(); 
 			sumWeights += weight;
 			DataVector probs = classifier.classify(datum.getFeatures());
-			final double unweightedScore = score(probs, datum.getClassIndex());
+			final double unweightedScore = getScore(probs, datum.getClassIndex());
 			sumScores += weight * unweightedScore;
 		}
 		return (sumWeights <= 0) ? Double.NEGATIVE_INFINITY : (sumScores / sumWeights); 

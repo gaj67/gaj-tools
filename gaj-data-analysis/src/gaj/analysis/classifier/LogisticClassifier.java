@@ -5,13 +5,16 @@ import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.DatumScore;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
-import gaj.data.numeric.DataObject;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 
-public class LogisticClassifier extends GradientAscentTrainer {
+public class LogisticClassifier extends BaseClassifier<DataMatrix> {
 
 	private final int Cm1;
+	/*
+	 * Model parameters, V = [V_c], such that
+	 *    P(c|x) = e^{V_c.x} / sum{c'} e^{V_c'.x}.
+	 */
 	private final WritableMatrix params;
 
 	public LogisticClassifier(int numClasses, int numFeatures) {
@@ -38,23 +41,41 @@ public class LogisticClassifier extends GradientAscentTrainer {
 	}
 
 	@Override
-	protected boolean updateParams(DataObject deltaParams) {
-		((DataMatrix) deltaParams).addTo(params);
+	public DataMatrix getParameters() {
+		return params;
+	}
+
+	@Override
+	public boolean setParameters(DataMatrix params) {
+		this.params.set(params);
 		return true;
 	}
 
 	@Override
-	protected DataObject getGradient(DatumScore datumScore) {
+	public boolean hasGradient() {
+		return true;
+	}
+
+	/* 
+	 * Computes ds/dV = [ ds/dV_c' ],
+	 * where 
+	 * 	  ds/dV_c' = [ dP(c|x)/dV_c' ] * [ ds/dP(c|x) ]
+	 *             = dyad{[w{c,c'}], x}  * [ds/dP(c|x)]
+	 *             = ( [w{c,c'}] . [ds/dP(c|x)] ) x
+	 * and
+	 *    w{c,c'} = delta{c,c'}P(c'|x) - P(c|x)P(c'|x). 
+	 */
+	@Override
+	public DataMatrix getGradient(DatumScore datumScore) {
 		WritableMatrix gradient = MatrixFactory.newWritableMatrix(Cm1, numFeatures);
 		DataVector probs = datumScore.getPosteriors();
-		// classRow = row of param. matrix corresp. to class.
-		for (int classRow = 0; classRow < Cm1; classRow++) {
-			WritableVector classWeights = VectorFactory.newWritableVector(numClasses);
-			classWeights.add(VectorFactory.scale(probs, -probs.get(classRow)));
-			classWeights.add(classRow, probs.get(classRow));
-			double classWeight = VectorFactory.dot(classWeights, datumScore.getGradient());
+		for (int cPrime = 0; cPrime < Cm1; cPrime++) {
+			WritableVector w = VectorFactory.newWritableVector(numClasses);
+			w.set(VectorFactory.scale(probs, -probs.get(cPrime)));
+			w.add(cPrime, probs.get(cPrime));
+			double classWeight = VectorFactory.dot(w, datumScore.getGradient());
 			DataVector featureWeights = VectorFactory.scale(datumScore.getFeatures(), classWeight);
-			gradient.addRow(classRow, featureWeights);
+			gradient.setRow(cPrime, featureWeights);
 		}
 		return gradient;
 	}

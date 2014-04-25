@@ -155,8 +155,12 @@ public abstract class VectorFactory {
 	public static WritableVector add(DataVector... vectors) {
 		final int length = vectors[0].length();
 		WritableVector summedVector = newWritableVector(length);
-		for (DataVector vector : vectors)
-			vector.addTo(summedVector);
+		for (DataVector vector : vectors) {
+			//if (vector instanceof AbstractVector)
+				((AbstractVector) vector).addTo(summedVector);
+			//else
+			//	summedVector.add(vector);
+		}
 		return summedVector;
 	}
 

@@ -9,34 +9,28 @@ import java.util.Iterator;
 /**
  * Implements a data vector as an array of index/value pairs, with ascending indices.
  */
-/*package-private*/ class SparseVectorImpl implements SparseVector {
+/*package-private*/ class SparseVectorImpl extends AbstractVector implements SparseVector {
 
-	private final int length;
 	/*package-private*/ final int[] indices;
 	/*package-private*/ final double[] values;
 
 	/*package-private*/ SparseVectorImpl(int length, int[] indices, double[] values) {
-		this.length = length;
+		super(length);
 		this.indices = indices;
 		this.values = values;
 	}
 
 	/*package-private*/ SparseVectorImpl(int length) {
-		this.length = length;
+		super(length);
 		this.indices = new int[0];
 		this.values = new double[0];
 	}
 
 	/*package-private*/ SparseVectorImpl(SparseVector vector) {
+		super(vector.length());
 		SparseVectorImpl sVec = (SparseVectorImpl) vector;
-		this.length = sVec.length;
 		this.indices = sVec.indices;
 		this.values = sVec.values;
-	}
-
-	@Override
-	public int length() {
-		return length;
 	}
 
 	@Override

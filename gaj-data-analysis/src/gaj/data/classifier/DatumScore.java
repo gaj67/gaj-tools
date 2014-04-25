@@ -31,13 +31,6 @@ public interface DatumScore extends GoldDatum {
 	double getScore();
 
 	/**
-	 * Obtains the weight of the data point.
-	 * 
-	 * @return The score weighting.
-	 */
-	double getWeight();
-
-	/**
 	 * Indicates whether or not score gradient
 	 * information is available.
 	 * 
@@ -55,6 +48,6 @@ public interface DatumScore extends GoldDatum {
 	 * @throws RuntimeException If gradient information is 
 	 * not computed.
 	 */
-	DataVector getGradient() throws RuntimeException;
+	DataVector getGradient();
 
 }

@@ -8,7 +8,7 @@ import gaj.data.vector.DataVector;
 /**
  * Implements the scaling of an arbitrary data matrix.
  */
-/*package-private*/ class ScaledMatrix extends BaseMatrix<DataVector> implements DataMatrix {
+/*package-private*/ class ScaledMatrix extends AbstractMatrix<DataVector> implements DataMatrix {
 
 	private final DataMatrix matrix;
 	private final double multiplier;

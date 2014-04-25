@@ -23,6 +23,13 @@ public class WritableSubVector extends SubVector implements WritableVector {
 	}
 
 	@Override
+	public void set(DataVector vector) {
+		int pos = start;
+		for (double value : vector)
+			this.vector.set(pos++, value);
+	}
+
+	@Override
 	public void add(DataVector vector) {
 		int pos = start;
 		for (double value : vector)

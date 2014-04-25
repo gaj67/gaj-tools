@@ -31,7 +31,7 @@ public class NumericFactory {
 	 * @param multiplier - The scaling factor.
 	 * @return The scaled data object.
 	 */
-	public static DataObject scale(DataObject data, double multiplier, boolean duplicate) {
+	public static DataObject scale(DataObject data, double multiplier) {
 		if (data instanceof DataVector)
 			return VectorFactory.scale((DataVector) data, multiplier);
 		if (data instanceof DataMatrix)

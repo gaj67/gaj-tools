@@ -14,14 +14,14 @@ import gaj.data.vector.DataVector;
  * where <tt>delta(c,c_d)=1</tt> if and only if
  * <tt>c_d=c</tt> (otherwise it is 0).
  */
-public class LogProbScorer extends AverageScorer {
+public class LogProbScorer extends GoldDataScorer {
 
 	protected LogProbScorer(GoldData goldStandard) {
 		super(goldStandard);
 	}
 
 	@Override
-	protected double score(DataVector probs, int classIndex) {
+	protected double getScore(DataVector probs, int classIndex) {
 		return Math.log(probs.get(classIndex));
 	}
 
@@ -31,7 +31,7 @@ public class LogProbScorer extends AverageScorer {
 	}
 
 	@Override
-	protected DataVector gradient(DataVector probs, int classIndex) {
+	protected DataVector getGradient(DataVector probs, int classIndex) {
 		return VectorFactory.newVector(numClasses(), classIndex, 1. / probs.get(classIndex));
 	}
 

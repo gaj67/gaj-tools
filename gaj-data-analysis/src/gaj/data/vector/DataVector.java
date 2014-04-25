@@ -55,13 +55,4 @@ public interface DataVector extends DataObject, Iterable<Double> {
 	 */
 	double dot(DataVector vector);
 
-	/**
-	 * Adds the current vector to the given vector.
-	 * <p/>Note: This is not guaranteed to give the most
-	 * efficient result - use a factory method.
-	 * 
-	 * @param vector - A mutable vector.
-	 */
-	void addTo(WritableVector vector);
-
 }

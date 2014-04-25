@@ -1,5 +1,7 @@
 package gaj.analysis.matrix;
 
+import gaj.data.matrix.DataMatrix;
+import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
 
 import java.util.Iterator;
@@ -8,12 +10,12 @@ import java.util.Iterator;
  * Implements a simple interface for iterating over
  * rows or columns of a matrix.
  */
-/*package-private*/ abstract class BaseMatrix<T extends DataVector> {
+public abstract class AbstractMatrix<T extends DataVector> implements DataMatrix {
 
 	protected final int numRows;
 	protected final int numColumns;
 
-	protected BaseMatrix(int numRows, int numColumns) {
+	protected AbstractMatrix(int numRows, int numColumns) {
 		this.numRows = numRows;
 		this.numColumns = numColumns;
 	}
@@ -47,5 +49,14 @@ import java.util.Iterator;
 	}
 
 	public abstract T getColumn(int column);
+
+	/**
+	 * Adds the current matrix values to the given matrix.
+	 * 
+	 * @param matrix - A modifiable matrix.
+	 */
+	protected void addTo(WritableMatrix matrix) {
+		matrix.add(this);
+	}
 
 }

@@ -1,5 +1,5 @@
 package gaj.afl.statistics;
-import gaj.afl.data.DataFactory;
+import gaj.afl.data.MatchDataFactory;
 import gaj.afl.data.match.Match;
 import gaj.afl.data.match.Team;
 
@@ -20,7 +20,7 @@ public class HomeTeamAdvantage {
 		int[] awayDraws = new int[NUM_TEAMS];
 		int[] awayLosses = new int[NUM_TEAMS];
 		// Collect statistics...
-		Collection<Match> records = DataFactory.newManager().getMatches();
+		Collection<Match> records = MatchDataFactory.newManager().getMatches();
 		for (Match match : records) {
 			int homeIdx = match.getFixture().getHomeTeam().ordinal();
 			int awayIdx = match.getFixture().getAwayTeam().ordinal();

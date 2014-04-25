@@ -6,33 +6,6 @@ package gaj.data.vector;
  * immutable data vectors. In particular, beware
  * of changing data after the vector has been cached.
  */
-public interface WritableVector extends DataVector {
-
-	/**
-	 * Sets the value of a vector element.
-	 * 
-	 * @param pos - The index position of the element 
-	 * (counting from 0).
-	 * @param value - The new element value.
-	 */
-	void set(int pos, double value);
-
-	/**
-	 * Adds the given value to the value of a vector element.
-	 * 
-	 * @param pos - The index position of the element 
-	 * (counting from 0).
-	 * @param value - The increment in the element value.
-	 */
-	void add(int pos, double value);
-
-	/**
-	 * Adds the given vector to the current vector.
-	 * <p/>Note: This is not guaranteed to give the most
-	 * efficient result - use the factory method.
-	 * 
-	 * @param vector - A data vector.
-	 */
-	void add(DataVector vector);
+public interface WritableVector extends SettableVector, AddableVector {
 
 }

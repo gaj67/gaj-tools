@@ -67,11 +67,4 @@ public interface DataMatrix extends DataObject {
 	 */
 	double norm();
 
-	/**
-	 * Adds the current matrix values to the given matrix.
-	 * 
-	 * @param matrix - A modifiable matrix.
-	 */
-	void addTo(WritableMatrix matrix);
-
 }
