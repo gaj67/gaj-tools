@@ -5,10 +5,11 @@ import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.DatumScore;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
+import gaj.data.numeric.DataObject;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 
-public class LogisticClassifier extends BaseClassifier<DataMatrix> {
+public class LogisticClassifier extends BaseClassifier {
 
 	private final int Cm1;
 	/*
@@ -46,8 +47,8 @@ public class LogisticClassifier extends BaseClassifier<DataMatrix> {
 	}
 
 	@Override
-	public boolean setParameters(DataMatrix params) {
-		this.params.set(params);
+	public boolean setParameters(DataObject params) {
+		this.params.set((DataMatrix) params);
 		return true;
 	}
 

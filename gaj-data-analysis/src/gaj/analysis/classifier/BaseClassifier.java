@@ -9,7 +9,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * Offers a base class for an updatable classifier.
  * By default, no gradient is computed.
  */
-public abstract class BaseClassifier<T extends DataObject> implements UpdatableClassifier<T> {
+public abstract class BaseClassifier implements UpdatableClassifier {
 
 	/** Total number C of classes. */
 	protected final int numClasses;
@@ -37,7 +37,7 @@ public abstract class BaseClassifier<T extends DataObject> implements UpdatableC
 	}
 	
 	@Override
-	public T getGradient(DatumScore datumScore) {
+	public DataObject getGradient(DatumScore datumScore) {
 		throw new NotImplementedException();
 	}
 }

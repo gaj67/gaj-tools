@@ -6,7 +6,7 @@ import gaj.data.numeric.DataObject;
  * Specifies a classifier that may have its parameters
  * updated.
  */
-public interface UpdatableClassifier<T extends DataObject> extends Classifier {
+public interface UpdatableClassifier extends Classifier {
 
 	/**
 	 * Obtains a representation of the current
@@ -14,7 +14,7 @@ public interface UpdatableClassifier<T extends DataObject> extends Classifier {
 	 * 
 	 * @return The parameter values.
 	 */
-	T getParameters();
+	DataObject getParameters();
 	
 	/**
 	 * Updates the classifier parameters.
@@ -24,7 +24,7 @@ public interface UpdatableClassifier<T extends DataObject> extends Classifier {
 	 * classifier parameters actually
 	 * have (or have not) been updated.
 	 */
-	boolean setParameters(T params);
+	boolean setParameters(DataObject params);
 
 	/**
 	 * Indicates whether or not it is safe to call the
@@ -45,6 +45,6 @@ public interface UpdatableClassifier<T extends DataObject> extends Classifier {
 	 * @throws RuntimeException If the gradient
 	 * cannot be computed.
 	 */
-	T getGradient(DatumScore datumScore);
+	DataObject getGradient(DatumScore datumScore);
 
 }
