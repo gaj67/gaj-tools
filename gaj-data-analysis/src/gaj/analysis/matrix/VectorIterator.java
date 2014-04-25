@@ -9,7 +9,12 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  * Iterates over a sequence of data vectors.
  */
-public abstract class VectorIterator<T extends DataVector> implements Iterator<T> {
+public abstract class VectorIterator<T extends DataVector> implements Iterator<T>, Iterable<T> {
+
+	@Override
+	public Iterator<T> iterator() {
+		return this;
+	}
 
 	@Override
 	public void remove() {

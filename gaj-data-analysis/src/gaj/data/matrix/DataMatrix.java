@@ -1,7 +1,5 @@
 package gaj.data.matrix;
 
-import java.util.Iterator;
-
 import gaj.data.numeric.DataObject;
 import gaj.data.vector.DataVector;
 
@@ -51,14 +49,14 @@ public interface DataMatrix extends DataObject {
 	 * 
 	 * @return A row iterator.
 	 */
-	Iterator<? extends DataVector> getRows();
+	Iterable<? extends DataVector> getRows();
 
 	/**
 	 * Allows iteration over all columns of the data matrix.
 	 * 
 	 * @return A column iterator.
 	 */
-	Iterator<? extends DataVector> getColumns();
+	Iterable<? extends DataVector> getColumns();
 
 	/**
 	 * Obtains the norm of the matrix.

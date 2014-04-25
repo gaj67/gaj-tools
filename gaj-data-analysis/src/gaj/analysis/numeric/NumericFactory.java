@@ -47,4 +47,19 @@ public class NumericFactory {
 		throw new IllegalArgumentException("Unknown data object");
 	}
 
+	/**
+	 * Computes the scalar product of two data objects.
+	 * 
+	 * @param obj1
+	 * @param obj2
+	 * @return The scalar product.
+	 */
+	public static double dot(DataObject obj1, DataObject obj2) {
+		if (obj1 instanceof DataVector)
+			return VectorFactory.dot((DataVector) obj1, (DataVector) obj2);
+		if (obj1 instanceof DataMatrix)
+			return MatrixFactory.dot((DataMatrix) obj1, (DataMatrix) obj2);
+		throw new IllegalArgumentException("Unknown data object");
+	}
+
 }

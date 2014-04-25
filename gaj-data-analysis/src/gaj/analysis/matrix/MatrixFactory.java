@@ -135,5 +135,22 @@ public class MatrixFactory {
 		return result;
 	}
 
+	/**
+	 * Computes the scalar product of two matrices.
+	 * 
+	 * @param matrix1
+	 * @param matrix2
+	 * @return The scalar product.
+	 */
+	public static double dot(DataMatrix matrix1, DataMatrix matrix2) {
+		double sum = 0;
+		int row = 0;
+		for (DataVector vec1 : matrix1.getRows()) {
+			DataVector vec2 = matrix2.getRow(row++);
+			sum += VectorFactory.dot(vec1, vec2);
+		}
+		return sum;
+	}
+
 	// TODO Similar methods for ColumnMatrix.
 }

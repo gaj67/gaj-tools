@@ -2,8 +2,6 @@ package gaj.data.matrix;
 
 import gaj.data.vector.WritableVector;
 
-import java.util.Iterator;
-
 /**
  * Indicates a data matrix with mutable data.
  * Use sparingly, because most methods assume
@@ -27,7 +25,7 @@ public interface WritableMatrix extends SettableMatrix, AddableMatrix {
 	 * @return A row iterator.
 	 */
 	@Override
-	Iterator<? extends WritableVector> getRows();
+	Iterable<? extends WritableVector> getRows();
 
 	/**
 	 * Obtains a column of the matrix.
@@ -44,6 +42,6 @@ public interface WritableMatrix extends SettableMatrix, AddableMatrix {
 	 * @return A column iterator.
 	 */
 	@Override
-	Iterator<? extends WritableVector> getColumns();
+	Iterable<? extends WritableVector> getColumns();
 
 }

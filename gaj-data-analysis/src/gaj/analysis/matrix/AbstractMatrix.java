@@ -4,8 +4,6 @@ import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
 
-import java.util.Iterator;
-
 /**
  * Implements a simple interface for iterating over
  * rows or columns of a matrix.
@@ -28,7 +26,7 @@ public abstract class AbstractMatrix<T extends DataVector> implements DataMatrix
 		return numColumns;
 	}
 
-	public Iterator<T> getRows() {
+	public Iterable<T> getRows() {
 		return new MatrixIterative<T>(numRows) {
 			@Override
 			protected T get(int row) {
@@ -39,7 +37,7 @@ public abstract class AbstractMatrix<T extends DataVector> implements DataMatrix
 
 	public abstract T getRow(int row);
 
-	public Iterator<T> getColumns() {
+	public Iterable<T> getColumns() {
 		return new MatrixIterative<T>(numColumns) {
 			@Override
 			protected T get(int column) {
