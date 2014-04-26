@@ -16,7 +16,7 @@ import gaj.data.vector.DataVector;
  */
 public class LogProbScorer extends GoldDataScorer {
 
-	protected LogProbScorer(GoldData goldStandard) {
+	public LogProbScorer(GoldData goldStandard) {
 		super(goldStandard);
 	}
 

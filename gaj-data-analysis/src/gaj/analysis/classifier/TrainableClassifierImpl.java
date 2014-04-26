@@ -38,8 +38,8 @@ import gaj.data.vector.DataVector;
 	public TrainingSummary train(TrainingParams control, DataScorer... scorers) {
 		try {
 			ClassifierTrainer trainer = trainerClass.newInstance();
-			trainer.bindArguments(classifier, control, scorers);
-			return trainer.train();
+			trainer.bindArguments(classifier, scorers);
+			return trainer.train(control);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new IllegalStateException(e.getMessage());
 		}

@@ -66,7 +66,8 @@ import java.util.List;
 			} else {
 				{
 					int idx = line.indexOf(" Fixture</h2>");
-					if (idx >= 0) year = Integer.parseInt(line.substring(idx-4, idx));
+					if (idx >= 0)
+						year = Integer.parseInt(line.substring(idx-4, idx));
 				}
 				int start = line.indexOf("<table");
 				if (start < 0) { line = null; continue; }
@@ -88,7 +89,7 @@ import java.util.List;
 	private static List<Match> processTable(int year, String table) {
 		int idx = table.indexOf("class=");
 		if (idx < 0) return null;
-		if (!table.startsWith("fixturesmall", idx+7)) return null;
+//		if (!table.startsWith("fixturesmall", idx+7)) return null;
 		List<Match> res = new LinkedList<>();
 		int rowCount = -1;
 		while (true) {

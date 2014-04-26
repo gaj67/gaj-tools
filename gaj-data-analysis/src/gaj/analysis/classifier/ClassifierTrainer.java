@@ -39,6 +39,7 @@ public abstract class ClassifierTrainer {
 		this.classifier = classifier;
 		this.scorers = scorers;
 		initialise();
+		isBound = true;
 	}
 
 	/**

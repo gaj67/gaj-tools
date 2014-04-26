@@ -19,11 +19,11 @@ import gaj.data.vector.DataVector;
  * Drawn matches are ignored.
  *
  */
-/*package-private*/ abstract class GoldMatchDataNoDraws implements GoldData {
+public abstract class GoldMatchDataNoDraws implements GoldData {
 
 	private final Collection<Match> matches;
 
-	/*package-private*/ GoldMatchDataNoDraws(Collection<Match> matches) {
+	public GoldMatchDataNoDraws(Collection<Match> matches) {
 		this.matches = matches;
 	}
 	
