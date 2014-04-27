@@ -1,62 +1,77 @@
 package gaj.afl.statistics;
+import gaj.afl.data.MatchDataFactory;
+import gaj.afl.data.match.Match;
+import gaj.afl.data.match.Team;
 
-import gaj.afl.data.DataFactory;
-import gaj.afl.data.Fixture;
-import gaj.afl.data.Match;
-import gaj.afl.data.Team;
-
-import java.io.IOException;
 import java.util.Collection;
+
 
 
 public class HomeTeamAdvantage {
 
-	public static void main(String[] args) throws IOException {
-		int N = 1 + Team.values().length;
-		double[] numHomeWins = new double[N];
-		double[] numHomeWinsSq = new double[N];
-		int[] numHomeGames = new int[N];
-		Collection<Match> records = DataFactory.newManager().getAllMatches();
+	public static void main(String[] args) {
+		final int NUM_TEAMS = Team.values().length;
+		// Summary statistics about home team:
+		int[] homeWins = new int[NUM_TEAMS];
+		int[] homeDraws = new int[NUM_TEAMS];
+		int[] homeLosses = new int[NUM_TEAMS];
+		// Summary statistics about away team:
+		int[] awayWins = new int[NUM_TEAMS];
+		int[] awayDraws = new int[NUM_TEAMS];
+		int[] awayLosses = new int[NUM_TEAMS];
+		// Collect statistics...
+		Collection<Match> records = MatchDataFactory.newManager().getMatches();
 		for (Match match : records) {
-			Fixture fixture = match.getFixture();
-			if (!fixture.getRound().toString().startsWith("R")) continue;
-			double homeWin = scoreHomeWin(match);
-			double homeWinSq = homeWin * homeWin;
-			numHomeGames[0]++;
-			numHomeWins[0] += homeWin;
-			numHomeWinsSq[0] += homeWinSq;
-			int n = 1 + fixture.getHomeTeam().ordinal();
-			numHomeGames[n]++;
-			numHomeWins[n] += homeWin; 
-			numHomeWinsSq[n] += homeWinSq; 
+			int homeIdx = match.getFixture().getHomeTeam().ordinal();
+			int awayIdx = match.getFixture().getAwayTeam().ordinal();
+			switch (match.getOutcome()) {
+			case Draw:
+				homeDraws[homeIdx]++;
+				awayDraws[awayIdx]++;
+				break;
+			case Loss:
+				homeLosses[homeIdx]++;
+				awayWins[awayIdx]++;
+				break;
+			case Win:
+				homeWins[homeIdx]++;
+				awayLosses[awayIdx]++;
+				break;
+			default:
+				break;
+			}
 		}
-		
-		summariseWins("Overall", numHomeGames[0], numHomeWins[0], numHomeWinsSq[0]);
-		for (Team homeTeam : Team.values()) {
-			int n = 1 + homeTeam.ordinal();
-			summariseWins(homeTeam.toString(), numHomeGames[n], numHomeWins[n], numHomeWinsSq[n]);
+		// Summarise statistics...
+		displayHeader();
+		int totWins = 0, totDraws = 0, totLosses = 0;
+		for (Team team : Team.values()) {
+			int teamIdx = team.ordinal();
+			displayStats(team.toExternal(), 
+					homeWins[teamIdx], homeDraws[teamIdx], homeLosses[teamIdx],
+					awayWins[teamIdx], awayDraws[teamIdx], awayLosses[teamIdx]);
+			totWins += homeWins[teamIdx];
+			totDraws += homeDraws[teamIdx];
+			totLosses += homeLosses[teamIdx];
 		}
+		displayStats("Total",  totWins, totDraws, totLosses,
+				totLosses, totDraws, totWins);
 	}
 
-	private static void summariseWins(String label, int numGames, double numWins, double numWinsSq) {
-		double mean = numWins / numGames;
-		double var = numWinsSq / numGames - mean * mean;
-		double stdErr = Math.sqrt(var) / numGames;
-		System.out.printf("%s -> %6.4f (%6.4f, %6.4f)%n", 
-				label, mean, mean - 2*stdErr, mean + 2*stdErr);
+	private static void displayHeader() {
+		System.out.println("Team: home-wins, draws, losses, games, advantage, away-wins, draws, losses, games, advantage");
 	}
 
-	private static double scoreHomeWin(Match record) {
-		switch (record.getOutcome()) {
-		case Draw:
-			return 0.5;
-		case Loss:
-			return 0.0;
-		case Win:
-			return 1.0;
-		default:
-			throw new IllegalArgumentException("Unknown result: " + record.getOutcome());
-		}
+	private static void displayStats(
+			String label, int homeWins, int homeDraws, int homeLosses,
+			int awayWins, int awayDraws, int awayLosses) 
+	{
+		int homeGames = homeWins + homeDraws + homeLosses;
+		double homeAdv = (homeWins + 0.5 * homeDraws) / homeGames - 0.5;
+		int awayGames = awayWins + awayDraws + awayLosses;
+		double awayAdv = (awayWins + 0.5 * awayDraws) / awayGames - 0.5;
+		System.out.printf("* %s: %d, %d, %d, %d, %4.2f; %d, %d, %d, %d, %4.2f%n",
+				label, homeWins, homeDraws, homeLosses, homeGames, homeAdv, 
+				awayWins, awayDraws, awayLosses, awayGames, awayAdv);
 	}
 
 }

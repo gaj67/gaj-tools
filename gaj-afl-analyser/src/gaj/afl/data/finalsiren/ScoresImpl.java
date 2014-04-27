@@ -1,9 +1,8 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.MutableScore;
-import gaj.afl.data.Quarter;
-import gaj.afl.data.Score;
-import gaj.afl.data.Scores;
+import gaj.afl.data.match.Quarter;
+import gaj.afl.data.match.Score;
+import gaj.afl.data.match.Scores;
 
 /**
  * Encapsulates the total scores at the end of each quarter.
@@ -24,7 +23,7 @@ import gaj.afl.data.Scores;
 	}
 
 	private Score diff(Score prevScore, Score curScore) {
-		return new MutableScore(
+		return new MutableScoreImpl(
 				curScore.numGoals() - prevScore.numGoals(), 
 				curScore.numBehinds() - prevScore.numBehinds()); 
 	}

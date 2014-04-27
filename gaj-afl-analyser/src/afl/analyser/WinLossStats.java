@@ -1,6 +1,6 @@
 package afl.analyser;
 
-import gaj.afl.datatype.MatchResult;
+import gaj.afl.data.match.MatchResult;
 
 /**
  * Stores the home and away win/loss statistics.

@@ -1,15 +1,14 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.Fixture;
-import gaj.afl.data.Location;
-import gaj.afl.data.Match;
-import gaj.afl.data.MutableScore;
-import gaj.afl.data.Outcome;
-import gaj.afl.data.Round;
-import gaj.afl.data.Score;
-import gaj.afl.data.Scores;
-import gaj.afl.data.ShortMonth;
-import gaj.afl.data.Team;
+import gaj.afl.data.match.Fixture;
+import gaj.afl.data.match.Location;
+import gaj.afl.data.match.Match;
+import gaj.afl.data.match.Outcome;
+import gaj.afl.data.match.Round;
+import gaj.afl.data.match.Score;
+import gaj.afl.data.match.Scores;
+import gaj.afl.data.match.ShortMonth;
+import gaj.afl.data.match.Team;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -67,7 +66,8 @@ import java.util.List;
 			} else {
 				{
 					int idx = line.indexOf(" Fixture</h2>");
-					if (idx >= 0) year = Integer.parseInt(line.substring(idx-4, idx));
+					if (idx >= 0)
+						year = Integer.parseInt(line.substring(idx-4, idx));
 				}
 				int start = line.indexOf("<table");
 				if (start < 0) { line = null; continue; }
@@ -89,7 +89,7 @@ import java.util.List;
 	private static List<Match> processTable(int year, String table) {
 		int idx = table.indexOf("class=");
 		if (idx < 0) return null;
-		if (!table.startsWith("fixturesmall", idx+7)) return null;
+//		if (!table.startsWith("fixturesmall", idx+7)) return null;
 		List<Match> res = new LinkedList<>();
 		int rowCount = -1;
 		while (true) {
@@ -194,7 +194,7 @@ import java.util.List;
 
 	private static Score parseScore(String score) {
 		String[] parts = score.split("[.]");
-		return new MutableScore(Integer.valueOf(parts[0]), Integer.valueOf(parts[1]));
+		return new MutableScoreImpl(Integer.valueOf(parts[0]), Integer.valueOf(parts[1]));
 	}
 
 	private static String stripTags(String data) {

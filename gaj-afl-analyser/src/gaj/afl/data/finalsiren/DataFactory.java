@@ -1,6 +1,6 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.DataManager;
+import gaj.afl.data.match.MatchFetcher;
 
 /**
  * Provides access to Final Siren match data.
@@ -12,7 +12,7 @@ public abstract class DataFactory {
 	/**
 	 * @return A manager for obtaining historical match data.
 	 */
-	public static DataManager newManager() {
+	public static MatchFetcher newManager() {
 		return new DataScraper();
 	}
 }

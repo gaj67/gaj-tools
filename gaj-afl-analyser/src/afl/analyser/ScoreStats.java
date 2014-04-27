@@ -1,10 +1,10 @@
 package afl.analyser;
 
-import gaj.afl.data.Team;
 import gaj.afl.data.finalsiren.OldFinalSirenScraper;
-import gaj.afl.datatype.MatchRecord;
-import gaj.afl.datatype.Score;
-import gaj.afl.datatype.TeamScores;
+import gaj.afl.data.match.MatchRecord;
+import gaj.afl.data.match.OldScore;
+import gaj.afl.data.match.Team;
+import gaj.afl.data.match.TeamScores;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,11 +48,11 @@ public class ScoreStats {
 
    public Stats goals, behinds, points;
 
-   public ScoreStats(List<Score> scores) {
+   public ScoreStats(List<OldScore> scores) {
       InternalStats _goals = new InternalStats();
       InternalStats _behinds = new InternalStats();
       InternalStats _points = new InternalStats();
-      for (Score score : scores) {
+      for (OldScore score : scores) {
          _goals.add(score.goals);
          _behinds.add(score.behinds);
          _points.add(score.points);
@@ -69,20 +69,20 @@ public class ScoreStats {
    }
 
    public static void main(String[] args) throws IOException {
-      Map<Team,List<Score>> records = new HashMap<Team,List<Score>>();
+      Map<Team,List<OldScore>> records = new HashMap<Team,List<OldScore>>();
       File dir = new File("data/training/finalsiren/match");
       for (File file : dir.listFiles()) {
          addScores(records, OldFinalSirenScraper.scrapeFolder(file.getAbsoluteFile()));
       }
-      List<Score> allScores = new ArrayList<Score>();
-      for (Entry<Team, List<Score>> entry : records.entrySet()) {
+      List<OldScore> allScores = new ArrayList<OldScore>();
+      for (Entry<Team, List<OldScore>> entry : records.entrySet()) {
          System.out.printf("%s: %s\n", entry.getKey(), new ScoreStats(entry.getValue()));
          allScores.addAll(entry.getValue());
       }
       System.out.printf("Overall: %s\n", new ScoreStats(allScores));
    }
 
-   public static void addScores(Map<Team, List<Score>> records, List<MatchRecord> matches) {
+   public static void addScores(Map<Team, List<OldScore>> records, List<MatchRecord> matches) {
       if (matches == null) return;
       for (MatchRecord rec : matches) {
          addScores(records, rec.homeTeam);
@@ -90,14 +90,14 @@ public class ScoreStats {
       }
    }
 
-   private static void addScores(Map<Team, List<Score>> records, TeamScores team) {
-      List<Score> allScores = records.get(team.team);
+   private static void addScores(Map<Team, List<OldScore>> records, TeamScores team) {
+      List<OldScore> allScores = records.get(team.team);
       if (allScores == null) {
-         allScores = new ArrayList<Score>();
+         allScores = new ArrayList<OldScore>();
          records.put(team.team, allScores);
       }
-      Score prevScore = null;
-      for (Score score : team.scores) {
+      OldScore prevScore = null;
+      for (OldScore score : team.scores) {
          allScores.add(score.subtract(prevScore));
          prevScore = score;
       }

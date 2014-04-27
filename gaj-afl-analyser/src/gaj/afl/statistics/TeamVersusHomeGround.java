@@ -1,10 +1,10 @@
 package gaj.afl.statistics;
 
-import gaj.afl.data.DataFactory;
-import gaj.afl.data.Location;
-import gaj.afl.data.Match;
-import gaj.afl.data.Round;
-import gaj.afl.data.Team;
+import gaj.afl.data.MatchDataFactory;
+import gaj.afl.data.match.Location;
+import gaj.afl.data.match.Match;
+import gaj.afl.data.match.Round;
+import gaj.afl.data.match.Team;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -136,7 +136,7 @@ import java.util.Set;
 	}
 
 	private static Collection<Match> getData() {
-		return DataFactory.newManager().getAllMatches();
+		return MatchDataFactory.newManager().getMatches();
 	}
 	
 	private static Map<Team, Map<Location, Integer>> getTeamLocationCounts(Collection<Match> matches) {
