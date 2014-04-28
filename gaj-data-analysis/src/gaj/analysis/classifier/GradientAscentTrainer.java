@@ -3,7 +3,6 @@ package gaj.analysis.classifier;
 import gaj.analysis.numeric.NumericFactory;
 import gaj.data.classifier.DatumScore;
 import gaj.data.classifier.TrainingParams;
-import gaj.data.classifier.TrainingSummary;
 import gaj.data.numeric.DataObject;
 
 /**
@@ -13,10 +12,6 @@ import gaj.data.numeric.DataObject;
  */
 public class GradientAscentTrainer extends ClassifierTrainer {
 
-	/**
-	 * Current training and testing scores.
-	 */
-	protected double[] scores;
 	/**
 	 * Current gradient of the training data.
 	 */
@@ -32,8 +27,8 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 			throw new IllegalArgumentException("A gradient-enabled classifier is required");
 		if (scorers.length == 0 || !scorers[0].hasGradient())
 			throw new IllegalArgumentException("A training-data gradient scorer is required");
-		scores = new double[scorers.length];
 		gradient = computeTrainingScoreAndGradient(scores);
+		NumericFactory.display("Gradient:", gradient);
 		computeTestingScores(scores);
 		stepSize = 0.5;
 	}
@@ -47,6 +42,7 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 		double[] newScores = new double[scorers.length];
 		DataObject newGradient = performLineSearch(control, newScores);
 		if (newGradient == null) return false;
+		NumericFactory.display("New gradient=", newGradient);
 		computeTestingScores(newScores);
 		boolean halt = terminate(control, newScores);
 		computeStepSize(newScores, newGradient);
@@ -66,13 +62,17 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	private DataObject performLineSearch(TrainingParams control, double[] newScores) {
 		double rho = stepSize;
 		while (numIterations < control.maxIterations()) {
-			if (!updateParams(NumericFactory.scale(gradient, rho))) 
+			NumericFactory.display("Gradient=", gradient);
+			System.out.printf("Step-size=%5.3f%n", rho);
+			DataObject increment = NumericFactory.scale(gradient, rho);
+			NumericFactory.display("Increment=", increment);
+			if (!updateParams(increment)) 
 				return null;
 			DataObject newGradient = computeTrainingScoreAndGradient(newScores);
-			numIterations++; // XXX Include minor iterations here.
 			if (newScores[0] > scores[0]) return newGradient;
+			numIterations++; // XXX Include minor iterations here.
 			recomputeStepSize(newScores, newGradient);
-			rho = stepSize - rho;
+			rho = stepSize - Math.abs(rho);
 		}
 		return null;
 	}
@@ -131,7 +131,9 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	}
 
 	private boolean updateParams(DataObject increment) {
+		NumericFactory.display("Increment=", increment);
 		DataObject newParams = NumericFactory.add(classifier.getParameters(), increment);
+		NumericFactory.display("Parameters=", newParams);
 		return classifier.setParameters(newParams);
 	}
 
@@ -163,12 +165,6 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 		// TODO Use quadratic or cubic acceleration.
 		stepSize = 0.5;
 		return newGradient;
-	}
-
-	@Override
-	public TrainingSummary getSummary() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

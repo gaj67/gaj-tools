@@ -21,11 +21,6 @@ import gaj.data.vector.WritableVector;
 		this.values = new double[length];
 	}
 
-	/*package-private*/ WritableDenseVector(DenseVector vector) {
-		super(vector.length());
-		this.values = ((WritableDenseVector) vector).values;
-	}
-
 	@Override
 	public double get(int pos) {
 		return values[pos];

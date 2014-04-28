@@ -8,6 +8,7 @@ import gaj.analysis.classifier.LogProbScorer;
 import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.GoldData;
+import gaj.data.classifier.GoldDatum;
 import gaj.data.classifier.TrainableClassifier;
 import gaj.data.classifier.TrainingParams;
 import gaj.data.classifier.TrainingSummary;
@@ -23,6 +24,13 @@ public class TrainHomeTeamAdvantage {
 		// Collect all match statistics...
 		MatchFetcher manager = MatchDataFactory.newManager();
 		GoldData trainingData = getMatchData(manager.getMatchesByYear(2010, 2011));
+		int n = 0, w = 0;
+		for (GoldDatum datum : trainingData) {
+			n++;
+			if (datum.getClassIndex() == 1) w++;
+		}
+		System.out.printf("n=%d, l=%d, w=%d%n", n, n-w, w);
+		System.out.printf("Proportions=[%4.2f, %4.2f]%n", 1.0*(n-w)/n, 1.0*w/n);
 		GoldData testingData = getMatchData(manager.getMatchesByYear(2012));
 		DataScorer[] scorers = new DataScorer[] {
 			new LogProbScorer(trainingData),
@@ -33,11 +41,20 @@ public class TrainHomeTeamAdvantage {
 		TrainableClassifier classifier = ClassifierFactory.newDefaultClassifier(numClasses, numFeatures);
 		TrainingParams control = getControl();
 		TrainingSummary summary = classifier.train(control, scorers);
+		System.out.printf("#iterations=%d%n", summary.numIterations());
+		printScores("Initial", summary.initalScores());
+		printScores("Final", summary.initalScores());
+	}
+
+	private static void printScores(String label, double[] scores) {
+		System.out.printf("%s scores = [", label);
+		for (double score : scores)
+			System.out.printf(" %f", score);
+		System.out.println(" ]");
 	}
 
 	private static TrainingParams getControl() {
 		return new TrainingParams() {
-			
 			@Override
 			public double scoreTolerance() {
 				return 0;
@@ -50,14 +67,14 @@ public class TrainHomeTeamAdvantage {
 			
 			@Override
 			public double gradientTolerance() {
-				return 0;
+				return -1;
 			}
 		};
 	}
 
 	private static GoldData getMatchData(final Collection<Match> matches) {
 		return new GoldMatchDataNoDraws(matches) {
-			private final DataVector FEATURES = VectorFactory.newVector(1, 0, 1.);
+			private final DataVector FEATURES = VectorFactory.newSparseVector(1, 0, 1.);
 			@Override
 			public int numFeatures() {
 				return 1;

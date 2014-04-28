@@ -62,4 +62,14 @@ public class NumericFactory {
 		throw new IllegalArgumentException("Unknown data object");
 	}
 
+	public static void display(String label, DataObject obj) {
+		if (obj instanceof DataVector)
+			VectorFactory.display(label, (DataVector) obj);
+		else if (obj instanceof DataMatrix)
+			MatrixFactory.display(label, (DataMatrix) obj);
+		else
+			throw new IllegalArgumentException("Unknown data object");
+	}
+
+
 }

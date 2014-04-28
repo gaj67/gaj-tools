@@ -44,7 +44,7 @@ public abstract class VectorFactory {
 	 * @param data - The array of data.
 	 * @return The data vector.
 	 */
-	public static IndexVector newVector(int... data) {
+	public static IndexVector newIndexVector(int... data) {
 		return new DenseIndexVector(data);
 	}
 
@@ -73,7 +73,7 @@ public abstract class VectorFactory {
 	 * @param data - A sequence of index/value pairs, with ascending indices.
 	 * @return The data vector.
 	 */
-	public static DataVector newVector(int length, double... data) {
+	public static DataVector newSparseVector(int length, double... data) {
 		if (data.length % 2 != 0)
 			throw new IllegalArgumentException("Odd length - expected index/value pairs");
 		int[] indices = new int[data.length / 2];
@@ -162,6 +162,13 @@ public abstract class VectorFactory {
 			//	summedVector.add(vector);
 		}
 		return summedVector;
+	}
+
+	public static void display(String label, DataVector vector) {
+		System.out.printf("%s [", label);
+		for (double value : vector)
+			System.out.printf(" %f", value);
+		System.out.println(" ]");
 	}
 
 }

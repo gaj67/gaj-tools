@@ -36,7 +36,7 @@ import gaj.data.vector.DataVector;
 
 	@Override
 	public double norm() {
-		return multiplier * matrix.norm();
+		return Math.abs(multiplier) * matrix.norm();
 	}
 
 	@Override

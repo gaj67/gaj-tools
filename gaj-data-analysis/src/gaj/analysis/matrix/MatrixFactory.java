@@ -63,6 +63,7 @@ public class MatrixFactory {
 	}
 
 	public static DataMatrix scale(DataMatrix matrix, double multiplier) {
+		if (multiplier == 1) return matrix;
 		if (matrix instanceof ZeroMatrix) return matrix;
 		if (multiplier == 0) return new ZeroMatrix(matrix.numRows(), matrix.numColumns());
 		if (matrix instanceof SparseMatrix)
@@ -153,4 +154,12 @@ public class MatrixFactory {
 	}
 
 	// TODO Similar methods for ColumnMatrix.
+
+	public static void display(String label, DataMatrix matrix) {
+		System.out.printf("%s [%n", label);
+		for (DataVector row : matrix.getRows())
+			VectorFactory.display("", row);
+		System.out.println(" ]");
+	}
+
 }

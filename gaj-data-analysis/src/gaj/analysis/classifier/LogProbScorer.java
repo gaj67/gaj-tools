@@ -32,7 +32,7 @@ public class LogProbScorer extends GoldDataScorer {
 
 	@Override
 	protected DataVector getGradient(DataVector probs, int classIndex) {
-		return VectorFactory.newVector(numClasses(), classIndex, 1. / probs.get(classIndex));
+		return VectorFactory.newSparseVector(numClasses(), classIndex, 1. / probs.get(classIndex));
 	}
 
 }
