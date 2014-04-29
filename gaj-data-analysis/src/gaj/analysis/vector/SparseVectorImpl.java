@@ -26,13 +26,6 @@ import java.util.Iterator;
 		this.values = new double[0];
 	}
 
-	/*package-private*/ SparseVectorImpl(SparseVector vector) {
-		super(vector.length());
-		SparseVectorImpl sVec = (SparseVectorImpl) vector;
-		this.indices = sVec.indices;
-		this.values = sVec.values;
-	}
-
 	@Override
 	public double get(int pos) {
 		if (pos < 0 && pos >= length)

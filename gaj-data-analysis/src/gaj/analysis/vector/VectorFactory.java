@@ -115,7 +115,9 @@ public abstract class VectorFactory {
 			return new ScaledSparseVector((SparseVector) vector, multiplier);
 		if (vector instanceof DenseVector)
 			return new ScaledDenseVector((DenseVector) vector, multiplier);
-		return new ScaledCompoundVector(vector, multiplier);
+		if (vector instanceof CompoundVector)
+			return new ScaledCompoundVector((CompoundVector) vector, multiplier);
+		return new ScaledVector(vector, multiplier);
 	}
 
 	/**

@@ -58,4 +58,96 @@ public class VectorTest {
 		}
 	}
 
+	@Test
+	public void testDenseVectorScaling() {
+		System.out.println("Testing dense vector scaling...");
+		{
+			DataVector vec = VectorFactory.newVector(0, 1, 2, 3);
+			DataVector vecTimes2 = VectorFactory.scale(vec, 2);
+			DataVector vecTimes2Divide2 = VectorFactory.scale(vecTimes2, 0.5);
+			VectorFactory.display("Original:", vec);
+			VectorFactory.display("Reconstructed:", vecTimes2Divide2);
+			for (int i = 0; i < vec.length(); i++)
+				assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
+			{
+				int i = 0;
+				for (double value : vec)
+					assertTrue(isEqual(value, vecTimes2Divide2.get(i++)));
+			}
+			{
+				int i = 0;
+				for (double value : vecTimes2Divide2)
+					assertTrue(isEqual(value, vec.get(i++)));
+			}
+			System.out.printf("Norms - original: %f,  reconstructed: %f%n", vec.norm(), vecTimes2Divide2.norm());
+			assertTrue(isEqual(vec.norm(), vecTimes2Divide2.norm()));
+			DataVector vec2 = VectorFactory.newVector(1, 2, 3, 4);
+			assertTrue(isEqual(vec.dot(vec2), vecTimes2Divide2.dot(vec2)));
+			assertTrue(isEqual(vec2.dot(vec), vec2.dot(vecTimes2Divide2)));
+		}
+		System.out.println("Tested dense vector scaling!");
+	}
+
+	@Test
+	public void testSparseVectorScaling() {
+		System.out.println("Testing sparse vector scaling...");
+		{
+			DataVector vec = VectorFactory.newSparseVector(4, 1, 1, 2, 2, 3, 3);
+			DataVector vecTimes2 = VectorFactory.scale(vec, 2);
+			DataVector vecTimes2Divide2 = VectorFactory.scale(vecTimes2, 0.5);
+			VectorFactory.display("Original:", vec);
+			VectorFactory.display("Reconstructed:", vecTimes2Divide2);
+			for (int i = 0; i < vec.length(); i++)
+				assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
+			{
+				int i = 0;
+				for (double value : vec)
+					assertTrue(isEqual(value, vecTimes2Divide2.get(i++)));
+			}
+			{
+				int i = 0;
+				for (double value : vecTimes2Divide2)
+					assertTrue(isEqual(value, vec.get(i++)));
+			}
+			System.out.printf("Norms - original: %f,  reconstructed: %f%n", vec.norm(), vecTimes2Divide2.norm());
+			assertTrue(isEqual(vec.norm(), vecTimes2Divide2.norm()));
+			DataVector vec2 = VectorFactory.newVector(1, 2, 3, 4);
+			assertTrue(isEqual(vec.dot(vec2), vecTimes2Divide2.dot(vec2)));
+			assertTrue(isEqual(vec2.dot(vec), vec2.dot(vecTimes2Divide2)));
+		}
+		System.out.println("Tested sparse vector scaling!");
+	}
+
+	@Test
+	public void testCompoundVectorScaling() {
+		System.out.println("Testing compound vector scaling...");
+		{
+			DataVector vec1 = VectorFactory.newSparseVector(4, 1, 1, 2, 2, 3, 3);
+			DataVector vec2 = VectorFactory.newVector(0, 1, 2, 3);
+			DataVector vec = VectorFactory.concatenate(vec1, vec2);
+			DataVector vecTimes2 = VectorFactory.scale(vec, 2);
+			DataVector vecTimes2Divide2 = VectorFactory.scale(vecTimes2, 0.5);
+			VectorFactory.display("Original:", vec);
+			VectorFactory.display("Reconstructed:", vecTimes2Divide2);
+			for (int i = 0; i < vec.length(); i++)
+				assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
+			{
+				int i = 0;
+				for (double value : vec)
+					assertTrue(isEqual(value, vecTimes2Divide2.get(i++)));
+			}
+			{
+				int i = 0;
+				for (double value : vecTimes2Divide2)
+					assertTrue(isEqual(value, vec.get(i++)));
+			}
+			System.out.printf("Norms - original: %f,  reconstructed: %f%n", vec.norm(), vecTimes2Divide2.norm());
+			assertTrue(isEqual(vec.norm(), vecTimes2Divide2.norm()));
+			DataVector vec3 = VectorFactory.newVector(1, 2, 3, 4, 5, 6, 7, 8);
+			assertTrue(isEqual(vec.dot(vec3), vecTimes2Divide2.dot(vec3)));
+			assertTrue(isEqual(vec3.dot(vec), vec3.dot(vecTimes2Divide2)));
+		}
+		System.out.println("Tested compound vector scaling!");
+	}
+
 }

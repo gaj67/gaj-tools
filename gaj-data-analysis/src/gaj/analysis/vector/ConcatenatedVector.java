@@ -11,11 +11,11 @@ import java.util.Iterator;
  */
 /*package-private*/ class ConcatenatedVector extends AbstractVector implements CompoundVector {
 
-	private final AbstractVector[] vectors;
+	private final DataVector[] vectors;
 
 	/*package-private*/ ConcatenatedVector(DataVector[] vectors) {
 		super(computeLength(vectors));
-		this.vectors = (AbstractVector[]) vectors;
+		this.vectors = vectors;
 	}
 
 	private static int computeLength(DataVector[] vectors) {
@@ -47,8 +47,8 @@ import java.util.Iterator;
 			public boolean hasNext() {
 				if (i >= vectors.length) return false;
 				if (iter == null) iter = vectors[0].iterator();
-				while (!iter.hasNext() && i < vectors.length)
-					iter = vectors[++i].iterator();
+				while (!iter.hasNext() && ++i < vectors.length)
+					iter = vectors[i].iterator();
 				return (i < vectors.length);
 			}
 
@@ -84,9 +84,9 @@ import java.util.Iterator;
 	@Override
 	public void addTo(WritableVector vector) {
 		int pos = 0;
-		for (AbstractVector vector1 : vectors) {
+		for (DataVector vector1 : vectors) {
 			WritableVector vector2 = new WritableSubVector(vector, pos, vector1.length());
-			vector1.addTo(vector2);
+			((AbstractVector) vector1).addTo(vector2);
 			pos += vector1.length();
 		}
 	}
