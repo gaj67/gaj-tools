@@ -45,7 +45,7 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 		NumericFactory.display("New gradient=", newGradient);
 		computeTestingScores(newScores);
 		boolean halt = terminate(control, newScores);
-		computeStepSize(newScores, newGradient);
+		recomputeStepSizeAndGradient(newScores, newGradient);
 		scores = newScores;
 		return !halt;
 	}
@@ -79,7 +79,8 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 
 	/**
 	 * Recomputes the step-size for a new step from
-	 * x0 along gradient g0. Called due to a failure of
+	 * the original point x0 along the same gradient g0. 
+	 * Called due to a failure of
 	 * the line search for the current step-size, rho,
 	 * for which x1 = x0 + rho*g0.
 	 * 
@@ -93,17 +94,18 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	}
 
 	/**
-	 * Computes the step-size for a new step from
-	 * x1 along gradient g1.
+	 * Recomputes the step-size for a new step from
+	 * the new point x1 along a new gradient.
 	 * 
 	 * @param newScores - The scores at x1.
 	 * @param newGradient - The slope at x1.
 	 */
-	protected void computeStepSize(double[] newScores, DataObject newGradient) {
+	protected void recomputeStepSizeAndGradient(double[] newScores, DataObject newGradient) {
 		// TODO Use quadratic or cubic acceleration.
 		//double rho = curveFit(stepSize, scores[0], gradient, newScores[0], newGradient);
 		//stepSize = Maths.abs(stepSize - rho);
 		stepSize = 0.5;
+		gradient = newGradient;
 	}
 
 	private DataObject computeTrainingScoreAndGradient(double[] scores) {
@@ -150,21 +152,6 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	protected boolean terminate(TrainingParams control, double[] newScores) {
 		// TODO Check if avg. testing score has decreased.
 		return (newScores[0] - scores[0] <= control.scoreTolerance()); 
-	}
-
-	/**
-	 * Calculates an improved estimate of the 
-	 * gradient and a corresponding step-size.
-	 * 
-	 * @param newScores - The score at x1.
-	 * @param newGradient - The slope at x1.
-	 * @return An updated gradient estimate.
-	 */
-	protected DataObject updateGradientAndStepSize(
-			double[] newScores, DataObject newGradient) {
-		// TODO Use quadratic or cubic acceleration.
-		stepSize = 0.5;
-		return newGradient;
 	}
 
 }
