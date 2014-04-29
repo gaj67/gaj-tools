@@ -43,7 +43,7 @@ public class TrainHomeTeamAdvantage {
 		TrainingSummary summary = classifier.train(control, scorers);
 		System.out.printf("#iterations=%d%n", summary.numIterations());
 		printScores("Initial", summary.initalScores());
-		printScores("Final", summary.initalScores());
+		printScores("Final", summary.finalScores());
 	}
 
 	private static void printScores(String label, double[] scores) {
@@ -62,7 +62,7 @@ public class TrainHomeTeamAdvantage {
 			
 			@Override
 			public int maxIterations() {
-				return 10;
+				return 20;
 			}
 			
 			@Override

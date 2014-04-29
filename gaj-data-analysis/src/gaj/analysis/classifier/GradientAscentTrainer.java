@@ -28,7 +28,6 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 		if (scorers.length == 0 || !scorers[0].hasGradient())
 			throw new IllegalArgumentException("A training-data gradient scorer is required");
 		gradient = computeTrainingScoreAndGradient(scores);
-		NumericFactory.display("Gradient:", gradient);
 		computeTestingScores(scores);
 		stepSize = 0.5;
 	}
@@ -65,7 +64,6 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 			NumericFactory.display("Gradient=", gradient);
 			System.out.printf("Step-size=%5.3f%n", rho);
 			DataObject increment = NumericFactory.scale(gradient, rho);
-			NumericFactory.display("Increment=", increment);
 			if (!updateParams(increment)) 
 				return null;
 			DataObject newGradient = computeTrainingScoreAndGradient(newScores);
