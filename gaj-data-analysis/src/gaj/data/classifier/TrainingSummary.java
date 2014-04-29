@@ -13,17 +13,17 @@ public interface TrainingSummary {
 	int numIterations();
 
 	/**
-	 * Indicates the accuracy score of the classifier on the gold-standard data set before training.
+	 * Indicates the accuracy score(s) of the classifier on the gold-standard data before training.
 	 * 
-	 * @return The initial score.
+	 * @return The initial score(s).
 	 */
-	double initalScore();
+	double[] initalScores();
 
 	/**
-	 * Indicates the accuracy score of the classifier on the gold-standard data set after training.
+	 * Indicates the accuracy score(s) of the classifier on the gold-standard data after training.
 	 * 
-	 * @return The final score.
+	 * @return The final score(s).
 	 */
-	double finalScore();
+	double[] finalScores();
 
 }

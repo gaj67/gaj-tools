@@ -1,5 +1,7 @@
 package gaj.analysis.classifier;
 
+import java.util.Arrays;
+
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.TrainingParams;
 import gaj.data.classifier.TrainingSummary;
@@ -16,7 +18,18 @@ public abstract class ClassifierTrainer {
 	private boolean isBound = false;
 	protected UpdatableClassifier classifier;
 	protected DataScorer[] scorers;
+	/**
+	 * Current number of iterations during or after training.
+	 */
 	protected int numIterations;
+	/**
+	 * Current training and testing scores.
+	 */
+	protected double[] scores;
+	/**
+	 * Copy of training and testing scores just prior to training.
+	 */
+	private double[] initialScores;
 
 	/**
 	 * Allows late binding of the arguments.
@@ -38,12 +51,16 @@ public abstract class ClassifierTrainer {
 			throw new IllegalStateException("The trainer is already in use");
 		this.classifier = classifier;
 		this.scorers = scorers;
+		scores = new double[scorers.length];
+		Arrays.fill(scores, Double.NEGATIVE_INFINITY);
 		initialise();
+		initialScores = Arrays.copyOf(scores, scores.length);
 		isBound = true;
 	}
 
 	/**
-	 * Initialises any required training properties.
+	 * Initialises any required training properties,
+	 * including the classifier scores.
 	 */
 	protected abstract void initialise();
 
@@ -57,8 +74,10 @@ public abstract class ClassifierTrainer {
 	 */
 	public TrainingSummary train(TrainingParams control) {
 		numIterations = 0;
+		initialScores = Arrays.copyOf(scores, scores.length);
 		while (true) {
 			if (!iterate(control)) break;
+			numIterations++;
 		}
 		return getSummary();
 	}
@@ -68,8 +87,7 @@ public abstract class ClassifierTrainer {
 	 * of the training process 
 	 * according to the given control parameters.
 	 * This method is responsible for testing
-	 * and incrementing the iteration count,
-	 * as well as testing score tolerances, etc.
+	 * the iteration count and score tolerances, etc.
 	 * 
 	 * @param control - The control parameters.
 	 * @return A value of true (or false) if 
@@ -82,6 +100,27 @@ public abstract class ClassifierTrainer {
 	 * 
 	 * @return The summary data.
 	 */
-	public abstract TrainingSummary getSummary();
+	public TrainingSummary getSummary() {
+		return new TrainingSummary() {
+			private final int _numIterations = numIterations;
+			private final double[] _initialScores = Arrays.copyOf(initialScores, initialScores.length);
+			private final double[] _finalScores = Arrays.copyOf(scores, scores.length);
+
+			@Override
+			public int numIterations() {
+				return _numIterations;
+			}
+
+			@Override
+			public double[] initalScores() {
+				return _initialScores;
+			}
+
+			@Override
+			public double[] finalScores() {
+				return _finalScores;
+			}
+		};
+	}
 
 }

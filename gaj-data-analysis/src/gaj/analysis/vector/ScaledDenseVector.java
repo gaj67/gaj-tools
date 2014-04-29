@@ -6,18 +6,20 @@ import gaj.data.vector.WritableVector;
 
 import java.util.Iterator;
 
-/*package-private*/ class ScaledDenseVector extends WritableDenseVector {
+/*package-private*/ class ScaledDenseVector extends AbstractVector implements DenseVector {
 
 	private final double multiplier;
+	private DenseVector vector;
 
 	/*package-private*/ ScaledDenseVector(DenseVector vector, double multiplier) {
-		super(vector);
+		super(vector.length());
+		this.vector = vector;
 		this.multiplier = multiplier;
 	}
 
 	@Override
 	public double get(int pos) {
-		return super.get(pos) * multiplier;
+		return vector.get(pos) * multiplier;
 	}
 
 	@Override
@@ -49,7 +51,7 @@ import java.util.Iterator;
 	@Override
 	public void addTo(WritableVector vector) {
 		int i = 0;
-		for (double value : values)
+		for (double value : this.vector)
 			vector.add(i++, multiplier * value);
 	}
 
