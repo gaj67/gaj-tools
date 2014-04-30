@@ -1,11 +1,11 @@
 package gaj.analysis.classifier;
 
-import java.util.Arrays;
-
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.TrainingParams;
 import gaj.data.classifier.TrainingSummary;
 import gaj.data.classifier.UpdatableClassifier;
+
+import java.util.Arrays;
 
 /**
  * A base class for implementing a trainer for
@@ -73,13 +73,25 @@ public abstract class ClassifierTrainer {
 	 * @return A summary of the training process.
 	 */
 	public TrainingSummary train(TrainingParams control) {
+		start();
+		while (iterate(control));
+		end();
+		return getSummary();
+	}
+
+	/**
+	 * Marks the start of a training run, including
+	 * (re)initialising the iteration counter.
+	 */
+	protected void start() {
 		numIterations = 0;
 		initialScores = Arrays.copyOf(scores, scores.length);
-		while (true) {
-			if (!iterate(control)) break;
-			numIterations++;
-		}
-		return getSummary();
+	}
+
+	/**
+	 * Marks the end of a training run.
+	 */
+	protected void end() {
 	}
 
 	/**
@@ -93,7 +105,51 @@ public abstract class ClassifierTrainer {
 	 * @return A value of true (or false) if 
 	 * further training is (or is not) permitted.
 	 */
-	public abstract boolean iterate(TrainingParams control);
+	public boolean iterate(TrainingParams control) {
+		if (preTerminate(control)) return false;
+		double[] newScores = update(control);
+		numIterations++;
+		boolean halt = postTerminate(control, newScores);
+		scores = newScores;
+		return !halt;
+	}
+
+	/**
+	 * Performs an update of the classifier parameters.
+	 * 
+	 * @param control - The control parameters.
+	 * @return The updated classifier scores.
+	 */
+	protected abstract double[] update(TrainingParams control);
+
+	/**
+	 * Checks whether or not training should cease
+	 * prior to an update iteration.
+	 * 
+	 * @param control - The control parameters.
+	 * @return A value of true (or false) if training
+	 * should (or should not) cease.
+	 */
+	protected boolean preTerminate(TrainingParams control) {
+		return (numIterations >= control.maxIterations());
+	}
+
+	/**
+	 * Checks whether or not iterative training should cease
+	 * given the change in scores due to an update iteration. 
+	 * For example, testing scores could be
+	 * used to control over-training.
+	 * 
+	 * @param control - The control parameters.
+	 * @param newScores - The classifier scores after the update.
+	 * @return A value of true (or false) if training
+	 * should (or should not) cease.
+	 */
+	protected boolean postTerminate(TrainingParams control, double[] newScores) {
+		// TODO Check if avg. testing score has decreased.
+		return (control.scoreTolerance() > 0
+				&& newScores[0] - scores[0] < control.scoreTolerance()); 
+	}
 
 	/**
 	 * Obtains the current status of the training process.

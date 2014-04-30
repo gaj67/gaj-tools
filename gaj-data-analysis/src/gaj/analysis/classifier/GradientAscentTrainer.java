@@ -32,23 +32,6 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 		stepSize = 0.5;
 	}
 
-	@Override
-	public boolean iterate(TrainingParams control) {
-		if (numIterations >= control.maxIterations())
-			return false;
-		if (NumericFactory.norm(gradient) <= control.gradientTolerance())
-			return false;
-		double[] newScores = new double[scorers.length];
-		DataObject newGradient = performLineSearch(control, newScores);
-		if (newGradient == null) return false;
-		NumericFactory.display("New gradient=", newGradient);
-		computeTestingScores(newScores);
-		boolean halt = terminate(control, newScores);
-		recomputeStepSizeAndGradient(newScores, newGradient);
-		scores = newScores;
-		return !halt;
-	}
-
 	/**
 	 * Finds a step-size rho such that
 	 * x1 = x0 + rho*g0 and score(x1) > score(x0).
@@ -137,19 +120,23 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 		return classifier.setParameters(newParams);
 	}
 
-	/**
-	 * Checks whether or not iterative training should cease
-	 * given the change in scores. For example, testing scores could be
-	 * used to control over-training.
-	 * 
-	 * @param control - The control parameters.
-	 * @param newScores - The classifier scores after the update.
-	 * @return A value of true (or false) if training
-	 * should (or should not) cease.
-	 */
-	protected boolean terminate(TrainingParams control, double[] newScores) {
-		// TODO Check if avg. testing score has decreased.
-		return (newScores[0] - scores[0] <= control.scoreTolerance()); 
+	@Override
+	protected boolean preTerminate(TrainingParams control) {
+		if (super.preTerminate(control))
+			return true;
+		return (control.gradientTolerance() > 0 
+				&& NumericFactory.norm(gradient) < control.gradientTolerance());
+	}
+
+	@Override
+	protected double[] update(TrainingParams control) {
+		double[] newScores = new double[scorers.length];
+		DataObject newGradient = performLineSearch(control, newScores);
+		if (newGradient == null) return scores;
+		NumericFactory.display("New gradient=", newGradient);
+		computeTestingScores(newScores);
+		recomputeStepSizeAndGradient(newScores, newGradient);
+		return newScores;
 	}
 
 }

@@ -62,7 +62,7 @@ public class TrainHomeTeamAdvantage {
 			
 			@Override
 			public int maxIterations() {
-				return 20;
+				return 100;
 			}
 			
 			@Override
