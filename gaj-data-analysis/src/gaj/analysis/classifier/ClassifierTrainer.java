@@ -141,7 +141,7 @@ public abstract class ClassifierTrainer {
 	 * should (or should not) cease.
 	 */
 	protected boolean preTerminate(TrainingParams control) {
-		return (numIterations >= control.maxIterations());
+		return (control.maxIterations() > 0 && numIterations >= control.maxIterations());
 	}
 
 	/**

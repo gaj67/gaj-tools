@@ -8,7 +8,7 @@ public interface TrainingParams {
 	/**
 	 * Specifies the maximum number of update iterations to perform during training.
 	 * 
-	 * @return The maximum number of iterations, or a negative value if there is no maximum.
+	 * @return The maximum number of iterations, or a non-positive value if there is no maximum.
 	 */
 	int maxIterations();
 	
