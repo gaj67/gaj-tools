@@ -5,6 +5,7 @@ import gaj.afl.data.match.Match;
 import gaj.afl.data.match.MatchFetcher;
 import gaj.analysis.classifier.ClassifierFactory;
 import gaj.analysis.classifier.LogProbScorer;
+import gaj.analysis.numeric.NumericFactory;
 import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.GoldData;
@@ -31,6 +32,7 @@ public class TrainHomeTeamAdvantage {
 		}
 		System.out.printf("n=%d, l=%d, w=%d%n", n, n-w, w);
 		System.out.printf("Proportions=[%4.2f, %4.2f]%n", 1.0*(n-w)/n, 1.0*w/n);
+		System.out.printf("Expected parameter=%f%n", Math.log(1.0*(n-w)/w));
 		GoldData testingData = getMatchData(manager.getMatchesByYear(2012));
 		DataScorer[] scorers = new DataScorer[] {
 			new LogProbScorer(trainingData),
@@ -44,6 +46,7 @@ public class TrainHomeTeamAdvantage {
 		System.out.printf("#iterations=%d%n", summary.numIterations());
 		printScores("Initial", summary.initalScores());
 		printScores("Final", summary.finalScores());
+		NumericFactory.display("Final classifier parameter=", classifier.getParameters());
 	}
 
 	private static void printScores(String label, double[] scores) {
@@ -57,7 +60,7 @@ public class TrainHomeTeamAdvantage {
 		return new TrainingParams() {
 			@Override
 			public double scoreTolerance() {
-				return 0;
+				return 1e-16;
 			}
 			
 			@Override
@@ -68,6 +71,11 @@ public class TrainHomeTeamAdvantage {
 			@Override
 			public double gradientTolerance() {
 				return -1;
+			}
+
+			@Override
+			public double relativeScoreTolerance() {
+				return 0;
 			}
 		};
 	}

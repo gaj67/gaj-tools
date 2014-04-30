@@ -44,8 +44,6 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	private DataObject performLineSearch(TrainingParams control, double[] newScores) {
 		double rho = stepSize;
 		while (numIterations < control.maxIterations()) {
-			NumericFactory.display("Gradient=", gradient);
-			System.out.printf("Step-size=%5.3f%n", rho);
 			DataObject increment = NumericFactory.scale(gradient, rho);
 			if (!updateParams(increment)) 
 				return null;
@@ -114,9 +112,7 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	}
 
 	private boolean updateParams(DataObject increment) {
-		NumericFactory.display("Increment=", increment);
 		DataObject newParams = NumericFactory.add(classifier.getParameters(), increment);
-		NumericFactory.display("Parameters=", newParams);
 		return classifier.setParameters(newParams);
 	}
 
@@ -133,7 +129,6 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 		double[] newScores = new double[scorers.length];
 		DataObject newGradient = performLineSearch(control, newScores);
 		if (newGradient == null) return scores;
-		NumericFactory.display("New gradient=", newGradient);
 		computeTestingScores(newScores);
 		recomputeStepSizeAndGradient(newScores, newGradient);
 		return newScores;

@@ -159,7 +159,7 @@ public class MatrixFactory {
 		System.out.printf("%s [%n", label);
 		for (DataVector row : matrix.getRows())
 			VectorFactory.display("", row);
-		System.out.println(" ]");
+		System.out.println("]");
 	}
 
 }

@@ -65,6 +65,16 @@ public abstract class ClassifierTrainer {
 	protected abstract void initialise();
 
 	/**
+	 * Obtains the number of iterations that have already been performed in the
+	 * current training cycle.
+	 * 
+	 * @return The number of iterations.
+	 */
+	public int numIterations() {
+		return numIterations;
+	}
+
+	/**
 	 * Updates the classifier parameters according
 	 * to the given control parameters.
 	 * The iterations are (re)started from zero.
@@ -83,7 +93,7 @@ public abstract class ClassifierTrainer {
 	 * Marks the start of a training run, including
 	 * (re)initialising the iteration counter.
 	 */
-	protected void start() {
+	public void start() {
 		numIterations = 0;
 		initialScores = Arrays.copyOf(scores, scores.length);
 	}
@@ -91,7 +101,7 @@ public abstract class ClassifierTrainer {
 	/**
 	 * Marks the end of a training run.
 	 */
-	protected void end() {
+	public void end() {
 	}
 
 	/**
@@ -147,8 +157,11 @@ public abstract class ClassifierTrainer {
 	 */
 	protected boolean postTerminate(TrainingParams control, double[] newScores) {
 		// TODO Check if avg. testing score has decreased.
-		return (control.scoreTolerance() > 0
-				&& newScores[0] - scores[0] < control.scoreTolerance()); 
+		if (control.scoreTolerance() > 0
+				&& newScores[0] - scores[0] < control.scoreTolerance())
+			return true;
+		return (control.relativeScoreTolerance() > 0
+				&& newScores[0] - scores[0] < Math.abs(scores[0]) * control.relativeScoreTolerance());
 	}
 
 	/**
