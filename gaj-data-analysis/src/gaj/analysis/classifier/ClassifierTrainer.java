@@ -1,6 +1,7 @@
 package gaj.analysis.classifier;
 
 import gaj.data.classifier.DataScorer;
+import gaj.data.classifier.ScoredTrainer;
 import gaj.data.classifier.TrainingParams;
 import gaj.data.classifier.TrainingSummary;
 import gaj.data.classifier.UpdatableClassifier;
@@ -10,10 +11,9 @@ import java.util.Arrays;
 /**
  * A base class for implementing a trainer for
  * a trainable classifier. The trainer is initialised
- * once, but may be repeatedly trained 
- * (on the same data).
+ * once, but may be repeatedly used (on the same data).
  */
-public abstract class ClassifierTrainer {
+public abstract class ClassifierTrainer implements ScoredTrainer {
 
 	private boolean isBound = false;
 	protected UpdatableClassifier classifier;
@@ -54,7 +54,6 @@ public abstract class ClassifierTrainer {
 		scores = new double[scorers.length];
 		Arrays.fill(scores, Double.NEGATIVE_INFINITY);
 		initialise();
-		initialScores = Arrays.copyOf(scores, scores.length);
 		isBound = true;
 	}
 
@@ -64,57 +63,54 @@ public abstract class ClassifierTrainer {
 	 */
 	protected abstract void initialise();
 
-	/**
-	 * Obtains the number of iterations that have already been performed in the
-	 * current training cycle.
-	 * 
-	 * @return The number of iterations.
-	 */
+	@Override
 	public int numIterations() {
 		return numIterations;
 	}
 
-	/**
-	 * Updates the classifier parameters according
-	 * to the given control parameters.
-	 * The iterations are (re)started from zero.
-	 * 
-	 * @param control - The control parameters.
-	 * @return A summary of the training process.
-	 */
-	public TrainingSummary train(TrainingParams control) {
-		start();
-		while (iterate(control));
-		end();
-		return getSummary();
+	@Override
+	public double[] getScores() {
+		return Arrays.copyOf(scores, scores.length);
 	}
 
-	/**
-	 * Marks the start of a training run, including
-	 * (re)initialising the iteration counter.
-	 */
-	public void start() {
+	@Override
+	public TrainingSummary train(TrainingParams control) {
+		start(control);
+		while (iterate(control));
+		return end(control);
+	}
+
+	@Override
+	public void start(TrainingParams control) {
 		numIterations = 0;
 		initialScores = Arrays.copyOf(scores, scores.length);
 	}
 
-	/**
-	 * Marks the end of a training run.
-	 */
-	public void end() {
+	@Override
+	public TrainingSummary end(TrainingParams control) {
+		return new TrainingSummary() {
+			private final int _numIterations = numIterations;
+			private final double[] _initialScores = initialScores;
+			private final double[] _finalScores = Arrays.copyOf(scores, scores.length);
+
+			@Override
+			public int numIterations() {
+				return _numIterations;
+			}
+
+			@Override
+			public double[] initalScores() {
+				return _initialScores;
+			}
+
+			@Override
+			public double[] finalScores() {
+				return _finalScores;
+			}
+		};
 	}
 
-	/**
-	 * Performs at most one major iteration
-	 * of the training process 
-	 * according to the given control parameters.
-	 * This method is responsible for testing
-	 * the iteration count and score tolerances, etc.
-	 * 
-	 * @param control - The control parameters.
-	 * @return A value of true (or false) if 
-	 * further training is (or is not) permitted.
-	 */
+	@Override
 	public boolean iterate(TrainingParams control) {
 		if (preTerminate(control)) return false;
 		double[] newScores = update(control);
@@ -162,34 +158,6 @@ public abstract class ClassifierTrainer {
 			return true;
 		return (control.relativeScoreTolerance() > 0
 				&& newScores[0] - scores[0] < Math.abs(scores[0]) * control.relativeScoreTolerance());
-	}
-
-	/**
-	 * Obtains the current status of the training process.
-	 * 
-	 * @return The summary data.
-	 */
-	public TrainingSummary getSummary() {
-		return new TrainingSummary() {
-			private final int _numIterations = numIterations;
-			private final double[] _initialScores = Arrays.copyOf(initialScores, initialScores.length);
-			private final double[] _finalScores = Arrays.copyOf(scores, scores.length);
-
-			@Override
-			public int numIterations() {
-				return _numIterations;
-			}
-
-			@Override
-			public double[] initalScores() {
-				return _initialScores;
-			}
-
-			@Override
-			public double[] finalScores() {
-				return _finalScores;
-			}
-		};
 	}
 
 }

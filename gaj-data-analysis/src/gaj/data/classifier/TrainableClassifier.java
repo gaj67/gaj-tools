@@ -1,22 +1,17 @@
 package gaj.data.classifier;
 
 
-
 /**
- * Specifies a trainer for a probabilistic classifier
- * that can iteratively have its parameters updated.
+ * Specifies a classifier that can have its parameters updated by training 
+ * (and optionally testing) against gold-standard data.
  */
 public interface TrainableClassifier extends UpdatableClassifier {
 
 	/**
-	 * Updates the classifier parameters based upon the given
-	 * score from the training data, and optionally one or more scores from
-	 * testing data.
+	 * Obtains a trainer for the classifier bound to the given training/testing data scorer(s).
 	 * 
-	 * @param control - The parameters controlling termination of iterative training.
-	 * @param scorers - The data scorers used to test classifier performance.
-	 * @return A summary of the training iterations performed.
+	 * @return A classifier trainer.
 	 */
-	TrainingSummary train(TrainingParams control, DataScorer... scorers);
+	ScoredTrainer getTrainer(DataScorer... scorers);
 
 }

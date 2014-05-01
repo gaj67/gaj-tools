@@ -2,9 +2,8 @@ package gaj.analysis.classifier;
 
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.DatumScore;
+import gaj.data.classifier.ScoredTrainer;
 import gaj.data.classifier.TrainableClassifier;
-import gaj.data.classifier.TrainingParams;
-import gaj.data.classifier.TrainingSummary;
 import gaj.data.classifier.UpdatableClassifier;
 import gaj.data.numeric.DataObject;
 import gaj.data.vector.DataVector;
@@ -37,17 +36,6 @@ import gaj.data.vector.DataVector;
 	}
 
 	@Override
-	public TrainingSummary train(TrainingParams control, DataScorer... scorers) {
-		try {
-			ClassifierTrainer trainer = trainerClass.newInstance();
-			trainer.bindArguments(classifier, scorers);
-			return trainer.train(control);
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new IllegalStateException(e.getMessage());
-		}
-	}
-
-	@Override
 	public DataObject getParameters() {
 		return classifier.getParameters();
 	}
@@ -65,6 +53,17 @@ import gaj.data.vector.DataVector;
 	@Override
 	public DataObject getGradient(DatumScore datumScore) {
 		return classifier.getGradient(datumScore);
+	}
+
+	@Override
+	public ScoredTrainer getTrainer(DataScorer... scorers) {
+		try {
+			ClassifierTrainer trainer = trainerClass.newInstance();
+			trainer.bindArguments(classifier, scorers);
+			return trainer;
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new IllegalStateException(e.getMessage());
+		}
 	}
 
 }

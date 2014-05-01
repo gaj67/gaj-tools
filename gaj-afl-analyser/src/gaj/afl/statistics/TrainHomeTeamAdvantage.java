@@ -42,7 +42,7 @@ public class TrainHomeTeamAdvantage {
 		int numFeatures = scorers[0].numFeatures();
 		TrainableClassifier classifier = ClassifierFactory.newDefaultClassifier(numClasses, numFeatures);
 		TrainingParams control = getControl();
-		TrainingSummary summary = classifier.train(control, scorers);
+		TrainingSummary summary = classifier.getTrainer(scorers).train(control);
 		System.out.printf("#iterations=%d%n", summary.numIterations());
 		printScores("Initial", summary.initalScores());
 		printScores("Final", summary.finalScores());
