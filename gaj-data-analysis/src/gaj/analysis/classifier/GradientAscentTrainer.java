@@ -1,5 +1,6 @@
 package gaj.analysis.classifier;
 
+import gaj.analysis.curves.CurveFactory;
 import gaj.analysis.numeric.NumericFactory;
 import gaj.data.classifier.DatumScore;
 import gaj.data.classifier.TrainingParams;
@@ -68,22 +69,20 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	 */
 	protected void recomputeStepSize(double[] newScores, DataObject newGradient) {
 		// TODO Use quadratic or cubic acceleration.
-		//stepSize = curveFit(stepSize, scores[0], gradient, newScores[0], newGradient);
+		//double rho = CurveFactory.quadraticOptimum(stepSize, gradient, newGradient);
 		stepSize *= 0.5;
 	}
 
 	/**
-	 * Recomputes the step-size for a new step from
-	 * the new point x1 along a new gradient.
+	 * Recomputes the step-size r for a new step from
+	 * the point x1 along some gradient g, i.e. x2=x1+r*g.
 	 * 
-	 * @param newScores - The scores at x1.
-	 * @param newGradient - The slope at x1.
+	 * @param newScores - The scores s1 at x1.
+	 * @param newGradient - The slope g1 at x1.
 	 */
 	protected void recomputeStepSizeAndGradient(double[] newScores, DataObject newGradient) {
-		// TODO Use quadratic or cubic acceleration.
-		//double rho = curveFit(stepSize, scores[0], gradient, newScores[0], newGradient);
-		//stepSize = Maths.abs(stepSize - rho);
-		stepSize = 0.5;
+		// TODO Try cubic acceleration.
+		stepSize = CurveFactory.quadraticOptimum2(stepSize, gradient, newGradient);
 		gradient = newGradient;
 	}
 

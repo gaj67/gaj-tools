@@ -6,7 +6,7 @@ import gaj.data.numeric.DataObject;
 public abstract class CurveFactory {
 
 	private CurveFactory() {}
-	
+
 	/**
 	 * Fits a quadratic curve through
 	 * two gradients, g0 and g1, at unknown
@@ -38,7 +38,44 @@ public abstract class CurveFactory {
 	{
 		double g0g0 = NumericFactory.dot(g0, g0);
 		double g0g1 = NumericFactory.dot(g0, g1);
-		return -r0*g0g0/(g0g1-g0g0);
+		return -r0 * g0g0 / (g0g1 - g0g0);
+	}
+
+	/**
+	 * Fits a quadratic curve through
+	 * two gradients, g0 and g1, at unknown
+	 * points x0 and x1=x0+r0*g0. 
+	 * Estimates the scalar distance r
+	 * needed to reach the turning point
+	 * at x=x1+r*g1.
+	 * 
+	 * Compute distance from x0 along g0
+	 * (see quadraticOptimum), then
+	 * correct for distance from x1=x0+r0*g0 along g0,
+	 * then project onto g1.
+	 * => r1 = (r-r0)*g0.g1/g1.g1
+	 *       = [-r0*g0.g0/g0.(g1-g0)-r0]*g0.g1/g1.g1
+	 *       = -r0 * g0.g1*g0.g1 / g0.(g1-g0)*g1.g1.
+     *
+	 * @param r0 - The initial gradient scaling.
+	 * @param g0 - The slope at x0.
+	 * @param g1 - The slope at x1=x0+r0*g0.
+	 * @return The optimal step-size, r.
+	 */
+	public static double quadraticOptimum2(
+			double r0, DataObject g0, DataObject g1) 
+	{
+		/* Compute distance from x0 along g0, then
+		 * correct for distance from x1 along g0,
+		 * then project onto g1.
+		 * i.e. r1 = (r-r0)*g0.g1/g1.g1
+		 */
+
+		double g0g0 = NumericFactory.dot(g0, g0);
+		double g0g1 = NumericFactory.dot(g0, g1);
+		double g1g1 = NumericFactory.dot(g1, g1);
+		double r = -r0 * g0g0 / (g0g1 - g0g0); 
+		return (r - r0) * g0g1 / g1g1;
 	}
 
 }
