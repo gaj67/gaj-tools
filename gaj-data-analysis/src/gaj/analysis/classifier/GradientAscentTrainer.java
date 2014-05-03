@@ -43,7 +43,7 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	 */
 	private DataObject performLineSearch(TrainingParams control, double[] newScores) {
 		double rho = stepSize;
-		while (numIterations < control.maxIterations()) {
+		while (control.maxIterations() <= 0 || numIterations < control.maxIterations()) {
 			DataObject increment = NumericFactory.scale(gradient, rho);
 			if (!updateParams(increment)) 
 				return null;

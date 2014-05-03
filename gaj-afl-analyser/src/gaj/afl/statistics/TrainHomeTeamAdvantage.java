@@ -60,17 +60,17 @@ public class TrainHomeTeamAdvantage {
 		return new TrainingParams() {
 			@Override
 			public double scoreTolerance() {
-				return 1e-16;
+				return 1e-14;
 			}
 			
 			@Override
 			public int maxIterations() {
-				return 100;
+				return 0;
 			}
 			
 			@Override
 			public double gradientTolerance() {
-				return -1;
+				return 0;
 			}
 
 			@Override
