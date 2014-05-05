@@ -18,7 +18,9 @@ import gaj.data.vector.DataVector;
 import java.util.Collection;
 
 
-
+/**
+ * Tests for home-ground advantage by training a classifier with a constant feature value of 1.
+ */
 public class TrainHomeTeamAdvantage {
 
 	public static void main(String[] args) {
@@ -30,18 +32,24 @@ public class TrainHomeTeamAdvantage {
 			n++;
 			if (datum.getClassIndex() == 1) w++;
 		}
-		System.out.printf("n=%d, l=%d, w=%d%n", n, n-w, w);
-		System.out.printf("Proportions=[%4.2f, %4.2f]%n", 1.0*(n-w)/n, 1.0*w/n);
-		System.out.printf("Expected parameter=%f%n", Math.log(1.0*(n-w)/w));
+		double p = 1.0 * w / n;
+		System.out.printf("#games=%d, home-losses=%d, home-wins=%d, P(home-win)=%5.3f, P(home-loss)=%5.3f%n", n, n-w, w, p, 1-p);
+		System.out.printf("Expected parameter=%f%n", Math.log((1-p) / p));
 		GoldData testingData = getMatchData(manager.getMatchesByYear(2012));
 		DataScorer[] scorers = new DataScorer[] {
 			new LogProbScorer(trainingData),
 			new LogProbScorer(testingData)
 		};
+		train(false, scorers);
+		train(true, scorers);
+	}
+
+	private static void train(boolean useAcceleration, DataScorer[] scorers) {
+		System.out.printf("Using acceleration: %s%n", useAcceleration);
 		int numClasses = scorers[0].numClasses();
 		int numFeatures = scorers[0].numFeatures();
 		TrainableClassifier classifier = ClassifierFactory.newDefaultClassifier(numClasses, numFeatures);
-		TrainingParams control = getControl();
+		TrainingParams control = getControl(useAcceleration);
 		TrainingSummary summary = classifier.getTrainer(scorers).train(control);
 		System.out.printf("#iterations=%d%n", summary.numIterations());
 		printScores("Initial", summary.initalScores());
@@ -56,7 +64,7 @@ public class TrainHomeTeamAdvantage {
 		System.out.println(" ]");
 	}
 
-	private static TrainingParams getControl() {
+	private static TrainingParams getControl(final boolean useAcceleration) {
 		return new TrainingParams() {
 			@Override
 			public double scoreTolerance() {
@@ -76,6 +84,11 @@ public class TrainHomeTeamAdvantage {
 			@Override
 			public double relativeScoreTolerance() {
 				return 0;
+			}
+
+			@Override
+			public boolean useAcceleration() {
+				return useAcceleration;
 			}
 		};
 	}

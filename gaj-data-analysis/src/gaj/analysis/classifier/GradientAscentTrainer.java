@@ -77,12 +77,16 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	 * Recomputes the step-size r for a new step from
 	 * the point x1 along some gradient g, i.e. x2=x1+r*g.
 	 * 
+	 * @param useAcceleration - A flag indicating whether (true) or not (false)
+	 * to use curve fitting to accelerate convergence.
 	 * @param newScores - The scores s1 at x1.
 	 * @param newGradient - The slope g1 at x1.
 	 */
-	protected void recomputeStepSizeAndGradient(double[] newScores, DataObject newGradient) {
+	protected void recomputeStepSizeAndGradient(boolean useAcceleration, double[] newScores, DataObject newGradient) {
 		// TODO Try cubic acceleration.
-		stepSize = CurveFactory.quadraticOptimum2(stepSize, gradient, newGradient);
+		stepSize = useAcceleration
+				? CurveFactory.quadraticOptimum2(stepSize, gradient, newGradient)
+				: 0.5;
 		gradient = newGradient;
 	}
 
@@ -129,7 +133,7 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 		DataObject newGradient = performLineSearch(control, newScores);
 		if (newGradient == null) return scores;
 		computeTestingScores(newScores);
-		recomputeStepSizeAndGradient(newScores, newGradient);
+		recomputeStepSizeAndGradient(control.useAcceleration(), newScores, newGradient);
 		return newScores;
 	}
 

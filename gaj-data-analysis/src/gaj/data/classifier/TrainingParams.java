@@ -11,7 +11,7 @@ public interface TrainingParams {
 	 * @return The maximum number of iterations, or a non-positive value if there is no maximum.
 	 */
 	int maxIterations();
-	
+
 	/**
 	 * Specifies the smallest difference in accuracy scores between update iterations, 
 	 * below which training will cease. 
@@ -19,7 +19,7 @@ public interface TrainingParams {
 	 * @return The minimum score tolerance.
 	 */
 	double scoreTolerance();
-	
+
 	/**
 	 * Specifies the smallest relative difference in accuracy scores between update iterations, 
 	 * below which training will cease. 
@@ -35,5 +35,13 @@ public interface TrainingParams {
 	 * @return The minimum score gradient tolerance.
 	 */
 	double gradientTolerance();
+
+	/**
+	 * Indicates whether or not to use curve fitting to attempt to accelerate the convergence
+	 * of iterative training.
+	 *    
+	 * @return A value of true (or false) if acceleration is (or is not) to be used.
+	 */
+	boolean useAcceleration();
 
 }
