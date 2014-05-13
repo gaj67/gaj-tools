@@ -53,11 +53,13 @@ import java.util.Set;
 			Map<Location, Integer> locationDates,
 			Map<Location, Set<Location>> groups) {
 		for (Location loc1 : Location.values()) {
+			if (!locationDates.containsKey(loc1)) continue;
 			final int idx1 = loc1.ordinal();
 			int count1 = confusion[idx1][idx1];
 			int year1 = locationDates.get(loc1);
 			for (Location loc2 : Location.values()) {
 				if (loc2 == loc1) continue;
+				if (!locationDates.containsKey(loc2)) continue;
 				final int idx2 = loc2.ordinal();
 				int year2 = locationDates.get(loc2);
 				int count2 = confusion[idx1][idx2];
