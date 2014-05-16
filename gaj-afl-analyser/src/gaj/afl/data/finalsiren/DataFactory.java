@@ -12,7 +12,7 @@ public abstract class DataFactory {
 	/**
 	 * @return A manager for obtaining historical match data.
 	 */
-	public static MatchFetcher newManager() {
+	public static MatchFetcher newMatchFetcher() {
 		return new DataScraper();
 	}
 }

@@ -81,9 +81,9 @@ import java.util.Set;
 		for (Entry<Location, Set<Location>> entry : groups.entrySet()) {
 			if (entry.getValue().size() == 0) continue;
 			Location loc1 = entry.getKey();
-			System.out.printf("* %s [%d]%n", loc1, locationDates.get(loc1));
+			System.out.printf("* %s(%d) [%d]%n", loc1, loc1.getIdentifier(), locationDates.get(loc1));
 			for (Location loc2 : entry.getValue()) {
-				System.out.printf("  -> %s [%d]%n", loc2, locationDates.get(loc2));
+				System.out.printf("  -> %s(%d) [%d]%n", loc2, loc2.getIdentifier(), locationDates.get(loc2));
 			}
 		}		
 	}
@@ -92,15 +92,12 @@ import java.util.Set;
 			Map<Team, Map<Location, Integer>> countsOfTL) {
 		final int L = Location.values().length;
 		int[][] confusion = new int[L][L];
-		for (Location loc1 : Location.values()) {
-			final int idx1 = loc1.ordinal();
-			for (Map<Location, Integer> teamLocs : countsOfTL.values()) {
-				if (!teamLocs.containsKey(loc1)) continue;
-				for (Location loc2 : Location.values()) {
-					if (teamLocs.containsKey(loc2)) {
-						final int idx2 = loc2.ordinal();
-						confusion[idx1][idx2]++;
-					}
+		for (Map<Location, Integer> teamLocs : countsOfTL.values()) {
+			for (Location loc1 : teamLocs.keySet()) {
+				final int idx1 = loc1.ordinal();
+				for (Location loc2 : teamLocs.keySet()) {
+					final int idx2 = loc2.ordinal();
+					confusion[idx1][idx2]++;
 				}
 			}
 		}
@@ -130,9 +127,10 @@ import java.util.Set;
 		for (Entry<Team, Map<Location, Integer>> oentry : countsOfTL.entrySet()) {
 			System.out.printf("Team: %s%n", oentry.getKey());
 			for (Entry<Location, Integer> ientry : oentry.getValue().entrySet()) {
-				System.out.printf("   * %s -> %d [%d]%n", 
-						ientry.getKey(), ientry.getValue(),
-						datesOfL.get(ientry.getKey()));
+				Location loc = ientry.getKey();
+				System.out.printf("   * %s(%d) -> %d [%d]%n", 
+						loc, loc.getIdentifier(), 
+						ientry.getValue(), datesOfL.get(loc));
 			}
 		}
 	}

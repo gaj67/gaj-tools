@@ -1,5 +1,6 @@
 package gaj.afl.data;
 
+import gaj.afl.data.finalsiren.DataFactory;
 import gaj.afl.data.match.MatchFetcher;
 
 /**
@@ -13,6 +14,6 @@ public abstract class MatchDataFactory {
 	 * @return A manager for obtaining historical match data.
 	 */
 	public static MatchFetcher newManager() {
-		return gaj.afl.data.finalsiren.DataFactory.newManager();
+		return DataFactory.newMatchFetcher();
 	}
 }
