@@ -18,12 +18,14 @@ public enum Location {
 	Football_Park(0, 138.4936, -34.8798, "Football Park", "West Lakes", "SA"),
 	Gabba(9, 153.0381, -27.4859, "Brisbane Cricket Ground", "Brisbane", "QLD"), 
 	Gold_Coast_Stadium(6, 153.3669, -28.0063, "Carrara Stadium", "Gold Coast", "QLD"),
+	Kadinia_Park(15, 144.3546, -38.1581, "Kardinia Park", "South Geelong", "VIC"), 
 	Manuka_Oval(10, 149.1346, -35.3182, "Manuka Oval", "Griffith", "ACT"),
 	Marrara(11, 130.8872, -12.3992, "Marrara Stadium", "Darwin", "NT"),
 	Melbourne_Cricket_Ground(12, 144.9832 , -37.8200, "Melbourne Cricket Ground", "Melbourne", "VIC"), 
 	Metricon_Stadium(6, 153.3669, -28.0063, "Carrara Stadium", "Gold Coast", "QLD"),
 	Optus_Oval(13, 144.9617, -37.7839, "Princes Park", "Carlton", "VIC"),
 	Patersons_Stadium(14, 115.83, -31.9444, "Subiaco Oval", "Subiaco", "WA"),
+	Princes_Park(13, 144.9617, -37.7839, "Princes Park", "Carlton", "VIC"),
 	Shell_Stadium(15, 144.3546, -38.1581, "Kardinia Park", "South Geelong", "VIC"), 
 	Simonds_Stadium(15, 144.3546, -38.1581, "Kardinia Park", "South Geelong", "VIC"),
 	Skilled_Stadium(15, 144.3546, -38.1581, "Kardinia Park", "South Geelong", "VIC"),
@@ -39,6 +41,17 @@ public enum Location {
 	Westpac_Stadium(19, 174.7858, -41.2731, "Wellington Regional Stadium", "Wellington", "NZ"),
 	York_Park(3, 147.1389, -41.4258, "York Park", "Launceston", "TAS"), 
 	Visy_Park(13, 144.9617, -37.7839, "Princes Park", "Carlton", "VIC"),
+	Olympic_Park_Oval(20, 144.9811, -37.8247, "Olympic Park", "Melbourne", "VIC"),
+	Melbourne_Airport_Training_Facility(21, 144.8406, -37.6875, "Melbourne Airport", "Melbourne", "VIC"),
+	Fremantle_Oval(22, 115.7514, 32.0561, "Fremantle Oval", "Fremantle", "WA"),
+	Tom_Wills_Oval(23, 151.0726, -33.8536, "Tom Wills Oval", "Sydney Olympic Park", "NSW"),
+	Waverley_Park(24, 145.1886, -37.9256, "Waverley Park", "Mulgrave", "VIC"),
+	Gosch__s_Paddock(25, 144.9852, -37.8180, "Yarra Park", "East Melbourne", "VIC"), // YP is a precinct, in.c MCG
+	Arden_Street_Oval(26, 144.9411, 37.7992, "Arden Street Oval", "North Melbourne", "VIC"),
+	Alberton_Oval(27, 138.5194, -34.8644, "Alberton Oval", "Alberton", "SA"),
+	Punt_Road_Oval(28, 144.9878, -37.8222, "Punt Road Oval", "Richmond", "VIC"),
+	Linen_House_Centre(29, 145.1575, -38.1052, "Linen House Centre", "Seaford", "VIC"),
+	Whitten_Oval(30, 144.8867, -37.7992, "Whitten_Oval", "Footscray", "VIC"),
 	;
 
 	private final int identifier;
