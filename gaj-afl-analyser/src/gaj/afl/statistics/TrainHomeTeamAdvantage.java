@@ -3,6 +3,7 @@ import gaj.afl.data.MatchDataFactory;
 import gaj.afl.data.classifier.GoldMatchDataNoDraws;
 import gaj.afl.data.match.Match;
 import gaj.afl.data.match.MatchFetcher;
+import gaj.analysis.classifier.AccuracyScorer;
 import gaj.analysis.classifier.ClassifierFactory;
 import gaj.analysis.classifier.LogProbScorer;
 import gaj.analysis.numeric.NumericFactory;
@@ -26,7 +27,7 @@ public class TrainHomeTeamAdvantage {
 	public static void main(String[] args) {
 		// Collect all match statistics...
 		MatchFetcher manager = MatchDataFactory.newManager();
-		GoldData trainingData = getMatchData(manager.getMatchesByYear(2010, 2011));
+		GoldData trainingData = getMatchData(manager.getMatchesByYear(2008, 2009, 2010, 2011));
 		int n = 0, w = 0;
 		for (GoldDatum datum : trainingData) {
 			n++;
@@ -35,10 +36,12 @@ public class TrainHomeTeamAdvantage {
 		double p = 1.0 * w / n;
 		System.out.printf("#games=%d, home-losses=%d, home-wins=%d, P(home-win)=%5.3f, P(home-loss)=%5.3f%n", n, n-w, w, p, 1-p);
 		System.out.printf("Expected parameter=%f%n", Math.log((1-p) / p));
-		GoldData testingData = getMatchData(manager.getMatchesByYear(2012));
+		GoldData testingData = getMatchData(manager.getMatchesByYear(2012, 2013));
 		DataScorer[] scorers = new DataScorer[] {
 			new LogProbScorer(trainingData),
-			new LogProbScorer(testingData)
+			new AccuracyScorer(trainingData, 1e-3),
+			new LogProbScorer(testingData),
+			new AccuracyScorer(testingData, 1e-3),
 		};
 		train(false, scorers);
 		train(true, scorers);
