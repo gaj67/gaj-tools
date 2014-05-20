@@ -8,7 +8,9 @@ public enum Team {
 	Adelaide, Brisbane_Lions, Carlton, Collingwood, Essendon, 
 	Fremantle, Geelong, Hawthorn, Melbourne, North_Melbourne, 
 	Port_Adelaide, Richmond, St_Kilda, Sydney, West_Coast, 
-	Western_Bulldogs, Gold_Coast, GWS_Giants;
+	Western_Bulldogs, Gold_Coast, GWS_Giants,
+	
+	Brisbane_Bears, Fitzroy;
 
 	/**
 	 * Obtains the type from an external string representation.

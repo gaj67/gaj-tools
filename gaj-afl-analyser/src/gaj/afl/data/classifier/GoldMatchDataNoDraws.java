@@ -35,6 +35,12 @@ public abstract class GoldMatchDataNoDraws implements GoldData {
 	@Override
 	public abstract int numFeatures();
 
+	/**
+	 * Obtains the numerical features for the match.
+	 * 
+	 * @param match - The match.
+	 * @return The match feature vector.
+	 */
 	protected abstract DataVector getFeatures(Match match);
 
 	@Override
@@ -45,26 +51,27 @@ public abstract class GoldMatchDataNoDraws implements GoldData {
 
 			@Override
 			public boolean hasNext() {
-				// Skip draws for now.
-				while (iter.hasNext()) {
+				while (match == null) {
+					if (!iter.hasNext()) return false;
 					match = iter.next();
-					if (Outcome.Draw != match.getOutcome())
-						return true;
+					if (Outcome.Draw == match.getOutcome()) match = null;
 				}
-				return false;
+				return true;
 			}
 
 			@Override
 			protected GoldDatum get(int pos) {
+				final Match _match = match;
+				match = null;
 				return new GoldDatum() {
 					@Override
 					public DataVector getFeatures() {
-						return GoldMatchDataNoDraws.this.getFeatures(match);
+						return GoldMatchDataNoDraws.this.getFeatures(_match);
 					}
 
 					@Override
 					public int getClassIndex() {
-						return (Outcome.Loss == match.getOutcome()) ? 0 : 1;
+						return (Outcome.Loss == _match.getOutcome()) ? 0 : 1;
 					}
 
 					@Override

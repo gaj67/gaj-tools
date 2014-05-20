@@ -21,7 +21,7 @@ public class TeamHomeLocation {
 			put(Team.Collingwood, Location.Olympic_Park_Oval);
 			put(Team.Essendon, Location.Melbourne_Airport_Training_Facility);
 			put(Team.Fremantle, Location.Fremantle_Oval);
-			put(Team.Geelong, Location.Kadinia_Park);
+			put(Team.Geelong, Location.Kardinia_Park);
 			put(Team.Gold_Coast, Location.Carrara);
 			put(Team.GWS_Giants, Location.Tom_Wills_Oval);
 			put(Team.Hawthorn, Location.Waverley_Park);

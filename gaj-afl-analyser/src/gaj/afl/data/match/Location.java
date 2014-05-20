@@ -18,7 +18,7 @@ public enum Location {
 	Football_Park(0, 138.4936, -34.8798, "Football Park", "West Lakes", "SA"),
 	Gabba(9, 153.0381, -27.4859, "Brisbane Cricket Ground", "Brisbane", "QLD"), 
 	Gold_Coast_Stadium(6, 153.3669, -28.0063, "Carrara Stadium", "Gold Coast", "QLD"),
-	Kadinia_Park(15, 144.3546, -38.1581, "Kardinia Park", "South Geelong", "VIC"), 
+	Kardinia_Park(15, 144.3546, -38.1581, "Kardinia Park", "South Geelong", "VIC"), 
 	Manuka_Oval(10, 149.1346, -35.3182, "Manuka Oval", "Griffith", "ACT"),
 	Marrara(11, 130.8872, -12.3992, "Marrara Stadium", "Darwin", "NT"),
 	Melbourne_Cricket_Ground(12, 144.9832 , -37.8200, "Melbourne Cricket Ground", "Melbourne", "VIC"), 
@@ -52,6 +52,14 @@ public enum Location {
 	Punt_Road_Oval(28, 144.9878, -37.8222, "Punt Road Oval", "Richmond", "VIC"),
 	Linen_House_Centre(29, 145.1575, -38.1052, "Linen House Centre", "Seaford", "VIC"),
 	Whitten_Oval(30, 144.8867, -37.7992, "Whitten_Oval", "Footscray", "VIC"),
+	Moorabbin_Oval(31, 145.0439, -37.9375, "Moorabbin Oval", "Moorabbin", "VIC"), // St Kilda old ground.
+	Linen_House_Oval(31, 145.0439, -37.9375, "Moorabbin Oval", "Moorabbin", "VIC"),
+	
+	Western_Oval(-1, 0, 0, "Western Oval", "Geelong North", "VIC"),
+	Windy_Hill(-1, 0, 0, "?", "?", "?"),
+	Victoria_Park(-1, 0, 0, "?", "?", "?"),
+	North_Hobart(-1, 0, 0, "?", "?", "?"),
+	AFL_Park(-1, 0, 0, "?", "?", "?"),
 	;
 
 	private final int identifier;
