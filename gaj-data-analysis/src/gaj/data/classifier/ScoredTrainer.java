@@ -47,6 +47,7 @@ public interface ScoredTrainer {
 
 	/**
 	 * Obtains the number of iterations that have been performed during training.
+	 * <p/>This may include minor iterations as well as major iterations.
 	 * 
 	 * @return The number of training iterations.
 	 */
