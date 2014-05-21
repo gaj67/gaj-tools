@@ -9,6 +9,45 @@ public abstract class CurveFactory {
 
 	/**
 	 * Fits a quadratic curve through
+	 * two known gradients, g0 and g1, at unknown
+	 * points x0 and x1, respectively, 
+	 * where it is known that x1 = x0 + d. 
+	 * <p/>Computes the scalar distance r
+	 * needed to reach the estimated turning point
+	 * at x1* = x0 + r*d.
+	 * 
+	 * @param g0 - The slope at x0.
+	 * @param g1 - The slope at x1 = x0 + d.
+	 * @param d - The directed distance, x1 - x0.
+	 * @return The optimal step-size, r.
+	 */
+	public static double quadraticOptimum(
+			DataObject g0, DataObject g1, DataObject d) 
+	{
+		/*
+		 * <p/>Consider a curve y=f(x), such that
+		 * y0=f(x0), g0=f'(x0), H0=f''(x0), etc.
+		 * Let x1=x0+d. Then (Taylor series)
+		 * f(x1) = f(x0)+f'(x0).(x1-x0)+1/2 f''(x0):(x1-x0)^2 + O(||x1-x0||^3),
+		 * => y1 = y0+g0.d+1/2*d.H0.d + O(||d||^3).
+		 * Also, 
+		 * f'(x1) = f'(x0)+(x1-x0).f''(x0) + O(||x1-x0||^2).
+		 * => g1 = g0+d.H0 + O(||d||^2) => d.H0.d = (g1-g0).d + O(||d||^3).
+		 * Now, optimum occurs at x1*=x0+r*d with zero slope, i.e.
+		 *    0 = f'(x1*) = f'(x0)+(x1*-x0).f''(x0) + O(||x1*-x0||^2)
+		 * => 0 = g0+r*d.H0 + O(||d||^2) 
+		 * => 0 = g0.d+r*d.H0.d + O(||d||^3)
+		 * => r = -g0.d/d.H0.d + O(||d||^3) 
+		 *     = -g0.d/(g1-g0).d + O(||d||^3).
+		 */
+		double g0d = NumericFactory.dot(g0, d);
+		double g1d = NumericFactory.dot(g1, d);
+		return -g0d / (g1d - g0d);
+	}
+
+
+	/**
+	 * Fits a quadratic curve through
 	 * two gradients, g0 and g1, at unknown
 	 * points x0 and x1=x0+r0*g0. 
 	 * Estimates the scalar distance r
