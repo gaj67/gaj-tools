@@ -1,5 +1,6 @@
 package gaj.data.classifier;
 
+import gaj.data.numeric.DataObject;
 import gaj.data.vector.DataVector;
 
 

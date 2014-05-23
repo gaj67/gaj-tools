@@ -162,4 +162,14 @@ public class MatrixFactory {
 		System.out.println("]");
 	}
 
+	public static WritableVector asWritableVector(WritableMatrix matrix) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static DataVector asVector(DataMatrix matrix) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

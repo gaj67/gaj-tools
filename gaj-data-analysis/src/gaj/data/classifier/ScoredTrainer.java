@@ -14,39 +14,10 @@ public interface ScoredTrainer {
 	 * @param control - The control parameters.
 	 * @return A summary of the training process.
 	 */
-	public TrainingSummary train(TrainingParams control);
+	public TrainingSummary train(TrainingControl control);
 
 	/**
-	 * Manually starts a training run, including
-	 * initialising the iteration counter.
-	 * 
-	 * @param control - The control parameters.
-	 */
-	public void start(TrainingParams control);
-
-	/**
-	 * Manually ends the training run, and summarises the training pocess.
-	 * 
-	 * @param control - The control parameters.
-	 * @return A summary of the training process.
-	 */
-	public TrainingSummary end(TrainingParams control);
-
-	/**
-	 * Performs at most one major iteration
-	 * of the training process. 
-	 * <p/>This method is responsible for setting
-	 * the iteration count and computing the classifier scores, 
-	 * and then testing these values against the training control parameters.
-	 * 
-	 * @param control - The control parameters.
-	 * @return A value of true (or false) if 
-	 * further training is (or is not) permitted.
-	 */
-	public boolean iterate(TrainingParams control);
-
-	/**
-	 * Obtains the number of iterations that have been performed during training.
+	 * Obtains the total number of iterations that have been performed by the trainer.
 	 * <p/>This may include minor iterations as well as major iterations.
 	 * 
 	 * @return The number of training iterations.

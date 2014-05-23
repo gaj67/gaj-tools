@@ -3,7 +3,7 @@ package gaj.data.classifier;
 /**
  * Specifies any parameter settings required for updating a trainable classifier.
  */
-public interface TrainingParams {
+public interface TrainingControl {
 
 	/**
 	 * Specifies the maximum number of update iterations to perform during training.

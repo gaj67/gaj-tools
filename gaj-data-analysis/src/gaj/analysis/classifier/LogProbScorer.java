@@ -14,7 +14,7 @@ import gaj.data.vector.DataVector;
  * where <tt>delta(c,c_d)=1</tt> if and only if
  * <tt>c_d=c</tt> (otherwise it is 0).
  */
-public class LogProbScorer extends GoldDataScorer {
+public class LogProbScorer extends BaseDataScorer {
 
 	public LogProbScorer(GoldData goldStandard) {
 		super(goldStandard);

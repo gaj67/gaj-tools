@@ -2,20 +2,19 @@ package gaj.analysis.classifier;
 
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.DatumScore;
+import gaj.data.classifier.ParameterisedClassifier;
 import gaj.data.classifier.ScoredTrainer;
 import gaj.data.classifier.TrainableClassifier;
-import gaj.data.classifier.UpdatableClassifier;
-import gaj.data.numeric.DataObject;
+import gaj.data.classifier.TrainingControl;
 import gaj.data.vector.DataVector;
 
-/*package-private*/ class TrainableClassifierImpl implements
-		TrainableClassifier {
+/*package-private*/ class TrainableClassifierImpl implements TrainableClassifier {
 
-	private final UpdatableClassifier classifier;
-	private final Class<? extends ClassifierTrainer> trainerClass;
+	private final ParameterisedClassifier classifier;
+	private final Class<? extends TrainingAlgorithm> trainerClass;
 
-	/*package-private*/ TrainableClassifierImpl(UpdatableClassifier classifier, 
-			Class<? extends ClassifierTrainer> trainerClass) {
+	/*package-private*/ TrainableClassifierImpl(ParameterisedClassifier classifier, 
+			Class<? extends TrainingAlgorithm> trainerClass) {
 		this.classifier = classifier;
 		this.trainerClass = trainerClass;
 	}
@@ -36,12 +35,12 @@ import gaj.data.vector.DataVector;
 	}
 
 	@Override
-	public DataObject getParameters() {
+	public DataVector getParameters() {
 		return classifier.getParameters();
 	}
 
 	@Override
-	public boolean setParameters(DataObject params) {
+	public boolean setParameters(DataVector params) {
 		return classifier.setParameters(params);
 	}
 
@@ -51,19 +50,18 @@ import gaj.data.vector.DataVector;
 	}
 
 	@Override
-	public DataObject getGradient(DatumScore datumScore) {
+	public DataVector getGradient(DatumScore datumScore) {
 		return classifier.getGradient(datumScore);
 	}
 
 	@Override
 	public ScoredTrainer getTrainer(DataScorer... scorers) {
-		try {
-			ClassifierTrainer trainer = trainerClass.newInstance();
-			trainer.bindArguments(classifier, scorers);
-			return trainer;
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new IllegalStateException(e.getMessage());
-		}
+		return new ClassifierTrainer(classifier, scorers, trainerClass);
+	}
+
+	@Override
+	public int numParameters() {
+		return classifier.numParameters();
 	}
 
 }

@@ -22,6 +22,26 @@ public interface DataScorer {
 	int numFeatures();
 
 	/**
+	 * Computes the overall score of the given 
+	 * classifier against the gold-standard data set.
+	 * 
+	 * @param classifier - A trained classifier.
+	 * @return The classification score.
+	 */
+	double getClassifierScore(Classifier classifier);
+
+	/**
+	 * Computes the overall score (and associated information) of the given 
+	 * classifier against the gold-standard data set.
+	 * <p/>Note: If the classifier is gradient-enabled, then
+	 * score gradient information should be available.
+	 * 
+	 * @param classifier - A trained classifier.
+	 * @return The classification score information.
+	 */
+	ClassifierScore getClassifierScoreInfo(ParameterisedClassifier classifier);
+
+	/**
 	 * Indicates whether or not the scorer computes gradient
 	 * information.
 	 * 
@@ -29,27 +49,17 @@ public interface DataScorer {
 	 * safe to call the DatumScore.getGradient() method.
 	 */
 	boolean hasGradient();
-	
-	/**
-	 * Computes the individual accuracy scores 
-	 * (and any other required information) 
-	 * of the given classifier against each 
-	 * data point in the gold-standard data set.
-	 * 
-	 * @param classifier - A trained classifier.
-	 * @return A sequence of individual scores.
-	 */
-	Iterable<? extends DatumScore> getScores(Classifier classifier);
 
 	/**
-	 * Computes the overall, weighted average score of the given 
-	 * classifier against the gold standard data set.
-	 * <p/>This should only be called if the individual data point scores are
-	 * not required, e.g. for testing data.
+	 * Computes the individual accuracy scores (and associated information) 
+	 * of the given classifier against each 
+	 * data point in the gold-standard data set.
+	 * <p/>Note: If the scorer is gradient-enabled, then
+	 * score gradient information should be available.
 	 * 
 	 * @param classifier - A trained classifier.
-	 * @return The weighted average score.
+	 * @return A sequence of individual datum scores.
 	 */
-	double getScore(Classifier classifier);
+	Iterable<? extends DatumScore> getDatumScores(Classifier classifier);
 
 }

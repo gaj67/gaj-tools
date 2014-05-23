@@ -1,67 +1,56 @@
 package gaj.analysis.classifier;
 
+import gaj.data.classifier.ClassifierScore;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.ScoredTrainer;
-import gaj.data.classifier.TrainingParams;
+import gaj.data.classifier.TrainingControl;
 import gaj.data.classifier.TrainingSummary;
-import gaj.data.classifier.UpdatableClassifier;
+import gaj.data.classifier.ParameterisedClassifier;
 
 import java.util.Arrays;
 
 /**
  * A base class for implementing a trainer for
  * a trainable classifier. The trainer is initialised
- * once, but may be repeatedly used (on the same data).
+ * once, but may be repeatedly used (on the same data) by instantiating
+ * the specified training algorithm class.
  */
-public abstract class ClassifierTrainer implements ScoredTrainer {
+public class ClassifierTrainer implements ScoredTrainer {
 
-	private boolean isBound = false;
-	protected UpdatableClassifier classifier;
-	protected DataScorer[] scorers;
+	private final ParameterisedClassifier classifier;
+	private final DataScorer[] scorers;
+	private final Class<? extends TrainingAlgorithm> algo;
 	/**
-	 * Current number of iterations during or after training.
+	 * Current, total number of training iterations performed.
 	 */
-	protected int numIterations;
+	private int numIterations = 0;
 	/**
 	 * Current training and testing scores.
 	 */
-	protected double[] scores;
+	private final double[] scores;
 	/**
-	 * Copy of training and testing scores just prior to training.
+	 * Current training score and any other information.
 	 */
-	private double[] initialScores;
+	private ClassifierScore state;
 
 	/**
-	 * Allows late binding of the arguments.
-	 */
-	protected ClassifierTrainer() {}
-
-	/**
-	 * Binds the trainer to the given arguments.
+	 * Binds the classifier and scorers to the  training algorithm.
 	 * 
-	 * @param classifier - An updatable classifier.
-	 * @param scorers - One or more data scorers.
+	 * @param classifier - The classifier to be trained.
+	 * @param scorers - The scorers to be evaluated. The first scorer represents the training data,
+	 * and subsequent scorers, if any, represent testing data.
+	 * @param algo - The training algorithm.
 	 */
-	protected ClassifierTrainer(UpdatableClassifier classifier, DataScorer... scorers) {
-		bindArguments(classifier, scorers);
-	}
-
-	/*package-private*/ final void bindArguments(UpdatableClassifier classifier, DataScorer[] scorers) {
-		if (isBound)
-			throw new IllegalStateException("The trainer is already in use");
+	protected ClassifierTrainer(ParameterisedClassifier classifier, DataScorer[] scorers, Class<? extends TrainingAlgorithm> algo) {
 		this.classifier = classifier;
 		this.scorers = scorers;
+		this.algo = algo;
 		scores = new double[scorers.length];
-		Arrays.fill(scores, Double.NEGATIVE_INFINITY);
-		initialise();
-		isBound = true;
+		state = scorers[0].getClassifierScoreInfo(classifier);
+		scores[0] = state.getScore();
+		for (int i = 1; i < scorers.length; i++)
+			scores[i] = scorers[i].getClassifierScore(classifier);
 	}
-
-	/**
-	 * Initialises any required training properties,
-	 * including the classifier scores.
-	 */
-	protected abstract void initialise();
 
 	@Override
 	public int numIterations() {
@@ -74,90 +63,20 @@ public abstract class ClassifierTrainer implements ScoredTrainer {
 	}
 
 	@Override
-	public TrainingSummary train(TrainingParams control) {
-		start(control);
-		while (iterate(control));
-		return end(control);
-	}
-
-	@Override
-	public void start(TrainingParams control) {
-		numIterations = 0;
-		initialScores = Arrays.copyOf(scores, scores.length);
-	}
-
-	@Override
-	public TrainingSummary end(TrainingParams control) {
-		return new TrainingSummary() {
-			private final int _numIterations = numIterations;
-			private final double[] _initialScores = initialScores;
-			private final double[] _finalScores = Arrays.copyOf(scores, scores.length);
-
-			@Override
-			public int numIterations() {
-				return _numIterations;
-			}
-
-			@Override
-			public double[] initalScores() {
-				return _initialScores;
-			}
-
-			@Override
-			public double[] finalScores() {
-				return _finalScores;
-			}
-		};
-	}
-
-	@Override
-	public boolean iterate(TrainingParams control) {
-		if (preTerminate(control)) return false;
-		double[] newScores = update(control);
-		numIterations++;
-		boolean halt = postTerminate(control, newScores);
-		scores = newScores;
-		return !halt;
-	}
-
-	/**
-	 * Performs an update of the classifier parameters.
-	 * 
-	 * @param control - The control parameters.
-	 * @return The updated classifier scores.
-	 */
-	protected abstract double[] update(TrainingParams control);
-
-	/**
-	 * Checks whether or not training should cease
-	 * prior to an update iteration.
-	 * 
-	 * @param control - The control parameters.
-	 * @return A value of true (or false) if training
-	 * should (or should not) cease.
-	 */
-	protected boolean preTerminate(TrainingParams control) {
-		return (control.maxIterations() > 0 && numIterations >= control.maxIterations());
-	}
-
-	/**
-	 * Checks whether or not iterative training should cease
-	 * given the change in scores due to an update iteration. 
-	 * For example, testing scores could be
-	 * used to control over-training.
-	 * 
-	 * @param control - The control parameters.
-	 * @param newScores - The classifier scores after the update.
-	 * @return A value of true (or false) if training
-	 * should (or should not) cease.
-	 */
-	protected boolean postTerminate(TrainingParams control, double[] newScores) {
-		// TODO Check if avg. testing score has decreased.
-		if (control.scoreTolerance() > 0
-				&& newScores[0] - scores[0] < control.scoreTolerance())
-			return true;
-		return (control.relativeScoreTolerance() > 0
-				&& newScores[0] - scores[0] < Math.abs(scores[0]) * control.relativeScoreTolerance());
+	public TrainingSummary train(TrainingControl control) {
+		try {
+			TrainingAlgorithm trainer = algo.newInstance();
+			trainer.bindArguments(classifier, scorers, control);
+			trainer.setState(state);
+			trainer.setScores(getScores());
+			TrainingSummary summary = trainer.train();
+			numIterations += summary.numIterations();
+			state = trainer.getState();
+			System.arraycopy(trainer.getScores(), 0, scores, 0, scores.length);
+			return summary;
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 }

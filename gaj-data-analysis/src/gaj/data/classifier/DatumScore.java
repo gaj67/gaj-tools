@@ -16,17 +16,9 @@ public interface DatumScore extends GoldDatum {
 	DataVector getPosteriors();
 
 	/**
-	 * Obtains the weighted average score of all data points up to
-	 * and including the current one.
+	 * Obtains the unweighted score of the data point.
 	 * 
-	 * @return The weighted average score.
-	 */
-	double getAverageScore();
-
-	/**
-	 * Obtains the unnormalised, weighted score of the data point.
-	 * 
-	 * @return The weighted score.
+	 * @return The unweighted score.
 	 */
 	double getScore();
 
@@ -41,11 +33,11 @@ public interface DatumScore extends GoldDatum {
 
 	/**
 	 * If {@link #hasGradient}() is true, 
-	 * obtains the gradient of the score with respect to the 
+	 * obtains the unweighted gradient of the score with respect to the 
 	 * posterior probability <em>P(c|x)</em> of each class c.
 	 * 
-	 * @return The class-posterior gradient vector.
-	 * @throws RuntimeException If gradient information is 
+	 * @return The unweighted class-posterior gradient vector.
+	 * @throws IllegalStateException If gradient information is 
 	 * not computed.
 	 */
 	DataVector getGradient();

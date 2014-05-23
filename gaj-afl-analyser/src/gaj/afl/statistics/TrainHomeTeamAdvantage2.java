@@ -14,7 +14,7 @@ import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.GoldData;
 import gaj.data.classifier.GoldDatum;
 import gaj.data.classifier.TrainableClassifier;
-import gaj.data.classifier.TrainingParams;
+import gaj.data.classifier.TrainingControl;
 import gaj.data.classifier.TrainingSummary;
 import gaj.data.vector.DataVector;
 
@@ -55,7 +55,7 @@ public class TrainHomeTeamAdvantage2 {
 		int numClasses = scorers[0].numClasses();
 		int numFeatures = scorers[0].numFeatures();
 		TrainableClassifier classifier = ClassifierFactory.newDefaultClassifier(numClasses, numFeatures);
-		TrainingParams control = getControl(useAcceleration);
+		TrainingControl control = getControl(useAcceleration);
 		TrainingSummary summary = classifier.getTrainer(scorers).train(control);
 		long end = System.currentTimeMillis();
 		double time = 1e-3 * (end - start);
@@ -73,8 +73,8 @@ public class TrainHomeTeamAdvantage2 {
 		System.out.println(" ]");
 	}
 
-	private static TrainingParams getControl(final boolean useAcceleration) {
-		return new TrainingParams() {
+	private static TrainingControl getControl(final boolean useAcceleration) {
+		return new TrainingControl() {
 			@Override
 			public double scoreTolerance() {
 				return 1e-14;

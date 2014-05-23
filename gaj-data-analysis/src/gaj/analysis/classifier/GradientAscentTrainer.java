@@ -3,7 +3,7 @@ package gaj.analysis.classifier;
 import gaj.analysis.curves.CurveFactory;
 import gaj.analysis.numeric.NumericFactory;
 import gaj.data.classifier.DatumScore;
-import gaj.data.classifier.TrainingParams;
+import gaj.data.classifier.TrainingControl;
 import gaj.data.numeric.DataObject;
 
 /**
@@ -42,7 +42,7 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	 * @return The new slope, f'(x1), or a value of null
 	 * if no better-scoring point was found.
 	 */
-	private DataObject performLineSearch(TrainingParams control, double[] newScores) {
+	private DataObject performLineSearch(TrainingControl control, double[] newScores) {
 		double rho = stepSize;
 		while (control.maxIterations() <= 0 || numIterations < control.maxIterations()) {
 			DataObject increment = NumericFactory.scale(gradient, rho);
@@ -120,7 +120,7 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	}
 
 	@Override
-	protected boolean preTerminate(TrainingParams control) {
+	protected boolean preTerminate(TrainingControl control) {
 		if (super.preTerminate(control))
 			return true;
 		return (control.gradientTolerance() > 0 
@@ -128,7 +128,7 @@ public class GradientAscentTrainer extends ClassifierTrainer {
 	}
 
 	@Override
-	protected double[] update(TrainingParams control) {
+	protected double[] update(TrainingControl control) {
 		double[] newScores = new double[scorers.length];
 		DataObject newGradient = performLineSearch(control, newScores);
 		if (newGradient == null) return scores;

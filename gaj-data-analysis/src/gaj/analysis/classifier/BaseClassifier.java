@@ -1,15 +1,16 @@
 package gaj.analysis.classifier;
 
 import gaj.data.classifier.DatumScore;
-import gaj.data.classifier.UpdatableClassifier;
+import gaj.data.classifier.ParameterisedClassifier;
 import gaj.data.numeric.DataObject;
+import gaj.data.vector.DataVector;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- * Offers a base class for an updatable classifier.
+ * Offers a base class for a parameterised classifier.
  * By default, no gradient is computed.
  */
-public abstract class BaseClassifier implements UpdatableClassifier {
+public abstract class BaseClassifier implements ParameterisedClassifier {
 
 	/** Total number C of classes. */
 	protected final int numClasses;
@@ -37,7 +38,7 @@ public abstract class BaseClassifier implements UpdatableClassifier {
 	}
 	
 	@Override
-	public DataObject getGradient(DatumScore datumScore) {
-		throw new NotImplementedException();
+	public DataVector getGradient(DatumScore datumScore) {
+		throw new IllegalStateException("No gradient was computed");
 	}
 }

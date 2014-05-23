@@ -16,17 +16,19 @@ public class LogisticClassifier extends BaseClassifier {
 	 * Model parameters, V = [V_c], such that
 	 *    P(c|x) = e^{V_c.x} / sum{c'} e^{V_c'.x}.
 	 */
-	private final WritableMatrix params;
+	private final WritableMatrix matParams;
+	private final WritableVector vecParams;
 
 	public LogisticClassifier(int numClasses, int numFeatures) {
 		super(numClasses, numFeatures);
 		Cm1 = numClasses - 1;
-		params = MatrixFactory.newWritableMatrix(Cm1, numFeatures);
+		matParams = MatrixFactory.newWritableMatrix(Cm1, numFeatures);
+		vecParams = MatrixFactory.asWritableVector(matParams);
 	}
 
 	@Override
 	public DataVector classify(DataVector features) {
-		DataVector weights = MatrixFactory.multiply(params, features);
+		DataVector weights = MatrixFactory.multiply(matParams, features);
 		double[] posteriors = new double[numClasses];
 		posteriors[Cm1] = 1;
 		double norm = 1;
@@ -42,13 +44,13 @@ public class LogisticClassifier extends BaseClassifier {
 	}
 
 	@Override
-	public DataMatrix getParameters() {
-		return params;
+	public DataVector getParameters() {
+		return vecParams;
 	}
 
 	@Override
-	public boolean setParameters(DataObject params) {
-		this.params.set((DataMatrix) params);
+	public boolean setParameters(DataVector params) {
+		vecParams.set(params);
 		return true;
 	}
 
@@ -67,7 +69,7 @@ public class LogisticClassifier extends BaseClassifier {
 	 *    w{c,c'} = delta{c,c'}P(c'|x) - P(c|x)P(c'|x). 
 	 */
 	@Override
-	public DataMatrix getGradient(DatumScore datumScore) {
+	public DataVector getGradient(DatumScore datumScore) {
 		WritableMatrix gradient = MatrixFactory.newWritableMatrix(Cm1, numFeatures);
 		DataVector probs = datumScore.getPosteriors();
 		for (int cPrime = 0; cPrime < Cm1; cPrime++) {
@@ -78,7 +80,12 @@ public class LogisticClassifier extends BaseClassifier {
 			DataVector featureWeights = VectorFactory.scale(datumScore.getFeatures(), classWeight);
 			gradient.setRow(cPrime, featureWeights);
 		}
-		return gradient;
+		return MatrixFactory.asVector(gradient);
+	}
+
+	@Override
+	public int numParameters() {
+		return vecParams.length();
 	}
 
 }
