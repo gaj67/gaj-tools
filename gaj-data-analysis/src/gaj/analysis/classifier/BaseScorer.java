@@ -5,7 +5,7 @@ import java.util.Iterator;
 import gaj.analysis.vector.DataIterator;
 import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.Classifier;
-import gaj.data.classifier.ClassifierScore;
+import gaj.data.classifier.ClassifierScoreInfo;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.DatumScore;
 import gaj.data.classifier.GoldData;
@@ -25,7 +25,7 @@ import gaj.data.vector.WritableVector;
  * is computed. If this is required, override {@link #hasGradient}()
  * and {@link #gradient}().
  */
-public abstract class BaseDataScorer implements DataScorer {
+public abstract class BaseScorer implements DataScorer {
 
 	private final GoldData data;
 
@@ -34,7 +34,7 @@ public abstract class BaseDataScorer implements DataScorer {
 	 * 
 	 * @param data - The gold-standard data set.
 	 */
-	protected BaseDataScorer(GoldData data) {
+	protected BaseScorer(GoldData data) {
 		this.data = data;
 	}
 
@@ -114,7 +114,7 @@ public abstract class BaseDataScorer implements DataScorer {
 	}
 
 	@Override
-	public ClassifierScore getClassifierScoreInfo(ParameterisedClassifier classifier) {
+	public ClassifierScoreInfo getClassifierScoreInfo(ParameterisedClassifier classifier) {
 		if (!hasGradient() || !classifier.hasGradient()) {
 			return getClassifierScore(getClassifierScore(classifier), null);
 		} else {
@@ -137,8 +137,8 @@ public abstract class BaseDataScorer implements DataScorer {
 		}
 	}
 
-	private ClassifierScore getClassifierScore(final double score, final /*@Nullable*/ DataVector gradient) {
-		return new ClassifierScore() {				
+	private ClassifierScoreInfo getClassifierScore(final double score, final /*@Nullable*/ DataVector gradient) {
+		return new ClassifierScoreInfo() {				
 			@Override
 			public boolean hasGradient() {
 				return (gradient != null);
@@ -175,13 +175,13 @@ public abstract class BaseDataScorer implements DataScorer {
 
 			@Override
 			public boolean hasGradient() {
-				return BaseDataScorer.this.hasGradient();
+				return BaseScorer.this.hasGradient();
 			}
 
 			@Override
 			public DataVector getGradient() {
 				if (gradient == null)
-					gradient = BaseDataScorer.this.getGradient(probs, datum.getClassIndex());
+					gradient = BaseScorer.this.getGradient(probs, datum.getClassIndex());
 				return gradient;
 			}
 

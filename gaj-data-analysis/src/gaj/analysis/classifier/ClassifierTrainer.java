@@ -1,11 +1,10 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.ClassifierScore;
 import gaj.data.classifier.DataScorer;
+import gaj.data.classifier.ParameterisedClassifier;
 import gaj.data.classifier.ScoredTrainer;
 import gaj.data.classifier.TrainingControl;
 import gaj.data.classifier.TrainingSummary;
-import gaj.data.classifier.ParameterisedClassifier;
 
 import java.util.Arrays;
 
@@ -17,21 +16,9 @@ import java.util.Arrays;
  */
 public class ClassifierTrainer implements ScoredTrainer {
 
-	private final ParameterisedClassifier classifier;
-	private final DataScorer[] scorers;
-	private final Class<? extends TrainingAlgorithm> algo;
-	/**
-	 * Current, total number of training iterations performed.
-	 */
+	private final TrainingAlgorithm trainer;
+	/** Current, total number of training iterations performed. */
 	private int numIterations = 0;
-	/**
-	 * Current training and testing scores.
-	 */
-	private final double[] scores;
-	/**
-	 * Current training score and any other information.
-	 */
-	private ClassifierScore state;
 
 	/**
 	 * Binds the classifier and scorers to the  training algorithm.
@@ -42,14 +29,12 @@ public class ClassifierTrainer implements ScoredTrainer {
 	 * @param algo - The training algorithm.
 	 */
 	protected ClassifierTrainer(ParameterisedClassifier classifier, DataScorer[] scorers, Class<? extends TrainingAlgorithm> algo) {
-		this.classifier = classifier;
-		this.scorers = scorers;
-		this.algo = algo;
-		scores = new double[scorers.length];
-		state = scorers[0].getClassifierScoreInfo(classifier);
-		scores[0] = state.getScore();
-		for (int i = 1; i < scorers.length; i++)
-			scores[i] = scorers[i].getClassifierScore(classifier);
+		try {
+			trainer = algo.newInstance();
+			trainer.bindArguments(classifier, scorers);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	@Override
@@ -59,24 +44,15 @@ public class ClassifierTrainer implements ScoredTrainer {
 
 	@Override
 	public double[] getScores() {
+		double[] scores = trainer.getScores();
 		return Arrays.copyOf(scores, scores.length);
 	}
 
 	@Override
 	public TrainingSummary train(TrainingControl control) {
-		try {
-			TrainingAlgorithm trainer = algo.newInstance();
-			trainer.bindArguments(classifier, scorers, control);
-			trainer.setState(state);
-			trainer.setScores(getScores());
-			TrainingSummary summary = trainer.train();
-			numIterations += summary.numIterations();
-			state = trainer.getState();
-			System.arraycopy(trainer.getScores(), 0, scores, 0, scores.length);
-			return summary;
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new IllegalStateException(e);
-		}
+		TrainingSummary summary = trainer.train(control);
+		numIterations += summary.numIterations();
+		return summary;
 	}
 
 }

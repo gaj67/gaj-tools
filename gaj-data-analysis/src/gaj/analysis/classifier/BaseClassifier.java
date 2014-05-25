@@ -2,9 +2,7 @@ package gaj.analysis.classifier;
 
 import gaj.data.classifier.DatumScore;
 import gaj.data.classifier.ParameterisedClassifier;
-import gaj.data.numeric.DataObject;
 import gaj.data.vector.DataVector;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Offers a base class for a parameterised classifier.

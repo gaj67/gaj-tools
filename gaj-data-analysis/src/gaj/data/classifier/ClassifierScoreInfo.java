@@ -5,7 +5,7 @@ import gaj.data.vector.DataVector;
 /**
  * Encapsulates the score of a classifier as computed by a dataScorer.
  */
-public interface ClassifierScore {
+public interface ClassifierScoreInfo {
 
 	/**
 	 * Obtains the score of the classifier on gold-standard data.

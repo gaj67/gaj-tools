@@ -39,7 +39,7 @@ public interface DataScorer {
 	 * @param classifier - A trained classifier.
 	 * @return The classification score information.
 	 */
-	ClassifierScore getClassifierScoreInfo(ParameterisedClassifier classifier);
+	ClassifierScoreInfo getClassifierScoreInfo(ParameterisedClassifier classifier);
 
 	/**
 	 * Indicates whether or not the scorer computes gradient

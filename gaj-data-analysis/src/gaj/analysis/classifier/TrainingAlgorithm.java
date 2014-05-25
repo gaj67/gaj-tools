@@ -1,6 +1,6 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.ClassifierScore;
+import gaj.data.classifier.ClassifierScoreInfo;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.ParameterisedClassifier;
 import gaj.data.classifier.TrainingControl;
@@ -11,37 +11,136 @@ import gaj.data.classifier.TrainingSummary;
  */
 public abstract class TrainingAlgorithm {
 
-	protected ParameterisedClassifier classifier;
-	protected DataScorer[] scorers;
-	protected TrainingControl control;
-	private ClassifierScore state;
+	//**********************************************************
+	// Instantiation interface.
+
+	/** The classifier set by {@link #bindArguments}(). */
+	private ParameterisedClassifier classifier;
+	/** The training and testing scorers set by {@link #bindArguments}(). */
+	private DataScorer[] scorers;
+	/** Indicates the number of training and testing scores. */
+	private int numScores;
+	/** Current training and testing scores. */
 	private double[] scores;
+	/** Current training score and any other information. */
+	private ClassifierScoreInfo trainingScore;
 
 	/**
 	 * Instantiates the algorithm, to be later initialised via {@link #bindArguments}().
 	 */
-	public TrainingAlgorithm() {}
+	protected TrainingAlgorithm() {}
 
-	/*package-private*/ void bindArguments(ParameterisedClassifier classifier, DataScorer[] scorers, TrainingControl control) {
+	/*package-private*/ void bindArguments(ParameterisedClassifier classifier, DataScorer[] scorers) {
 		this.classifier = classifier;
 		this.scorers = scorers;
-		this.control = control;		
+		numScores = scorers.length;
+		scores = new double[numScores];
+		trainingScore = computeScores(scores);
+	}
+
+	protected ParameterisedClassifier getClassifier() {
+		return classifier;
+	}
+
+	protected DataScorer[] getScorers() {
+		return scorers;
+	}
+
+	/** 
+	 * Indicates the number of training and testing scores. 
+	 * 
+	 * @return The length of the scores array.
+	 */
+	protected int numScores() {
+		return numScores;
 	}
 
 	/**
-	 * Performs classifier training.
+	 * Computes the current training and testing scores of the classifier on the gold-standard
+	 * data.
 	 * 
-	 * @return A summary of the training iterations performed.
+	 * @param scores - The array of training and testing scores.
+	 * @return The training score information.
 	 */
-	protected abstract TrainingSummary train();
+	protected ClassifierScoreInfo computeScores(double[] scores) {
+		computeTestingScores(scores);
+		return computeTrainingScore(scores);
+	}
 
 	/**
-	 * Specifies the classifier training score information.
+	 * Computes the current training score of the classifier on the gold-standard
+	 * data.
 	 * 
-	 * @param state - The training score information.
+	 * @param scores - The array of training and testing scores.
+	 * @return The training score information.
 	 */
-	protected void setState(ClassifierScore state) {
-		this.state = state;
+	protected ClassifierScoreInfo computeTrainingScore(double[] scores) {
+		ClassifierScoreInfo info = scorers[0].getClassifierScoreInfo(classifier);
+		scores[0] = info.getScore();
+		return info;
+	}
+
+	/**
+	 * Computes the current testing scores of the classifier on the gold-standard
+	 * data.
+	 * 
+	 * @param scores - The array of training and testing scores.
+	 */
+	protected void computeTestingScores(double[] scores) {
+		for (int i = 1; i < scorers.length; i++)
+			scores[i] = scorers[i].getClassifierScore(classifier);		
+	}
+
+
+	//**********************************************************
+	// Training-specific interface. The information generated is only valid
+	// for the current training run.
+
+	/** Current number of training iterations performed. */
+	private int numIterations = 0;
+
+	/**
+	 * Performs classifier training, and updates the scores via
+	 * {@link #setScores}() and the number of iterations via {@link #incIterations}().
+	 * 
+	 * @param control - The settings to control termination of the training process.
+	 * @return A summary of the training iterations performed.
+	 */
+	protected abstract TrainingSummary train(TrainingControl control);
+
+	/**
+	 * Obtains the current number of training iterations performed.
+	 * 
+	 * @return The number of iterations.
+	 */
+	protected int numIterations() {
+		return numIterations;
+	}
+
+	/**
+	 * Increments the number of training iterations performed.
+	 */
+	protected void incIterations() {
+		numIterations++;
+	}
+
+	/**
+	 * Resets the number of iterations for a new training run.
+	 */
+	protected void resetIterations() {
+		numIterations = 0;
+	}
+
+	/**
+	 * Specifies the classifier training and testing scores, and other
+	 * training information.
+	 * 
+	 * @param trainingScore - The training score information.
+	 * @param scores - The training and testing scores.
+	 */
+	protected void setScores(ClassifierScoreInfo trainingScore, double[] scores) {
+		this.trainingScore = trainingScore;
+		this.scores = scores;
 	}
 
 	/**
@@ -49,17 +148,8 @@ public abstract class TrainingAlgorithm {
 	 * 
 	 * @return The training score information.
 	 */
-	protected ClassifierScore getState() {
-		return state;
-	}
-
-	/**
-	 * Specifies the classifier training and testing scores.
-	 * 
-	 * @param scores - The array of scores.
-	 */
-	protected void setScores(double[] scores) {
-		this.scores = scores;
+	protected ClassifierScoreInfo getTrainingScore() {
+		return trainingScore;
 	}
 
 	/**

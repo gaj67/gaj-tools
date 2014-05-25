@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Scores the proportion of correctly classified data, allowing for ties.
  */
-public class AccuracyScorer extends BaseDataScorer {
+public class AccuracyScorer extends BaseScorer {
 
 	private final double tieTolerance;
 

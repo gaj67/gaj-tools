@@ -5,7 +5,6 @@ import gaj.data.classifier.DatumScore;
 import gaj.data.classifier.ParameterisedClassifier;
 import gaj.data.classifier.ScoredTrainer;
 import gaj.data.classifier.TrainableClassifier;
-import gaj.data.classifier.TrainingControl;
 import gaj.data.vector.DataVector;
 
 /*package-private*/ class TrainableClassifierImpl implements TrainableClassifier {
