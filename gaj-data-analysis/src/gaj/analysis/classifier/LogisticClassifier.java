@@ -3,9 +3,7 @@ package gaj.analysis.classifier;
 import gaj.analysis.matrix.MatrixFactory;
 import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.DatumScore;
-import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
-import gaj.data.numeric.DataObject;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 

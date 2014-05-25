@@ -163,13 +163,15 @@ public class MatrixFactory {
 	}
 
 	public static WritableVector asWritableVector(WritableMatrix matrix) {
-		// TODO Auto-generated method stub
-		return null;
+		if (matrix instanceof FlatMatrix)
+			return VectorFactory.newWritableVector(((FlatMatrix<?>) matrix).getFlatData());
+		return new WritableVectorMatrix(matrix);
 	}
 
 	public static DataVector asVector(DataMatrix matrix) {
-		// TODO Auto-generated method stub
-		return null;
+		if (matrix instanceof FlatMatrix)
+			return VectorFactory.newVector(((FlatMatrix<?>) matrix).getFlatData());
+		return new VectorMatrix(matrix);
 	}
 
 }
