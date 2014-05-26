@@ -1,47 +1,26 @@
 package gaj.analysis.matrix;
 
-import java.util.Iterator;
-
+import gaj.analysis.vector.AbstractVector;
 import gaj.data.matrix.DataMatrix;
-import gaj.data.vector.DataVector;
 
 /**
  * Presents a matrix as a flat vector.
  */
-public class VectorMatrix implements DataVector {
+public class VectorMatrix extends AbstractVector {
 
-	public VectorMatrix(DataMatrix matrix) {
-		// TODO Auto-generated constructor stub
-	}
+	protected final DataMatrix matrix;
+	protected final int numColumns;
 
-	@Override
-	public int length() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double norm() {
-		// TODO Auto-generated method stub
-		return 0;
+	protected VectorMatrix(DataMatrix matrix) {
+		super(matrix.numRows() * matrix.numColumns());
+		this.matrix = matrix;
+		this.numColumns = matrix.numColumns();
 	}
 
 	@Override
 	public double get(int pos) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Iterator<Double> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public double dot(DataVector vector) {
-		// TODO Auto-generated method stub
-		return 0;
+		// Row-wise, pos = numColumns * row + column.
+		return matrix.get(pos / numColumns, pos % numColumns);
 	}
 
 }

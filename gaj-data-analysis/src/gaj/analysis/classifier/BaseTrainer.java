@@ -1,6 +1,8 @@
 package gaj.analysis.classifier;
 
 import gaj.data.classifier.ClassifierScoreInfo;
+import gaj.data.classifier.DataScorer;
+import gaj.data.classifier.ParameterisedClassifier;
 import gaj.data.classifier.TrainingControl;
 import gaj.data.classifier.TrainingSummary;
 
@@ -11,6 +13,17 @@ import java.util.Arrays;
  * </p>The same instance may be reused multiple times.
  */
 public abstract class BaseTrainer extends TrainingAlgorithm {
+
+	/**
+	 * Binds the training algorithm to the given classifier and scorers.
+	 * 
+	 * @param classifier - The classifier to be trained.
+	 * @param scorers - The data scorers to measure classifier performance.
+	 */
+	protected BaseTrainer(ParameterisedClassifier classifier,
+			DataScorer[] scorers) {
+		super(classifier, scorers);
+	}
 
 	/** The training controls set by {@link #train}(). */
 	private TrainingControl control;

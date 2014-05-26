@@ -3,6 +3,7 @@ package gaj.analysis.classifier;
 import gaj.analysis.curves.CurveFactory;
 import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.ClassifierScoreInfo;
+import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.ParameterisedClassifier;
 import gaj.data.classifier.TrainingControl;
 import gaj.data.vector.DataVector;
@@ -14,21 +15,27 @@ import gaj.data.vector.DataVector;
  */
 public class GradientAscentTrainer extends BaseTrainer {
 
+	/**
+	 * Binds the training algorithm to the given classifier and scorers.
+	 * 
+	 * @param classifier - The classifier to be trained.
+	 * @param scorers - The data scorers to measure classifier performance.
+	 */
+	protected GradientAscentTrainer(ParameterisedClassifier classifier,
+			DataScorer[] scorers) {
+		super(classifier, scorers);
+		computeStepSizeAndDirection();
+	}
+
 	/** Maximum angle (in degrees) between vectors for projection. */
 	private static final double MAX_ANGLE = 45;
 	/** Helps measure the 'closeness' between two vectors. */
-	private static final double CLOSENESS_SCALE = Math.cos(Math.PI * MAX_ANGLE / 180);
+	private static final double CLOSENESS = Math.cos(Math.PI * MAX_ANGLE / 180);
 	/** Current step-size for an upcoming gradient ascent. */
 	private double stepSize;
 	/** Current gradient or quasi-gradient direction for an upcoming gradient ascent. */
 	private DataVector direction;
 
-	@Override
-	protected void start() {
-		super.start();
-		computeStepSizeAndDirection();
-	}
-	
 	/**
 	 * Computes the direction for the next iteration, and the step-size 
 	 * to take along that direction.
@@ -71,15 +78,21 @@ public class GradientAscentTrainer extends BaseTrainer {
 		double rho = stepSize;
 		final ParameterisedClassifier classifier = getClassifier();
 		final TrainingControl control = getControl();
-		while (control.maxIterations() <= 0 || numIterations() < control.maxIterations()) {
+		int maxSubIterations = control.maxSubIterations();
+		if (maxSubIterations <= 0) maxSubIterations = Integer.MAX_VALUE;
+		int numSubIterations = 0;
+		while (numSubIterations < maxSubIterations) {
 			DataVector newParams = VectorFactory.add(
 					classifier.getParameters(), 
 					VectorFactory.scale(direction, rho));
 			if (!classifier.setParameters(newParams)) break;
 			ClassifierScoreInfo newTrainingScore = computeTrainingScore(newScores);
-			if (newScores[0] > getScores()[0]) return newTrainingScore;
+			if (newScores[0] > getScores()[0]) {
+				incIterations(numSubIterations); // Count minor iterations.
+				return newTrainingScore;
+			}
 			// Set up further line search.
-			incIterations(); // Count minor iterations.
+			numSubIterations++;
 			recomputeStepSize(newTrainingScore);
 			rho = stepSize - Math.abs(rho);
 		}
@@ -107,25 +120,14 @@ public class GradientAscentTrainer extends BaseTrainer {
 	 * {@link #getPrevTrainingScore}() and {@link #getTrainingScore}().
 	 */
 	private void recomputeStepSizeAndDirection() {
+		// Keep previous step-size in both cases below.
 		if (getControl().useAcceleration()) {
 			// TODO Try cubic acceleration.
 			final DataVector g0 = getPrevTrainingScore().getGradient();
 			final DataVector g1 = getTrainingScore().getGradient();
-			double rho = CurveFactory.quadraticOptimum(g0, g1, direction); // Not scaled by step-size.
-			stepSize *= (rho - 1); // Allow for being at x1 = x0+stepSize*d.
-			// Check if it is safe to update direction to projection onto g1.
-			final double d_dot_g1 = VectorFactory.dot(direction, g1);
-			final double g1_norm = g1.norm();
-			if (Math.abs(d_dot_g1) > CLOSENESS_SCALE * direction.norm() * g1_norm) {
-				// < MAX_ANGLE; project onto g1.
-				stepSize *= d_dot_g1 / (g1_norm * g1_norm);
-				direction = g1;
-			} else {
-				// >= MAX_ANGLE; keep same direction.
-			}
+			direction = CurveFactory.quadraticOptimumDisplacement(g0, g1, direction, CLOSENESS);
 		} else {
 			direction = getTrainingScore().getGradient();
-			// Keep previous step-size.
 		}
 	}
 

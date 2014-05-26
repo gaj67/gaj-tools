@@ -15,9 +15,9 @@ public abstract class TrainingAlgorithm {
 	// Instantiation interface.
 
 	/** The classifier set by {@link #bindArguments}(). */
-	private ParameterisedClassifier classifier;
+	private final ParameterisedClassifier classifier;
 	/** The training and testing scorers set by {@link #bindArguments}(). */
-	private DataScorer[] scorers;
+	private final DataScorer[] scorers;
 	/** Indicates the number of training and testing scores. */
 	private int numScores;
 	/** Current training and testing scores. */
@@ -26,11 +26,12 @@ public abstract class TrainingAlgorithm {
 	private ClassifierScoreInfo trainingScore;
 
 	/**
-	 * Instantiates the algorithm, to be later initialised via {@link #bindArguments}().
+	 * Binds the training algorithm to the given classifier and scorers.
+	 * 
+	 * @param classifier - The classifier to be trained.
+	 * @param scorers - The data scorers to measure classifier performance.
 	 */
-	protected TrainingAlgorithm() {}
-
-	/*package-private*/ void bindArguments(ParameterisedClassifier classifier, DataScorer[] scorers) {
+	protected TrainingAlgorithm(ParameterisedClassifier classifier, DataScorer[] scorers) {
 		this.classifier = classifier;
 		this.scorers = scorers;
 		numScores = scorers.length;
@@ -122,6 +123,15 @@ public abstract class TrainingAlgorithm {
 	 */
 	protected void incIterations() {
 		numIterations++;
+	}
+
+	/**
+	 * Increments the number of training iterations performed by the specified amount.
+	 * 
+	 * @param numIterations - The number of additional iterations performed.
+	 */
+	protected void incIterations(int numIterations) {
+		this.numIterations += numIterations;  
 	}
 
 	/**

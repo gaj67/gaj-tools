@@ -58,19 +58,17 @@ public class TrainHomeTeamAdvantage2Detailed {
 		TrainableClassifier classifier = ClassifierFactory.newDefaultClassifier(numClasses, numFeatures);
 		TrainingControl control = getControl(useAcceleration);
 		ScoredTrainer trainer = classifier.getTrainer(scorers);
-		trainer.start(control);
 		System.out.println("Iteration, scores");
 		printScores("" + trainer.numIterations(), trainer.getScores());
-		while (trainer.iterate(control)) {
+		for (int i = 0; i < 10; i++) {
+			@SuppressWarnings("unused")
+			TrainingSummary summary = trainer.train(control);
 			printScores("" + trainer.numIterations(), trainer.getScores());
 		}
-		TrainingSummary summary = trainer.end(control);
 		long end = System.currentTimeMillis();
 		double time = 1e-3 * (end - start);
 		System.out.printf("#iterations=%d, time=%4.2f seconds (%4.2f ms/iter)%n", 
-				summary.numIterations(), time, 1e3 * time / summary.numIterations());
-		printScores("Initial", summary.initalScores());
-		printScores("Final", summary.finalScores());
+				trainer.numIterations(), time, 1e3 * time / trainer.numIterations());
 		NumericFactory.display("Final classifier parameter=", classifier.getParameters());
 	}
 
@@ -90,7 +88,12 @@ public class TrainHomeTeamAdvantage2Detailed {
 			
 			@Override
 			public int maxIterations() {
-				return 0;
+				return 1;
+			}
+
+			@Override
+			public int maxSubIterations() {
+				return 10;
 			}
 			
 			@Override

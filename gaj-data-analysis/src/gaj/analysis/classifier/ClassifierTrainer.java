@@ -6,6 +6,8 @@ import gaj.data.classifier.ScoredTrainer;
 import gaj.data.classifier.TrainingControl;
 import gaj.data.classifier.TrainingSummary;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 /**
@@ -30,9 +32,9 @@ public class ClassifierTrainer implements ScoredTrainer {
 	 */
 	protected ClassifierTrainer(ParameterisedClassifier classifier, DataScorer[] scorers, Class<? extends TrainingAlgorithm> algo) {
 		try {
-			trainer = algo.newInstance();
-			trainer.bindArguments(classifier, scorers);
-		} catch (InstantiationException | IllegalAccessException e) {
+			Constructor<? extends TrainingAlgorithm> constructor = algo.getDeclaredConstructor(ParameterisedClassifier.class, DataScorer[].class);
+			trainer = constructor.newInstance(classifier, scorers);
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			throw new IllegalStateException(e);
 		}
 	}

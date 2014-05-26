@@ -14,6 +14,7 @@ import java.util.Iterator;
 public abstract class AbstractVector implements DataVector {
 
 	protected final int length;
+	private double norm = -1;
 
 	protected AbstractVector(int length) {
 		this.length = length;
@@ -26,12 +27,15 @@ public abstract class AbstractVector implements DataVector {
 
 	@Override
 	public double norm() {
-		double sum = 0;
-		for (int i = 0; i < length; i++) {
-			double value = get(i);
-			sum += value * value;
+		if (norm < 0) {
+			double sum = 0;
+			for (int i = 0; i < length; i++) {
+				final double value = get(i);
+				sum += value * value;
+			}
+			norm = Math.sqrt(sum);
 		}
-		return Math.sqrt(sum);
+		return norm;
 	}
 
 	@Override

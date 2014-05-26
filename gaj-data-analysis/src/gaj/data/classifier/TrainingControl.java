@@ -13,6 +13,14 @@ public interface TrainingControl {
 	int maxIterations();
 
 	/**
+	 * Specifies the maximum number of minor iterations that may be performed during
+	 * a major (score-improving) iteration.
+	 * 
+	 * @return The maximum number of sub-iterations, or a non-positive value if there is no maximum.
+	 */
+	int maxSubIterations();
+
+	/**
 	 * Specifies the smallest difference in accuracy scores between update iterations, 
 	 * below which training will cease. 
 	 * 

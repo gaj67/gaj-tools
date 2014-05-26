@@ -5,6 +5,7 @@ import gaj.analysis.vector.VectorFactory;
 import gaj.data.matrix.CompoundMatrix;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.DenseMatrix;
+import gaj.data.matrix.FlatMatrix;
 import gaj.data.matrix.RowMatrix;
 import gaj.data.matrix.SparseMatrix;
 import gaj.data.matrix.WritableMatrix;
@@ -37,8 +38,8 @@ public class MatrixFactory {
 	 * @param data - The row-matrix of data.
 	 * @return The data matrix.
 	 */
-	public static DataMatrix newMatrix(double[][] data) {
-		return new WritableDenseRowMatrix(data);
+	public static RowMatrix newMatrix(double[][] data) {
+		return new WritableDenseMatrix(data);
 	}
 
 	/**
@@ -49,7 +50,7 @@ public class MatrixFactory {
 	 * @return The data matrix.
 	 */
 	public static WritableMatrix newWritableMatrix(int numRows, int numColumns) {
-		return new WritableDenseRowMatrix(numRows, numColumns);
+		return new WritableDenseMatrix(numRows, numColumns);
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class MatrixFactory {
 	 * @return The data matrix.
 	 */
 	public static WritableMatrix newWritableMatrix(double[][] data) {
-		return new WritableDenseRowMatrix(data);
+		return new WritableDenseMatrix(data);
 	}
 
 	public static DataMatrix scale(DataMatrix matrix, double multiplier) {
@@ -164,13 +165,13 @@ public class MatrixFactory {
 
 	public static WritableVector asWritableVector(WritableMatrix matrix) {
 		if (matrix instanceof FlatMatrix)
-			return VectorFactory.newWritableVector(((FlatMatrix<?>) matrix).getFlatData());
+			return VectorFactory.newWritableVector(((FlatMatrix) matrix).getFlatData());
 		return new WritableVectorMatrix(matrix);
 	}
 
 	public static DataVector asVector(DataMatrix matrix) {
 		if (matrix instanceof FlatMatrix)
-			return VectorFactory.newVector(((FlatMatrix<?>) matrix).getFlatData());
+			return VectorFactory.newVector(((FlatMatrix) matrix).getFlatData());
 		return new VectorMatrix(matrix);
 	}
 

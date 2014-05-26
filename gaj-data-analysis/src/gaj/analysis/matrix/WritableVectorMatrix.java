@@ -1,7 +1,5 @@
 package gaj.analysis.matrix;
 
-import java.util.Iterator;
-
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
@@ -9,64 +7,49 @@ import gaj.data.vector.WritableVector;
 /**
  * Presents a matrix as a flat vector.
  */
-public class WritableVectorMatrix implements WritableVector {
+public class WritableVectorMatrix extends VectorMatrix implements WritableVector {
 
-	public WritableVectorMatrix(WritableMatrix matrix) {
-		// TODO Auto-generated constructor stub
+	protected final int numRows;
+
+	protected WritableVectorMatrix(WritableMatrix matrix) {
+		super(matrix);
+		this.numRows = matrix.numRows();
 	}
 
 	@Override
 	public void set(int pos, double value) {
-		// TODO Auto-generated method stub
-
+		// Row-wise, pos = numColumns * row + column.
+		((WritableMatrix) matrix).set(pos / numColumns, pos % numColumns, value);
 	}
 
 	@Override
 	public void set(DataVector vector) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public int length() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double norm() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double get(int pos) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Iterator<Double> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public double dot(DataVector vector) {
-		// TODO Auto-generated method stub
-		return 0;
+		final WritableMatrix _matrix = ((WritableMatrix) matrix);
+		int pos = 0;
+		for (int row = 0; row < numRows; row++) {
+			WritableVector rowVec = _matrix.getRow(row);
+			for (int column = 0; column < numColumns; column++) {
+				rowVec.set(column, vector.get(pos++));
+			}
+		}
 	}
 
 	@Override
 	public void add(int pos, double value) {
-		// TODO Auto-generated method stub
-
+		// Row-wise, pos = numColumns * row + column.
+		((WritableMatrix) matrix).add(pos / numColumns, pos % numColumns, value);
 	}
 
 	@Override
 	public void add(DataVector vector) {
-		// TODO Auto-generated method stub
-
+		final WritableMatrix _matrix = ((WritableMatrix) matrix);
+		int pos = 0;
+		for (int row = 0; row < numRows; row++) {
+			WritableVector rowVec = _matrix.getRow(row);
+			for (int column = 0; column < numColumns; column++) {
+				rowVec.add(column, vector.get(pos++));
+			}
+		}
 	}
 
 }
