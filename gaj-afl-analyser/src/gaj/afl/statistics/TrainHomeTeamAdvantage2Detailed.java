@@ -16,6 +16,7 @@ import gaj.data.classifier.GoldDatum;
 import gaj.data.classifier.ScoredTrainer;
 import gaj.data.classifier.TrainableClassifier;
 import gaj.data.classifier.TrainingControl;
+import gaj.data.classifier.TrainingState;
 import gaj.data.classifier.TrainingSummary;
 import gaj.data.vector.DataVector;
 
@@ -60,20 +61,23 @@ public class TrainHomeTeamAdvantage2Detailed {
 		ScoredTrainer trainer = classifier.getTrainer(scorers);
 		System.out.println("Iteration, scores");
 		printScores("" + trainer.numIterations(), trainer.getScores());
-		for (int i = 0; i < 10; i++) {
-			@SuppressWarnings("unused")
+		TrainingState state = TrainingState.NOT_HALTED;
+		while (state != TrainingState.SCORE_CONVERGED) {
 			TrainingSummary summary = trainer.train(control);
 			printScores("" + trainer.numIterations(), trainer.getScores());
+			state = summary.getTrainingState();
+			if (state != TrainingState.MAX_ITERATIONS_EXCEEDED) break; // What happened?
 		}
+		System.out.printf("Final state=%s%n", state);
 		long end = System.currentTimeMillis();
 		double time = 1e-3 * (end - start);
 		System.out.printf("#iterations=%d, time=%4.2f seconds (%4.2f ms/iter)%n", 
 				trainer.numIterations(), time, 1e3 * time / trainer.numIterations());
-		NumericFactory.display("Final classifier parameter=", classifier.getParameters());
+		NumericFactory.display("Final classifier parameters =", classifier.getParameters());
 	}
 
 	private static void printScores(String label, double[] scores) {
-		System.out.printf("%s scores = [", label);
+		System.out.printf("%s [", label);
 		for (double score : scores)
 			System.out.printf(" %f", score);
 		System.out.println(" ]");

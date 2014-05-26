@@ -26,4 +26,11 @@ public interface TrainingSummary {
 	 */
 	double[] finalScores();
 
+	/**
+	 * Indicates the reason why the training process halted.
+	 * 
+	 * @return The termination state.
+	 */
+	TrainingState getTrainingState();
+
 }

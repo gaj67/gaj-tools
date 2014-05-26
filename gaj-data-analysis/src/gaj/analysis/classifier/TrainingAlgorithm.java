@@ -15,9 +15,9 @@ public abstract class TrainingAlgorithm {
 	// Instantiation interface.
 
 	/** The classifier set by {@link #bindArguments}(). */
-	private final ParameterisedClassifier classifier;
+	protected final ParameterisedClassifier classifier;
 	/** The training and testing scorers set by {@link #bindArguments}(). */
-	private final DataScorer[] scorers;
+	protected final DataScorer[] scorers;
 	/** Indicates the number of training and testing scores. */
 	private int numScores;
 	/** Current training and testing scores. */
@@ -37,14 +37,6 @@ public abstract class TrainingAlgorithm {
 		numScores = scorers.length;
 		scores = new double[numScores];
 		trainingScore = computeScores(scores);
-	}
-
-	protected ParameterisedClassifier getClassifier() {
-		return classifier;
-	}
-
-	protected DataScorer[] getScorers() {
-		return scorers;
 	}
 
 	/** 

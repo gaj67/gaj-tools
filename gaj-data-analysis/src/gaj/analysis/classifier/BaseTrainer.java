@@ -5,6 +5,7 @@ import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.ParameterisedClassifier;
 import gaj.data.classifier.TrainingControl;
 import gaj.data.classifier.TrainingSummary;
+import gaj.data.classifier.TrainingState;
 
 import java.util.Arrays;
 
@@ -37,25 +38,30 @@ public abstract class BaseTrainer extends TrainingAlgorithm {
 	@Override
 	public TrainingSummary train(TrainingControl control) {
 		this.control = control;
-		start();
-		while (iterate());
-		return end();
+		TrainingState state = start();
+		while (state == TrainingState.NOT_HALTED)
+			state = iterate();
+		return end(state);
 	}
 
 	/**
 	 * Starts the training run by resetting the number of iterations.
+	 * @return 
 	 */
-	protected void start() {
+	protected TrainingState start() {
 		initialScores = Arrays.copyOf(getScores(), numScores());
 		resetIterations();
+		return TrainingState.NOT_HALTED;
 	}
 
 	/**
 	 * Ends the training run, and summarises the training pocess.
+	 * @param state 
 	 * 
 	 * @return A summary of the training process.
 	 */
-	protected TrainingSummary end() {
+	protected TrainingSummary end(TrainingState state) {
+		final TrainingState _state = state;
 		final int _numIterations = numIterations();
 		final double[] _initialScores = initialScores;
 		initialScores = null;
@@ -75,6 +81,11 @@ public abstract class BaseTrainer extends TrainingAlgorithm {
 			public double[] finalScores() {
 				return _finalScores;
 			}
+
+			@Override
+			public TrainingState getTrainingState() {
+				return _state;
+			}
 		};
 	}
 
@@ -88,11 +99,13 @@ public abstract class BaseTrainer extends TrainingAlgorithm {
 	 * @return A value of true (or false) if 
 	 * further training is (or is not) permitted.
 	 */
-	protected boolean iterate() {
-		if (preTerminate()) return false;
-		if (!update()) return false;
+	protected TrainingState iterate() {
+		TrainingState state = preTerminate();
+		if (state != TrainingState.NOT_HALTED) return state;
+		state = update();
+		if (state != TrainingState.NOT_HALTED) return state;
 		incIterations();
-		return !postTerminate();
+		return postTerminate();
 	}
 
 	/**
@@ -103,7 +116,7 @@ public abstract class BaseTrainer extends TrainingAlgorithm {
 	 * @return A value of true (or false) if a training
 	 * update did (or did not) occur.
 	 */
-	protected abstract boolean update();
+	protected abstract TrainingState update();
 
 	/**
 	 * Checks whether or not training should cease
@@ -112,8 +125,9 @@ public abstract class BaseTrainer extends TrainingAlgorithm {
 	 * @return A value of true (or false) if training
 	 * should (or should not) cease.
 	 */
-	protected boolean preTerminate() {
-		return (control.maxIterations() > 0 && numIterations() >= control.maxIterations());
+	protected TrainingState preTerminate() {
+		return (control.maxIterations() > 0 && numIterations() >= control.maxIterations())
+				? TrainingState.MAX_ITERATIONS_EXCEEDED : TrainingState.NOT_HALTED;
 	}
 
 	/**
@@ -125,14 +139,15 @@ public abstract class BaseTrainer extends TrainingAlgorithm {
 	 * @return A value of true (or false) if training
 	 * should (or should not) cease.
 	 */
-	protected boolean postTerminate() {
+	protected TrainingState postTerminate() {
 		final double prevScore = prevScores[0];
 		final double diffScore = getScores()[0] - prevScore;
 		if (control.scoreTolerance() > 0
 				&& diffScore < control.scoreTolerance())
-			return true;
+			return TrainingState.SCORE_CONVERGED;
 		return (control.relativeScoreTolerance() > 0
-				&& diffScore < Math.abs(prevScore) * control.relativeScoreTolerance());
+				&& diffScore < Math.abs(prevScore) * control.relativeScoreTolerance())
+				? TrainingState.RELATIVE_SCORE_CONVERGED : TrainingState.NOT_HALTED;
 	}
 
 	/**

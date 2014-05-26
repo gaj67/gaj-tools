@@ -6,6 +6,7 @@ import gaj.data.classifier.ClassifierScoreInfo;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.ParameterisedClassifier;
 import gaj.data.classifier.TrainingControl;
+import gaj.data.classifier.TrainingState;
 import gaj.data.vector.DataVector;
 
 /**
@@ -48,35 +49,37 @@ public class GradientAscentTrainer extends BaseTrainer {
 	}
 
 	@Override
-	protected boolean preTerminate() {
-		if (super.preTerminate()) return true;
+	protected TrainingState preTerminate() {
+		TrainingState state = super.preTerminate();
+		if (state != TrainingState.NOT_HALTED) return state;
 		final TrainingControl control = getControl();
 		return (control.gradientTolerance() > 0 
-				&& direction.norm() < control.gradientTolerance());
+				&& direction.norm() < control.gradientTolerance())
+				? TrainingState.GRADIENT_TOO_SMALL : TrainingState.NOT_HALTED;
 	}
 
 	@Override
-	protected boolean update() {
+	protected TrainingState update() {
 		double[] newScores = new double[numScores()];
-		ClassifierScoreInfo newTrainingScore = performLineSearch(newScores);
-		if (newTrainingScore == null) return false;
+		ClassifierScoreInfo[] newTrainingScore = new ClassifierScoreInfo[1]; 
+		TrainingState state = performLineSearch(newTrainingScore, newScores);
+		if (state != TrainingState.NOT_HALTED) return state;
 		computeTestingScores(newScores);
-		updateScores(newTrainingScore, newScores);
+		updateScores(newTrainingScore[0], newScores);
 		recomputeStepSizeAndDirection();
-		return true;
+		return TrainingState.NOT_HALTED;
 	}
 
 	/**
 	 * Finds a step-size rho for direction d such that
 	 * x1 = x0 + rho*d and score(x1) > score(x0).
 	 * 
+	 * @param newInfo - Place-holder for the training score gradient, f'(x1).
 	 * @param newScores - Place-holder for the new training score, f(x1).
-	 * @return The new training score information, containing f'(x1), 
-	 * or a value of null if no better-scoring point was found.
+	 * @return The state of the trainer.
 	 */
-	private ClassifierScoreInfo performLineSearch(double[] newScores) {
+	private TrainingState performLineSearch(ClassifierScoreInfo[] newInfo, double[] newScores) {
 		double rho = stepSize;
-		final ParameterisedClassifier classifier = getClassifier();
 		final TrainingControl control = getControl();
 		int maxSubIterations = control.maxSubIterations();
 		if (maxSubIterations <= 0) maxSubIterations = Integer.MAX_VALUE;
@@ -85,18 +88,19 @@ public class GradientAscentTrainer extends BaseTrainer {
 			DataVector newParams = VectorFactory.add(
 					classifier.getParameters(), 
 					VectorFactory.scale(direction, rho));
-			if (!classifier.setParameters(newParams)) break;
+			if (!classifier.setParameters(newParams)) return TrainingState.UPDATE_FAILED;
 			ClassifierScoreInfo newTrainingScore = computeTrainingScore(newScores);
-			if (newScores[0] > getScores()[0]) {
+			if (newScores[0] > getScores()[0]) { // Score has improved.
 				incIterations(numSubIterations); // Count minor iterations.
-				return newTrainingScore;
+				newInfo[0] = newTrainingScore;
+				return TrainingState.NOT_HALTED;
 			}
 			// Set up further line search.
 			numSubIterations++;
 			recomputeStepSize(newTrainingScore);
 			rho = stepSize - Math.abs(rho);
 		}
-		return null;
+		return TrainingState.MAX_SUB_ITERATIONS_EXCEEDED;
 	}
 
 	/**
