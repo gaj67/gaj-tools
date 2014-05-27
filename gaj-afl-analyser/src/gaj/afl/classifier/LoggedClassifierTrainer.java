@@ -28,9 +28,11 @@ public class LoggedClassifierTrainer {
 		
 	}
 
-	public void train(boolean useAcceleration, boolean showScoreTrace) {
-		System.out.printf("Using acceleration: %s, Showing score trace: %s%n", useAcceleration, showScoreTrace);
-		TrainingControl control = getControl(useAcceleration, showScoreTrace ? 1 : 0);
+	public void train(boolean useAcceleration, int traceIterations) {
+		System.out.printf("Using acceleration: %s%n", useAcceleration);
+		System.out.printf("Showing score trace: %s%n", 
+				(traceIterations > 0) ? ("every " + traceIterations + " iterations") : "no");
+		TrainingControl control = getControl(useAcceleration, traceIterations);
 		train(classifier.getTrainer(getScorers()), control);
 	}
 

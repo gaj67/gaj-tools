@@ -31,8 +31,8 @@ public class TrainHomeTeamAdvantage {
 		System.out.printf("#games=%d, home-losses=%d, home-wins=%d, P(home-win)=%5.3f, P(home-loss)=%5.3f%n", n, n-w, w, p, 1-p);
 		System.out.printf("Expected parameter=%f%n", Math.log((1-p) / p));
 		GoldData testingData = getMatchData(manager.getMatchesByYear(2012, 2013));
-		getTrainer(trainingData, testingData).train(false, false);
-		getTrainer(trainingData, testingData).train(true, true);
+		getTrainer(trainingData, testingData).train(false, 10);
+		getTrainer(trainingData, testingData).train(true, 1);
 	}
 
 	private static LoggedClassifierTrainer getTrainer(GoldData trainingData,

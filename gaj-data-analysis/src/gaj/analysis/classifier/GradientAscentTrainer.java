@@ -79,6 +79,7 @@ public class GradientAscentTrainer extends BaseTrainer {
 	 * @return The state of the trainer.
 	 */
 	private TrainingState performLineSearch(ClassifierScoreInfo[] newInfo, double[] newScores) {
+		TrainingState state = TrainingState.MAX_SUB_ITERATIONS_EXCEEDED;
 		double rho = stepSize;
 		final TrainingControl control = getControl();
 		int maxSubIterations = control.maxSubIterations();
@@ -88,19 +89,23 @@ public class GradientAscentTrainer extends BaseTrainer {
 			DataVector newParams = VectorFactory.add(
 					classifier.getParameters(), 
 					VectorFactory.scale(direction, rho));
-			if (!classifier.setParameters(newParams)) return TrainingState.UPDATE_FAILED;
+			if (!classifier.setParameters(newParams)) {
+				state = TrainingState.UPDATE_FAILED;
+				break;
+			}
 			ClassifierScoreInfo newTrainingScore = computeTrainingScore(newScores);
 			if (newScores[0] > getScores()[0]) { // Score has improved.
-				incIterations(numSubIterations); // Count minor iterations.
 				newInfo[0] = newTrainingScore;
-				return TrainingState.NOT_HALTED;
+				state = TrainingState.NOT_HALTED;
+				break;
 			}
 			// Set up further line search.
 			numSubIterations++;
 			recomputeStepSize(newTrainingScore);
 			rho = stepSize - Math.abs(rho);
 		}
-		return TrainingState.MAX_SUB_ITERATIONS_EXCEEDED;
+		incIterations(numSubIterations); // Count minor iterations.
+		return state;
 	}
 
 	/**
