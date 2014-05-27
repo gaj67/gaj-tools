@@ -18,7 +18,7 @@ import java.util.Collection;
 /**
  * Tests for home-ground advantage by training a classifier with a constant feature value of 1.
  */
-public class TrainHomeTeamAdvantage2Detailed {
+public class TrainHomeTeamAdvantage2 {
 
 	public static void main(String[] args) {
 		// Collect all match statistics...
