@@ -156,11 +156,11 @@ public class MatrixFactory {
 
 	// TODO Similar methods for ColumnMatrix.
 
-	public static void display(String label, DataMatrix matrix) {
-		System.out.printf("%s [%n", label);
+	public static void display(String prefix, DataMatrix matrix, String suffix) {
+		System.out.printf("%s [%n", prefix);
 		for (DataVector row : matrix.getRows())
-			VectorFactory.display("", row);
-		System.out.println("]");
+			VectorFactory.display("", row, "\n");
+		System.out.printf("]%s", suffix);
 	}
 
 	public static WritableVector asWritableVector(WritableMatrix matrix) {

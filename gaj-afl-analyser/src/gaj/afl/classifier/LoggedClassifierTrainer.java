@@ -1,7 +1,7 @@
 package gaj.afl.classifier;
 import gaj.analysis.classifier.AccuracyScorer;
 import gaj.analysis.classifier.LogProbScorer;
-import gaj.analysis.numeric.NumericFactory;
+import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.GoldData;
 import gaj.data.classifier.ScoredTrainer;
@@ -9,6 +9,7 @@ import gaj.data.classifier.TrainableClassifier;
 import gaj.data.classifier.TrainingControl;
 import gaj.data.classifier.TrainingState;
 import gaj.data.classifier.TrainingSummary;
+import gaj.data.vector.DataVector;
 
 
 /**
@@ -48,12 +49,12 @@ public class LoggedClassifierTrainer {
 
 	protected void train(ScoredTrainer trainer, TrainingControl control) {
 		long start = System.currentTimeMillis();
-		System.out.println("Iteration, scores");
-		printScores("" + trainer.numIterations(), trainer.getScores());
+		System.out.println("Iteration, scores, prameters");
+		printScores(trainer.numIterations(), trainer.getScores(), classifier.getParameters());
 		TrainingState state = TrainingState.NOT_HALTED;
 		while (state != TrainingState.SCORE_CONVERGED) {
 			TrainingSummary summary = trainer.train(control);
-			printScores("" + trainer.numIterations() + ", ", trainer.getScores());
+			printScores(trainer.numIterations(), trainer.getScores(), classifier.getParameters());
 			state = summary.getTrainingState();
 			if (state != TrainingState.MAX_ITERATIONS_EXCEEDED) break; // What happened?
 		}
@@ -62,14 +63,16 @@ public class LoggedClassifierTrainer {
 		double time = 1e-3 * (end - start);
 		System.out.printf("#iterations=%d, time=%4.2f seconds (%4.2f ms/iter)%n", 
 				trainer.numIterations(), time, 1e3 * time / trainer.numIterations());
-		NumericFactory.display("Final classifier parameters =", classifier.getParameters());
+		VectorFactory.display("Final classifier parameters =", classifier.getParameters(), "\n");
 	}
 
-	private static void printScores(String label, double[] scores) {
-		System.out.printf("%s [", label);
+	private static void printScores(int numIterations, double[] scores, DataVector parameters) {
+		System.out.printf("%d, [", numIterations);
 		for (double score : scores)
 			System.out.printf(" %f", score);
-		System.out.println(" ]");
+		System.out.print(" ], ");
+		VectorFactory.display(parameters);
+		System.out.println();
 	}
 
 	protected static TrainingControl getControl(final boolean useAcceleration, final int maxIterations) {

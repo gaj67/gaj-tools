@@ -166,11 +166,17 @@ public abstract class VectorFactory {
 		return summedVector;
 	}
 
-	public static void display(String label, DataVector vector) {
-		System.out.printf("%s [", label);
+	public static void display(String prefix, DataVector vector, String suffix) {
+		System.out.print(prefix);
+		display(vector);
+		System.out.print(suffix);
+	}
+
+	public static void display(DataVector vector) {
+		System.out.print("[");
 		for (double value : vector)
 			System.out.printf(" %f", value);
-		System.out.println(" ]");
+		System.out.print(" ]");
 	}
 
 }

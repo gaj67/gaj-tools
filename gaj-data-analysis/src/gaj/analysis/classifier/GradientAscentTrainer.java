@@ -28,10 +28,6 @@ public class GradientAscentTrainer extends BaseTrainer {
 		computeStepSizeAndDirection();
 	}
 
-	/** Maximum angle (in degrees) between vectors for projection. */
-	private static final double MAX_ANGLE = 45;
-	/** Helps measure the 'closeness' between two vectors. */
-	private static final double CLOSENESS = Math.cos(Math.PI * MAX_ANGLE / 180);
 	/** Current step-size for an upcoming gradient ascent. */
 	private double stepSize;
 	/** Current gradient or quasi-gradient direction for an upcoming gradient ascent. */
@@ -80,7 +76,7 @@ public class GradientAscentTrainer extends BaseTrainer {
 	 */
 	private TrainingState performLineSearch(ClassifierScoreInfo[] newInfo, double[] newScores) {
 		TrainingState state = TrainingState.MAX_SUB_ITERATIONS_EXCEEDED;
-		double rho = stepSize;
+		double prevStepSize = 0;
 		final TrainingControl control = getControl();
 		int maxSubIterations = control.maxSubIterations();
 		if (maxSubIterations <= 0) maxSubIterations = Integer.MAX_VALUE;
@@ -88,7 +84,7 @@ public class GradientAscentTrainer extends BaseTrainer {
 		while (numSubIterations < maxSubIterations) {
 			DataVector newParams = VectorFactory.add(
 					classifier.getParameters(), 
-					VectorFactory.scale(direction, rho));
+					VectorFactory.scale(direction, stepSize - prevStepSize));
 			if (!classifier.setParameters(newParams)) {
 				state = TrainingState.UPDATE_FAILED;
 				break;
@@ -101,8 +97,8 @@ public class GradientAscentTrainer extends BaseTrainer {
 			}
 			// Set up further line search.
 			numSubIterations++;
+			prevStepSize = stepSize;
 			recomputeStepSize(newTrainingScore);
-			rho = stepSize - Math.abs(rho);
 		}
 		incIterations(numSubIterations); // Count minor iterations.
 		return state;
@@ -117,9 +113,15 @@ public class GradientAscentTrainer extends BaseTrainer {
 	 * @param newTrainingScore 
 	 */
 	protected void recomputeStepSize(ClassifierScoreInfo newTrainingScore) {
-		// TODO Use quadratic or cubic acceleration.
-		//double rho = CurveFactory.quadraticOptimum(stepSize, gradient, newGradient);
-		stepSize *= 0.5;
+		if (getControl().useAcceleration()) {
+			// TODO Use cubic acceleration.
+			final DataVector g0 = getTrainingScore().getGradient();
+			final DataVector g1 = newTrainingScore.getGradient();
+			double s = CurveFactory.quadraticOptimumScaling(g0, g1, direction);
+			stepSize *= (s > 0 && s < 1) ? s : 0.5;
+		} else {
+			stepSize *= 0.5;
+		}			
 	}
 
 	/**
@@ -129,15 +131,16 @@ public class GradientAscentTrainer extends BaseTrainer {
 	 * {@link #getPrevTrainingScore}() and {@link #getTrainingScore}().
 	 */
 	private void recomputeStepSizeAndDirection() {
-		// Keep previous step-size in both cases below.
+		final DataVector g1 = getTrainingScore().getGradient();
 		if (getControl().useAcceleration()) {
 			// TODO Try cubic acceleration.
 			final DataVector g0 = getPrevTrainingScore().getGradient();
-			final DataVector g1 = getTrainingScore().getGradient();
-			direction = CurveFactory.quadraticOptimumDisplacement(g0, g1, direction, CLOSENESS);
+			double s = CurveFactory.quadraticOptimumScaling(g0, g1, direction);
+			stepSize *= Math.abs(s - 1);
 		} else {
-			direction = getTrainingScore().getGradient();
+			// Best guess is previous step-size.
 		}
+		direction = g1;
 	}
 
 }
