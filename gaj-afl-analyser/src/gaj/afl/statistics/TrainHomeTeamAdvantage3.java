@@ -16,10 +16,9 @@ import java.util.Collection;
 
 
 /**
- * Tests for home-ground advantage by training a classifier with a constant feature value of 1 plus
- * a distance-travelled measure for each team.
+ * Tests for home-ground advantage by training a classifier with a distance-travelled measure for each team.
  */
-public class TrainHomeTeamAdvantage2 {
+public class TrainHomeTeamAdvantage3 {
 
 	public static void main(String[] args) {
 		// Collect all match statistics...
@@ -50,7 +49,7 @@ public class TrainHomeTeamAdvantage2 {
 		return new GoldMatchDataNoDraws(matches) {
 			@Override
 			public int numFeatures() {
-				return 3;
+				return 2;
 			}
 
 			@Override
@@ -62,7 +61,7 @@ public class TrainHomeTeamAdvantage2 {
 				Team awayTeam = match.getFixture().getAwayTeam();
 				Location awayLoc = TeamHomeLocation.getTrainingLocation(awayTeam);
 				double awayDist = computeDistance(awayLoc, ground);
-				return VectorFactory.newVector(1., homeDist, awayDist);
+				return VectorFactory.newVector(homeDist, awayDist);
 			}
 		};
 	}

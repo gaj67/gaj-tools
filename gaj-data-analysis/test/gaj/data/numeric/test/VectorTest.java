@@ -65,8 +65,8 @@ public class VectorTest {
 			DataVector vec = VectorFactory.newVector(0, 1, 2, 3);
 			DataVector vecTimes2 = VectorFactory.scale(vec, 2);
 			DataVector vecTimes2Divide2 = VectorFactory.scale(vecTimes2, 0.5);
-			VectorFactory.display("Original:", vec);
-			VectorFactory.display("Reconstructed:", vecTimes2Divide2);
+			VectorFactory.display("Original:", vec, "\n");
+			VectorFactory.display("Reconstructed:", vecTimes2Divide2, "\n");
 			for (int i = 0; i < vec.length(); i++)
 				assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
 			{
@@ -95,8 +95,8 @@ public class VectorTest {
 			DataVector vec = VectorFactory.newSparseVector(4, 1, 1, 2, 2, 3, 3);
 			DataVector vecTimes2 = VectorFactory.scale(vec, 2);
 			DataVector vecTimes2Divide2 = VectorFactory.scale(vecTimes2, 0.5);
-			VectorFactory.display("Original:", vec);
-			VectorFactory.display("Reconstructed:", vecTimes2Divide2);
+			VectorFactory.display("Original:", vec, "\n");
+			VectorFactory.display("Reconstructed:", vecTimes2Divide2, "\n");
 			for (int i = 0; i < vec.length(); i++)
 				assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
 			{
@@ -127,8 +127,8 @@ public class VectorTest {
 			DataVector vec = VectorFactory.concatenate(vec1, vec2);
 			DataVector vecTimes2 = VectorFactory.scale(vec, 2);
 			DataVector vecTimes2Divide2 = VectorFactory.scale(vecTimes2, 0.5);
-			VectorFactory.display("Original:", vec);
-			VectorFactory.display("Reconstructed:", vecTimes2Divide2);
+			VectorFactory.display("Original:", vec, "\n");
+			VectorFactory.display("Reconstructed:", vecTimes2Divide2, "\n");
 			for (int i = 0; i < vec.length(); i++)
 				assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
 			{
