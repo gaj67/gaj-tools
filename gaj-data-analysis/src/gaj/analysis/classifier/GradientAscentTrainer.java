@@ -1,6 +1,5 @@
 package gaj.analysis.classifier;
 
-import gaj.analysis.curves.CurveFactory;
 import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.ClassifierScoreInfo;
 import gaj.data.classifier.DataScorer;
@@ -11,7 +10,7 @@ import gaj.data.vector.DataVector;
 
 /**
  * Implements a classifier trainer using
- * gradient ascent to maximise the score(s)
+ * linear gradient ascent to maximise the score(s)
  * on one or more fixed data sets.
  */
 public class GradientAscentTrainer extends BaseTrainer {
@@ -29,16 +28,16 @@ public class GradientAscentTrainer extends BaseTrainer {
 	}
 
 	/** Current step-size for an upcoming gradient ascent. */
-	private double stepSize;
+	protected double stepSize;
 	/** Current gradient or quasi-gradient direction for an upcoming gradient ascent. */
-	private DataVector direction;
+	protected DataVector direction;
 
 	/**
 	 * Computes the direction for the next iteration, and the step-size 
 	 * to take along that direction.
 	 * <p/>Gradient information is available in {@link #getTrainingScore}().
 	 */
-	private void computeStepSizeAndDirection() {
+	protected void computeStepSizeAndDirection() {
 		// TODO Normalise step-size by gradient size.
 		stepSize = 0.5;
 		direction = getTrainingScore().getGradient();
@@ -74,7 +73,7 @@ public class GradientAscentTrainer extends BaseTrainer {
 	 * @param newScores - Place-holder for the new training score, f(x1).
 	 * @return The state of the trainer.
 	 */
-	private TrainingState performLineSearch(ClassifierScoreInfo[] newInfo, double[] newScores) {
+	protected TrainingState performLineSearch(ClassifierScoreInfo[] newInfo, double[] newScores) {
 		TrainingState state = TrainingState.MAX_SUB_ITERATIONS_EXCEEDED;
 		double prevStepSize = 0;
 		final TrainingControl control = getControl();
@@ -113,15 +112,7 @@ public class GradientAscentTrainer extends BaseTrainer {
 	 * @param newTrainingScore 
 	 */
 	protected void recomputeStepSize(ClassifierScoreInfo newTrainingScore) {
-		if (getControl().useAcceleration()) {
-			// TODO Use cubic acceleration.
-			final DataVector g0 = getTrainingScore().getGradient();
-			final DataVector g1 = newTrainingScore.getGradient();
-			double s = CurveFactory.quadraticOptimumScaling(g0, g1, direction);
-			stepSize *= (s > 0 && s < 1) ? s : 0.5;
-		} else {
-			stepSize *= 0.5;
-		}			
+		stepSize *= 0.5;
 	}
 
 	/**
@@ -130,17 +121,9 @@ public class GradientAscentTrainer extends BaseTrainer {
 	 * <p/>Gradient information is available in 
 	 * {@link #getPrevTrainingScore}() and {@link #getTrainingScore}().
 	 */
-	private void recomputeStepSizeAndDirection() {
-		final DataVector g1 = getTrainingScore().getGradient();
-		if (getControl().useAcceleration()) {
-			// TODO Try cubic acceleration.
-			final DataVector g0 = getPrevTrainingScore().getGradient();
-			double s = CurveFactory.quadraticOptimumScaling(g0, g1, direction);
-			stepSize *= Math.abs(s - 1);
-		} else {
-			// Best guess is previous step-size.
-		}
-		direction = g1;
+	protected void recomputeStepSizeAndDirection() {
+		// Best guess is previous step-size.
+		direction = getTrainingScore().getGradient();
 	}
 
 }

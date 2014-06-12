@@ -42,7 +42,7 @@ public abstract class CurveFactory {
 		 */
 		double g0d = VectorFactory.dot(g0, d);
 		double g1d = VectorFactory.dot(g1, d);
-		return -g0d / (g1d - g0d);
+		return -g0d / (g1d - g0d); // NB: Invariant to scaling of d.
 	}
 
 
@@ -76,6 +76,58 @@ public abstract class CurveFactory {
 		} else {
 			return VectorFactory.scale(d, s);
 		}
+	}
+
+	/**
+	 * Fits a cubic curve through two known function values,
+	 * y0 and y1, and
+	 * two known function gradients, g0 and g1, at unknown
+	 * points x0 and x1, respectively, 
+	 * where it is known that x1 = x0 + d. 
+	 * <p/>Computes the scalar distance s
+	 * needed to reach the estimated turning point
+	 * from x0 along direction d.
+	 * 
+	 * @param y0 - The value f(x0).
+	 * @param g0 - The slope f'(x0).
+	 * @param y1 - The value f(x1).
+	 * @param g1 - The slope f'(x1).
+	 * @param d - The directed distance, x1 - x0.
+	 * @return The optimal step-size, s.
+	 */
+	public static double cubicOptimumScaling(
+			double y0, DataVector g0, 
+			double y1, DataVector g1, DataVector d) 
+	{
+		/*
+		 * <p/>Consider a curve y=f(x), such that
+		 * y0=f(x0), g0=f'(x0), H0=f''(x0), T0=f'''(x0), etc.
+		 * Let x1=x0+d. Then (Taylor series)
+		 * f(x1) = f(x0)+f'(x0).(x1-x0)
+		 * +1/2 f''(x0):(x1-x0)^2 
+		 * +1/6 f'''(x0):(x1-x0)^3 + O(||x1-x0||^4),
+		 * => y1 = y0+g0.d+1/2*d.H0.d+1/6*T0:d^3 + O(||d||^4).
+		 * Also, 
+		 * f'(x1) = f'(x0)+(x1-x0).f''(x0) 
+		 * + 1/2 f'''(x):(x1-x0)^2 + O(||x1-x0||^3)
+		 * => g1 = g0+d.H0+1/2*T0:d^2 + O(||d||^3)
+		 * => d.H0.d = (g1-g0).d-1/2*T0:d^3 + O(||d||^4).
+		 * Hence, y1-y0 = 1/2*(g1+g0).d-1/12*T0:d^3 + O(||d||^4).
+		 * 
+		 * Now, let x1* = x0 + s*d, such that f'(x1*) = 0 and f''(x1*) < 0,
+		 * i.e. x1* is a local maximum turning point.
+		 * Then f'(x1*) = 0 = f'(x0) + (x1*-x0).f''(x0)
+		 * + 1/2 f'''(x0):(x1*-x0)^2 + O(||x1*-x0||^3)
+		 * => 0 = g0 + s*d.H0 + 1/2*s^2*T0:d^2 + O(||d||^3)
+		 * => 1/2*T0:d^3*s^2 + d.H0.d*s + g0.d = 0
+		 * => s = (-d.H0.d - sqrt{(d.H0.d)^2-2*T0:d^3*g0.d}) / T0:d^3.
+		 */
+		double g0d = VectorFactory.dot(g0, d);
+		double g1d = VectorFactory.dot(g1, d);
+		double T0d3 = 6 * (g1d + g0d) - 3 * (y1 - y0);
+		double H0d2 = (g1d - g0d) - 0.5 * T0d3;
+		double D = H0d2 * H0d2 - 2 * T0d3 * g0d;
+		return -(H0d2 + Math.sqrt(D)) / T0d3; // NB: C(g0,g1,r*d) = C(g0,g1,d)/r.
 	}
 
 }

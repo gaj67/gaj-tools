@@ -44,12 +44,4 @@ public interface TrainingControl {
 	 */
 	double gradientTolerance();
 
-	/**
-	 * Indicates whether or not to use curve fitting to attempt to accelerate the convergence
-	 * of iterative training.
-	 *    
-	 * @return A value of true (or false) if acceleration is (or is not) to be used.
-	 */
-	boolean useAcceleration();
-
 }

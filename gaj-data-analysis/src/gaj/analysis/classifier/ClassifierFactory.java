@@ -31,16 +31,32 @@ public abstract class ClassifierFactory {
 	}
 
 	/**
-	 * Obtains the default trainable classifier.
+	 * Obtains the default classifier with a gradient ascent trainer.
 	 * 
 	 * @param numClasses - The number of classes in the classification scheme.
 	 * @param numFeatures - The length of each feature vector.
+	 * @param type - The type of acceleration to apply to gradient ascent.
 	 * @return A trainable classifier.
 	 */
-	public static TrainableClassifier newTrainableClassifier(int numClasses, int numFeatures) {
+	public static TrainableClassifier newTrainableClassifier(int numClasses, int numFeatures, AccelerationType type) {
 		return new TrainableClassifierImpl(
 				newLogisticClassifier(numClasses, numFeatures),
-				GradientAscentTrainer.class);
+				getGradientAscentAlgorithm(type));
+	}
+
+	private static Class<? extends TrainingAlgorithm> getGradientAscentAlgorithm(
+			AccelerationType type) 
+	{
+		switch (type) {
+			case Cubic:
+				return CubicGradientAscentTrainer.class;
+			case Linear:
+				return GradientAscentTrainer.class;
+			case Quadratic:
+				return QuadraticGradientAscentTrainer.class;
+			default:
+				throw new IllegalArgumentException("Unknown type: " + type);
+		}
 	}
 
 }

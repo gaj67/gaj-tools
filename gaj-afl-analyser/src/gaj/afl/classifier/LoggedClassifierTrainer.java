@@ -1,5 +1,7 @@
 package gaj.afl.classifier;
+import gaj.analysis.classifier.AccelerationType;
 import gaj.analysis.classifier.AccuracyScorer;
+import gaj.analysis.classifier.ClassifierFactory;
 import gaj.analysis.classifier.LogProbScorer;
 import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.DataScorer;
@@ -29,11 +31,18 @@ public class LoggedClassifierTrainer {
 		
 	}
 
-	public void train(boolean useAcceleration, int traceIterations) {
-		System.out.printf("Using acceleration: %s%n", useAcceleration);
+	public static LoggedClassifierTrainer getTrainer(GoldData trainingData,
+			GoldData testingData, AccelerationType type) {
+		LoggedClassifierTrainer trainer = new LoggedClassifierTrainer(
+				ClassifierFactory.newTrainableClassifier(trainingData.numClasses(), trainingData.numFeatures(), type), 
+				trainingData, testingData);
+		return trainer;
+	}
+
+	public void train(int traceIterations) {
 		System.out.printf("Showing score trace: %s%n", 
 				(traceIterations > 0) ? ("every " + traceIterations + " iterations") : "no");
-		TrainingControl control = getControl(useAcceleration, traceIterations);
+		TrainingControl control = getControl(traceIterations);
 		train(classifier.getTrainer(getScorers()), control);
 	}
 
@@ -75,7 +84,7 @@ public class LoggedClassifierTrainer {
 		System.out.println();
 	}
 
-	protected static TrainingControl getControl(final boolean useAcceleration, final int maxIterations) {
+	protected static TrainingControl getControl(final int maxIterations) {
 		return new TrainingControl() {
 			@Override
 			public double scoreTolerance() {
@@ -100,11 +109,6 @@ public class LoggedClassifierTrainer {
 			@Override
 			public double relativeScoreTolerance() {
 				return 0;
-			}
-
-			@Override
-			public boolean useAcceleration() {
-				return useAcceleration;
 			}
 		};
 	}
