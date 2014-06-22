@@ -179,4 +179,16 @@ public abstract class VectorFactory {
 		System.out.print(" ]");
 	}
 
+	/**
+	 * Computes the element-wise product of two vectors.
+	 * 
+	 * @param v1 - The first vector.
+	 * @param v2 - The second vector.
+	 * @return The product vector.
+	 */
+	public static DataVector multiply(DataVector v1, DataVector v2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -7,7 +7,7 @@ import gaj.data.vector.WritableVector;
 /**
  * Implements a data vector as a true array of numbers.
  */
-/*package-private*/ class WritableDenseVector extends AbstractVector implements DenseVector, WritableVector {
+/*package-private*/ class WritableDenseVector extends AbstractVector implements FlatVector, WritableVector {
 
 	protected final double[] values;
 
@@ -71,6 +71,11 @@ import gaj.data.vector.WritableVector;
 		int i = 0;
 		for (double value : vector)
 			values[i++] += value;
+	}
+
+	@Override
+	public double[] getFlatData() {
+		return values;
 	}
 
 }

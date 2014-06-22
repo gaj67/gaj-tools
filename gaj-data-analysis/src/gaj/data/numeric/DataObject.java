@@ -6,4 +6,18 @@ package gaj.data.numeric;
  */
 public interface DataObject {
 
+	/**
+	 * Indicates the total number of elements in the data structure,
+	 * 
+	 * @return The size of the data.
+	 */
+	//int size();
+	
+	/**
+	 * Indicates the size of the data structure along each dimension.
+	 * 
+	 * @return An array of dimensions.
+	 */
+	//int[] dimensions();
+	
 }
