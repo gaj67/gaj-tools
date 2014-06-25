@@ -1,4 +1,4 @@
-package gaj.analysis.matrix;
+package gaj.impl.matrix;
 
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.DenseMatrix;
@@ -167,6 +167,11 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 	public void multiply(DataMatrix matrix) {
 		for (int row = 0; row < numRows; row++)
 			multiplyRow(row, matrix.getRow(row));
+	}
+
+	@Override
+	public double[][] getArray() {
+		return data;
 	}
 
 }

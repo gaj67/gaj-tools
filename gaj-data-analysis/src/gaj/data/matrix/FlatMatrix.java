@@ -2,7 +2,7 @@ package gaj.data.matrix;
 
 
 /**
- * Indicates that the matrix data is stored as a flat array.
+ * Indicates that the matrix data are stored as a flat array.
  */
 public interface FlatMatrix extends DenseMatrix {
 
@@ -11,6 +11,6 @@ public interface FlatMatrix extends DenseMatrix {
 	 * 
 	 * @return The flat data array.
 	 */
-	double[] getFlatData();
+	double[] getArray();
 
 }

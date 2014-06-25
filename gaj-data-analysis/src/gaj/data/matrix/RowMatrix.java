@@ -2,6 +2,11 @@ package gaj.data.matrix;
 
 
 /**
- * Marks the matrix as having efficient row-based operations.
+ * Indicates that the matrix data are stored as a nested array
+ * of row arrays.
  */
-public interface RowMatrix extends DataMatrix {}
+public interface RowMatrix extends DenseMatrix {
+	
+	double[][] getArray();
+
+}

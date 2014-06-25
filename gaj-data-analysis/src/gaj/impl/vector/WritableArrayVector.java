@@ -11,7 +11,7 @@ import gaj.data.vector.WritableVector;
  */
 /*package-private*/ class WritableArrayVector extends AbstractVector implements ArrayVector, WritableVector {
 
-	protected final double[] data;
+	private final double[] data;
 
 	/**
 	 * Initialises a zero-valued vector.

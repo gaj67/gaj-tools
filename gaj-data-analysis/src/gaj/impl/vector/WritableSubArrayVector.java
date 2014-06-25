@@ -21,10 +21,6 @@ import gaj.data.vector.WritableVector;
 		this.end = start + length;
 	}
 
-	/*package-private*/ public WritableSubArrayVector(ArrayVector vector, int start, int length) {
-		this(vector.getArray(), start, length);
-	}
-
 	@Override
 	public double norm() {
 		double sum = 0;

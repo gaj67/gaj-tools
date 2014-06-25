@@ -1,9 +1,9 @@
 package gaj.analysis.markov;
 
-import gaj.analysis.matrix.MatrixFactory;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
+import gaj.impl.matrix.MatrixFactory;
 import gaj.impl.vector.VectorFactory;
 
 /**

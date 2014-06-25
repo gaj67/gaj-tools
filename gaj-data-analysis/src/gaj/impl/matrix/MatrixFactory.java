@@ -1,4 +1,4 @@
-package gaj.analysis.matrix;
+package gaj.impl.matrix;
 
 import gaj.data.matrix.CompoundMatrix;
 import gaj.data.matrix.DataMatrix;
@@ -165,13 +165,13 @@ public class MatrixFactory {
 
 	public static WritableVector asWritableVector(WritableMatrix matrix) {
 		if (matrix instanceof FlatMatrix)
-			return VectorFactory.newWritableVector(((FlatMatrix) matrix).getFlatData());
+			return VectorFactory.newWritableVector(((FlatMatrix) matrix).getArray());
 		return new WritableVectorMatrix(matrix);
 	}
 
 	public static DataVector asVector(DataMatrix matrix) {
 		if (matrix instanceof FlatMatrix)
-			return VectorFactory.newVector(((FlatMatrix) matrix).getFlatData());
+			return VectorFactory.newVector(((FlatMatrix) matrix).getArray());
 		return new VectorMatrix(matrix);
 	}
 
