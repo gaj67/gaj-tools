@@ -6,6 +6,6 @@ package gaj.data.vector;
  * immutable data vectors. In particular, beware
  * of changing data after the vector has been cached.
  */
-public interface WritableVector extends SettableVector, AddableVector {
+public interface WritableVector extends SettableVector, AddableVector, MultiplicableVector {
 
 }

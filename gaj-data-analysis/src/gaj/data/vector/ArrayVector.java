@@ -1,16 +1,15 @@
-package gaj.analysis.vector;
+package gaj.data.vector;
 
-import gaj.data.vector.DenseVector;
 
 /**
  * Marks a vector as having a flat array representation,
  * which means it must also be dense.
  */
-/*package-private*/ interface FlatVector extends DenseVector {
+public interface ArrayVector extends DenseVector {
 
 	/**
 	 * @return The internal array of data.
 	 */
-	double[] getFlatData();
+	double[] getArray();
 
 }

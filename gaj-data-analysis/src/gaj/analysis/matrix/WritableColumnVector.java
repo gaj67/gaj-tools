@@ -1,6 +1,7 @@
 package gaj.analysis.matrix;
 
 import gaj.analysis.vector.AbstractVector;
+import gaj.data.vector.ArrayVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 
@@ -35,16 +36,52 @@ import gaj.data.vector.WritableVector;
 
 	@Override
 	public void set(DataVector vector) {
-		int row = 0;
-		for (double value : vector)
-			data[row++][column] = value;
+		if (vector instanceof ArrayVector) {
+			final double[] values = ((ArrayVector) vector).getArray();
+			for (int row = 0; row < length; row++)
+				data[row][column] = values[row];
+		} else {
+			int row = 0;
+			for (double value : vector)
+				data[row++][column] = value;
+		}
 	}
 
 	@Override
 	public void add(DataVector vector) {
-		int row = 0;
-		for (double value : vector)
-			data[row++][column] += value;
+		if (vector instanceof ArrayVector) {
+			final double[] values = ((ArrayVector) vector).getArray();
+			for (int row = 0; row < length; row++)
+				data[row][column] += values[row];
+		} else {
+			int row = 0;
+			for (double value : vector)
+				data[row++][column] += value;
+		}
+	}
+
+	@Override
+	public void multiply(int row, double value) {
+		data[row][column] *= value;
+	}
+
+	@Override
+	public void multiply(double value) {
+		for (int row = 0; row < length; row++)
+			data[row][column] *= value;
+	}
+
+	@Override
+	public void multiply(DataVector vector) {
+		if (vector instanceof ArrayVector) {
+			final double[] values = ((ArrayVector) vector).getArray();
+			for (int row = 0; row < length; row++)
+				data[row][column] *= values[row];
+		} else {
+			int row = 0;
+			for (double value : vector)
+				data[row++][column] *= value;
+		}
 	}
 
 }

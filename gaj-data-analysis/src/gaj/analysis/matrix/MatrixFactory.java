@@ -39,7 +39,7 @@ public class MatrixFactory {
 	 * @return The data matrix.
 	 */
 	public static RowMatrix newMatrix(double[][] data) {
-		return new WritableDenseMatrix(data);
+		return new WritableRowMatrix(data);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class MatrixFactory {
 	 * @return The data matrix.
 	 */
 	public static WritableMatrix newWritableMatrix(int numRows, int numColumns) {
-		return new WritableDenseMatrix(numRows, numColumns);
+		return new WritableRowMatrix(numRows, numColumns);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class MatrixFactory {
 	 * @return The data matrix.
 	 */
 	public static WritableMatrix newWritableMatrix(double[][] data) {
-		return new WritableDenseMatrix(data);
+		return new WritableRowMatrix(data);
 	}
 
 	public static DataMatrix scale(DataMatrix matrix, double multiplier) {

@@ -11,7 +11,7 @@ import gaj.data.vector.WritableVector;
 
 	private final DataVector vector;
 	protected final int start;
-	private final int end;
+	protected final int end;
 
 	/*package-private*/ public SubVector(DataVector vector, int start, int length) {
 		super(length);

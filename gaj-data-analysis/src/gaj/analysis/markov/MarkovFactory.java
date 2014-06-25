@@ -47,8 +47,8 @@ public abstract class MarkovFactory {
 		for (int t = 1; t < numStages; t++) {
 			// Compute stage t quantities using stage t-1.
 			alpha = VectorFactory.multiply(
-					obsProbs.getRow(t),
-					MatrixFactory.multiply(alpha, transProbs));
+						obsProbs.getRow(t),
+						MatrixFactory.multiply(alpha, transProbs));
 			mp.setRow(t, alpha);
 		}
 		return mp;
@@ -122,7 +122,7 @@ public abstract class MarkovFactory {
 		//   p(x_1,...,x_T,end,s_T|start) = alpha_T * beta_T.
 		int t = numStages - 1;
 		DataVector beta = endProbs;
-		mp.setRow(t, VectorFactory.multiply(mp.getRow(t), beta));
+		mp.multiplyRow(t, beta);
 		while (t > 0) {
 			// Compute beta_{t-1} = p(x_t,...,x_T|s_{t-1})
 			//  = sum_{s_t}p(x_t,...,x_T|s_t) P(s_t|s_{t-1}).
@@ -133,8 +133,13 @@ public abstract class MarkovFactory {
 					VectorFactory.multiply(beta, obsProbs.getRow(t)));
 			// Compute joint probability, 
 			//   p(x_1,...,x_T,end,s_t|start) = alpha_t * beta_t.
-			mp.setRow(--t, VectorFactory.multiply(mp.getRow(t), beta));
+			mp.multiplyRow(--t, beta);
 		}
 		return mp;
 	}
+	
+	// TODO Add constructor and dynamic methods.
+	// TODO Add posteriorProbabilities
+	// TODO Add WritableVector = initBeta(endProbs);
+	//      updateBeta(beta, t);
 }

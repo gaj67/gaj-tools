@@ -36,4 +36,21 @@ public class WritableSubVector extends SubVector implements WritableVector {
 			this.vector.add(pos++, value);
 	}
 
+	@Override
+	public void multiply(int pos, double value) {
+		vector.multiply(start + pos, value);
+	}
+
+	@Override
+	public void multiply(double value) {
+		for (int pos = start; pos < end; pos++)
+			vector.multiply(pos, value);
+	}
+
+	@Override
+	public void multiply(DataVector vector) {
+		for (int i = 0, pos = start; i < length; i++, pos++)
+			this.vector.multiply(pos, vector.get(i));
+	}
+
 }

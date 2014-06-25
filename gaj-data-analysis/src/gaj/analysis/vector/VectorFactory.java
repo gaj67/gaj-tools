@@ -34,7 +34,7 @@ public abstract class VectorFactory {
 	 * @return The data vector.
 	 */
 	public static DataVector newVector(double... data) {
-		return new WritableDenseVector(data);
+		return new WritableArrayVector(data);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public abstract class VectorFactory {
 	 * @return The data vector.
 	 */
 	public static WritableVector newWritableVector(int length) {
-		return new WritableDenseVector(length);
+		return new WritableArrayVector(length);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public abstract class VectorFactory {
 	 * @return The data vector.
 	 */
 	public static WritableVector newWritableVector(double... data) {
-		return new WritableDenseVector(data);
+		return new WritableArrayVector(data);
 	}
 
 	/**
