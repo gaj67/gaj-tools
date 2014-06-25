@@ -7,10 +7,10 @@ import gaj.afl.data.match.Match;
 import gaj.afl.data.match.MatchFetcher;
 import gaj.afl.data.match.Team;
 import gaj.analysis.classifier.ClassifierFactory;
-import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.GoldData;
 import gaj.data.classifier.GoldDatum;
 import gaj.data.vector.DataVector;
+import gaj.impl.vector.VectorFactory;
 
 import java.util.Collection;
 

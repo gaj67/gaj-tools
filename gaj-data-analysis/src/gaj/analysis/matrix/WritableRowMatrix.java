@@ -1,6 +1,5 @@
 package gaj.analysis.matrix;
 
-import gaj.analysis.vector.VectorFactory;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.DenseMatrix;
 import gaj.data.matrix.RowMatrix;
@@ -8,6 +7,7 @@ import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.ArrayVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
+import gaj.impl.vector.VectorFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /*package-private*/ class WritableRowMatrix extends AbstractMatrix<WritableVector> implements DenseMatrix, WritableMatrix, RowMatrix {

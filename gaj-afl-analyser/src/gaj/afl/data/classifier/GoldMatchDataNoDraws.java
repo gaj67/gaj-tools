@@ -5,10 +5,10 @@ import java.util.Iterator;
 
 import gaj.afl.data.match.Match;
 import gaj.afl.data.match.Outcome;
-import gaj.analysis.vector.VectorIterative;
 import gaj.data.classifier.GoldData;
 import gaj.data.classifier.GoldDatum;
 import gaj.data.vector.DataVector;
+import gaj.impl.vector.VectorIterative;
 
 /**
  * Interprets a collection of historical match data as a 

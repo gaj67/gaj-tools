@@ -1,10 +1,10 @@
 package gaj.analysis.numeric;
 
 import gaj.analysis.matrix.MatrixFactory;
-import gaj.analysis.vector.VectorFactory;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.numeric.DataObject;
 import gaj.data.vector.DataVector;
+import gaj.impl.vector.VectorFactory;
 
 public class NumericFactory {
 

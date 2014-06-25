@@ -3,7 +3,6 @@ import gaj.analysis.classifier.AccelerationType;
 import gaj.analysis.classifier.AccuracyScorer;
 import gaj.analysis.classifier.ClassifierFactory;
 import gaj.analysis.classifier.LogProbScorer;
-import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.GoldData;
 import gaj.data.classifier.ScoredTrainer;
@@ -12,6 +11,7 @@ import gaj.data.classifier.TrainingControl;
 import gaj.data.classifier.TrainingState;
 import gaj.data.classifier.TrainingSummary;
 import gaj.data.vector.DataVector;
+import gaj.impl.vector.VectorFactory;
 
 
 /**

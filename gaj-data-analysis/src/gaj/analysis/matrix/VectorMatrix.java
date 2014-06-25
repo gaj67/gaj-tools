@@ -1,7 +1,7 @@
 package gaj.analysis.matrix;
 
-import gaj.analysis.vector.AbstractVector;
 import gaj.data.matrix.DataMatrix;
+import gaj.impl.vector.AbstractVector;
 
 /**
  * Presents a matrix as a flat vector.

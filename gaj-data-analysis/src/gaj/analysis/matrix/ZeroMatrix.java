@@ -1,9 +1,9 @@
 package gaj.analysis.matrix;
 
-import gaj.analysis.vector.VectorFactory;
 import gaj.data.matrix.SparseMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
+import gaj.impl.vector.VectorFactory;
 
 /*package-private*/ class ZeroMatrix extends AbstractMatrix<DataVector> implements SparseMatrix {
 

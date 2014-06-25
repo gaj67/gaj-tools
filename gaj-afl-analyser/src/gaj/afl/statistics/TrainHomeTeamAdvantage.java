@@ -5,10 +5,10 @@ import gaj.afl.data.classifier.GoldMatchDataNoDraws;
 import gaj.afl.data.match.Match;
 import gaj.afl.data.match.MatchFetcher;
 import gaj.analysis.classifier.AccelerationType;
-import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.GoldData;
 import gaj.data.classifier.GoldDatum;
 import gaj.data.vector.DataVector;
+import gaj.impl.vector.VectorFactory;
 
 import java.util.Collection;
 

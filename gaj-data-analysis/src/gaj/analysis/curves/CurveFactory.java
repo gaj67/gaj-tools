@@ -1,7 +1,7 @@
 package gaj.analysis.curves;
 
-import gaj.analysis.vector.VectorFactory;
 import gaj.data.vector.DataVector;
+import gaj.impl.vector.VectorFactory;
 
 public abstract class CurveFactory {
 

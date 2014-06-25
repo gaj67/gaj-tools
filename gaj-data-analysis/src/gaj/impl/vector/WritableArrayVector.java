@@ -1,4 +1,6 @@
-package gaj.analysis.vector;
+package gaj.impl.vector;
+
+import java.util.Arrays;
 
 import gaj.data.vector.ArrayVector;
 import gaj.data.vector.DataVector;
@@ -9,26 +11,41 @@ import gaj.data.vector.WritableVector;
  */
 /*package-private*/ class WritableArrayVector extends AbstractVector implements ArrayVector, WritableVector {
 
-	protected final double[] values;
+	protected final double[] data;
 
+	/**
+	 * Initialises a zero-valued vector.
+	 * 
+	 * @param length - The length of the vector.
+	 */
 	/*package-private*/ WritableArrayVector(int length) {
 		super(length);
-		this.values = new double[length];
+		this.data = new double[length];
 	}
 
+	/**
+	 * Initialises an array-valued vector.
+	 * 
+	 * @param values - The array of values.
+	 */
 	/*package-private*/ WritableArrayVector(double[] values) {
 		super(values.length);
-		this.values = values;
+		this.data = values;
 	}
 
+	/**
+	 * Initialises a copy of an array-valued vector.
+	 * 
+	 * @param vector - The vector of values.
+	 */
 	/*package-private*/ WritableArrayVector(ArrayVector vector) {
 		super(vector.length());
-		this.values = vector.getArray();
+		this.data = Arrays.copyOf(vector.getArray(), vector.length());
 	}
 
 	@Override
 	public double get(int pos) {
-		return values[pos];
+		return data[pos];
 	}
 
 	@Override
@@ -36,85 +53,85 @@ import gaj.data.vector.WritableVector;
 		double sum = 0;
 		int i = 0;
 		for (double value : vector)
-			sum += values[i++] * value;
+			sum += data[i++] * value;
 		return sum;
 	}
 
 	@Override
 	public double norm() {
 		double sum = 0;
-		for (double value : values)
+		for (double value : data)
 			sum += value * value;
 		return Math.sqrt(sum);
 	}
 
 	@Override
 	public void addTo(WritableVector vector) {
-		for (int i = 0; i < values.length; i++)
-			vector.add(i, values[i]);
+		for (int i = 0; i < data.length; i++)
+			vector.add(i, data[i]);
 	}
 
 	@Override
 	public void set(int pos, double value) {
-		values[pos] = value;
+		data[pos] = value;
 	}
 
 	@Override
 	public void add(int pos, double value) {
-		values[pos] += value;
+		data[pos] += value;
 	}
 
 	@Override
 	public void set(DataVector vector) {
 		if (vector instanceof ArrayVector) {
-			double[] data = ((ArrayVector)vector).getArray();
-			System.arraycopy(data, 0, values, 0, length);
+			double[] values = ((ArrayVector)vector).getArray();
+			System.arraycopy(values, 0, data, 0, length);
 		} else {
 			int i = 0;
 			for (double value : vector)
-				values[i++] = value;
+				data[i++] = value;
 		}
 	}
 
 	@Override
 	public void add(DataVector vector) {
 		if (vector instanceof ArrayVector) {
-			double[] data = ((ArrayVector)vector).getArray();
+			double[] values = ((ArrayVector)vector).getArray();
 			for (int i = 0; i < length; i++)
-				values[i] += data[i];
+				data[i] += values[i];
 		} else {
 			int i = 0;
 			for (double value : vector)
-				values[i++] += value;
+				data[i++] += value;
 		}
 	}
 
 	@Override
 	public double[] getArray() {
-		return values;
+		return data;
 	}
 
 	@Override
 	public void multiply(int pos, double value) {
-		values[pos] *= value;
+		data[pos] *= value;
 	}
 
 	@Override
 	public void multiply(double value) {
 		for (int i = 0; i < length; i++)
-			values[i] *= value;
+			data[i] *= value;
 	}
 
 	@Override
 	public void multiply(DataVector vector) {
 		if (vector instanceof ArrayVector) {
-			double[] data = ((ArrayVector)vector).getArray();
+			double[] values = ((ArrayVector)vector).getArray();
 			for (int i = 0; i < length; i++)
-				values[i] *= data[i];
+				data[i] *= values[i];
 		} else {
 			int i = 0;
 			for (double value : vector)
-				values[i++] *= value;
+				data[i++] *= value;
 		}
 	}
 

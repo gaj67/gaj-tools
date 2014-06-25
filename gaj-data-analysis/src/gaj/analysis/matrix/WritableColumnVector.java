@@ -1,9 +1,9 @@
 package gaj.analysis.matrix;
 
-import gaj.analysis.vector.AbstractVector;
 import gaj.data.vector.ArrayVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
+import gaj.impl.vector.AbstractVector;
 
 /**
  * Wraps the specified column of a row-based, dense matrix. 

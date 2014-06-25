@@ -1,7 +1,5 @@
 package gaj.analysis.matrix;
 
-import gaj.analysis.vector.AbstractVector;
-import gaj.analysis.vector.VectorFactory;
 import gaj.data.matrix.CompoundMatrix;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.DenseMatrix;
@@ -11,6 +9,8 @@ import gaj.data.matrix.SparseMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
+import gaj.impl.vector.AbstractVector;
+import gaj.impl.vector.VectorFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**

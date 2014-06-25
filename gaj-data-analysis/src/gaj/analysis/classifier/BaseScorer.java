@@ -2,8 +2,6 @@ package gaj.analysis.classifier;
 
 import java.util.Iterator;
 
-import gaj.analysis.vector.DataIterator;
-import gaj.analysis.vector.VectorFactory;
 import gaj.data.classifier.Classifier;
 import gaj.data.classifier.ClassifierScoreInfo;
 import gaj.data.classifier.DataScorer;
@@ -13,6 +11,8 @@ import gaj.data.classifier.GoldDatum;
 import gaj.data.classifier.ParameterisedClassifier;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
+import gaj.impl.vector.DataIterator;
+import gaj.impl.vector.VectorFactory;
 
 /**
  * Binds an arbitrary scorer to gold-standard data.
