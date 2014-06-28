@@ -31,9 +31,9 @@ public class CubicGradientAscentTrainer extends GradientAscentTrainer {
 		double s = CurveFactory.cubicOptimumScaling(
 				ts.getScore(), ts.getGradient(), 
 				newTrainingScore.getScore(), newTrainingScore.getGradient(), 
-				direction);
+				stepSize, direction);
 		if (s > 0 && s < stepSize)
-			stepSize = s;
+			stepSize *= s;
 		else
 			stepSize *= 0.5;
 	}
@@ -46,8 +46,8 @@ public class CubicGradientAscentTrainer extends GradientAscentTrainer {
 		double s = CurveFactory.cubicOptimumScaling(
 				prevInfo.getScore(), prevInfo.getGradient(), 
 				curInfo.getScore(), g1, 
-				direction);
-		stepSize = Math.abs(s - stepSize);
+				stepSize, direction);
+		stepSize *= Math.abs(s - 1);
 		direction = g1;
 	}
 
