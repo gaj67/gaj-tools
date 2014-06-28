@@ -6,6 +6,7 @@ import gaj.afl.data.match.Location;
 import gaj.afl.data.match.Match;
 import gaj.afl.data.match.MatchFetcher;
 import gaj.afl.data.match.Team;
+import gaj.analysis.classifier.AccelerationType;
 import gaj.data.classifier.GoldData;
 import gaj.data.classifier.GoldDatum;
 import gaj.data.vector.DataVector;
@@ -33,8 +34,8 @@ public class TrainHomeTeamAdvantage2 {
 		System.out.printf("#games=%d, home-losses=%d, home-wins=%d, P(home-win)=%5.3f, P(home-loss)=%5.3f%n", n, n-w, w, p, 1-p);
 		System.out.printf("Expected parameter=%f%n", Math.log((1-p) / p));
 		GoldData testingData = getMatchData(manager.getMatchesByYear(2012, 2013));
-		LoggedClassifierTrainer.getTrainer(trainingData, testingData, false).train(1000);
-		LoggedClassifierTrainer.getTrainer(trainingData, testingData, true).train(1);
+		LoggedClassifierTrainer.getTrainer(trainingData, testingData, AccelerationType.Linear).train(500);
+		LoggedClassifierTrainer.getTrainer(trainingData, testingData, AccelerationType.Quadratic).train(20);
 	}
 
 	private static GoldData getMatchData(final Collection<Match> matches) {
