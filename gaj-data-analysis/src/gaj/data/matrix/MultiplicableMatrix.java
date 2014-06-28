@@ -11,13 +11,20 @@ import gaj.data.vector.DataVector;
 public interface MultiplicableMatrix extends DataMatrix {
 
 	/**
-	 * Multiplies the value of a matrix element by the given value.
+	 * Multiplies the matrix element by the given value.
 	 * 
 	 * @param row - The index of the matrix row.
 	 * @param col - The index of the matrix column.
 	 * @param value - The value of specified matrix element.
 	 */
 	void multiply(int row, int column, double value);
+
+	/**
+	 * Multiplies the matrix by the given value.
+	 * 
+	 * @param value - The scaling value.
+	 */
+	void multiply(double value);
 
 	/**
 	 * Multiplies a row of the matrix by the given vector.

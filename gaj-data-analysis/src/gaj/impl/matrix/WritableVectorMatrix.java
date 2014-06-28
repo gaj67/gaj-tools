@@ -1,4 +1,4 @@
-package gaj.analysis.matrix;
+package gaj.impl.matrix;
 
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
@@ -48,6 +48,29 @@ public class WritableVectorMatrix extends VectorMatrix implements WritableVector
 			WritableVector rowVec = _matrix.getRow(row);
 			for (int column = 0; column < numColumns; column++) {
 				rowVec.add(column, vector.get(pos++));
+			}
+		}
+	}
+
+	@Override
+	public void multiply(int pos, double value) {
+		((WritableMatrix) matrix).multiply(pos / numColumns, pos % numColumns, value);
+	}
+
+	@Override
+	public void multiply(double value) {
+		final WritableMatrix _matrix = ((WritableMatrix) matrix);
+		_matrix.multiply(value);
+	}
+
+	@Override
+	public void multiply(DataVector vector) {
+		final WritableMatrix _matrix = ((WritableMatrix) matrix);
+		int pos = 0;
+		for (int row = 0; row < numRows; row++) {
+			WritableVector rowVec = _matrix.getRow(row);
+			for (int column = 0; column < numColumns; column++) {
+				rowVec.multiply(column, vector.get(pos++));
 			}
 		}
 	}

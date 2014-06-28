@@ -1,4 +1,4 @@
-package gaj.analysis.matrix;
+package gaj.impl.matrix;
 
 import gaj.data.matrix.DataMatrix;
 import gaj.impl.vector.AbstractVector;

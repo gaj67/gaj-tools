@@ -174,4 +174,13 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 		return data;
 	}
 
+	@Override
+	public void multiply(double value) {
+		for (int row = 0; row < numRows; row++) {
+			final double[] theRow = data[row];
+			for (int column = 0; column < numColumns; column++)
+				theRow[column] *= value;
+		}
+	}
+
 }
