@@ -83,21 +83,23 @@ public abstract class CurveFactory {
 	 * y0 and y1, and
 	 * two known function gradients, g0 and g1, at unknown
 	 * points x0 and x1, respectively, 
-	 * where it is known that x1 = x0 + d. 
+	 * where it is known that x1 = x0 + r*d. 
 	 * <p/>Computes the scalar distance s
 	 * needed to reach the estimated turning point
-	 * from x0 along direction d.
+	 * at x1* = x0 + s*r*d.
 	 * 
 	 * @param y0 - The value f(x0).
 	 * @param g0 - The slope f'(x0).
 	 * @param y1 - The value f(x1).
 	 * @param g1 - The slope f'(x1).
-	 * @param d - The directed distance, x1 - x0.
+	 * @param r  - The step-size.
+	 * @param d - The directed distance, (x1 - x0) / r.
 	 * @return The optimal step-size, s.
 	 */
 	public static double cubicOptimumScaling(
 			double y0, DataVector g0, 
-			double y1, DataVector g1, DataVector d) 
+			double y1, DataVector g1, 
+			double r, DataVector d) 
 	{
 		/*
 		 * <p/>Consider a curve y=f(x), such that
@@ -122,12 +124,12 @@ public abstract class CurveFactory {
 		 * => 1/2*T0:d^3*s^2 + d.H0.d*s + g0.d = 0
 		 * => s = (-d.H0.d - sqrt{(d.H0.d)^2-2*T0:d^3*g0.d}) / T0:d^3.
 		 */
-		double g0d = VectorFactory.dot(g0, d);
-		double g1d = VectorFactory.dot(g1, d);
+		double g0d = r * VectorFactory.dot(g0, d);
+		double g1d = r * VectorFactory.dot(g1, d);
 		double T0d3 = 6 * (g1d + g0d) - 3 * (y1 - y0);
 		double H0d2 = (g1d - g0d) - 0.5 * T0d3;
 		double D = H0d2 * H0d2 - 2 * T0d3 * g0d;
-		return -(H0d2 + Math.sqrt(D)) / T0d3; // NB: C(g0,g1,r*d) = C(g0,g1,d)/r.
+		return -(H0d2 + Math.sqrt(D)) / T0d3;
 	}
 
 }
