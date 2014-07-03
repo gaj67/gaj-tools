@@ -45,7 +45,7 @@ public abstract class MarkovFactory {
 		// Initialise forward probabilities, p(x_1,...,x_t,s_t).
 		final int numStages = obsProbs.numRows();
 		final int numStates = obsProbs.numColumns();
-		WritableMatrix mp = MatrixFactory.newWritableMatrix(numStages, numStates);
+		WritableMatrix mp = MatrixFactory.newMatrix(numStages, numStates);
 		// Compute alpha_1 = p(x_1,s_1) = p(x_1|s_1) P(s_1|start).
 		DataVector alpha = VectorFactory.multiply(obsProbs.getRow(0), startProbs);
 		mp.setRow(0, alpha);
@@ -84,8 +84,7 @@ public abstract class MarkovFactory {
 	{
 		// Initialise backward probabilities, p(x_{t+1},...,x_T|s_t).
 		final int numStages = obsProbs.numRows();
-		final int numStates = obsProbs.numColumns();
-		WritableMatrix mp = MatrixFactory.newWritableMatrix(numStages, numStates);
+		WritableMatrix mp = MatrixFactory.newMatrix(numStages, obsProbs.numColumns());
 		// Set beta_T = P(end|s_T).
 		DataVector beta = endProbs;
 		int t = numStages - 1;

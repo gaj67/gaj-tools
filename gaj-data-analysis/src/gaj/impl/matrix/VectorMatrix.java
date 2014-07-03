@@ -23,4 +23,19 @@ public class VectorMatrix extends AbstractVector {
 		return matrix.get(pos / numColumns, pos % numColumns);
 	}
 
+	@Override
+	public boolean isDense() {
+		return false;
+	}
+
+	@Override
+	public boolean isSparse() {
+		return false;
+	}
+
+	@Override
+	public boolean isCompound() {
+		return true;
+	}
+
 }

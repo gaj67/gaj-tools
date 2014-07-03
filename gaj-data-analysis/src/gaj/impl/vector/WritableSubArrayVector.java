@@ -2,13 +2,12 @@ package gaj.impl.vector;
 
 import gaj.data.vector.ArrayVector;
 import gaj.data.vector.DataVector;
-import gaj.data.vector.DenseVector;
 import gaj.data.vector.WritableVector;
 
 /**
  * Provides a view onto part of another vector.
  */
-/*package-private*/ class WritableSubArrayVector extends AbstractVector implements DenseVector, WritableVector {
+/*package-private*/ class WritableSubArrayVector extends DenseVector implements WritableVector {
 
 	private final double[] values;
 	protected final int start;

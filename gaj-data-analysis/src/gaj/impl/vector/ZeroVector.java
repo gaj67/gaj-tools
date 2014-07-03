@@ -1,10 +1,9 @@
 package gaj.impl.vector;
 
 import gaj.data.vector.DataVector;
-import gaj.data.vector.SparseVector;
 import gaj.data.vector.WritableVector;
 
-/*package-private*/ class ZeroVector extends AbstractVector implements SparseVector {
+/*package-private*/ class ZeroVector extends SparseVector {
 
 	/*package-private*/ ZeroVector(int length) {
 		super(length);

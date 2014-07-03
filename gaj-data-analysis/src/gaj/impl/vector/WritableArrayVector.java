@@ -9,7 +9,7 @@ import gaj.data.vector.WritableVector;
 /**
  * Implements a data vector as a true array of numbers.
  */
-/*package-private*/ class WritableArrayVector extends AbstractVector implements ArrayVector, WritableVector {
+/*package-private*/ class WritableArrayVector extends DenseVector implements ArrayVector, WritableVector {
 
 	private final double[] data;
 

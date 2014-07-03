@@ -18,7 +18,8 @@ import gaj.data.vector.DataVector;
 
 	@Override
 	public double get(int pos) {
-		return vector.get(pos) * multiplier;
+		double value = vector.get(pos);
+		return (value == 0) ? 0 : value * multiplier;
 	}
 
 	@Override
@@ -34,6 +35,21 @@ import gaj.data.vector.DataVector;
 	@Override
 	public double dot(DataVector vector) {
 		return multiplier * this.vector.dot(vector);
+	}
+
+	@Override
+	public boolean isDense() {
+		return vector.isDense();
+	}
+
+	@Override
+	public boolean isSparse() {
+		return vector.isSparse();
+	}
+
+	@Override
+	public boolean isCompound() {
+		return vector.isCompound();
 	}
 
 }

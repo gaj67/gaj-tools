@@ -1,7 +1,6 @@
 package gaj.impl.vector;
 
 import gaj.data.vector.DataVector;
-import gaj.data.vector.SparseVector;
 import gaj.data.vector.WritableVector;
 
 import java.util.Iterator;
@@ -9,7 +8,7 @@ import java.util.Iterator;
 /**
  * Implements a data vector as an array of index/value pairs, with ascending indices.
  */
-/*package-private*/ class SparseVectorImpl extends AbstractVector implements SparseVector {
+/*package-private*/ class SparseVectorImpl extends SparseVector {
 
 	/*package-private*/ final int[] indices;
 	/*package-private*/ final double[] values;

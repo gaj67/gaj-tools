@@ -1,10 +1,7 @@
 package gaj.impl.vector;
 
-import gaj.data.vector.CompoundVector;
 import gaj.data.vector.DataVector;
-import gaj.data.vector.DenseVector;
 import gaj.data.vector.IndexVector;
-import gaj.data.vector.SparseVector;
 import gaj.data.vector.WritableVector;
 
 import java.util.Iterator;
@@ -19,35 +16,13 @@ public abstract class VectorFactory {
 	private VectorFactory() {}
 
 	/**
-	 * Creates a vector of the required length, full of zeroes.
+	 * Creates an immutable vector of the required length, full of zeroes.
 	 * 
 	 * @param length - The vector length.
 	 * @return The zero-data vector.
 	 */
-	public static DataVector newVector(int length) {
+	public static DataVector newZeroVector(int length) {
 		return new ZeroVector(length);
-	}
-
-	/**
-	 * Wraps the given data into a vector.
-	 * <p/>Warning: The data must not be modified!
-	 * 
-	 * @param data - The array of data.
-	 * @return The data vector.
-	 */
-	public static DataVector newVector(double... data) {
-		return new WritableArrayVector(data);
-	}
-
-	/**
-	 * Wraps the given integer data into a vector.
-	 * <p/>Warning: The data must not be modified!
-	 * 
-	 * @param data - The array of data.
-	 * @return The data vector.
-	 */
-	public static IndexVector newIndexVector(int... data) {
-		return new DenseIndexVector(data);
 	}
 
 	/**
@@ -55,18 +30,30 @@ public abstract class VectorFactory {
 	 * 
 	 * @return The data vector.
 	 */
-	public static WritableVector newWritableVector(int length) {
+	public static WritableVector newVector(int length) {
 		return new WritableArrayVector(length);
 	}
 
 	/**
 	 * Wraps the given data into a modifiable vector.
+	 * <p/>Warning: The data must not be modified elsewhere!
 	 * 
 	 * @param data - The array of data.
 	 * @return The data vector.
 	 */
-	public static WritableVector newWritableVector(double... data) {
+	public static WritableVector newVector(double... data) {
 		return new WritableArrayVector(data);
+	}
+
+	/**
+	 * Wraps the given integer data into an immutable vector.
+	 * <p/>Warning: The data must not be modified elsewhere!
+	 * 
+	 * @param data - The array of data.
+	 * @return The data vector.
+	 */
+	public static IndexVector newIndexVector(int... data) {
+		return new DenseIndexVector(data);
 	}
 
 	/**
@@ -113,12 +100,6 @@ public abstract class VectorFactory {
 	public static DataVector scale(DataVector vector, double multiplier) {
 		if (vector instanceof ZeroVector) return vector;
 		if (multiplier == 0) return new ZeroVector(vector.size());
-		if (vector instanceof SparseVector)
-			return new ScaledSparseVector((SparseVector) vector, multiplier);
-		if (vector instanceof DenseVector)
-			return new ScaledDenseVector((DenseVector) vector, multiplier);
-		if (vector instanceof CompoundVector)
-			return new ScaledCompoundVector((CompoundVector) vector, multiplier);
 		return new ScaledVector(vector, multiplier);
 	}
 
@@ -130,18 +111,18 @@ public abstract class VectorFactory {
 	 * @return The dot product.
 	 */
 	public static double dot(DataVector vec1, DataVector vec2) {
-		if (vec1 instanceof SparseVector)
-			return ((SparseVector) vec1).dot(vec2);
-		if (vec2 instanceof SparseVector)
-			return ((SparseVector) vec2).dot(vec1);
-		if (vec1 instanceof CompoundVector)
-			return ((CompoundVector) vec1).dot(vec2);
-		if (vec2 instanceof CompoundVector)
-			return ((CompoundVector) vec2).dot(vec1);
-		if (vec1 instanceof DenseVector)
-			return ((DenseVector) vec1).dot(vec2);
-		if (vec2 instanceof DenseVector)
-			return ((DenseVector) vec2).dot(vec1);
+		if (vec1.isSparse())
+			return vec1.dot(vec2);
+		if (vec2.isSparse())
+			return vec2.dot(vec1);
+		if (vec1.isCompound())
+			return vec1.dot(vec2);
+		if (vec2.isCompound())
+			return vec2.dot(vec1);
+		if (vec1.isDense())
+			return vec1.dot(vec2);
+		if (vec2.isDense())
+			return vec2.dot(vec1);
 		double sum = 0;
 		final Iterator<Double> iter1 = vec1.iterator();
 		final Iterator<Double> iter2 = vec2.iterator();
@@ -158,12 +139,12 @@ public abstract class VectorFactory {
 	 */
 	public static WritableVector add(DataVector... vectors) {
 		final int length = vectors[0].size();
-		WritableVector summedVector = newWritableVector(length);
+		WritableVector summedVector = newVector(length);
 		for (DataVector vector : vectors) {
-			//if (vector instanceof AbstractVector)
+			if (vector instanceof AbstractVector)
 				((AbstractVector) vector).addTo(summedVector);
-			//else
-			//	summedVector.add(vector);
+			else
+				summedVector.add(vector);
 		}
 		return summedVector;
 	}

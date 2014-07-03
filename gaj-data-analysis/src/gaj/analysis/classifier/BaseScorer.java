@@ -120,7 +120,7 @@ public abstract class BaseScorer implements DataScorer {
 		} else {
 			double sumWeights = 0;
 			double sumScores = 0;
-			WritableVector sumGradients = VectorFactory.newWritableVector(classifier.numParameters());
+			WritableVector sumGradients = VectorFactory.newVector(classifier.numParameters());
 			for (GoldDatum datum : data) {
 				final double weight = datum.getWeight(); 
 				sumWeights += weight;

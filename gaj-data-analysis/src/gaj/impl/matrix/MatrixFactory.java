@@ -1,11 +1,8 @@
 package gaj.impl.matrix;
 
-import gaj.data.matrix.CompoundMatrix;
 import gaj.data.matrix.DataMatrix;
-import gaj.data.matrix.DenseMatrix;
 import gaj.data.matrix.FlatMatrix;
 import gaj.data.matrix.RowMatrix;
-import gaj.data.matrix.SparseMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
@@ -21,24 +18,23 @@ public class MatrixFactory {
 	private MatrixFactory() {}
 
 	/**
-	 * Creates a matrix of the required length, full of zeroes.
+	 * Creates an immutable matrix of the required size, full of zeroes.
 	 * 
 	 * @param numRows - The column length.
 	 * @param numColumns - The row length.
 	 * @return The zero-data matrix.
 	 */
-	public static DataMatrix newMatrix(int numRows, int numColumns) {
+	public static DataMatrix newZeroMatrix(int numRows, int numColumns) {
 		return new ZeroMatrix(numRows, numColumns);
 	}
 
 	/**
-	 * Wraps the given dense data into a matrix.
-	 * <p/>Warning: The data must not be modified!
+	 * Wraps the given dense data into a modifiable matrix.
 	 * 
 	 * @param data - The row-matrix of data.
 	 * @return The data matrix.
 	 */
-	public static RowMatrix newMatrix(double[][] data) {
+	public static WritableMatrix newMatrix(double[][] data) {
 		return new WritableRowMatrix(data);
 	}
 
@@ -49,30 +45,14 @@ public class MatrixFactory {
 	 * @param numColumns - The row length.
 	 * @return The data matrix.
 	 */
-	public static WritableMatrix newWritableMatrix(int numRows, int numColumns) {
+	public static WritableMatrix newMatrix(int numRows, int numColumns) {
 		return new WritableRowMatrix(numRows, numColumns);
-	}
-
-	/**
-	 * Wraps the given data into a modifiable matrix.
-	 * 
-	 * @param data - The row-matrix of data.
-	 * @return The data matrix.
-	 */
-	public static WritableMatrix newWritableMatrix(double[][] data) {
-		return new WritableRowMatrix(data);
 	}
 
 	public static DataMatrix scale(DataMatrix matrix, double multiplier) {
 		if (multiplier == 1) return matrix;
 		if (matrix instanceof ZeroMatrix) return matrix;
 		if (multiplier == 0) return new ZeroMatrix(matrix.numRows(), matrix.numColumns());
-		if (matrix instanceof SparseMatrix)
-			return new ScaledSparseMatrix((SparseMatrix) matrix, multiplier);
-		if (matrix instanceof DenseMatrix)
-			return new ScaledDenseMatrix((DenseMatrix) matrix, multiplier);
-		if (matrix instanceof CompoundMatrix)
-			return new ScaledCompoundMatrix((CompoundMatrix) matrix, multiplier);
 		return new ScaledMatrix(matrix, multiplier);
 	}
 
@@ -84,7 +64,7 @@ public class MatrixFactory {
 	 */
 	@SuppressWarnings("unchecked")
 	public static WritableMatrix add(DataMatrix... matrices) {
-		WritableMatrix summedMatrix = newWritableMatrix(matrices[0].numRows(), matrices[0].numColumns());
+		WritableMatrix summedMatrix = newMatrix(matrices[0].numRows(), matrices[0].numColumns());
 		for (DataMatrix matrix : matrices)
 			((AbstractMatrix<DataVector>) matrix).addTo(summedMatrix);
 		return summedMatrix;
@@ -105,7 +85,7 @@ public class MatrixFactory {
 
 	private static DataVector multiply(RowMatrix matrix, DataVector vector) {
 		final int numRows = matrix.numRows();
-		WritableVector result = VectorFactory.newWritableVector(numRows);
+		WritableVector result = VectorFactory.newVector(numRows);
 		for (int row = 0; row < numRows; row++)
 			result.set(row, VectorFactory.dot(matrix.getRow(row), vector));
 		return result;
@@ -126,7 +106,7 @@ public class MatrixFactory {
 	
 	private static DataVector multiply(DataVector vector, RowMatrix matrix) {
 		// TODO Better handle a sparse vector.
-		WritableVector result = VectorFactory.newWritableVector(matrix.numColumns());
+		WritableVector result = VectorFactory.newVector(matrix.numColumns());
 		final int numRows = matrix.numRows();
 		for (int row = 0; row < numRows; row++) {
 			double value = vector.get(row);
@@ -163,9 +143,9 @@ public class MatrixFactory {
 		System.out.printf("]%s", suffix);
 	}
 
-	public static WritableVector asWritableVector(WritableMatrix matrix) {
+	public static WritableVector asVector(WritableMatrix matrix) {
 		if (matrix instanceof FlatMatrix)
-			return VectorFactory.newWritableVector(((FlatMatrix) matrix).getArray());
+			return VectorFactory.newVector(((FlatMatrix) matrix).getArray());
 		return new WritableVectorMatrix(matrix);
 	}
 

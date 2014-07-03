@@ -1,7 +1,6 @@
 package gaj.impl.matrix;
 
 import gaj.data.matrix.DataMatrix;
-import gaj.data.matrix.DenseMatrix;
 import gaj.data.matrix.RowMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.ArrayVector;
@@ -10,19 +9,13 @@ import gaj.data.vector.WritableVector;
 import gaj.impl.vector.VectorFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-/*package-private*/ class WritableRowMatrix extends AbstractMatrix<WritableVector> implements DenseMatrix, WritableMatrix, RowMatrix {
+/*package-private*/ class WritableRowMatrix extends DenseMatrix<WritableVector> implements WritableMatrix, RowMatrix {
 
 	private final double[][] data;
 
 	/*package-private*/ WritableRowMatrix(double[][] data) {
 		super(data.length, data[0].length);
 		this.data = data;
-	}
-
-	// XXX Shared data, not writable?
-	/*package-private*/ WritableRowMatrix(DenseMatrix matrix) {
-		super(matrix.numRows(), matrix.numColumns());
-		this.data = ((WritableRowMatrix) matrix).data;
 	}
 
 	/*package-private*/ WritableRowMatrix(int numRows, int numColumns) {
@@ -32,7 +25,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 	@Override
 	public WritableVector getRow(int row) {
-		return VectorFactory.newWritableVector(data[row]);
+		return VectorFactory.newVector(data[row]);
 	}
 
 	@Override

@@ -18,12 +18,16 @@ public abstract class AbstractMatrix<T extends DataVector> implements DataMatrix
 		this.numColumns = numColumns;
 	}
 
-	public int numRows() {
+	final public int numRows() {
 		return numRows;
 	}
 
-	public int numColumns() {
+	final public int numColumns() {
 		return numColumns;
+	}
+
+	final public int size() {
+		return numRows * numColumns;
 	}
 
 	public Iterable<T> getRows() {

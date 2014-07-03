@@ -1,13 +1,12 @@
 package gaj.impl.vector;
 
-import gaj.data.vector.CompoundVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 
 /**
  * Provides a view onto part of another vector.
  */
-/*package-private*/ class SubVector extends AbstractVector implements CompoundVector {
+/*package-private*/ class SubVector extends CompoundVector {
 
 	private final DataVector vector;
 	protected final int start;

@@ -20,8 +20,8 @@ public class LogisticClassifier extends BaseClassifier {
 	public LogisticClassifier(int numClasses, int numFeatures) {
 		super(numClasses, numFeatures);
 		Cm1 = numClasses - 1;
-		matParams = MatrixFactory.newWritableMatrix(Cm1, numFeatures);
-		vecParams = MatrixFactory.asWritableVector(matParams);
+		matParams = MatrixFactory.newMatrix(Cm1, numFeatures);
+		vecParams = MatrixFactory.asVector(matParams);
 	}
 
 	@Override
@@ -68,10 +68,10 @@ public class LogisticClassifier extends BaseClassifier {
 	 */
 	@Override
 	public DataVector getGradient(DatumScore datumScore) {
-		WritableMatrix gradient = MatrixFactory.newWritableMatrix(Cm1, numFeatures);
+		WritableMatrix gradient = MatrixFactory.newMatrix(Cm1, numFeatures);
 		DataVector probs = datumScore.getPosteriors();
 		for (int cPrime = 0; cPrime < Cm1; cPrime++) {
-			WritableVector w = VectorFactory.newWritableVector(numClasses);
+			WritableVector w = VectorFactory.newVector(numClasses);
 			w.set(VectorFactory.scale(probs, -probs.get(cPrime)));
 			w.add(cPrime, probs.get(cPrime));
 			double classWeight = VectorFactory.dot(w, datumScore.getGradient());

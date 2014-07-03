@@ -1,6 +1,5 @@
 package gaj.impl.vector;
 
-import gaj.data.vector.CompoundVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 
@@ -9,7 +8,7 @@ import java.util.Iterator;
 /**
  * Implements the (deferred) concatenation of multiple data vectors together into a single, compound vector.
  */
-/*package-private*/ class ConcatenatedVector extends AbstractVector implements CompoundVector {
+/*package-private*/ class ConcatenatedVector extends CompoundVector {
 
 	private final DataVector[] vectors;
 

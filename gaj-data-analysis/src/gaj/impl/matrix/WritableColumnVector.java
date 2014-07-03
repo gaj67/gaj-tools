@@ -4,11 +4,12 @@ import gaj.data.vector.ArrayVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 import gaj.impl.vector.AbstractVector;
+import gaj.impl.vector.DenseVector;
 
 /**
  * Wraps the specified column of a row-based, dense matrix. 
  */
-/*package-private*/ class WritableColumnVector extends AbstractVector implements WritableVector {
+/*package-private*/ class WritableColumnVector extends DenseVector implements WritableVector {
 
 	private final double[][] data;
 	private final int column;

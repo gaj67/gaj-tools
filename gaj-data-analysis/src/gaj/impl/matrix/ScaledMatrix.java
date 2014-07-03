@@ -45,4 +45,19 @@ import gaj.impl.vector.VectorFactory;
 			matrix.addRow(row, getRow(row));
 	}
 
+	@Override
+	public boolean isDense() {
+		return matrix.isDense();
+	}
+
+	@Override
+	public boolean isSparse() {
+		return matrix.isSparse();
+	}
+
+	@Override
+	public boolean isCompound() {
+		return matrix.isCompound();
+	}
+
 }
