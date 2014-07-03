@@ -62,11 +62,19 @@ import java.util.Iterator;
 	}
 
 	@Override
-	public double norm() {
+	protected double _norm() {
 		double sum = 0;
 		for (double value : values)
 			sum += value * value;
 		return Math.sqrt(sum);
+	}
+
+	@Override
+	public double sum() {
+		double sum = 0;
+		for (double value : values)
+			sum += value;
+		return sum;
 	}
 
 	@Override

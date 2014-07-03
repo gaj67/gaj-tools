@@ -23,12 +23,25 @@ import gaj.data.vector.WritableVector;
 
 	@Override
 	public double norm() {
+		return _norm();
+	}
+
+	@Override
+	protected double _norm() {
 		double sum = 0;
 		for (int i = start; i < end; i++) {
 			double value = values[i];
 			sum += value * value;
 		}
 		return Math.sqrt(sum);
+	}
+
+	@Override
+	public double sum() {
+		double sum = 0;
+		for (int i = start; i < end; i++)
+			sum += values[i];
+		return sum;
 	}
 
 	@Override

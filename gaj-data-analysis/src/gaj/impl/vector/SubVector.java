@@ -21,13 +21,21 @@ import gaj.data.vector.WritableVector;
 	}
 
 	@Override
-	public double norm() {
+	protected double _norm() {
 		double sum = 0;
 		for (int i = start; i < end; i++) {
 			double value = vector.get(i);
 			sum += value * value;
 		}
 		return Math.sqrt(sum);
+	}
+
+	@Override
+	public double sum() {
+		double sum = 0;
+		for (int i = start; i < end; i++)
+			sum += vector.get(i);
+		return sum;
 	}
 
 	@Override

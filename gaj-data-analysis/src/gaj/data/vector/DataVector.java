@@ -14,9 +14,9 @@ public interface DataVector extends DataObject, Iterable<Double> {
 	// Intrinsic properties of the vector.
 	
 	/**
-	 * @return The length of the vector.
+	 * @return The number of data elements in the vector.
 	 */
-	int length();
+	int size();
 
 	/**
 	 * Calculates the Euclidean norm of the vector.
@@ -24,6 +24,13 @@ public interface DataVector extends DataObject, Iterable<Double> {
 	 * @return The vector norm.
 	 */
 	double norm();
+
+	/**
+	 * Calculates the sum of the vector elements.
+	 * 
+	 * @return The vector sum.
+	 */
+	double sum();
 
 	/**
 	 * Obtains the value of a vector element.

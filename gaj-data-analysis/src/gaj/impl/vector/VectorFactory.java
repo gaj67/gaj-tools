@@ -9,6 +9,8 @@ import gaj.data.vector.WritableVector;
 
 import java.util.Iterator;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
  * Provides access to numerical vectors.
  */
@@ -110,7 +112,7 @@ public abstract class VectorFactory {
 	 */
 	public static DataVector scale(DataVector vector, double multiplier) {
 		if (vector instanceof ZeroVector) return vector;
-		if (multiplier == 0) return new ZeroVector(vector.length());
+		if (multiplier == 0) return new ZeroVector(vector.size());
 		if (vector instanceof SparseVector)
 			return new ScaledSparseVector((SparseVector) vector, multiplier);
 		if (vector instanceof DenseVector)
@@ -155,7 +157,7 @@ public abstract class VectorFactory {
 	 * @return The summed vector.
 	 */
 	public static WritableVector add(DataVector... vectors) {
-		final int length = vectors[0].length();
+		final int length = vectors[0].size();
 		WritableVector summedVector = newWritableVector(length);
 		for (DataVector vector : vectors) {
 			//if (vector instanceof AbstractVector)
@@ -187,8 +189,7 @@ public abstract class VectorFactory {
 	 * @return The product vector.
 	 */
 	public static DataVector multiply(DataVector v1, DataVector v2) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 }

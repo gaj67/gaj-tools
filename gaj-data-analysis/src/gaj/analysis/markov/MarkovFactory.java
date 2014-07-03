@@ -7,13 +7,23 @@ import gaj.impl.matrix.MatrixFactory;
 import gaj.impl.vector.VectorFactory;
 
 /**
- * Provides the basic methods for analysing 
- * hidden Markov sequences.
+ * Provides the basic methods for analysing hidden Markov sequences.
+ * <p/>Note: It is assumed here that all sequences are full, i.e. have a definite start and end.
+ * For sequences with an unknown start, use P(s_t) in place of P(s_1|start).
+ * For sequences with an unknown end, use a ones-vector in place of P(end|s_T).
  */
 public abstract class MarkovFactory {
 
 	private MarkovFactory() {}
-	
+
+	// TODO Add constructor and dynamic methods.
+	// TODO Add posteriorProbabilities
+	// TODO Add WritableVector = initBeta(endProbs);
+	//      updateBeta(beta, t);
+
+	//==============================================================
+	// Static methods.
+
 	/**
 	 * Computes the forward joint probabilities, p(x_1,...,x_t,s_t),
 	 * of a known sequence {x_t}
@@ -94,8 +104,8 @@ public abstract class MarkovFactory {
 	}
 
 	/**
-	 * Computes the backward conditional probabilities, 
-	 * p(x_{t+1},...,x_T|s_t),
+	 * Computes the joint probabilities, 
+	 * p(x_1,...,x_T,s_t),
 	 * of a known sequence {x_t}
 	 * of observations, for the unknown state s_t
 	 * at each stage t=1,2,...,T.
@@ -108,7 +118,7 @@ public abstract class MarkovFactory {
 	 * terminating conditional state probabilities, P(end|s_T).
 	 * @param transProbs - The S x S matrix of state transition
 	 * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}.
-	 * @return The T x S matrix of backward probabilities.
+	 * @return The T x S matrix of joint probabilities.
 	 */
 	public static DataMatrix jointProbabilities(
 			DataMatrix obsProbs, 
@@ -137,9 +147,32 @@ public abstract class MarkovFactory {
 		}
 		return mp;
 	}
-	
-	// TODO Add constructor and dynamic methods.
-	// TODO Add posteriorProbabilities
-	// TODO Add WritableVector = initBeta(endProbs);
-	//      updateBeta(beta, t);
+
+	/**
+	 * Computes the state posterior probabilities, 
+	 * p(s_t|x_1,...,x_T),
+	 * of a known sequence {x_t}
+	 * of observations, for the unknown state s_t
+	 * at each stage t=1,2,...,T.
+	 * 
+	 * @param obsProbs - The T x S matrix of conditional 
+	 * observation probabilities, p(x_t|s_t).
+	 * @param startProbs - The length-S vector of 
+	 * initial, prior state probabilities, P(s_1|start).
+	 * @param endProbs - The length-S vector of 
+	 * terminating conditional state probabilities, P(end|s_T).
+	 * @param transProbs - The S x S matrix of state transition
+	 * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}.
+	 * @return The T x S matrix of posterior probabilities.
+	 */
+	public static DataMatrix posteriorProbabilities(
+			DataMatrix obsProbs, 
+			DataVector startProbs, DataVector endProbs, 
+			DataMatrix transProbs) 
+	{
+		WritableMatrix mp = (WritableMatrix) jointProbabilities(obsProbs, startProbs, endProbs, transProbs);
+		double inverse = 1.0 / mp.getRow(0).sum(); // Compute normaliser, 1 / p(x_1,...,x_T).
+		mp.multiply(inverse);
+		return mp;
+	}
 }

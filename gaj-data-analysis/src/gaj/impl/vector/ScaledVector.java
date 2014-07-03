@@ -8,10 +8,10 @@ import gaj.data.vector.DataVector;
 /*package-private*/ class ScaledVector extends AbstractVector {
 
 	private final double multiplier;
-	private DataVector vector;
+	private final DataVector vector;
 
 	/*package-private*/ ScaledVector(DataVector vector, double multiplier) {
-		super(vector.length());
+		super(vector.size());
 		this.vector = vector;
 		this.multiplier = multiplier;
 	}
@@ -22,8 +22,13 @@ import gaj.data.vector.DataVector;
 	}
 
 	@Override
-	public double norm() {
+	protected double _norm() {
 		return Math.abs(multiplier) * vector.norm();
+	}
+
+	@Override
+	public double sum() {
+		return multiplier * vector.sum();
 	}
 
 	@Override

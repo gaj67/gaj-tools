@@ -39,8 +39,8 @@ import gaj.data.vector.WritableVector;
 	 * @param vector - The vector of values.
 	 */
 	/*package-private*/ WritableArrayVector(ArrayVector vector) {
-		super(vector.length());
-		this.data = Arrays.copyOf(vector.getArray(), vector.length());
+		super(vector.size());
+		this.data = Arrays.copyOf(vector.getArray(), vector.size());
 	}
 
 	@Override
@@ -59,6 +59,11 @@ import gaj.data.vector.WritableVector;
 
 	@Override
 	public double norm() {
+		return _norm();
+	}
+
+	@Override
+	protected double _norm() {
 		double sum = 0;
 		for (double value : data)
 			sum += value * value;
@@ -133,6 +138,14 @@ import gaj.data.vector.WritableVector;
 			for (double value : vector)
 				data[i++] *= value;
 		}
+	}
+
+	@Override
+	public double sum() {
+		double sum = 0;
+		for (double value : data)
+			sum += value;
+		return sum;
 	}
 
 }

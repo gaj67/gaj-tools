@@ -83,7 +83,7 @@ public class LogisticClassifier extends BaseClassifier {
 
 	@Override
 	public int numParameters() {
-		return vecParams.length();
+		return vecParams.size();
 	}
 
 }

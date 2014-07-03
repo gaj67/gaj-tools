@@ -21,21 +21,36 @@ public abstract class AbstractVector implements DataVector {
 	}
 
 	@Override
-	public int length() {
+	public int size() {
 		return length;
 	}
 
 	@Override
 	public double norm() {
-		if (norm < 0) {
-			double sum = 0;
-			for (int i = 0; i < length; i++) {
-				final double value = get(i);
-				sum += value * value;
-			}
-			norm = Math.sqrt(sum);
-		}
+		if (norm < 0) norm = _norm();
 		return norm;
+	}
+
+	/**
+	 * Efficiently computes the Euclidean norm of the vector.
+	 * 
+	 * @return The vector norm.
+	 */
+	protected double _norm() {
+		double sum = 0;
+		for (int i = 0; i < length; i++) {
+			final double value = get(i);
+			sum += value * value;
+		}
+		return Math.sqrt(sum);
+	}
+
+	@Override
+	public double sum() {
+		double sum = 0;
+		for (int i = 0; i < length; i++)
+			sum += get(i);
+		return sum;
 	}
 
 	@Override
@@ -61,7 +76,6 @@ public abstract class AbstractVector implements DataVector {
 	public void addTo(WritableVector vector) {
 		for (int i = 0; i < length; i++)
 			vector.add(i, get(i));
-		//vector.add(this);
 	}
 
 }

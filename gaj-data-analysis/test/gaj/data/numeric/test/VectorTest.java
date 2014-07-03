@@ -19,7 +19,7 @@ public class VectorTest {
 	public void testVector() {
 		{
 			DataVector vec = VectorFactory.newSparseVector(13, 0, 1, 3, 2, 11, 3, 12, 4);
-			assertEquals(13, vec.length());
+			assertEquals(13, vec.size());
 			assertTrue(isEqual(1, vec.get(0)));
 			assertTrue(isEqual(0, vec.get(1)));
 			assertTrue(isEqual(2, vec.get(3)));
@@ -29,7 +29,7 @@ public class VectorTest {
 		}
 		{
 			DataVector vec = VectorFactory.newSparseVector(13, 3, 2, 11, 3);
-			assertEquals(13, vec.length());
+			assertEquals(13, vec.size());
 			assertTrue(isEqual(0, vec.get(0)));
 			assertTrue(isEqual(0, vec.get(1)));
 			assertTrue(isEqual(2, vec.get(3)));
@@ -40,7 +40,7 @@ public class VectorTest {
 		{
 			DataVector vec1 = VectorFactory.newSparseVector(13, 3, 2, 11, 3);
 			DataVector vec2 = VectorFactory.newVector(0., 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0);
-			assertEquals(13, vec2.length());
+			assertEquals(13, vec2.size());
 			for (int i = 0; i < 13; i++)
 				assertTrue(isEqual(vec1.get(i), vec2.get(i)));
 			Iterator<Double> iter1 = vec1.iterator();
@@ -67,7 +67,7 @@ public class VectorTest {
 			DataVector vecTimes2Divide2 = VectorFactory.scale(vecTimes2, 0.5);
 			VectorFactory.display("Original:", vec, "\n");
 			VectorFactory.display("Reconstructed:", vecTimes2Divide2, "\n");
-			for (int i = 0; i < vec.length(); i++)
+			for (int i = 0; i < vec.size(); i++)
 				assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
 			{
 				int i = 0;
@@ -97,7 +97,7 @@ public class VectorTest {
 			DataVector vecTimes2Divide2 = VectorFactory.scale(vecTimes2, 0.5);
 			VectorFactory.display("Original:", vec, "\n");
 			VectorFactory.display("Reconstructed:", vecTimes2Divide2, "\n");
-			for (int i = 0; i < vec.length(); i++)
+			for (int i = 0; i < vec.size(); i++)
 				assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
 			{
 				int i = 0;
@@ -129,7 +129,7 @@ public class VectorTest {
 			DataVector vecTimes2Divide2 = VectorFactory.scale(vecTimes2, 0.5);
 			VectorFactory.display("Original:", vec, "\n");
 			VectorFactory.display("Reconstructed:", vecTimes2Divide2, "\n");
-			for (int i = 0; i < vec.length(); i++)
+			for (int i = 0; i < vec.size(); i++)
 				assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
 			{
 				int i = 0;

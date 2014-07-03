@@ -23,11 +23,16 @@ import gaj.data.vector.WritableVector;
 	}
 
 	@Override
-	public double norm() {
+	protected double _norm() {
 		return 0;
 	}
 
 	@Override
 	public void addTo(WritableVector vector) {}
+
+	@Override
+	public double sum() {
+		return 0;
+	}
 
 }

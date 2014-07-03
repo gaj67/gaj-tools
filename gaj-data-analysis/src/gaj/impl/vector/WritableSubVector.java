@@ -13,6 +13,11 @@ public class WritableSubVector extends SubVector implements WritableVector {
 	}
 
 	@Override
+	public double norm() {
+		return _norm();
+	}
+
+	@Override
 	public void set(int pos, double value) {
 		vector.set(start + pos, value);
 	}

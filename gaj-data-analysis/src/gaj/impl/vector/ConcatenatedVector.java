@@ -21,7 +21,7 @@ import java.util.Iterator;
 	private static int computeLength(DataVector[] vectors) {
 		int length = 0;
 		for (DataVector vector : vectors)
-			length += vector.length();
+			length += vector.size();
 		return length;
 	}
 
@@ -30,8 +30,8 @@ import java.util.Iterator;
 		if (pos >= 0 && pos < length) {
 			int _pos = pos;
 			for (DataVector vector : vectors) {
-				if (_pos < vector.length()) return vector.get(_pos);
-				_pos -= vector.length();
+				if (_pos < vector.size()) return vector.get(_pos);
+				_pos -= vector.size();
 			}
 		}
 		throw new IndexOutOfBoundsException("Bad index: " + pos);
@@ -60,7 +60,7 @@ import java.util.Iterator;
 	}
 
 	@Override
-	public double norm() {
+	protected double _norm() {
 		double sum = 0;
 		for (DataVector vector : vectors) {
 			double norm = vector.norm();
@@ -70,13 +70,21 @@ import java.util.Iterator;
 	}
 
 	@Override
+	public double sum() {
+		double sum = 0;
+		for (DataVector vector : vectors)
+			sum += vector.sum();
+		return sum;
+	}
+
+	@Override
 	public double dot(DataVector vector) {
 		double sum = 0;
 		int pos = 0;
 		for (DataVector vector1 : vectors) {
-			DataVector vector2 = new SubVector(vector, pos, vector1.length());
+			DataVector vector2 = new SubVector(vector, pos, vector1.size());
 			sum += vector1.dot(vector2);
-			pos += vector1.length();
+			pos += vector1.size();
 		}
 		return sum;
 	}
@@ -85,9 +93,9 @@ import java.util.Iterator;
 	public void addTo(WritableVector vector) {
 		int pos = 0;
 		for (DataVector vector1 : vectors) {
-			WritableVector vector2 = new WritableSubVector(vector, pos, vector1.length());
+			WritableVector vector2 = new WritableSubVector(vector, pos, vector1.size());
 			((AbstractVector) vector1).addTo(vector2);
-			pos += vector1.length();
+			pos += vector1.size();
 		}
 	}
 
