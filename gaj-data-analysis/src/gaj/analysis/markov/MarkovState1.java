@@ -1,5 +1,7 @@
 package gaj.analysis.markov;
 
+import gaj.data.markov.SequenceProbabilities;
+
 import java.util.Random;
 
 import utils.markov.SequenceProbabilities.ProbabilityType;

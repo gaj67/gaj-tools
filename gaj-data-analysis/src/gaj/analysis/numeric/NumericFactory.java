@@ -1,7 +1,7 @@
 package gaj.analysis.numeric;
 
 import gaj.data.matrix.DataMatrix;
-import gaj.data.numeric.DataObject;
+import gaj.data.object.DataObject;
 import gaj.data.vector.DataVector;
 import gaj.impl.matrix.MatrixFactory;
 import gaj.impl.vector.VectorFactory;

@@ -1,6 +1,6 @@
 package gaj.data.vector;
 
-import gaj.data.numeric.DataObject;
+import gaj.data.object.DataObject;
 
 import java.util.Iterator;
 

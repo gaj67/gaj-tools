@@ -1,5 +1,9 @@
 package gaj.analysis.markov;
 
+import gaj.data.markov.ProbabilityType;
+import gaj.data.markov.SequenceProbabilities;
+import gaj.data.markov.SequenceType;
+
 public class OneStep {
 
 	private double[] vP_s1_g_start;

@@ -1,4 +1,4 @@
-package gaj.data.numeric;
+package gaj.data.object;
 
 /**
  * Indicates dimensionalised numerical data, e.g. a vector or matrix or tensor, etc., or a

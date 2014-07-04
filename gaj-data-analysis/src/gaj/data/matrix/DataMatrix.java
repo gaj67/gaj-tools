@@ -1,6 +1,6 @@
 package gaj.data.matrix;
 
-import gaj.data.numeric.DataObject;
+import gaj.data.object.DataObject;
 import gaj.data.vector.DataVector;
 
 
