@@ -1,9 +1,11 @@
 package gaj.impl.vector;
 
+import gaj.data.vector.ArrayVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.IndexVector;
 import gaj.data.vector.WritableVector;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -171,6 +173,25 @@ public abstract class VectorFactory {
 	 */
 	public static DataVector multiply(DataVector v1, DataVector v2) {
 		throw new NotImplementedException();
+	}
+
+	/**
+	 * Obtains an array copy of the vector data.
+	 * 
+	 * @param vec - The vector.
+	 * @return The copied array data.
+	 */
+	public static double[] toArray(DataVector vec) {
+		int length = vec.size();
+		if (vec instanceof ArrayVector) {
+			return Arrays.copyOf(((ArrayVector) vec).getArray(), length);
+		} else {
+			double[] data = new double[length];
+			int pos = 0;
+			for (double value : vec)
+				data[pos++] = value;
+			return data;
+		}
 	}
 
 }

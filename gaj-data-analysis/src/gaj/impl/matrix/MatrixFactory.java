@@ -1,8 +1,10 @@
 package gaj.impl.matrix;
 
+import java.util.Arrays;
+
 import gaj.data.matrix.DataMatrix;
-import gaj.data.matrix.FlatMatrix;
-import gaj.data.matrix.RowMatrix;
+import gaj.data.matrix.FlatArrayMatrix;
+import gaj.data.matrix.RowArrayMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
@@ -36,6 +38,30 @@ public class MatrixFactory {
 	 */
 	public static WritableMatrix newMatrix(double[][] data) {
 		return new WritableRowMatrix(data);
+	}
+
+	/**
+	 * Creates a writable matrix copy of the given matrix.
+	 * 
+	 * @param matrix - The matrix to be copied.
+	 * @return The writable matrix copy.
+	 */
+	public static WritableMatrix newMatrix(DataMatrix matrix) {
+		final int numRows = matrix.numRows();
+		final int numColumns = matrix.numColumns();
+		double[][] copyData = new double[numRows][];
+		if (matrix instanceof RowArrayMatrix) {
+			int row = 0;
+			for (double[] rowData : ((RowArrayMatrix) matrix).getArray()) {
+				copyData[row++] = Arrays.copyOf(rowData, numColumns);
+			}
+		} else {
+			int row = 0;
+			for (DataVector rowVec : matrix.getRows()) {
+				copyData[row++] = VectorFactory.toArray(rowVec);
+			}
+		}
+		return new WritableRowMatrix(copyData);
 	}
 
 	/**
@@ -78,12 +104,12 @@ public class MatrixFactory {
 	 * @return A length-N vector, y = A*x.
 	 */
 	public static DataVector multiply(DataMatrix matrix, DataVector vector) {
-		if (matrix instanceof RowMatrix)
-			return multiply((RowMatrix) matrix, vector);
+		if (matrix instanceof RowArrayMatrix)
+			return multiply((RowArrayMatrix) matrix, vector);
 		throw new NotImplementedException();
 	}
 
-	private static DataVector multiply(RowMatrix matrix, DataVector vector) {
+	private static DataVector multiply(RowArrayMatrix matrix, DataVector vector) {
 		final int numRows = matrix.numRows();
 		WritableVector result = VectorFactory.newVector(numRows);
 		for (int row = 0; row < numRows; row++)
@@ -99,12 +125,12 @@ public class MatrixFactory {
 	 * @return A length-M vector, y = x*A.
 	 */
 	public static DataVector multiply(DataVector vector, DataMatrix matrix) {
-		if (matrix instanceof RowMatrix)
-			return multiply(vector, (RowMatrix) matrix);
+		if (matrix instanceof RowArrayMatrix)
+			return multiply(vector, (RowArrayMatrix) matrix);
 		throw new NotImplementedException();
 	}
 	
-	private static DataVector multiply(DataVector vector, RowMatrix matrix) {
+	private static DataVector multiply(DataVector vector, RowArrayMatrix matrix) {
 		// TODO Better handle a sparse vector.
 		WritableVector result = VectorFactory.newVector(matrix.numColumns());
 		final int numRows = matrix.numRows();
@@ -143,16 +169,39 @@ public class MatrixFactory {
 		System.out.printf("]%s", suffix);
 	}
 
+	/**
+	 * Presents the writable matrix as a flat, writable vector.
+	 *  
+	 * @param matrix - The N x M matrix.
+	 * @return A length-NM vector.
+	 */
 	public static WritableVector asVector(WritableMatrix matrix) {
-		if (matrix instanceof FlatMatrix)
-			return VectorFactory.newVector(((FlatMatrix) matrix).getArray());
+		if (matrix instanceof FlatArrayMatrix)
+			return VectorFactory.newVector(((FlatArrayMatrix) matrix).getArray());
 		return new WritableVectorMatrix(matrix);
 	}
 
+	/**
+	 * Presents the matrix as a flat vector.
+	 *  
+	 * @param matrix - The N x M matrix.
+	 * @return A length-NM vector.
+	 */
 	public static DataVector asVector(DataMatrix matrix) {
-		if (matrix instanceof FlatMatrix)
-			return VectorFactory.newVector(((FlatMatrix) matrix).getArray());
+		if (matrix instanceof FlatArrayMatrix)
+			return VectorFactory.newVector(((FlatArrayMatrix) matrix).getArray());
 		return new VectorMatrix(matrix);
+	}
+
+	/**
+	 * Normalises the matrix so that each row-sum is unity.
+	 * 
+	 * @param matrix - The matrix to be normalised.
+	 */
+	public static void normaliseRowSums(WritableMatrix matrix) {
+		for (WritableVector row : matrix.getRows()) {
+			row.multiply(1.0 / row.sum());
+		}
 	}
 
 }

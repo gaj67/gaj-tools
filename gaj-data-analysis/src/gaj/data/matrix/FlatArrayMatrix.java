@@ -2,9 +2,9 @@ package gaj.data.matrix;
 
 
 /**
- * Indicates that the matrix data are stored as a flat array, and hence the matrix is dense.
+ * Indicates that the matrix data are stored as a single, flat array, and hence the matrix is dense.
  */
-public interface FlatMatrix extends DataMatrix {
+public interface FlatArrayMatrix extends DataMatrix {
 
 	/**
 	 * Obtains the internal array of matrix data.

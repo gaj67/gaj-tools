@@ -3,26 +3,19 @@ package gaj.analysis.markov;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
+import gaj.data.vector.WritableVector;
 import gaj.impl.matrix.MatrixFactory;
 import gaj.impl.vector.VectorFactory;
 
 /**
- * Provides the basic methods for analysing hidden Markov sequences.
+ * Provides the basic methods for analysing one-step hidden Markov sequences.
  * <p/>Note: It is assumed here that all sequences are full, i.e. have a definite start and end.
  * For sequences with an unknown start, use P(s_t) in place of P(s_1|start).
  * For sequences with an unknown end, use a ones-vector in place of P(end|s_T).
  */
-public abstract class MarkovFactory {
+public abstract class MarkovOneStep {
 
-	private MarkovFactory() {}
-
-	// TODO Add constructor and dynamic methods.
-	// TODO Add posteriorProbabilities
-	// TODO Add WritableVector = initBeta(endProbs);
-	//      updateBeta(beta, t);
-
-	//==============================================================
-	// Static methods.
+	private MarkovOneStep() {}
 
 	/**
 	 * Computes the forward joint probabilities, p(x_1,...,x_t,s_t),
@@ -91,9 +84,9 @@ public abstract class MarkovFactory {
 		mp.setRow(t, beta);
 		while (t > 0) {
 			// Compute beta_{t-1} = p(x_t,...,x_T|s_{t-1})
-			//  = sum_{s_t}p(x_t,...,x_T|s_t) P(s_t|s_{t-1}).
-			//  = sum_{s_t}p(x_{t+1},...,x_T|s_t) p(x_t|s_t) P(s_t|s_{t-1}).
-			//  = sum_{s_t}beta_t p(x_t|s_t) P(s_t|s_{t-1}).
+			//  = sum_{s_t} p(x_t,...,x_T|s_t) P(s_t|s_{t-1}).
+			//  = sum_{s_t} p(x_{t+1},...,x_T|s_t) p(x_t|s_t) P(s_t|s_{t-1}).
+			//  = sum_{s_t} beta_t p(x_t|s_t) P(s_t|s_{t-1}).
 			beta = MatrixFactory.multiply(
 					transProbs, 
 					VectorFactory.multiply(beta, obsProbs.getRow(t)));
@@ -134,9 +127,9 @@ public abstract class MarkovFactory {
 		mp.multiplyRow(t, beta);
 		while (t > 0) {
 			// Compute beta_{t-1} = p(x_t,...,x_T|s_{t-1})
-			//  = sum_{s_t}p(x_t,...,x_T|s_t) P(s_t|s_{t-1}).
-			//  = sum_{s_t}p(x_{t+1},...,x_T|s_t) p(x_t|s_t) P(s_t|s_{t-1}).
-			//  = sum_{s_t}beta_t p(x_t|s_t) P(s_t|s_{t-1}).
+			//  = sum_{s_t} p(x_t,...,x_T|s_t) P(s_t|s_{t-1}).
+			//  = sum_{s_t} p(x_{t+1},...,x_T|s_t) p(x_t|s_t) P(s_t|s_{t-1}).
+			//  = sum_{s_t} beta_t p(x_t|s_t) P(s_t|s_{t-1}).
 			beta = MatrixFactory.multiply(
 					transProbs, 
 					VectorFactory.multiply(beta, obsProbs.getRow(t)));
@@ -173,5 +166,20 @@ public abstract class MarkovFactory {
 		double inverse = 1.0 / mp.getRow(0).sum(); // Compute normaliser, 1 / p(x_1,...,x_T).
 		mp.multiply(inverse);
 		return mp;
+	}
+	
+	/**
+	 * Computes the state transition probabilities, P(s_t|s_{t-1}), from the joint state
+	 * probabilities, P(s_t,s_{t-1}).
+	 * 
+	 * @param jointProbs - The S x S matrix of joint probabilities, ordered by s_{t-1} down the
+	 * columns and s_t across the rows.
+	 * @return The S x S matrix of transition probabilities, ordered by s_{t-1} down the
+	 * columns and s_t across the rows.
+	 */
+	public static DataMatrix computeTransitions(DataMatrix jointProbs) {
+		WritableMatrix transProbs = MatrixFactory.newMatrix(jointProbs);
+		MatrixFactory.normaliseRowSums(transProbs);
+		return transProbs;
 	}
 }

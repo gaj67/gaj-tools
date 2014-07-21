@@ -1,4 +1,4 @@
-package gaj.data.numeric.test;
+package gaj.numeric.test;
 
 import static org.junit.Assert.*;
 
