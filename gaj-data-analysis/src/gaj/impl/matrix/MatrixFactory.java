@@ -204,4 +204,25 @@ public class MatrixFactory {
 		}
 	}
 
+	/**
+	 * Determines whether or not two matrices have equal values to the
+	 * given order of accuracy.
+	 * 
+	 * @param m1 - The first matrix.
+	 * @param m2 - The second matrix.
+	 * @param accuracy - The largest allowable difference.
+	 * @return A value of true (or false) if the two matrices do (or do not) agree
+	 * on dimensions and values.
+	 */
+	public static boolean equals(DataMatrix m1, DataMatrix m2, double accuracy) {
+		final int numRows = m1.numRows();
+		if (m2.numRows() != numRows) return false;
+		if (m2.numColumns() != m1.numColumns()) return false;
+		for (int row = 0; row < numRows; row++) {
+			if (!VectorFactory.equals(m1.getRow(row), m2.getRow(row), accuracy))
+				return false;
+		}
+		return true;
+	}
+
 }

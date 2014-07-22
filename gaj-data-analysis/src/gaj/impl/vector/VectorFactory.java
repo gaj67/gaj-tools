@@ -8,8 +8,6 @@ import gaj.data.vector.WritableVector;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * Provides access to numerical vectors.
  */
@@ -172,7 +170,19 @@ public abstract class VectorFactory {
 	 * @return The product vector.
 	 */
 	public static DataVector multiply(DataVector v1, DataVector v2) {
-		throw new NotImplementedException();
+		WritableVector vw = newVector(v1);
+		vw.multiply(v2);
+		return vw;
+	}
+
+	/**
+	 * Obtains a writable vector copy of the given vector.
+	 * 
+	 * @param vec - The vector.
+	 * @return A writable vector.
+	 */
+	public static WritableVector newVector(DataVector vec) {
+		return newVector(toArray(vec));
 	}
 
 	/**
@@ -192,6 +202,25 @@ public abstract class VectorFactory {
 				data[pos++] = value;
 			return data;
 		}
+	}
+
+	/**
+	 * Determines whether or not two vectors have equal values to the
+	 * given order of accuracy.
+	 * 
+	 * @param v1 - The first vector.
+	 * @param v2 - The second vector.
+	 * @param accuracy - The largest allowable difference.
+	 * @return A value of true (or false) if the two vectors do (or do not) agree
+	 * on dimensions and values.
+	 */
+	public static boolean equals(DataVector v1, DataVector v2, double accuracy) {
+		final int length = v1.size();
+		if (v2.size() != length) return false;
+		for (int i = 0; i < length; i++) {
+			if (Math.abs(v1.get(i) - v2.get(i)) > accuracy) return false;
+		}
+		return true;
 	}
 
 }

@@ -3,7 +3,6 @@ package gaj.analysis.markov;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
-import gaj.data.vector.WritableVector;
 import gaj.impl.matrix.MatrixFactory;
 import gaj.impl.vector.VectorFactory;
 
@@ -18,7 +17,7 @@ public abstract class MarkovOneStep {
 	private MarkovOneStep() {}
 
 	/**
-	 * Computes the forward joint probabilities, p(x_1,...,x_t,s_t),
+	 * Computes the forward joint probabilities, p(x_1,...,x_t,s_t|start),
 	 * of a known sequence {x_t}
 	 * of observations, for the unknown state s_t
 	 * at each stage t=1,2,...,T.
@@ -28,7 +27,8 @@ public abstract class MarkovOneStep {
 	 * @param startProbs - The length-S vector of 
 	 * initial state probabilities, P(s_1|start).
 	 * @param transProbs - The S x S matrix of state transition
-	 * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}.
+	 * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
+	 * and columns indexed by s_t.
 	 * @return The T x S matrix of forward probabilities.
 	 */
 	public static DataMatrix forwardProbabilities(
@@ -59,7 +59,7 @@ public abstract class MarkovOneStep {
 
 	/**
 	 * Computes the backward conditional probabilities, 
-	 * p(x_{t+1},...,x_T|s_t),
+	 * p(x_{t+1},...,x_T,end|s_t),
 	 * of a known sequence {x_t}
 	 * of observations, for the unknown state s_t
 	 * at each stage t=1,2,...,T.
@@ -69,7 +69,8 @@ public abstract class MarkovOneStep {
 	 * @param endProbs - The length-S vector of 
 	 * terminating conditional state probabilities, P(end|s_T).
 	 * @param transProbs - The S x S matrix of state transition
-	 * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}.
+	 * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
+	 * and columns indexed by s_t.
 	 * @return The T x S matrix of backward probabilities.
 	 */
 	public static DataMatrix backwardProbabilities(
@@ -97,7 +98,7 @@ public abstract class MarkovOneStep {
 
 	/**
 	 * Computes the joint probabilities, 
-	 * p(x_1,...,x_T,s_t),
+	 * p(x_1,...,x_T,end,s_t|start),
 	 * of a known sequence {x_t}
 	 * of observations, for the unknown state s_t
 	 * at each stage t=1,2,...,T.
@@ -109,7 +110,8 @@ public abstract class MarkovOneStep {
 	 * @param endProbs - The length-S vector of 
 	 * terminating conditional state probabilities, P(end|s_T).
 	 * @param transProbs - The S x S matrix of state transition
-	 * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}.
+	 * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
+	 * and columns indexed by s_t.
 	 * @return The T x S matrix of joint probabilities.
 	 */
 	public static DataMatrix jointProbabilities(
@@ -142,7 +144,7 @@ public abstract class MarkovOneStep {
 
 	/**
 	 * Computes the state posterior probabilities, 
-	 * p(s_t|x_1,...,x_T),
+	 * p(s_t|start,x_1,...,x_T,end),
 	 * of a known sequence {x_t}
 	 * of observations, for the unknown state s_t
 	 * at each stage t=1,2,...,T.
@@ -154,7 +156,8 @@ public abstract class MarkovOneStep {
 	 * @param endProbs - The length-S vector of 
 	 * terminating conditional state probabilities, P(end|s_T).
 	 * @param transProbs - The S x S matrix of state transition
-	 * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}.
+	 * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
+	 * and columns indexed by s_t.
 	 * @return The T x S matrix of posterior probabilities.
 	 */
 	public static DataMatrix posteriorProbabilities(
@@ -163,8 +166,8 @@ public abstract class MarkovOneStep {
 			DataMatrix transProbs) 
 	{
 		WritableMatrix mp = (WritableMatrix) jointProbabilities(obsProbs, startProbs, endProbs, transProbs);
-		double inverse = 1.0 / mp.getRow(0).sum(); // Compute normaliser, 1 / p(x_1,...,x_T).
-		mp.multiply(inverse);
+		double norm = 1.0 / mp.getRow(0).sum(); // Compute normaliser, 1 / p(x_1,...,x_T).
+		mp.multiply(norm);
 		return mp;
 	}
 	

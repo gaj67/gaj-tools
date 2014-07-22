@@ -3,7 +3,6 @@ package gaj.impl.matrix;
 import gaj.data.vector.ArrayVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
-import gaj.impl.vector.AbstractVector;
 import gaj.impl.vector.DenseVector;
 
 /**
