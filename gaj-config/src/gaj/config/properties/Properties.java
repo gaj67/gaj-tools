@@ -6,7 +6,7 @@ package gaj.config.properties;
 import java.util.Collection;
 
 /**
- * Defines a container of user-specified properties.
+ * Defines a container of non-grouped, user-specified properties.
  */
 public interface Properties<T> extends Configuration<T> {
 
