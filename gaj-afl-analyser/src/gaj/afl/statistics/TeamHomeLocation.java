@@ -1,8 +1,7 @@
 package gaj.afl.statistics;
 
-import gaj.afl.data.match.Location;
-import gaj.afl.data.match.Team;
-
+import gaj.afl.data.core.Location;
+import gaj.afl.data.core.Team;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;

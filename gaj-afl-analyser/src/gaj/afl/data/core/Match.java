@@ -1,4 +1,4 @@
-package gaj.afl.data.match;
+package gaj.afl.data.core;
 
 /**
  * Defines a completed match.

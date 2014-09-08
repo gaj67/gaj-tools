@@ -1,6 +1,6 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.match.Team;
+import gaj.afl.data.core.Team;
 import java.io.File;
 
 /**

@@ -1,4 +1,4 @@
-package gaj.afl.data.match;
+package gaj.afl.data.core;
 
 /**
  * Encapsulates the four quarter scores of a match for a

@@ -1,9 +1,9 @@
 package gaj.afl.statistics;
 import gaj.afl.classifier.GoldMatchDataNoDraws;
 import gaj.afl.classifier.LoggedClassifierTrainer;
-import gaj.afl.data.MatchDataFactory;
-import gaj.afl.data.match.Match;
-import gaj.afl.data.match.MatchFetcher;
+import gaj.afl.data.core.Match;
+import gaj.afl.data.core.MatchFetcher;
+import gaj.afl.data.store.MatchDataFactory;
 import gaj.analysis.classifier.AccelerationType;
 import gaj.data.classifier.GoldData;
 import gaj.data.classifier.GoldDatum;

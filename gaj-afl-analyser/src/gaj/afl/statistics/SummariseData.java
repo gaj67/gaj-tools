@@ -1,8 +1,8 @@
 package gaj.afl.statistics;
-import gaj.afl.data.MatchDataFactory;
-import gaj.afl.data.match.Match;
-import gaj.afl.data.match.MatchFetcher;
-import gaj.afl.data.match.Outcome;
+import gaj.afl.data.core.Match;
+import gaj.afl.data.core.MatchFetcher;
+import gaj.afl.data.core.Outcome;
+import gaj.afl.data.store.MatchDataFactory;
 import gaj.data.matrix.WritableMatrix;
 import gaj.impl.matrix.MatrixFactory;
 import java.util.Collection;

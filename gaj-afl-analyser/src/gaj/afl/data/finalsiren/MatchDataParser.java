@@ -1,14 +1,14 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.match.Fixture;
-import gaj.afl.data.match.Location;
-import gaj.afl.data.match.Match;
-import gaj.afl.data.match.Outcome;
-import gaj.afl.data.match.Round;
-import gaj.afl.data.match.Score;
-import gaj.afl.data.match.Scores;
-import gaj.afl.data.match.ShortMonth;
-import gaj.afl.data.match.Team;
+import gaj.afl.data.core.Fixture;
+import gaj.afl.data.core.Location;
+import gaj.afl.data.core.Match;
+import gaj.afl.data.core.Outcome;
+import gaj.afl.data.core.Round;
+import gaj.afl.data.core.Score;
+import gaj.afl.data.core.Scores;
+import gaj.afl.data.core.ShortMonth;
+import gaj.afl.data.core.Team;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

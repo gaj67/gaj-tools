@@ -1,6 +1,6 @@
-package gaj.afl.data;
+package gaj.afl.data.store;
 
-import gaj.afl.data.match.MatchFetcher;
+import gaj.afl.data.core.MatchFetcher;
 
 /**
  * Provides access to historical match data.

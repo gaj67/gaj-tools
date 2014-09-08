@@ -1,8 +1,8 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.match.Quarter;
-import gaj.afl.data.match.Score;
-import gaj.afl.data.match.Scores;
+import gaj.afl.data.core.Quarter;
+import gaj.afl.data.core.Score;
+import gaj.afl.data.core.Scores;
 
 /**
  * Encapsulates the total scores at the end of each quarter.

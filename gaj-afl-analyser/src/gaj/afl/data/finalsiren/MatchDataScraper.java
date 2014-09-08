@@ -1,9 +1,9 @@
 package gaj.afl.data.finalsiren;
 
-import gaj.afl.data.match.Match;
-import gaj.afl.data.match.MatchFetcher;
-import gaj.afl.data.match.Round;
-import gaj.afl.data.match.Team;
+import gaj.afl.data.core.Match;
+import gaj.afl.data.core.MatchFetcher;
+import gaj.afl.data.core.Round;
+import gaj.afl.data.core.Team;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

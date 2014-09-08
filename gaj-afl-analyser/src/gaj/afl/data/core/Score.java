@@ -1,4 +1,4 @@
-package gaj.afl.data.match;
+package gaj.afl.data.core;
 
 /**
  * Defines the score of a single team at some point in time,

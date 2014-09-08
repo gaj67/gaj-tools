@@ -1,7 +1,7 @@
 package gaj.afl.classifier;
 
-import gaj.afl.data.match.Match;
-import gaj.afl.data.match.Outcome;
+import gaj.afl.data.core.Match;
+import gaj.afl.data.core.Outcome;
 import gaj.data.classifier.GoldData;
 import gaj.data.classifier.GoldDatum;
 import gaj.data.vector.DataVector;

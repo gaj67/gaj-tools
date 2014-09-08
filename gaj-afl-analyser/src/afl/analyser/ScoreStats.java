@@ -1,11 +1,10 @@
 package afl.analyser;
 
+import gaj.afl.data.core.MatchRecord;
+import gaj.afl.data.core.OldScore;
+import gaj.afl.data.core.Team;
+import gaj.afl.data.core.TeamScores;
 import gaj.afl.data.finalsiren.OldFinalSirenScraper;
-import gaj.afl.data.match.MatchRecord;
-import gaj.afl.data.match.OldScore;
-import gaj.afl.data.match.Team;
-import gaj.afl.data.match.TeamScores;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

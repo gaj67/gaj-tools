@@ -1,13 +1,11 @@
 package afl.analyser;
+import gaj.afl.data.core.MatchRecord;
 import gaj.afl.data.finalsiren.OldFinalSirenScraper;
-import gaj.afl.data.match.MatchRecord;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import afl.classifier.SubsetClassifier;
 import afl.classifier.SubsetTrainer;
 import afl.classifier.Trainer;
