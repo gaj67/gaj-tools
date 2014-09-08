@@ -2,6 +2,8 @@ package gaj.afl.data.finalsiren;
 
 import gaj.afl.data.match.Match;
 import gaj.afl.data.match.MatchFetcher;
+import gaj.afl.data.match.Round;
+import gaj.afl.data.match.Team;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,23 +19,17 @@ import java.util.Map;
  */
 /*package-private*/ class MatchDataScraper implements MatchFetcher {
 
-    private static final File PATH_TO_DATA = new File("data/finalsiren/match");
-
     /**
-     * Obtains all historical match records.
-     *
-     * @return A collection of match records.
      * @throws UncheckedIOException If any IO problem occurs.
      * @throws IllegalParseException If the format of any input is invalid.
      */
-    @Override
-    public Collection<Match> getMatches() throws UncheckedIOException, IllegalParseException {
+    private Collection<Match> _getAllMatches() throws UncheckedIOException, IllegalParseException {
 	List<Match> records = new ArrayList<>();
 	MatchDataParser parser = new MatchDataParser();
-	for (String subdir : PATH_TO_DATA.list()) {
+	for (String subdir : MatchDataIdentifiers.getMatchDataPath().list()) {
 	    try {
 		int year = Integer.parseInt(subdir);
-		records.addAll(scrape(parser, year));
+		records.addAll(parseMatchFiles(parser, year));
 	    } catch (NumberFormatException e) {
 		// Ignore.
 	    }
@@ -42,51 +38,86 @@ import java.util.Map;
     }
 
     /**
-     * Obtains the historical match records for the given years.
-     *
-     * @param years - A optional array of years. If specified, the match records
-     * returned are restricted to these years;
-     * otherwise no records are returned.
-     * @return A collection of match records, which will contain
-     * duplications if the same year is repeated.
      * @throws UncheckedIOException If any IO problem occurs.
      * @throws IllegalParseException If the format of any input is invalid.
      */
     @Override
-    public Collection<Match> getMatchesByYear(int... years) throws UncheckedIOException, IllegalParseException {
+    public Collection<Match> getMatches(int... years) throws UncheckedIOException, IllegalParseException {
+	if (years.length == 0) {
+	    return _getAllMatches();
+	}
 	List<Match> records = new ArrayList<>();
 	MatchDataParser parser = new MatchDataParser();
 	for (int year : years) {
-	    records.addAll(scrape(parser, year));
+	    records.addAll(parseMatchFiles(parser, year));
 	}
 	return records;
     }
 
-    /*package-private*/ static Collection<Match> scrape(MatchDataParser parser, int year) throws UncheckedIOException, IllegalParseException {
+    /*package-private*/ static Collection<Match> parseMatchFiles(MatchDataParser parser, int year) throws UncheckedIOException, IllegalParseException {
 	Map<String, Match> records = new HashMap<>();
-	File dir = new File(PATH_TO_DATA, Integer.toString(year));
+	File dir = MatchDataIdentifiers.getMatchDataPath(year);
 	for (File file : dir.listFiles()) {
-	    try (InputStream source = new FileInputStream(file.getAbsoluteFile())) {
-		for (Match record : parser.parse(source)) {
-		    String key = record.getFixture().toString();
-		    key = Integer.toString(key.hashCode());
-		    records.put(key, record);
-		}
-	    } catch (IOException e) {
-		throw new UncheckedIOException(e);
-	    } catch (RuntimeException e) {
-		throw new IllegalParseException("Failed to parse file: " + file, e);
+	    parseMatchFile(parser, records, file);
+	}
+	return records.values();
+    }
+
+    private static void parseMatchFile(MatchDataParser parser, Map<String, Match> records, File file) {
+	try (InputStream source = new FileInputStream(file.getAbsoluteFile())) {
+	    for (Match record : parser.parse(source)) {
+		String key = record.getFixture().toString();
+		key = Integer.toString(key.hashCode());
+		records.put(key, record);
+	    }
+	} catch (IOException e) {
+	    throw new UncheckedIOException(e);
+	} catch (RuntimeException e) {
+	    throw new IllegalParseException("Failed to parse file: " + file, e);
+	}
+    }
+
+    @Override
+    public Collection<Match> getMatches(Team team, int... years) {
+	if (years.length == 0) {
+	    return _getAllMatches(team);
+	}
+	MatchDataParser parser = new MatchDataParser();
+	Map<String, Match> records = new HashMap<>();
+	for (int year : years) {
+	    File file = MatchDataIdentifiers.getMatchDataPath(team, year);
+	    parseMatchFile(parser, records, file);
+	}
+	return records.values();
+    }
+
+    private Collection<Match> _getAllMatches(Team team) {
+	Map<String, Match> records = new HashMap<>();
+	MatchDataParser parser = new MatchDataParser();
+	for (String subdir : MatchDataIdentifiers.getMatchDataPath().list()) {
+	    try {
+		int year = Integer.parseInt(subdir);
+		File file = MatchDataIdentifiers.getMatchDataPath(team, year);
+		parseMatchFile(parser, records, file);
+	    } catch (NumberFormatException e) {
+		// Ignore.
 	    }
 	}
 	return records.values();
     }
 
-    public static void main(String[] args) throws IOException {
-	MatchFetcher scraper = new MatchDataScraper();
-	int i = 0;
-	for (Match rec : scraper.getMatches()) {
-	    System.out.printf("Record %d: %s%n", ++i, rec);
+    /**
+     * @throws UncheckedIOException If any IO problem occurs.
+     * @throws IllegalParseException If the format of any input is invalid.
+     */
+    @Override
+    public /*@Nullable*/ Match getMatch(Team team, int year, Round round) {
+	for (Match match : getMatches(team, year)) {
+	    if (match.getFixture().getRound() == round) {
+		return match;
+	    }
 	}
+	return null;
     }
 
 }

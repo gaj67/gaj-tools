@@ -24,7 +24,7 @@ public class LoadData {
     private static void examineData(int year) {
 	System.out.printf("Examining data for year %d...%n", year);
 	MatchFetcher manager = MatchDataFactory.getMatchFetcher();
-	Collection<Match> matches = manager.getMatchesByYear(year);
+	Collection<Match> matches = manager.getMatches(year);
 	{
 	    int n = 0, w = 0, l = 0;
 	    for (Match match : matches) {

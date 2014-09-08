@@ -23,7 +23,7 @@ public class TrainHomeTeamAdvantage6 {
     public static void main(String[] args) {
 	// Collect all match statistics...
 	MatchFetcher manager = MatchDataFactory.getMatchFetcher();
-	GoldData trainingData = getMatchData(manager.getMatchesByYear(2008, 2009, 2010, 2011));
+	GoldData trainingData = getMatchData(manager.getMatches(2008, 2009, 2010, 2011));
 	int n = 0, w = 0;
 	for (GoldDatum datum : trainingData) {
 	    n++;
@@ -34,7 +34,7 @@ public class TrainHomeTeamAdvantage6 {
 	double p = 1.0 * w / n;
 	System.out.printf("#games=%d, home-losses=%d, home-wins=%d, P(home-win)=%5.3f, P(home-loss)=%5.3f%n", n, n-w, w, p, 1-p);
 	System.out.printf("Expected parameter=%f%n", Math.log((1-p) / p));
-	GoldData testingData = getMatchData(manager.getMatchesByYear(2012, 2013));
+	GoldData testingData = getMatchData(manager.getMatches(2012, 2013));
 	LoggedClassifierTrainer.getTrainer(trainingData, testingData, AccelerationType.Linear).train(500);
 	LoggedClassifierTrainer.getTrainer(trainingData, testingData, AccelerationType.Quadratic).train(20);
     }
