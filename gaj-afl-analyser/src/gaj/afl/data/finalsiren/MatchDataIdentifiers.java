@@ -10,7 +10,8 @@ import java.io.File;
 
     private static final File PATH_TO_DATA = new File("data/finalsiren/match/");
     private static final Team[] teams = new Team[] {
-	Team.Adelaide,
+	Team.Adelaide, Team.Brisbane_Lions, Team.Collingwood, Team.Geelong,
+
     };
 
     private MatchDataIdentifiers() {}

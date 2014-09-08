@@ -1,6 +1,6 @@
 package gaj.afl.statistics;
+import gaj.afl.classifier.GoldMatchDataNoDraws;
 import gaj.afl.data.MatchDataFactory;
-import gaj.afl.data.classifier.GoldMatchDataNoDraws;
 import gaj.afl.data.match.Match;
 import gaj.afl.data.match.MatchFetcher;
 import gaj.afl.data.match.Outcome;

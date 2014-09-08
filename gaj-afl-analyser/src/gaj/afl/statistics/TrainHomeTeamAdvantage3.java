@@ -1,7 +1,7 @@
 package gaj.afl.statistics;
+import gaj.afl.classifier.GoldMatchDataNoDraws;
 import gaj.afl.classifier.LoggedClassifierTrainer;
 import gaj.afl.data.MatchDataFactory;
-import gaj.afl.data.classifier.GoldMatchDataNoDraws;
 import gaj.afl.data.match.Location;
 import gaj.afl.data.match.Match;
 import gaj.afl.data.match.MatchFetcher;
@@ -12,7 +12,6 @@ import gaj.data.classifier.GoldData;
 import gaj.data.classifier.GoldDatum;
 import gaj.data.vector.DataVector;
 import gaj.impl.vector.VectorFactory;
-
 import java.util.Collection;
 
 
