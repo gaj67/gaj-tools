@@ -20,7 +20,7 @@ public class HomeTeamAdvantage {
 		int[] awayDraws = new int[NUM_TEAMS];
 		int[] awayLosses = new int[NUM_TEAMS];
 		// Collect statistics...
-		Collection<Match> records = MatchDataFactory.newManager().getMatches();
+		Collection<Match> records = MatchDataFactory.getMatchFetcher().getMatches();
 		for (Match match : records) {
 			int homeIdx = match.getFixture().getHomeTeam().ordinal();
 			int awayIdx = match.getFixture().getAwayTeam().ordinal();

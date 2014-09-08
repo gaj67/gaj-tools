@@ -1,9 +1,9 @@
-package gaj.afl.data;
+package gaj.afl.data.finalsiren;
 
 import gaj.afl.data.match.MatchFetcher;
 
 /**
- * Provides access to historical match data.
+ * Provides access to Final Siren match data.
  */
 public abstract class MatchDataFactory {
 
@@ -12,7 +12,7 @@ public abstract class MatchDataFactory {
     /**
      * @return A manager for obtaining historical match data.
      */
-    public static MatchFetcher getMatchFetcher() {
-	return gaj.afl.data.finalsiren.MatchDataFactory.newMatchFetcher();
+    public static MatchFetcher newMatchFetcher() {
+	return new MatchDataScraper();
     }
 }

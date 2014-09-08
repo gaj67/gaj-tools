@@ -23,7 +23,7 @@ public class TrainHomeTeamAdvantage3 {
 
 	public static void main(String[] args) {
 		// Collect all match statistics...
-		MatchFetcher manager = MatchDataFactory.newManager();
+		MatchFetcher manager = MatchDataFactory.getMatchFetcher();
 		GoldData trainingData = getMatchData(manager.getMatchesByYear(2008, 2009, 2010, 2011));
 		int n = 0, w = 0;
 		for (GoldDatum datum : trainingData) {
