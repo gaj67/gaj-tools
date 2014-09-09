@@ -147,6 +147,9 @@ import java.util.List;
 	}
 	Round round = parseRound(data.get(0));
 	Outcome result = parseOutcome(stripTags(data.get(7)));
+	if (result == null) {
+	    return null;
+	}
 	Location location = parseLocation(stripTags(data.get(14)));
 	Team homeTeam = parseTeam(stripTags(data.get(1)));
 	Score homeQ1 = parseScore(data.get(2).trim());
@@ -177,6 +180,8 @@ import java.util.List;
 		return Outcome.Loss;
 	    case "drew":
 		return Outcome.Draw;
+	    case "v":
+		return null;
 	    default:
 		throw new IllegalArgumentException("Unknown outcome: " + outcome);
 	}

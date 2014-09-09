@@ -26,18 +26,20 @@ public class LoadData {
 	MatchFetcher manager = MatchDataFactory.getMatchFetcher();
 	Collection<Match> matches = manager.getMatches(year);
 	{
-	    int n = 0, w = 0, l = 0;
+	    int n = 0, w = 0, l = 0, d = 0;
 	    for (Match match : matches) {
 		n++;
 		if (Outcome.Win == match.getOutcome()) {
 		    w++;
 		} else if (Outcome.Loss == match.getOutcome()) {
 		    l++;
+		} else {
+		    d++;
 		}
 	    }
 	    double p = 1.0 * w / n;
 	    double q = 1.0 * l / n;
-	    System.out.printf("#games=%d, home-losses=%d, home-wins=%d, P(home-win)=%5.3f, P(home-loss)=%5.3f%n", n, l, w, p, q);
+	    System.out.printf("#games=%d, home-losses=%d, home-wins=%d, home-draws=%d, P(home-win)=%5.3f, P(home-loss)=%5.3f%n", n, l, w, d, p, q);
 
 
 	}
