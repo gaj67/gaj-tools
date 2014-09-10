@@ -24,7 +24,7 @@ public class SummariseData {
 
     public static void main(String[] args) {
 	// Collect all match statistics...
-	Collection<Match> matches = fetcher.getMatches(2010, 2011, 2012);
+	Collection<Match> matches = fetcher.getMatches(2005, 2006, 2007, 2008, 2009, 2010, 2011);
 	summariseHomeWinsLosses(matches);
 	summarisePrevWinLoss(matches);
 	summariseHomeOutcomeVersusPrevOutcome(matches);
