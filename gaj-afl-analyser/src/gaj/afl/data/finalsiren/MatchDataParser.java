@@ -7,7 +7,6 @@ import gaj.afl.data.core.Outcome;
 import gaj.afl.data.core.Round;
 import gaj.afl.data.core.Score;
 import gaj.afl.data.core.Scores;
-import gaj.afl.data.core.ShortMonth;
 import gaj.afl.data.core.Team;
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,10 +1,10 @@
 package gaj.afl.statistics;
 
+import gaj.afl.data.MatchDataFactory;
 import gaj.afl.data.core.Location;
 import gaj.afl.data.core.Match;
 import gaj.afl.data.core.Round;
 import gaj.afl.data.core.Team;
-import gaj.afl.data.store.MatchDataFactory;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;

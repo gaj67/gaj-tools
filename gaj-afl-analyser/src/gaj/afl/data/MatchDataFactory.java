@@ -1,6 +1,6 @@
-package gaj.afl.data.store;
+package gaj.afl.data;
 
-import gaj.afl.data.core.MatchFetcher;
+import gaj.afl.data.store.MatchFetcher;
 
 /**
  * Provides access to historical match data.
@@ -15,4 +15,5 @@ public abstract class MatchDataFactory {
     public static MatchFetcher getMatchFetcher() {
 	return gaj.afl.data.finalsiren.MatchDataFactory.newMatchFetcher();
     }
+
 }

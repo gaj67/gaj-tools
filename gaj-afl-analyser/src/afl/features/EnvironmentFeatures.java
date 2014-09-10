@@ -2,7 +2,7 @@ package afl.features;
 
 import gaj.afl.data.core.MatchDateTime;
 import gaj.afl.data.core.MatchLocation;
-import gaj.afl.data.core.ShortMonth;
+import gaj.afl.data.finalsiren.ShortMonth;
 
 /**
  * Encapsulates known information about the environment

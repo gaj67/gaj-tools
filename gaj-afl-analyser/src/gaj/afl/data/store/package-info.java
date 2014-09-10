@@ -1,4 +1,4 @@
 /**
- * Provides access to stored match data.
+ * Defines access to stored match data.
  */
 package gaj.afl.data.store;

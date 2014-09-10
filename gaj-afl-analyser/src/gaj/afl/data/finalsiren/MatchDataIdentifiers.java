@@ -9,10 +9,6 @@ import java.io.File;
 /*package-private*/ abstract class MatchDataIdentifiers {
 
     private static final File PATH_TO_DATA = new File("data/finalsiren/match/");
-    private static final Team[] teams = new Team[] {
-	Team.Adelaide, Team.Brisbane_Lions, Team.Collingwood, Team.Geelong,
-
-    };
 
     private MatchDataIdentifiers() {}
 
@@ -23,12 +19,7 @@ import java.io.File;
      * @return The team identifier.
      */
     /*package-private*/ static int getTeamIdentifier(Team team) {
-	for (int i = 0; i < teams.length; i++) {
-	    if (teams[i] == team) {
-		return i + 1;
-	    }
-	}
-	throw new IllegalArgumentException("Could not find identifier for team: " + team);
+	return team.getIdentifier();
     }
 
     /**
@@ -52,10 +43,12 @@ import java.io.File;
     }
 
     /*package-private*/ static Team getTeamFromIdentifier(int id) {
-	if (id < 1 || id > teams.length) {
-	    throw new IllegalArgumentException("No such team identifier: " + id);
+	for (Team team : Team.values()) {
+	    if (team.getIdentifier() == id) {
+		return team;
+	    }
 	}
-	return teams[id - 1];
+	throw new IllegalArgumentException("No team found for identifier: " + id);
     }
 
     /**

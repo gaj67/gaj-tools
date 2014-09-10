@@ -1,10 +1,13 @@
-package gaj.afl.data.core;
+package gaj.afl.data.store;
 
 
+import gaj.afl.data.core.Match;
+import gaj.afl.data.core.Round;
+import gaj.afl.data.core.Team;
 import java.util.Collection;
 
 /**
- * Describes the interface for obtaining historical match records.
+ * An interface for obtaining historical match records.
  */
 public interface MatchFetcher {
 

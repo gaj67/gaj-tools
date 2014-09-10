@@ -11,9 +11,9 @@ public enum Round {
     Round13(), Round14(), Round15(), Round16(),
     Round17(), Round18(), Round19(), Round20(),
     Round21(), Round22(), Round23(), Round24(),
+    QualifyingFinal("QF"),
     EliminationFinal("EF"),
     SemiFinal("SF"),
-    QualifyingFinal("QF"),
     PreliminaryFinal("PF"),
     GrandFinal("GF");
 
