@@ -27,9 +27,9 @@ public class SummariseData {
 	Collection<Match> matches = fetcher.getMatches(2005, 2006, 2007, 2008, 2009, 2010, 2011);
 	summariseHomeWinsLosses(matches);
 	summarisePrevWinLoss(matches);
-	summariseHomeOutcomeVersusPrevOutcome(matches);
-	summariseHomeOutcomeVersusPrevAwayOutcome(matches);
-	summarisePrevHomeOutcomeVersusPrevAwayOutcome(matches);
+	//summariseHomeOutcomeVersusPrevOutcome(matches);
+	//summariseHomeOutcomeVersusPrevAwayOutcome(matches);
+	//summarisePrevHomeOutcomeVersusPrevAwayOutcome(matches);
     }
 
     /*
@@ -50,38 +50,64 @@ public class SummariseData {
     }
 
     /*
-     * Summarises the effect of having won or lost the previous game.
+     * Summarises the effect of having won or lost the previous game on the outcome of the current game.
      * For simplicity, it is assumed there are no previous games at the start of each year.
-     * The counts are accumulated from the perspective of the winning team, with
-     * the row corresponding to the previous win/loss/draw of the winning team, and the
-     * column corresponding to the losing team. Drawn matches count for half each.
+     * Also, a draw is averaged equally across both a win and a loss.
      */
     private static void summarisePrevWinLoss(Collection<Match> matches) {
-	WritableMatrix winCounts = MatrixFactory.newMatrix(3, 3);
-	displayOutcomes();
+	// Current vs previous outcomes, home team and away team separately.
+	WritableMatrix[] counts = new WritableMatrix[] {
+		MatrixFactory.newMatrix(2, 2),
+		MatrixFactory.newMatrix(2, 2),
+	};
+	System.out.printf("Outcomes: %s=%d, %s=%d%n",
+		Outcome.Win, Outcome.Win.ordinal(),
+		Outcome.Loss, Outcome.Loss.ordinal());
 	for (Match match : matches) {
 	    Fixture fixture = match.getFixture();
-	    int prevHomeOutcomeIndex = getPrevOutcomeIndex(fixture.getHomeTeam(), fixture);
-	    int prevAwayOutcomeIndex = getPrevOutcomeIndex(fixture.getAwayTeam(), fixture);
-	    if (prevHomeOutcomeIndex < 0 || prevAwayOutcomeIndex < 0) {
-		continue;
+	    Outcome outcome = match.getOutcome();
+	    Outcome prevHomeOutcome = getPrevOutcome(fixture.getHomeTeam(), fixture);
+	    if (prevHomeOutcome != null) {
+		addCounts(counts[0], outcome, prevHomeOutcome);
 	    }
-	    switch (match.getOutcome()) {
-		case Draw:
-		    winCounts.add(prevHomeOutcomeIndex, prevAwayOutcomeIndex, 0.5);
-		    winCounts.add(prevAwayOutcomeIndex, prevHomeOutcomeIndex, 0.5);
-		    break;
-		case Loss:
-		    winCounts.add(prevAwayOutcomeIndex, prevHomeOutcomeIndex, 1);
-		    break;
-		case Win:
-		    winCounts.add(prevHomeOutcomeIndex, prevAwayOutcomeIndex, 1);
-		    break;
-		default:
-		    break;
+
+	    Outcome curAwayOutcome = toggleOutcome(outcome);
+	    Outcome prevAwayOutcome = getPrevOutcome(fixture.getAwayTeam(), fixture);
+	    if (prevAwayOutcome != null) {
+		addCounts(counts[1], curAwayOutcome, prevAwayOutcome);
 	    }
 	}
-	MatrixFactory.display("Prev. outcome counts=", winCounts, "\n");
+	MatrixFactory.display("Home-team: Cur. outcome vs prev. outcome counts: ", counts[0], "\n");
+	MatrixFactory.display("Away-team: Cur. outcome vs prev. outcome counts: ", counts[1], "\n");
+	WritableMatrix totals = MatrixFactory.newMatrix(counts[0]);
+	totals.add(counts[1]);
+	MatrixFactory.display("Overall: Cur. outcome vs prev. outcome counts: ", totals, "\n");
+    }
+
+    private static void addCounts(WritableMatrix counts, Outcome curOutcome, Outcome prevOutcome) {
+	final boolean isCurDraw = (curOutcome == Outcome.Draw);
+	final boolean isPrevDraw = (prevOutcome == Outcome.Draw);
+	if (!isCurDraw && !isPrevDraw) {
+	    counts.add(curOutcome.ordinal(), prevOutcome.ordinal(), 1);
+	} else if (isCurDraw && isPrevDraw) {
+	    counts.add(0.25);
+	} else if (isCurDraw/*&& !isPrevDraw*/) {
+	    counts.getColumn(prevOutcome.ordinal()).add(0.5);
+	} else /*isPrevDraw (&& !isCurDraw)*/ {
+	    counts.getRow(curOutcome.ordinal()).add(0.5);
+	}
+    }
+
+    private static Outcome toggleOutcome(Outcome outcome) {
+	return (Outcome.Draw == outcome) ? Outcome.Draw : (Outcome.Win == outcome) ? Outcome.Loss : Outcome.Win;
+    }
+
+    private static int getOutcomeIndex(/*@Nullable*/ Outcome outcome) {
+	return (outcome == null) ? -1 : (Outcome.Loss == outcome) ? 0 : 1;
+    }
+
+    private static double getOutcomeWeight(Outcome outcome) {
+	return (Outcome.Draw == outcome) ? 0.5 : 1;
     }
 
     private static void displayOutcomes() {
