@@ -45,67 +45,16 @@ public class MarkovOneStepAnalyser {
     private final DataMatrix transProbs;
 
     /**
-     * @see {@link newAnalyser}().
+     * @see {@link #newAnalyser}().
      */
-    private MarkovOneStepAnalyser(DataVector initCounts, DataVector finalCounts,
-	    DataMatrix transCounts)
+    private MarkovOneStepAnalyser(DataVector initProbs, DataVector finalProbs,
+	    DataVector stateProbs, DataMatrix transProbs)
     {
-	initProbs = computeInitialStateProbabilities(initCounts);
-	DataVector nonFinalCounts = computeNonTerminalStateTransitionCounts(transCounts);
-	finalProbs = computeTerminalStateProbabilities(finalCounts, nonFinalCounts);
-	stateProbs = computeArbitraryStateProbabilities(nonFinalCounts, finalCounts);
-	onesProbs = VectorFactory.newVector(initCounts.size());
-	transProbs = computeStateTransitionProbabilities(transCounts);
-    }
-
-    private DataVector computeInitialStateProbabilities(DataVector initCounts) {
-	WritableVector probs = VectorFactory.newVector(initCounts);
-	probs.multiply(1.0 / initCounts.sum());
-	return probs;
-    }
-
-    /*
-     * Computes the number of transitions from each state to another (or the same),
-     * non-terminal state.
-     */
-    private DataVector computeNonTerminalStateTransitionCounts(DataMatrix transCounts) {
-	final int numStates = transCounts.numRows();
-	WritableVector probs = VectorFactory.newVector(numStates);
-	for (int row = 0; row < numStates; row++) {
-	    probs.set(row, transCounts.getRow(row).sum());
-	}
-	return probs;
-    }
-
-    private DataVector computeTerminalStateProbabilities(DataVector finalCounts, DataVector nonFinalCounts) {
-	WritableVector probs = VectorFactory.newVector(finalCounts);
-	final int numStates = finalCounts.size();
-	for (int state = 0; state < numStates; state++) {
-	    double finalCount = finalCounts.get(state);
-	    if (finalCount > 0) {
-		probs.multiply(state, 1.0 / (finalCount + nonFinalCounts.get(state)));
-	    }
-	}
-	return probs;
-    }
-
-    private DataVector computeArbitraryStateProbabilities(DataVector nonFinalCounts, DataVector finalCounts) {
-	WritableVector probs = VectorFactory.newVector(nonFinalCounts);
-	probs.add(finalCounts);
-	probs.multiply(1.0 / probs.sum());
-	return probs;
-    }
-
-    private DataMatrix computeStateTransitionProbabilities(DataMatrix transCounts) {
-	WritableMatrix probs = MatrixFactory.newMatrix(transCounts);
-	final int numStates = transCounts.numRows();
-	for (int row = 0; row < numStates; row++) {
-	    double nonFinalCounts = transCounts.getRow(row).sum();
-	    if (nonFinalCounts > 0) {
-		probs.multiplyRow(row, 1.0 / nonFinalCounts);
-	    }
-	}
-	return probs;
+	this.initProbs = initProbs;
+	this.finalProbs = finalProbs;
+	this.stateProbs = stateProbs;
+	this.onesProbs = VectorFactory.newVector(initProbs.size());
+	this.transProbs = transProbs;
     }
 
     /**
@@ -153,7 +102,62 @@ public class MarkovOneStepAnalyser {
 	    DataVector initCounts, DataVector finalCounts,
 	    DataMatrix transCounts)
     {
-	return new MarkovOneStepAnalyser(initCounts, finalCounts, transCounts);
+	DataVector initProbs = computeInitialStateProbabilities(initCounts);
+	DataVector nonFinalCounts = computeNonTerminalStateTransitionCounts(transCounts);
+	DataVector finalProbs = computeTerminalStateProbabilities(nonFinalCounts, finalCounts);
+	DataVector stateProbs = computeArbitraryStateProbabilities(nonFinalCounts, finalCounts);
+	DataMatrix transProbs = computeStateTransitionProbabilities(transCounts);
+	return new MarkovOneStepAnalyser(initProbs, finalProbs, stateProbs, transProbs);
+    }
+
+    private static DataVector computeInitialStateProbabilities(DataVector initCounts) {
+	WritableVector probs = VectorFactory.newVector(initCounts);
+	probs.multiply(1.0 / initCounts.sum());
+	return probs;
+    }
+
+    /*
+     * Computes the number of transitions from each state to another (or the same),
+     * non-terminal state.
+     */
+    private static DataVector computeNonTerminalStateTransitionCounts(DataMatrix transCounts) {
+	final int numStates = transCounts.numRows();
+	WritableVector probs = VectorFactory.newVector(numStates);
+	for (int row = 0; row < numStates; row++) {
+	    probs.set(row, transCounts.getRow(row).sum());
+	}
+	return probs;
+    }
+
+    private static DataVector computeTerminalStateProbabilities(DataVector nonFinalCounts, DataVector finalCounts) {
+	WritableVector probs = VectorFactory.newVector(finalCounts);
+	final int numStates = finalCounts.size();
+	for (int state = 0; state < numStates; state++) {
+	    double finalCount = finalCounts.get(state);
+	    if (finalCount > 0) {
+		probs.multiply(state, 1.0 / (finalCount + nonFinalCounts.get(state)));
+	    }
+	}
+	return probs;
+    }
+
+    private static DataVector computeArbitraryStateProbabilities(DataVector nonFinalCounts, DataVector finalCounts) {
+	WritableVector probs = VectorFactory.newVector(nonFinalCounts);
+	probs.add(finalCounts);
+	probs.multiply(1.0 / probs.sum());
+	return probs;
+    }
+
+    private static DataMatrix computeStateTransitionProbabilities(DataMatrix transCounts) {
+	WritableMatrix probs = MatrixFactory.newMatrix(transCounts);
+	final int numStates = transCounts.numRows();
+	for (int row = 0; row < numStates; row++) {
+	    double nonFinalCounts = transCounts.getRow(row).sum();
+	    if (nonFinalCounts > 0) {
+		probs.multiplyRow(row, 1.0 / nonFinalCounts);
+	    }
+	}
+	return probs;
     }
 
     /**
