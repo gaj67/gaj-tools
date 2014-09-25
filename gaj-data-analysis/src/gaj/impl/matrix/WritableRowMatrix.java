@@ -165,6 +165,14 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
     }
 
     @Override
+    public void multiplyRow(int row, double value) {
+	final double[] theRow = data[row];
+	for (int column = 0; column < numColumns; column++) {
+	    theRow[column] *= value;
+	}
+    }
+
+    @Override
     public void multiplyColumn(int column, DataVector vector) {
 	if (vector instanceof ArrayVector) {
 	    final double[] values = ((ArrayVector) vector).getArray();
@@ -176,6 +184,13 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 	    for (double value : vector) {
 		data[row++][column] *= value;
 	    }
+	}
+    }
+
+    @Override
+    public void multiplyColumn(int column, double value) {
+	for (int row = 0; row < numRows; row++) {
+	    data[row][column] *= value;
 	}
     }
 
