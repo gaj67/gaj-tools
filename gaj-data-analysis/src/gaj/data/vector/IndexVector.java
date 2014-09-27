@@ -9,9 +9,9 @@ import java.util.Iterator;
 public interface IndexVector extends Iterable<Integer> {
 
 	/**
-	 * @return The length of the vector.
+	 * @return The number of data elements in the vector.
 	 */
-	int length();
+	int size();
 
 	/**
 	 * @param pos - The position of the desired element (counting from 0).

@@ -13,7 +13,7 @@ import gaj.data.vector.IndexVector;
 	}
 
 	@Override
-	public int length() {
+	public int size() {
 		return values.length;
 	}
 
