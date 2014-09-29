@@ -2,6 +2,7 @@ package gaj.markov.test;
 
 import static org.junit.Assert.assertTrue;
 import gaj.analysis.markov.MarkovOneStepAnalyser;
+import gaj.analysis.markov.MarkovOneStepLibrary;
 import gaj.data.markov.SequenceType;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.vector.DataVector;
@@ -46,7 +47,7 @@ public class MarkovTest {
 			{ 0.4, 0.9 }  // p(x_2|s_2)
 		}
 		);
-	DataMatrix alpha = MarkovOneStepAnalyser.forwardProbabilities(obsProbs, startProbs, transProbs);
+	DataMatrix alpha = MarkovOneStepLibrary.forwardProbabilities(obsProbs, startProbs, transProbs);
 	MatrixFactory.display("p(x_1,x_2,...,x_t,s_t|start)=", alpha, "\n");
 	/*
 	 *  Forward checks:
@@ -64,7 +65,7 @@ public class MarkovTest {
 	assertTrue(MatrixFactory.equals(expectedAlpha, alpha, EPSILON));
 
 	DataVector endProbs = VectorFactory.newVector(0.1, 0.5);   // P(end|s_N)
-	DataMatrix beta = MarkovOneStepAnalyser.backwardProbabilities(obsProbs, endProbs, transProbs);
+	DataMatrix beta = MarkovOneStepLibrary.backwardProbabilities(obsProbs, endProbs, transProbs);
 	MatrixFactory.display("p(x_{t+1},x_{t+2},...,end|s_t,start)=", beta, "\n");
 	/*
 	 *  Backward checks:
@@ -80,7 +81,7 @@ public class MarkovTest {
 		);
 	assertTrue(MatrixFactory.equals(expectedBeta, beta, EPSILON));
 
-	DataMatrix gamma = MarkovOneStepAnalyser.jointProbabilities(obsProbs, startProbs, endProbs, transProbs);
+	DataMatrix gamma = MarkovOneStepLibrary.jointProbabilities(obsProbs, startProbs, endProbs, transProbs);
 	MatrixFactory.display("p(x_1,...,x_N,end,s_t|start)=", gamma, "\n");
 	/*
 	 *  Joint checks:
@@ -97,7 +98,7 @@ public class MarkovTest {
 	double norm = gamma.getRow(0).sum();
 	assertTrue(Math.abs(norm - gamma.getRow(1).sum()) <= EPSILON);
 
-	DataMatrix pred = MarkovOneStepAnalyser.posteriorProbabilities(obsProbs, startProbs, endProbs, transProbs);
+	DataMatrix pred = MarkovOneStepLibrary.posteriorProbabilities(obsProbs, startProbs, endProbs, transProbs);
 	MatrixFactory.display("p(s_t|start,x_1,...,x_N,end)=", pred, "\n");
 	/*
 	 *  Posterior checks:
@@ -128,7 +129,7 @@ public class MarkovTest {
 	VectorFactory.display("C(end|s_N)", finalCounts, "\n");
 	MarkovOneStepAnalyser analyser = MarkovOneStepAnalyser.newAnalyser(
 		initCounts, finalCounts, transCounts);
-	DataMatrix pred2 = analyser.posteriorProbabilities(obsProbs, SequenceType.Full);
+	DataMatrix pred2 = analyser.posteriorProbabilities(obsProbs, SequenceType.Complete);
 	MatrixFactory.display("p(s_t|start,x_1,...,x_N,end)=", pred2, "\n");
 	assertTrue(MatrixFactory.equals(expectedPred, pred2, EPSILON));
     }

@@ -70,18 +70,9 @@ public class MarkovOneStepAnalyser {
      * @return The T x S matrix of posterior probabilities.
      */
     public DataMatrix posteriorProbabilities(DataMatrix obsProbs, SequenceType type) {
-	switch (type) {
-	    case End:
-		return posteriorProbabilities(obsProbs, stateProbs, finalProbs, transProbs);
-	    case Full:
-		return posteriorProbabilities(obsProbs, initProbs, finalProbs, transProbs);
-	    case Start:
-		return posteriorProbabilities(obsProbs, initProbs, onesProbs, transProbs);
-	    case Sub:
-		return posteriorProbabilities(obsProbs, stateProbs, onesProbs, transProbs);
-	    default:
-		throw new IllegalArgumentException("Unknown sequence type: " + type);
-	}
+	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
+	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
+	return MarkovOneStepLibrary.posteriorProbabilities(obsProbs, startProbs, endProbs, transProbs);
     }
 
     //**********************************************************************
@@ -104,12 +95,14 @@ public class MarkovOneStepAnalyser {
     {
 	DataVector initProbs = computeInitialStateProbabilities(initCounts);
 	DataVector nonFinalCounts = computeNonTerminalStateTransitionCounts(transCounts);
-	DataVector finalProbs = computeTerminalStateProbabilities(nonFinalCounts, finalCounts);
-	DataVector stateProbs = computeArbitraryStateProbabilities(nonFinalCounts, finalCounts);
+	DataVector stateCounts = computeStateCounts(nonFinalCounts, finalCounts);
+	DataVector finalProbs = computeTerminalStateProbabilities(stateCounts, finalCounts);
+	DataVector stateProbs = computeArbitraryStateProbabilities(stateCounts);
 	DataMatrix transProbs = computeStateTransitionProbabilities(transCounts);
 	return new MarkovOneStepAnalyser(initProbs, finalProbs, stateProbs, transProbs);
     }
 
+    // Normalises C(s_1|start) to give P(s_1|start).
     private static DataVector computeInitialStateProbabilities(DataVector initCounts) {
 	WritableVector probs = VectorFactory.newVector(initCounts);
 	probs.multiply(1.0 / initCounts.sum());
@@ -129,25 +122,34 @@ public class MarkovOneStepAnalyser {
 	return probs;
     }
 
-    private static DataVector computeTerminalStateProbabilities(DataVector nonFinalCounts, DataVector finalCounts) {
-	WritableVector probs = VectorFactory.newVector(finalCounts);
+    // Computes C(s), the number of times state s occurred at any stage.
+    private static DataVector computeStateCounts(DataVector nonFinalCounts, DataVector finalCounts) {
+	WritableVector counts = VectorFactory.newVector(nonFinalCounts);
+	counts.add(finalCounts);
+	return counts;
+    }
+
+    // Computes P(end|s_T) = C(end|s_T) / C(s_T).
+    private static DataVector computeTerminalStateProbabilities(DataVector stateCounts, DataVector finalCounts) {
 	final int numStates = finalCounts.size();
+	WritableVector probs = VectorFactory.newVector(numStates);
 	for (int state = 0; state < numStates; state++) {
 	    double finalCount = finalCounts.get(state);
 	    if (finalCount > 0) {
-		probs.multiply(state, 1.0 / (finalCount + nonFinalCounts.get(state)));
+		probs.set(state, finalCount / stateCounts.get(state));
 	    }
 	}
 	return probs;
     }
 
-    private static DataVector computeArbitraryStateProbabilities(DataVector nonFinalCounts, DataVector finalCounts) {
-	WritableVector probs = VectorFactory.newVector(nonFinalCounts);
-	probs.add(finalCounts);
+    // Normalises C(s) to give P(s).
+    private static DataVector computeArbitraryStateProbabilities(DataVector stateCounts) {
+	WritableVector probs = VectorFactory.newVector(stateCounts);
 	probs.multiply(1.0 / probs.sum());
 	return probs;
     }
 
+    // Normalises C(s_{t-1},s_t) to give P(s_t|s_{t-1}).
     private static DataMatrix computeStateTransitionProbabilities(DataMatrix transCounts) {
 	WritableMatrix probs = MatrixFactory.newMatrix(transCounts);
 	final int numStates = transCounts.numRows();
@@ -158,161 +160,6 @@ public class MarkovOneStepAnalyser {
 	    }
 	}
 	return probs;
-    }
-
-    /**
-     * Computes the forward joint probabilities, p(x_1,...,x_t,s_t|start),
-     * of a known sequence {x_t}
-     * of observations, for the unknown state s_t
-     * at each stage t=1,2,...,T.
-     *
-     * @param obsProbs - The T x S matrix of conditional
-     * observation probabilities, p(x_t|s_t).
-     * @param startProbs - The length-S vector of
-     * initial state probabilities, P(s_1|start).
-     * @param transProbs - The S x S matrix of state transition
-     * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
-     * and columns indexed by s_t.
-     * @return The T x S matrix of forward probabilities.
-     */
-    public static DataMatrix forwardProbabilities(
-	    DataMatrix obsProbs, DataVector startProbs,
-	    DataMatrix transProbs)
-    {
-	// Initialise forward probabilities, p(x_1,...,x_t,s_t).
-	final int numStages = obsProbs.numRows();
-	final int numStates = obsProbs.numColumns();
-	WritableMatrix mp = MatrixFactory.newMatrix(numStages, numStates);
-	// Compute alpha_1 = p(x_1,s_1) = p(x_1|s_1) P(s_1|start).
-	DataVector alpha = VectorFactory.multiply(obsProbs.getRow(0), startProbs);
-	mp.setRow(0, alpha);
-	// Compute p(x_1,...,x_{t-1},s_t)
-	//  = sum_{s_{t-1}}p(x_1,...,x_{t-1},s_{t-1}) P(s_t|s_{t-1}).
-	//  = sum_{s_{t-1}}alpha_{t-1} P(s_t|s_{t-1}).
-	// Compute alpha_t = p(x_1,...,x_t,s_t)
-	//  = p(x_t|s_t) p(x_1,...,x_{t-1},s_t).
-	for (int t = 1; t < numStages; t++) {
-	    // Compute stage t quantities using stage t-1.
-	    alpha = VectorFactory.multiply(
-		    obsProbs.getRow(t),
-		    MatrixFactory.multiply(alpha, transProbs));
-	    mp.setRow(t, alpha);
-	}
-	return mp;
-    }
-
-    /**
-     * Computes the backward conditional probabilities,
-     * p(x_{t+1},...,x_T,end|s_t),
-     * of a known sequence {x_t}
-     * of observations, for the unknown state s_t
-     * at each stage t=1,2,...,T.
-     *
-     * @param obsProbs - The T x S matrix of conditional
-     * observation probabilities, p(x_t|s_t).
-     * @param endProbs - The length-S vector of
-     * terminating conditional state probabilities, P(end|s_T).
-     * @param transProbs - The S x S matrix of state transition
-     * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
-     * and columns indexed by s_t.
-     * @return The T x S matrix of backward probabilities.
-     */
-    public static DataMatrix backwardProbabilities(
-	    DataMatrix obsProbs, DataVector endProbs, DataMatrix transProbs)
-    {
-	// Initialise backward probabilities, p(x_{t+1},...,x_T|s_t).
-	final int numStages = obsProbs.numRows();
-	WritableMatrix mp = MatrixFactory.newMatrix(numStages, obsProbs.numColumns());
-	// Set beta_T = P(end|s_T).
-	DataVector beta = endProbs;
-	int t = numStages - 1;
-	mp.setRow(t, beta);
-	while (t > 0) {
-	    // Compute beta_{t-1} = p(x_t,...,x_T|s_{t-1})
-	    //  = sum_{s_t} p(x_t,...,x_T|s_t) P(s_t|s_{t-1}).
-	    //  = sum_{s_t} p(x_{t+1},...,x_T|s_t) p(x_t|s_t) P(s_t|s_{t-1}).
-	    //  = sum_{s_t} beta_t p(x_t|s_t) P(s_t|s_{t-1}).
-	    beta = MatrixFactory.multiply(
-		    transProbs,
-		    VectorFactory.multiply(beta, obsProbs.getRow(t)));
-	    mp.setRow(--t, beta);
-	}
-	return mp;
-    }
-
-    /**
-     * Computes the joint probabilities,
-     * p(x_1,...,x_T,end,s_t|start),
-     * of a known sequence {x_t}
-     * of observations, for the unknown state s_t
-     * at each stage t=1,2,...,T.
-     *
-     * @param obsProbs - The T x S matrix of conditional
-     * observation probabilities, p(x_t|s_t).
-     * @param startProbs - The length-S vector of
-     * initial, prior state probabilities, P(s_1|start).
-     * @param endProbs - The length-S vector of
-     * terminating conditional state probabilities, P(end|s_T).
-     * @param transProbs - The S x S matrix of state transition
-     * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
-     * and columns indexed by s_t.
-     * @return The T x S matrix of joint probabilities.
-     */
-    public static DataMatrix jointProbabilities(
-	    DataMatrix obsProbs,
-	    DataVector startProbs, DataVector endProbs,
-	    DataMatrix transProbs)
-    {
-	// Compute forward probabilities, alpha_t = p(x_1,...,x_t,s_t).
-	WritableMatrix mp = (WritableMatrix) forwardProbabilities(obsProbs, startProbs, transProbs);
-	final int numStages = mp.numRows();
-	// Compute joint probability,
-	//   p(x_1,...,x_T,end,s_T|start) = alpha_T * beta_T.
-	int t = numStages - 1;
-	DataVector beta = endProbs;
-	mp.multiplyRow(t, beta);
-	while (t > 0) {
-	    // Compute beta_{t-1} = p(x_t,...,x_T|s_{t-1})
-	    //  = sum_{s_t} p(x_t,...,x_T|s_t) P(s_t|s_{t-1}).
-	    //  = sum_{s_t} p(x_{t+1},...,x_T|s_t) p(x_t|s_t) P(s_t|s_{t-1}).
-	    //  = sum_{s_t} beta_t p(x_t|s_t) P(s_t|s_{t-1}).
-	    beta = MatrixFactory.multiply(
-		    transProbs,
-		    VectorFactory.multiply(beta, obsProbs.getRow(t)));
-	    // Compute joint probability,
-	    //   p(x_1,...,x_T,end,s_t|start) = alpha_t * beta_t.
-	    mp.multiplyRow(--t, beta);
-	}
-	return mp;
-    }
-
-    /**
-     * Computes the state posterior probabilities,
-     * p(s_t|start,x_1,...,x_T,end),
-     * of a known sequence {x_t}
-     * of observations, for the unknown state s_t
-     * at each stage t=1,2,...,T.
-     *
-     * @param obsProbs - The T x S matrix of conditional
-     * observation probabilities, p(x_t|s_t).
-     * @param startProbs - The length-S vector of
-     * initial, prior state probabilities, P(s_1|start).
-     * @param endProbs - The length-S vector of
-     * terminating conditional state probabilities, P(end|s_T).
-     * @param transProbs - The S x S matrix of state transition
-     * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
-     * and columns indexed by s_t.
-     * @return The T x S matrix of posterior probabilities.
-     */
-    public static DataMatrix posteriorProbabilities(
-	    DataMatrix obsProbs,
-	    DataVector startProbs, DataVector endProbs,
-	    DataMatrix transProbs)
-    {
-	WritableMatrix mp = (WritableMatrix) jointProbabilities(obsProbs, startProbs, endProbs, transProbs);
-	double norm = 1.0 / mp.getRow(0).sum(); // Compute normaliser, 1 / p(x_1,...,x_T).
-	mp.multiply(norm);
-	return mp;
     }
 
     /**
