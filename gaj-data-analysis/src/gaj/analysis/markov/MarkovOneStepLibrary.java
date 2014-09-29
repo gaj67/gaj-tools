@@ -6,7 +6,6 @@ import gaj.data.vector.DataVector;
 import gaj.data.vector.IndexVector;
 import gaj.impl.matrix.MatrixFactory;
 import gaj.impl.vector.VectorFactory;
-import java.util.Iterator;
 
 /**
  * Provides the basic methods for analysing one-step Markov sequences.
@@ -51,7 +50,7 @@ public abstract class MarkovOneStepLibrary {
     private MarkovOneStepLibrary() {}
 
     /**
-     * Computes the forward joint probabilities, p(x_1,...,x_t,s_t|start),
+     * Computes the forward joint probabilities, p(&lt;x_1,...,x_t), s_t),
      * of a known sequence {x_t}
      * of observations, for the unknown state s_t
      * at each stage t=1,2,...,T.
@@ -59,7 +58,7 @@ public abstract class MarkovOneStepLibrary {
      * @param obsProbs - The T x S matrix of conditional
      * observation probabilities, p(x_t|s_t).
      * @param startProbs - The length-S vector of
-     * initial state probabilities, P(s_1|start).
+     * initial state probabilities, P(s_1|&lt;).
      * @param transProbs - The S x S matrix of state transition
      * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
      * and columns indexed by s_t.
@@ -93,7 +92,7 @@ public abstract class MarkovOneStepLibrary {
 
     /**
      * Computes the backward conditional probabilities,
-     * p(x_{t+1},...,x_T,end|s_t),
+     * p(x_{t+1},...,x_T&gt;|s_t),
      * of a known sequence {x_t}
      * of observations, for the unknown state s_t
      * at each stage t=1,2,...,T.
@@ -101,7 +100,7 @@ public abstract class MarkovOneStepLibrary {
      * @param obsProbs - The T x S matrix of conditional
      * observation probabilities, p(x_t|s_t).
      * @param endProbs - The length-S vector of
-     * terminating conditional state probabilities, P(end|s_T).
+     * terminating conditional state probabilities, P(&gt;|s_T).
      * @param transProbs - The S x S matrix of state transition
      * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
      * and columns indexed by s_t.
@@ -132,7 +131,7 @@ public abstract class MarkovOneStepLibrary {
 
     /**
      * Computes the joint probabilities,
-     * p(x_1,...,x_T,end,s_t|start),
+     * p(&lt;x_1,...,x_T&gt; ,s_t),
      * of a known sequence {x_t}
      * of observations, for the unknown state s_t
      * at each stage t=1,2,...,T.
@@ -140,9 +139,9 @@ public abstract class MarkovOneStepLibrary {
      * @param obsProbs - The T x S matrix of conditional
      * observation probabilities, p(x_t|s_t).
      * @param startProbs - The length-S vector of
-     * initial, prior state probabilities, P(s_1|start).
+     * initial, prior state probabilities, P(s_1|&lt;).
      * @param endProbs - The length-S vector of
-     * terminating conditional state probabilities, P(end|s_T).
+     * terminating conditional state probabilities, P(&gt;|s_T).
      * @param transProbs - The S x S matrix of state transition
      * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
      * and columns indexed by s_t.
@@ -178,7 +177,7 @@ public abstract class MarkovOneStepLibrary {
 
     /**
      * Computes the state posterior probabilities,
-     * p(s_t|start,x_1,...,x_T,end),
+     * p(s_t|&lt;x_1,...,x_T&gt;),
      * of a known sequence {x_t}
      * of observations, for the unknown state s_t
      * at each stage t=1,2,...,T.
@@ -186,9 +185,9 @@ public abstract class MarkovOneStepLibrary {
      * @param obsProbs - The T x S matrix of conditional
      * observation probabilities, p(x_t|s_t).
      * @param startProbs - The length-S vector of
-     * initial, prior state probabilities, P(s_1|start).
+     * initial, prior state probabilities, P(s_1|&lt;).
      * @param endProbs - The length-S vector of
-     * terminating conditional state probabilities, P(end|s_T).
+     * terminating conditional state probabilities, P(&gt;|s_T).
      * @param transProbs - The S x S matrix of state transition
      * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
      * and columns indexed by s_t.
@@ -225,18 +224,100 @@ public abstract class MarkovOneStepLibrary {
 	    DataMatrix transProbs, IndexVector stateSequence)
     {
 	double prob = 1;
-	Iterator<Integer> iter = stateSequence.iterator();
-	if (iter.hasNext()) {
-	    int prevState = iter.next();
+	final int numStages = stateSequence.size();
+	if (numStages > 0) {
+	    int prevState = stateSequence.get(0);
+	    // Compute P(s_1|start).
 	    prob = startProbs.get(prevState);
-	    while (iter.hasNext()) {
-		int nextState = iter.next();
+	    for (int stage = 1; stage < numStages; stage++) {
+		int nextState = stateSequence.get(stage);
+		// Compute P(s_1,...,s_t|start) = P(s_1,...,s_{t-1}|start) P(s_t|s_{t-1}).
 		prob *= transProbs.get(prevState, nextState);
 		prevState = nextState;
 	    }
+	    // Compute P(s_1,...,s_T,end|start) = P(s_1,...,s_T|start) P(end|s_T).
 	    prob *= endProbs.get(prevState);
 	}
 	return prob;
+    }
+
+    /**
+     * Computes the joint probability P(&lt;s_1,...,s_T&gt;,&lt;x_1,...,x_T&gt;|T)
+     * of a given sequence of states and a given sequence of observations.
+     *
+     * @param startProbs - The length-S vector of
+     * initial, prior state probabilities, P(s_1|start).
+     * @param endProbs - The length-S vector of
+     * terminating conditional state probabilities, P(end|s_T).
+     * @param transProbs - The S x S matrix of state transition
+     * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
+     * and columns indexed by s_t.
+     * @param stateSequence - The sequence of state indices {k_t},
+     * where s_t=sigma_{k_t} for each stage t=1,...,T.
+     * @param obsProbs - The T x S matrix of conditional
+     * observation probabilities, p(x_t|s_t).
+     * @return The joint state--observation sequence probability.
+     */
+    public static double jointProbability(
+	    DataVector startProbs, DataVector endProbs,
+	    DataMatrix transProbs, IndexVector stateSequence, DataMatrix obsProbs)
+    {
+	double prob = 1;
+	final int numStages = stateSequence.size();
+	if (numStages > 0) {
+	    int prevState = stateSequence.get(0);
+	    // Compute p(s_1,x_1|start) = P(s_1|start) p(x_1|s_1).
+	    prob = startProbs.get(prevState) * obsProbs.get(0, prevState);
+	    for (int stage = 1; stage < numStages; stage++) {
+		int nextState = stateSequence.get(stage);
+		//  Compute p(s_1,...,s_t, x_1,...,x_t|start) =
+		//     p(s_1,...,s_{t-1}, x_1,...,x_{t-1}|start) P(s_t|s_{t-1}) p(x_t|s_t).
+		prob *= transProbs.get(prevState, nextState) * obsProbs.get(stage, nextState);
+		prevState = nextState;
+	    }
+	    // Compute p(s_1,...,s_T, x_1,...,x_T, end|start) =
+	    //     P(s_1,...,s_T, x_1,...,x_T|start) P(end|s_T).
+	    prob *= endProbs.get(prevState);
+	}
+	return prob;
+    }
+
+    // TODO posteriorProbabilities.
+
+    /**
+     * Computes the data probability, p(&lt;x_1,...,x_t)),
+     * of a known sequence {x_t}
+     * of observations, for the unknown state s_t
+     * at each stage t=1,2,...,T.
+     *
+     * @param obsProbs - The T x S matrix of conditional
+     * observation probabilities, p(x_t|s_t).
+     * @param startProbs - The length-S vector of
+     * initial state probabilities, P(s_1|&lt;).
+     * @param transProbs - The S x S matrix of state transition
+     * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
+     * and columns indexed by s_t.
+     * @return The data probability.
+     */
+    public static double dataProbability(
+	    DataMatrix obsProbs, DataVector startProbs,
+	    DataMatrix transProbs)
+    {
+	final int numStages = obsProbs.numRows();
+	// Compute alpha_1 = p(x_1,s_1|start) = p(x_1|s_1) P(s_1|start).
+	DataVector alpha = VectorFactory.multiply(obsProbs.getRow(0), startProbs);
+	// Compute p(x_1,...,x_{t-1},s_t|start)
+	//  = sum_{s_{t-1}} p(x_1,...,x_{t-1},s_{t-1}|start) P(s_t|s_{t-1}).
+	//  = sum_{s_{t-1}} alpha_{t-1} P(s_t|s_{t-1}).
+	// Compute alpha_t = p(x_1,...,x_t,s_t|start)
+	//  = p(x_t|s_t) p(x_1,...,x_{t-1},s_t|start).
+	for (int t = 1; t < numStages; t++) {
+	    // Compute stage t quantities using stage t-1.
+	    alpha = VectorFactory.multiply(
+		    obsProbs.getRow(t),
+		    MatrixFactory.multiply(alpha, transProbs));
+	}
+	return alpha.sum();
     }
 
 }
