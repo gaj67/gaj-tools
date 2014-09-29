@@ -285,39 +285,45 @@ public abstract class MarkovOneStepLibrary {
     // TODO posteriorProbabilities.
 
     /**
-     * Computes the data probability, p(&lt;x_1,...,x_t)),
+     * Computes the data probability, p(&lt;x_1,...,x_t&gt;),
      * of a known sequence {x_t}
      * of observations, for the unknown state s_t
      * at each stage t=1,2,...,T.
      *
-     * @param obsProbs - The T x S matrix of conditional
-     * observation probabilities, p(x_t|s_t).
      * @param startProbs - The length-S vector of
-     * initial state probabilities, P(s_1|&lt;).
+     * initial, prior state probabilities, P(s_1|start).
+     * @param endProbs - The length-S vector of
+     * terminating conditional state probabilities, P(end|s_T).
      * @param transProbs - The S x S matrix of state transition
      * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
      * and columns indexed by s_t.
+     * @param obsProbs - The T x S matrix of conditional
+     * observation probabilities, p(x_t|s_t).
      * @return The data probability.
      */
     public static double dataProbability(
-	    DataMatrix obsProbs, DataVector startProbs,
-	    DataMatrix transProbs)
+	    DataVector startProbs,
+	    DataVector endProbs,
+	    DataMatrix transProbs, DataMatrix obsProbs)
     {
 	final int numStages = obsProbs.numRows();
 	// Compute alpha_1 = p(x_1,s_1|start) = p(x_1|s_1) P(s_1|start).
 	DataVector alpha = VectorFactory.multiply(obsProbs.getRow(0), startProbs);
 	// Compute p(x_1,...,x_{t-1},s_t|start)
-	//  = sum_{s_{t-1}} p(x_1,...,x_{t-1},s_{t-1}|start) P(s_t|s_{t-1}).
-	//  = sum_{s_{t-1}} alpha_{t-1} P(s_t|s_{t-1}).
+	//    = sum_{s_{t-1}} p(x_1,...,x_{t-1},s_{t-1}|start) P(s_t|s_{t-1}).
+	//    = sum_{s_{t-1}} alpha_{t-1} P(s_t|s_{t-1}).
 	// Compute alpha_t = p(x_1,...,x_t,s_t|start)
-	//  = p(x_t|s_t) p(x_1,...,x_{t-1},s_t|start).
+	//    = p(x_t|s_t) p(x_1,...,x_{t-1},s_t|start).
 	for (int t = 1; t < numStages; t++) {
 	    // Compute stage t quantities using stage t-1.
 	    alpha = VectorFactory.multiply(
 		    obsProbs.getRow(t),
 		    MatrixFactory.multiply(alpha, transProbs));
 	}
-	return alpha.sum();
+	// Compute p(x_1,...,x_T,end|start)
+	//    = sum_{s_T} p(x_1,...,x_T, s_T|start) P(end|s_T)
+	//    = sum_{s_T} alpha_T P(end|s_T).
+	return VectorFactory.dot(alpha, endProbs);
     }
 
 }
