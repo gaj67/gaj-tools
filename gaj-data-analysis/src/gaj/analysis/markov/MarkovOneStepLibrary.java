@@ -209,9 +209,9 @@ public abstract class MarkovOneStepLibrary {
      * of a given sequence of states.
      *
      * @param startProbs - The length-S vector of
-     * initial, prior state probabilities, P(s_1|start).
+     * initial, prior state probabilities, P(s_1|&lt;).
      * @param endProbs - The length-S vector of
-     * terminating conditional state probabilities, P(end|s_T).
+     * terminating conditional state probabilities, P(&gt;|s_T).
      * @param transProbs - The S x S matrix of state transition
      * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
      * and columns indexed by s_t.
@@ -246,9 +246,9 @@ public abstract class MarkovOneStepLibrary {
      * of a given sequence of states and a given sequence of observations.
      *
      * @param startProbs - The length-S vector of
-     * initial, prior state probabilities, P(s_1|start).
+     * initial, prior state probabilities, P(s_1|&lt;).
      * @param endProbs - The length-S vector of
-     * terminating conditional state probabilities, P(end|s_T).
+     * terminating conditional state probabilities, P(&gt;|s_T).
      * @param transProbs - The S x S matrix of state transition
      * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
      * and columns indexed by s_t.
@@ -260,7 +260,8 @@ public abstract class MarkovOneStepLibrary {
      */
     public static double jointProbability(
 	    DataVector startProbs, DataVector endProbs,
-	    DataMatrix transProbs, IndexVector stateSequence, DataMatrix obsProbs)
+	    DataMatrix transProbs,
+	    IndexVector stateSequence, DataMatrix obsProbs)
     {
 	double prob = 1;
 	final int numStages = stateSequence.size();
@@ -282,8 +283,6 @@ public abstract class MarkovOneStepLibrary {
 	return prob;
     }
 
-    // TODO posteriorProbabilities.
-
     /**
      * Computes the data probability, p(&lt;x_1,...,x_t&gt;),
      * of a known sequence {x_t}
@@ -291,9 +290,9 @@ public abstract class MarkovOneStepLibrary {
      * at each stage t=1,2,...,T.
      *
      * @param startProbs - The length-S vector of
-     * initial, prior state probabilities, P(s_1|start).
+     * initial, prior state probabilities, P(s_1|&lt;).
      * @param endProbs - The length-S vector of
-     * terminating conditional state probabilities, P(end|s_T).
+     * terminating conditional state probabilities, P(&gt;|s_T).
      * @param transProbs - The S x S matrix of state transition
      * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
      * and columns indexed by s_t.
@@ -324,6 +323,63 @@ public abstract class MarkovOneStepLibrary {
 	//    = sum_{s_T} p(x_1,...,x_T, s_T|start) P(end|s_T)
 	//    = sum_{s_T} alpha_T P(end|s_T).
 	return VectorFactory.dot(alpha, endProbs);
+    }
+
+    /**
+     * Computes the state posterior probability, p(&lt;s_1,...,s_T&gt;|&lt;x_1,...,x_t&gt;),
+     * of a known sequence {s_t} of states given the known sequence {x_t}
+     * of observations.
+     *
+     * @param startProbs - The length-S vector of
+     * initial, prior state probabilities, P(s_1|&lt;).
+     * @param endProbs - The length-S vector of
+     * terminating conditional state probabilities, P(&gt;|s_T).
+     * @param transProbs - The S x S matrix of state transition
+     * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
+     * and columns indexed by s_t.
+     * @param stateSequence - The sequence of state indices {k_t},
+     * where s_t=sigma_{k_t} for each stage t=1,...,T.
+     * @param obsProbs - The T x S matrix of conditional
+     * observation probabilities, p(x_t|s_t).
+     * @return The data probability.
+     */
+    public static double posteriorProbability(
+	    DataVector startProbs,
+	    DataVector endProbs,
+	    DataMatrix transProbs,
+	    IndexVector stateSequence, DataMatrix obsProbs)
+    {
+	double prob = 1;
+	final int numStages = stateSequence.size();
+	if (numStages > 0) {
+	    // Compute alpha_1 = p(x_1,s_1|start) = p(x_1|s_1) P(s_1|start).
+	    DataVector alpha = VectorFactory.multiply(obsProbs.getRow(0), startProbs);
+	    // Compute p(s_1,x_1|start) = P(s_1|start) p(x_1|s_1).
+	    int prevState = stateSequence.get(0);
+	    prob = alpha.get(prevState);
+	    for (int stage = 1; stage < numStages; stage++) {
+		// Compute p(x_1,...,x_{t-1},s_t|start)
+		//    = sum_{s_{t-1}} p(x_1,...,x_{t-1},s_{t-1}|start) P(s_t|s_{t-1}).
+		//    = sum_{s_{t-1}} alpha_{t-1} P(s_t|s_{t-1}).
+		// Compute alpha_t = p(x_1,...,x_t,s_t|start)
+		//    = p(x_t|s_t) p(x_1,...,x_{t-1},s_t|start).
+		alpha = VectorFactory.multiply(
+			obsProbs.getRow(stage),
+			MatrixFactory.multiply(alpha, transProbs));
+		//  Compute p(s_1,...,s_t, x_1,...,x_t|start) =
+		//     p(s_1,...,s_{t-1}, x_1,...,x_{t-1}|start) P(s_t|s_{t-1}) p(x_t|s_t).
+		int nextState = stateSequence.get(stage);
+		prob *= transProbs.get(prevState, nextState) * obsProbs.get(stage, nextState);
+		prevState = nextState;
+	    }
+	    // Compute p(s_1,...,s_T, x_1,...,x_T, end|start) =
+	    //     P(s_1,...,s_T, x_1,...,x_T|start) P(end|s_T).
+	    prob *= endProbs.get(prevState);
+	    // Compute P(s_1,...,s_T|x_1,...,x_T, start,end) =
+	    //     p(s_1,...,s_T, x_1,...,x_T, end|start) / p(x_1,...,x_T, end|start).
+	    prob /= VectorFactory.dot(alpha, endProbs);
+	}
+	return prob;
     }
 
 }
