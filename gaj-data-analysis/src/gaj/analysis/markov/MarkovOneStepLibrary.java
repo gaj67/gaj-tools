@@ -3,8 +3,10 @@ package gaj.analysis.markov;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
+import gaj.data.vector.IndexVector;
 import gaj.impl.matrix.MatrixFactory;
 import gaj.impl.vector.VectorFactory;
+import java.util.Iterator;
 
 /**
  * Provides the basic methods for analysing one-step Markov sequences.
@@ -201,6 +203,40 @@ public abstract class MarkovOneStepLibrary {
 	double norm = 1.0 / mp.getRow(0).sum(); // Compute normaliser, 1 / p(x_1,...,x_T).
 	mp.multiply(norm);
 	return mp;
+    }
+
+    /**
+     * Computes the prior probability P(&lt;s_1,...,s_T&gt;|T)
+     * of a given sequence of states.
+     *
+     * @param startProbs - The length-S vector of
+     * initial, prior state probabilities, P(s_1|start).
+     * @param endProbs - The length-S vector of
+     * terminating conditional state probabilities, P(end|s_T).
+     * @param transProbs - The S x S matrix of state transition
+     * probabilities, P(s_t|s_{t-1}), with rows indexed by s_{t-1}
+     * and columns indexed by s_t.
+     * @param stateSequence - The sequence of state indices {k_t},
+     * where s_t=sigma_{k_t} for each stage t=1,...,T.
+     * @return The prior state sequence probability.
+     */
+    public static double priorProbability(
+	    DataVector startProbs, DataVector endProbs,
+	    DataMatrix transProbs, IndexVector stateSequence)
+    {
+	double prob = 1;
+	Iterator<Integer> iter = stateSequence.iterator();
+	if (iter.hasNext()) {
+	    int prevState = iter.next();
+	    prob = startProbs.get(prevState);
+	    while (iter.hasNext()) {
+		int nextState = iter.next();
+		prob *= transProbs.get(prevState, nextState);
+		prevState = nextState;
+	    }
+	    prob *= endProbs.get(prevState);
+	}
+	return prob;
     }
 
 }
