@@ -86,47 +86,25 @@ public class MarkovOneStepAnalyser {
      * @param finalCounts - A length-S vector of the number of times each state
      * occurred at the end of a sequence with a known end.
      * @param transCounts - An S x S matrix of the number of times state s_{t-1}
-     * was followed by state s_t, where s_{t-1} specifies the row and st specifies the column.
+     * was followed by state s_t, where s_{t-1} specifies the row and s_t specifies the column.
      * @return An initialised Markov analsyer.
      */
     public static MarkovOneStepAnalyser newAnalyser(
 	    DataVector initCounts, DataVector finalCounts,
 	    DataMatrix transCounts)
     {
-	DataVector initProbs = computeInitialStateProbabilities(initCounts);
-	DataVector nonFinalCounts = computeNonTerminalStateTransitionCounts(transCounts);
-	DataVector stateCounts = computeStateCounts(nonFinalCounts, finalCounts);
+	// Normalises C(s_1|start) to give P(s_1|start).
+	DataVector initProbs = VectorFactory.divide(initCounts, initCounts.sum());
+	// Computes C_{nonterm}(s_j) = sum_{s_{j+1}} C(s_j, s_{j+1}).
+	DataVector nonFinalCounts = MatrixFactory.sumColumns(transCounts);
+	// Computes C(s_j) = C_{nonterm}(s_j) + C_{term}(s_j).
+	DataVector stateCounts = VectorFactory.add(nonFinalCounts, finalCounts);
 	DataVector finalProbs = computeTerminalStateProbabilities(stateCounts, finalCounts);
-	DataVector stateProbs = computeArbitraryStateProbabilities(stateCounts);
-	DataMatrix transProbs = computeStateTransitionProbabilities(transCounts);
+	// Normalises C(s_j) to give P(s_j).
+	DataVector stateProbs = VectorFactory.divide(stateCounts, stateCounts.sum());
+	// Computes P(s_{j+1}|s_j) = C(s_j, s_{j+1}) / C_{nonterm}(s_j).
+	DataMatrix transProbs = MatrixFactory.divideRows(transCounts, nonFinalCounts);
 	return new MarkovOneStepAnalyser(initProbs, finalProbs, stateProbs, transProbs);
-    }
-
-    // Normalises C(s_1|start) to give P(s_1|start).
-    private static DataVector computeInitialStateProbabilities(DataVector initCounts) {
-	WritableVector probs = VectorFactory.newVector(initCounts);
-	probs.multiply(1.0 / initCounts.sum());
-	return probs;
-    }
-
-    /*
-     * Computes the number of transitions from each state to another (or the same),
-     * non-terminal state.
-     */
-    private static DataVector computeNonTerminalStateTransitionCounts(DataMatrix transCounts) {
-	final int numStates = transCounts.numRows();
-	WritableVector probs = VectorFactory.newVector(numStates);
-	for (int row = 0; row < numStates; row++) {
-	    probs.set(row, transCounts.getRow(row).sum());
-	}
-	return probs;
-    }
-
-    // Computes C(s), the number of times state s occurred at any stage.
-    private static DataVector computeStateCounts(DataVector nonFinalCounts, DataVector finalCounts) {
-	WritableVector counts = VectorFactory.newVector(nonFinalCounts);
-	counts.add(finalCounts);
-	return counts;
     }
 
     // Computes P(end|s_T) = C(end|s_T) / C(s_T).
@@ -139,13 +117,6 @@ public class MarkovOneStepAnalyser {
 		probs.set(state, finalCount / stateCounts.get(state));
 	    }
 	}
-	return probs;
-    }
-
-    // Normalises C(s) to give P(s).
-    private static DataVector computeArbitraryStateProbabilities(DataVector stateCounts) {
-	WritableVector probs = VectorFactory.newVector(stateCounts);
-	probs.multiply(1.0 / probs.sum());
 	return probs;
     }
 

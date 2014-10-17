@@ -96,6 +96,9 @@ public abstract class VectorFactory {
 
     /**
      * Scales the vector by a multiplicative factor.
+     * <p/>Note: The underlying vector is NOT copied, merely wrapped with a multiplier.
+     * Hence, each element will be scaled by the multiplier each time that element is accessed.
+     * Useful for scaling a large vector for a one-shot use.
      *
      * @param vector - The data vector to be scaled.
      * @param multiplier - The scaling factor.
@@ -109,6 +112,38 @@ public abstract class VectorFactory {
 	    return new ZeroVector(vector.size());
 	}
 	return new ScaledVector(vector, multiplier);
+    }
+
+    /**
+     * Scales the vector by a multiplicative factor.
+     * <p/>Note: The underlying vector is copied, and the elements are scaled once.
+     *
+     * @param vector - The data vector to be scaled.
+     * @param multiplier - The scaling factor.
+     * @return The scaled data vector.
+     */
+    public static WritableVector multiply(DataVector vector, double multiplier) {
+	WritableVector newVec = VectorFactory.newVector(vector);
+	newVec.multiply(multiplier);
+	return newVec;
+    }
+
+    /**
+     * Divides the vector elements by a non-zero divisor.
+     * <p/>Note: The underlying vector is copied, and the elements are scaled once.
+     * <p/>Note: If the divisor is zero, then the returned vector is zero-valued.
+     *
+     * @param vector - The data vector to be scaled.
+     * @param divisor - The inverse scaling factor.
+     * @return The scaled data vector.
+     */
+    public static WritableVector divide(DataVector vector, double divisor) {
+	if (divisor == 0.0) {
+	    return VectorFactory.newVector(vector.size());
+	}
+	WritableVector newVec = VectorFactory.newVector(vector);
+	newVec.multiply(1.0 / divisor);
+	return newVec;
     }
 
     /**
