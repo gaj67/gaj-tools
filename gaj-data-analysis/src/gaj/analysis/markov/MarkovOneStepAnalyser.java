@@ -4,7 +4,6 @@ import gaj.data.markov.SequenceType;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
-import gaj.data.vector.WritableVector;
 import gaj.impl.matrix.MatrixFactory;
 import gaj.impl.vector.VectorFactory;
 
@@ -99,38 +98,13 @@ public class MarkovOneStepAnalyser {
 	DataVector nonFinalCounts = MatrixFactory.sumColumns(transCounts);
 	// Computes C(s_j) = C_{nonterm}(s_j) + C_{term}(s_j).
 	DataVector stateCounts = VectorFactory.add(nonFinalCounts, finalCounts);
-	DataVector finalProbs = computeTerminalStateProbabilities(stateCounts, finalCounts);
+	// Computes P(end|s_T) = C(end|s_T) / C(s_T).
+	DataVector finalProbs = VectorFactory.divide(finalCounts, stateCounts);
 	// Normalises C(s_j) to give P(s_j).
 	DataVector stateProbs = VectorFactory.divide(stateCounts, stateCounts.sum());
 	// Computes P(s_{j+1}|s_j) = C(s_j, s_{j+1}) / C_{nonterm}(s_j).
 	DataMatrix transProbs = MatrixFactory.divideRows(transCounts, nonFinalCounts);
 	return new MarkovOneStepAnalyser(initProbs, finalProbs, stateProbs, transProbs);
-    }
-
-    // Computes P(end|s_T) = C(end|s_T) / C(s_T).
-    private static DataVector computeTerminalStateProbabilities(DataVector stateCounts, DataVector finalCounts) {
-	final int numStates = finalCounts.size();
-	WritableVector probs = VectorFactory.newVector(numStates);
-	for (int state = 0; state < numStates; state++) {
-	    double finalCount = finalCounts.get(state);
-	    if (finalCount > 0) {
-		probs.set(state, finalCount / stateCounts.get(state));
-	    }
-	}
-	return probs;
-    }
-
-    // Normalises C(s_{t-1},s_t) to give P(s_t|s_{t-1}).
-    private static DataMatrix computeStateTransitionProbabilities(DataMatrix transCounts) {
-	WritableMatrix probs = MatrixFactory.newMatrix(transCounts);
-	final int numStates = transCounts.numRows();
-	for (int row = 0; row < numStates; row++) {
-	    double nonFinalCounts = transCounts.getRow(row).sum();
-	    if (nonFinalCounts > 0) {
-		probs.multiplyRow(row, 1.0 / nonFinalCounts);
-	    }
-	}
-	return probs;
     }
 
     /**

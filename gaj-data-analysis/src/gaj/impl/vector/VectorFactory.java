@@ -122,7 +122,7 @@ public abstract class VectorFactory {
      * @param multiplier - The scaling factor.
      * @return The scaled data vector.
      */
-    public static WritableVector multiply(DataVector vector, double multiplier) {
+    public static DataVector multiply(DataVector vector, double multiplier) {
 	WritableVector newVec = VectorFactory.newVector(vector);
 	newVec.multiply(multiplier);
 	return newVec;
@@ -137,12 +137,32 @@ public abstract class VectorFactory {
      * @param divisor - The inverse scaling factor.
      * @return The scaled data vector.
      */
-    public static WritableVector divide(DataVector vector, double divisor) {
+    public static DataVector divide(DataVector vector, double divisor) {
 	if (divisor == 0.0) {
-	    return VectorFactory.newVector(vector.size());
+	    return VectorFactory.newZeroVector(vector.size());
 	}
 	WritableVector newVec = VectorFactory.newVector(vector);
 	newVec.multiply(1.0 / divisor);
+	return newVec;
+    }
+
+    /**
+     * Performs an element-by-element division of one vector by another vector.
+     * <p/>Note: If a divisor is zero, then the corresponding element is also zero-valued.
+     *
+     * @param vec1 - The numerator.
+     * @param vec2 - The denominator.
+     * @return The new vector.
+     */
+    public static DataVector divide(DataVector vec1, DataVector vec2) {
+	final int len = vec1.size();
+	WritableVector newVec = VectorFactory.newVector(len);
+	for (int pos = 0; pos < len; pos++) {
+	    double divisor = vec2.get(pos);
+	    if (divisor != 0.0) {
+		newVec.set(pos, vec1.get(pos) / divisor);
+	    }
+	}
 	return newVec;
     }
 
