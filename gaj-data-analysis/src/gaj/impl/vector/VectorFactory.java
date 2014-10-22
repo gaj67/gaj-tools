@@ -27,6 +27,16 @@ public abstract class VectorFactory {
     }
 
     /**
+     * Creates an immutable vector of the required length, full of the specified value.
+     *
+     * @param length - The vector length.
+     * @return The fixed-data vector.
+     */
+    public static DataVector newFixedVector(int length, double value) {
+	return new FixedVector(length, value);
+    }
+
+    /**
      * Creates an initially zero-valued, modifiable vector.
      *
      * @return The data vector.
@@ -53,7 +63,7 @@ public abstract class VectorFactory {
      * @param data - The array of data.
      * @return The data vector.
      */
-    public static IndexVector newIndexVector(int[] data) {
+    public static IndexVector newIndexVector(int... data) {
 	return new DenseIndexVector(data);
     }
 

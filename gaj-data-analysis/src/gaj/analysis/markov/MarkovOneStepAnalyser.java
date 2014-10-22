@@ -4,6 +4,7 @@ import gaj.data.markov.SequenceType;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
+import gaj.data.vector.IndexVector;
 import gaj.impl.matrix.MatrixFactory;
 import gaj.impl.vector.VectorFactory;
 
@@ -52,13 +53,12 @@ public class MarkovOneStepAnalyser {
 	this.initProbs = initProbs;
 	this.finalProbs = finalProbs;
 	this.stateProbs = stateProbs;
-	this.onesProbs = VectorFactory.newVector(initProbs.size());
+	this.onesProbs = VectorFactory.newFixedVector(initProbs.size(), 1);
 	this.transProbs = transProbs;
     }
 
     /**
-     * Computes the state posterior probabilities,
-     * p(s_t|start,x_1,...,x_T,end),
+     * Computes the state posterior probabilities, p(s_t|{x_t}),
      * of a known sequence or sub-sequence {x_t}
      * of observations, for the unknown state s_t
      * at each stage t=1,2,...,T.
@@ -72,6 +72,21 @@ public class MarkovOneStepAnalyser {
 	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
 	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
 	return MarkovOneStepLibrary.posteriorProbabilities(obsProbs, startProbs, endProbs, transProbs);
+    }
+
+    /**
+     * Computes the prior probability P({s_t}|T)
+     * of a given sequence {s_t} of states.
+     *
+     * @param stateSequence - The sequence of state indices {k_t},
+     * where s_t=sigma_{k_t} for each stage t=1,...,T.
+     * @param type - The type of sequence or sub-sequence.
+     * @return The prior state sequence probability.
+     */
+    public double priorProbability(IndexVector stateSequence, SequenceType type) {
+	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
+	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
+	return MarkovOneStepLibrary.priorProbability(startProbs, endProbs, transProbs, stateSequence);
     }
 
     //**********************************************************************

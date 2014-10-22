@@ -6,6 +6,7 @@ import gaj.analysis.markov.MarkovOneStepLibrary;
 import gaj.data.markov.SequenceType;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.vector.DataVector;
+import gaj.data.vector.IndexVector;
 import gaj.impl.matrix.MatrixFactory;
 import gaj.impl.vector.VectorFactory;
 import org.junit.Test;
@@ -58,7 +59,7 @@ public class MarkovTest {
     public void testForwardAlgo() {
 	System.out.println("testForwardAlgo:");
 	DataMatrix alpha = MarkovOneStepLibrary.forwardProbabilities(obsProbs, startProbs, transProbs);
-	MatrixFactory.display("p(x_1,x_2,...,x_t,s_t|start)=", alpha, "\n");
+	MatrixFactory.display("p(<x_1,x_2,...,x_t], s_t)=", alpha, "\n");
 	/*
 	 *  Forward checks:
 	 *    p(x_1,s_1|start) = [0.9*0.8, 0.1*0.3] = [0.72, 0.03].
@@ -79,7 +80,7 @@ public class MarkovTest {
     public void testBackwardAlgo() {
 	System.out.println("testBackwardAlgo:");
 	DataMatrix beta = MarkovOneStepLibrary.backwardProbabilities(obsProbs, endProbs, transProbs);
-	MatrixFactory.display("p(x_{t+1},x_{t+2},...,end|s_t,start)=", beta, "\n");
+	MatrixFactory.display("p([x_{t+1},x_{t+2},...,x_T>|s_t)=", beta, "\n");
 	/*
 	 *  Backward checks:
 	 *    p(end|s_2) = [0.1, 0.5].
@@ -99,7 +100,7 @@ public class MarkovTest {
     public void testForwardBackwardAlgo() {
 	System.out.println("testForwardBackwardAlgo:");
 	DataMatrix gamma = MarkovOneStepLibrary.jointProbabilities(obsProbs, startProbs, endProbs, transProbs);
-	MatrixFactory.display("p(x_1,...,x_N,end,s_t|start)=", gamma, "\n");
+	MatrixFactory.display("p(<x_1,...,x_T>, s_t)=", gamma, "\n");
 	/*
 	 *  Joint checks:
 	 *    p(x_1,x_2,end,s_1|start) = [0.368*0.72, 0.122*0.03] = [0.26496, 0.00366].
@@ -120,7 +121,7 @@ public class MarkovTest {
     public void testNormedForwardBackwardAlgo() {
 	System.out.println("testNormedForwardBackwardAlgo:");
 	DataMatrix pred = MarkovOneStepLibrary.posteriorProbabilities(obsProbs, startProbs, endProbs, transProbs);
-	MatrixFactory.display("p(s_t|start,x_1,...,x_N,end)=", pred, "\n");
+	MatrixFactory.display("p(s_t|<x_1,...,x_T>)=", pred, "\n");
 	/*
 	 *  Posterior checks:
 	 *    p(s_1|start,x_1,x_2,end) = [0.26496, 0.00366]/0.26862
@@ -140,8 +141,8 @@ public class MarkovTest {
     }
 
     @Test
-    public void testAnalyser() {
-	System.out.println("testAnalyser:");
+    public void testAnalyserPosterior() {
+	System.out.println("testAnalyserPosterior:");
 	/*
 	 * Fudge the probabilities to produce the various state transition counts.
 	 */
@@ -152,7 +153,7 @@ public class MarkovTest {
 	MarkovOneStepAnalyser analyser = MarkovOneStepAnalyser.newAnalyser(
 		initCounts, finalCounts, transCounts);
 	DataMatrix pred = analyser.posteriorProbabilities(obsProbs, SequenceType.Complete);
-	MatrixFactory.display("p(s_t|start,x_1,...,x_N,end)=", pred, "\n");
+	MatrixFactory.display("p(s_t|<x_1,...,x_T>)=", pred, "\n");
 
 	DataMatrix expectedPred = MatrixFactory.newMatrix(
 		new double[][] {
@@ -162,4 +163,33 @@ public class MarkovTest {
 	assertTrue(MatrixFactory.equals(expectedPred, pred, EPSILON));
     }
 
+    @Test
+    public void testAnalyserStates() {
+	System.out.println("testAnalyserStates:");
+	DataVector initCounts = VectorFactory.scale(startProbs, 10);
+	DataVector finalCounts = VectorFactory.newVector(5.0/9, 5);
+	MarkovOneStepAnalyser analyser = MarkovOneStepAnalyser.newAnalyser(
+		initCounts, finalCounts, transCounts);
+	IndexVector stateSequence = VectorFactory.newIndexVector(0, 0, 1);
+	double prob = analyser.priorProbability(stateSequence, SequenceType.Start);
+	System.out.printf("p(<s_1,...,s_T])=%f%n", prob);
+	/*
+	 * Expected value:
+	 *   P(<s_1=0,s_2=0,s_3=1]) = P(s_1=0|<) P(s_2=0|s_1=0) P(s_3=1|s_2=0).
+	 */
+	double expectedProb = startProbs.get(0) * transProbs.get(0, 0) * transProbs.get(0, 1);
+	assertTrue(equals(expectedProb, prob, EPSILON));
+	prob = analyser.priorProbability(stateSequence, SequenceType.Complete);
+	/*
+	 * Expected value:
+	 *   P(<s_1=0,s_2=0,s_3=1>) = P(<s_1=0,s_2=0,s_3=1]) P(>|s_3=1).
+	 */
+	System.out.printf("p(<s_1,...,s_T>)=%f%n", prob);
+	expectedProb *= endProbs.get(1);
+	assertTrue(equals(expectedProb, prob, EPSILON));
+    }
+
+    private boolean equals(double expected, double observed, double epsilon) {
+	return Math.abs(observed - expected) <= epsilon;
+    }
 }
