@@ -27,11 +27,19 @@ public class MarkovTest {
     private static final DataVector startProbs = VectorFactory.newVector(0.9, 0.1);
     /** P(end|s_T). */
     private static final DataVector endProbs = VectorFactory.newVector(0.1, 0.5);
-    /** p(x_t|s_t). */
-    private static final DataMatrix obsProbs = MatrixFactory.newMatrix(
+    /** Model p(x_t|s_t) for a length-2 sequence. */
+    private static final DataMatrix obsProbs2 = MatrixFactory.newMatrix(
 	    new double[][]{
 		    { 0.8, 0.3 }, // p(x_1|s_1)
 		    { 0.4, 0.9 }  // p(x_2|s_2)
+	    });
+    private static final IndexVector stateSequence3 = VectorFactory.newIndexVector(0, 0, 1);
+    /** Model p(x_t|s_t) for a length-3 sequence. */
+    private static final DataMatrix obsProbs3 = MatrixFactory.newMatrix(
+	    new double[][]{
+		    { 0.8, 0.3 }, // p(x_1|s_1)
+		    { 0.4, 0.9 }, // p(x_2|s_2)
+		    { 0.5, 0.5 }  // p(x_3|s_3)
 	    });
 
     private boolean equals(double x, double y) {
@@ -58,7 +66,7 @@ public class MarkovTest {
     @Test
     public void testForwardAlgo() {
 	System.out.println("testForwardAlgo:");
-	DataMatrix alpha = MarkovOneStepLibrary.forwardProbabilities(obsProbs, startProbs, transProbs);
+	DataMatrix alpha = MarkovOneStepLibrary.forwardProbabilities(obsProbs2, startProbs, transProbs);
 	MatrixFactory.display("p(<x_1,x_2,...,x_t], s_t)=", alpha, "\n");
 	/*
 	 *  Forward checks:
@@ -79,7 +87,7 @@ public class MarkovTest {
     @Test
     public void testBackwardAlgo() {
 	System.out.println("testBackwardAlgo:");
-	DataMatrix beta = MarkovOneStepLibrary.backwardProbabilities(obsProbs, endProbs, transProbs);
+	DataMatrix beta = MarkovOneStepLibrary.backwardProbabilities(obsProbs2, endProbs, transProbs);
 	MatrixFactory.display("p([x_{t+1},x_{t+2},...,x_T>|s_t)=", beta, "\n");
 	/*
 	 *  Backward checks:
@@ -99,7 +107,7 @@ public class MarkovTest {
     @Test
     public void testForwardBackwardAlgo() {
 	System.out.println("testForwardBackwardAlgo:");
-	DataMatrix gamma = MarkovOneStepLibrary.jointProbabilities(obsProbs, startProbs, endProbs, transProbs);
+	DataMatrix gamma = MarkovOneStepLibrary.jointProbabilities(obsProbs2, startProbs, endProbs, transProbs);
 	MatrixFactory.display("p(<x_1,...,x_T>, s_t)=", gamma, "\n");
 	/*
 	 *  Joint checks:
@@ -120,7 +128,7 @@ public class MarkovTest {
     @Test
     public void testNormedForwardBackwardAlgo() {
 	System.out.println("testNormedForwardBackwardAlgo:");
-	DataMatrix pred = MarkovOneStepLibrary.posteriorProbabilities(obsProbs, startProbs, endProbs, transProbs);
+	DataMatrix pred = MarkovOneStepLibrary.posteriorProbabilities(obsProbs2, startProbs, endProbs, transProbs);
 	MatrixFactory.display("p(s_t|<x_1,...,x_T>)=", pred, "\n");
 	/*
 	 *  Posterior checks:
@@ -143,16 +151,8 @@ public class MarkovTest {
     @Test
     public void testAnalyserPosterior() {
 	System.out.println("testAnalyserPosterior:");
-	/*
-	 * Fudge the probabilities to produce the various state transition counts.
-	 */
-	DataVector initCounts = VectorFactory.scale(startProbs, 10);
-	VectorFactory.display("C(s_1|start)=", initCounts, "\n");
-	DataVector finalCounts = VectorFactory.newVector(5.0/9, 5);
-	VectorFactory.display("C(end|s_N)=", finalCounts, "\n");
-	MarkovOneStepAnalyser analyser = MarkovOneStepAnalyser.newAnalyser(
-		initCounts, finalCounts, transCounts);
-	DataMatrix pred = analyser.posteriorProbabilities(obsProbs, SequenceType.Complete);
+	MarkovOneStepAnalyser analyser = getAnalyser();
+	DataMatrix pred = analyser.posteriorProbabilities(obsProbs2, SequenceType.Complete);
 	MatrixFactory.display("p(s_t|<x_1,...,x_T>)=", pred, "\n");
 
 	DataMatrix expectedPred = MatrixFactory.newMatrix(
@@ -166,12 +166,8 @@ public class MarkovTest {
     @Test
     public void testAnalyserStates() {
 	System.out.println("testAnalyserStates:");
-	DataVector initCounts = VectorFactory.scale(startProbs, 10);
-	DataVector finalCounts = VectorFactory.newVector(5.0/9, 5);
-	MarkovOneStepAnalyser analyser = MarkovOneStepAnalyser.newAnalyser(
-		initCounts, finalCounts, transCounts);
-	IndexVector stateSequence = VectorFactory.newIndexVector(0, 0, 1);
-	double prob = analyser.priorProbability(stateSequence, SequenceType.Start);
+	MarkovOneStepAnalyser analyser = getAnalyser();
+	double prob = analyser.priorProbability(stateSequence3, SequenceType.Start);
 	System.out.printf("p(<s_1,...,s_T])=%f%n", prob);
 	/*
 	 * Expected value:
@@ -179,7 +175,7 @@ public class MarkovTest {
 	 */
 	double expectedProb = startProbs.get(0) * transProbs.get(0, 0) * transProbs.get(0, 1);
 	assertTrue(equals(expectedProb, prob, EPSILON));
-	prob = analyser.priorProbability(stateSequence, SequenceType.Complete);
+	prob = analyser.priorProbability(stateSequence3, SequenceType.Complete);
 	/*
 	 * Expected value:
 	 *   P(<s_1=0,s_2=0,s_3=1>) = P(<s_1=0,s_2=0,s_3=1]) P(>|s_3=1).
@@ -189,7 +185,67 @@ public class MarkovTest {
 	assertTrue(equals(expectedProb, prob, EPSILON));
     }
 
+    private MarkovOneStepAnalyser getAnalyser() {
+	/*
+	 * Fudge the probabilities to produce the various state transition counts.
+	 */
+	DataVector initCounts = VectorFactory.scale(startProbs, 10);
+	DataVector finalCounts = VectorFactory.newVector(5.0/9, 5);
+	MarkovOneStepAnalyser analyser = MarkovOneStepAnalyser.newAnalyser(
+		initCounts, finalCounts, transCounts);
+	return analyser;
+    }
+
     private boolean equals(double expected, double observed, double epsilon) {
 	return Math.abs(observed - expected) <= epsilon;
     }
+
+    @Test
+    public void testAnalyserStatesAndObs() {
+	System.out.println("testAnalyserStatesAndObs:");
+	MarkovOneStepAnalyser analyser = getAnalyser();
+	double prob = analyser.jointProbability(stateSequence3, obsProbs3, SequenceType.Start);
+	System.out.printf("p(<s_1,...,s_T], <x_1,...,x_T])=%f%n", prob);
+	/*
+	 * Expected value:
+	 *   P(<s_1=0,s_2=0,s_3=1], <x_1,x_2,x_3])
+	 *     = P(s_1=0|<) p(x_1|s_1=0)
+	 *       * P(s_2=0|s_1=0) p(x_2|s_2=0)
+	 *       * P(s_3=1|s_2=0) p(x_3|s_3=1).
+	 */
+	double expectedProb = startProbs.get(0) * obsProbs3.get(0, 0)
+		* transProbs.get(0, 0) * obsProbs3.get(1, 0)
+		* transProbs.get(0, 1) * obsProbs3.get(2, 1);
+	assertTrue(equals(expectedProb, prob, EPSILON));
+	prob = analyser.jointProbability(stateSequence3, obsProbs3, SequenceType.Complete);
+	/*
+	 * Expected value:
+	 *   P(<s_1=0,s_2=0,s_3=1>, <x_1,x_2,x_3>)
+	 *     = P(<s_1=0,s_2=0,s_3=1], <x_1,x_2,x_3]) P(>|s_3=1).
+	 */
+	System.out.printf("p(<s_1,...,s_T>)=%f%n", prob);
+	expectedProb *= endProbs.get(1);
+	assertTrue(equals(expectedProb, prob, EPSILON));
+    }
+
+    @Test
+    public void testAnalyserObs() {
+	System.out.println("testAnalyserObs:");
+	MarkovOneStepAnalyser analyser = getAnalyser();
+	double obsProb = analyser.dataProbability(obsProbs3, SequenceType.Complete);
+	System.out.printf("p(<x_1,...,x_T>)=%f%n", obsProb);
+	double expectedProb = 0.0;
+	for (int s1 = 0; s1 <= 1; s1++) {
+	    for (int s2 = 0; s2 <= 1; s2++) {
+		for (int s3 = 0; s3 <= 1; s3++) {
+		    IndexVector stateSeq = VectorFactory.newIndexVector(s1, s2, s3);
+		    double jointProb = analyser.jointProbability(stateSeq, obsProbs3, SequenceType.Complete);
+		    VectorFactory.display("{s_t}=", stateSeq, String.format(", p({s_t}, {x_t})=%f%n", jointProb));
+		    expectedProb += jointProb;
+		}
+	    }
+	}
+	assertTrue(equals(expectedProb, obsProb, EPSILON));
+    }
+
 }

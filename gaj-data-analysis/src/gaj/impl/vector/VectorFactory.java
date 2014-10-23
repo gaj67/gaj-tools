@@ -244,6 +244,20 @@ public abstract class VectorFactory {
 	System.out.print(" ]");
     }
 
+    public static void display(String prefix, IndexVector vector, String suffix) {
+	System.out.print(prefix);
+	display(vector);
+	System.out.print(suffix);
+    }
+
+    public static void display(IndexVector vector) {
+	System.out.print("[");
+	for (int value : vector) {
+	    System.out.printf(" %d", value);
+	}
+	System.out.print(" ]");
+    }
+
     /**
      * Computes the element-wise product of two vectors.
      *

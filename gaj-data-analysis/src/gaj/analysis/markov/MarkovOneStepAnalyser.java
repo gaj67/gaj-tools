@@ -89,6 +89,38 @@ public class MarkovOneStepAnalyser {
 	return MarkovOneStepLibrary.priorProbability(startProbs, endProbs, transProbs, stateSequence);
     }
 
+    /**
+     * Computes the joint probability P({s_t}, {x_t})
+     * of a given sequence {st} of states and a given sequence {x_t} of observations.
+     *
+     * @param stateSequence - The sequence of state indices {k_t},
+     * where s_t=sigma_{k_t} for each stage t=1,...,T.
+     * @param obsProbs - The T x S matrix of conditional
+     * observation probabilities, p(x_t|s_t).
+     * @param type - The type of sequence or sub-sequence.
+     * @return The joint state--observation sequence probability.
+     */
+    public double jointProbability(IndexVector stateSequence, DataMatrix obsProbs, SequenceType type) {
+	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
+	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
+	return MarkovOneStepLibrary.jointProbability(startProbs, endProbs, transProbs, stateSequence, obsProbs);
+    }
+
+    /**
+     * Computes the data probability p({x_t})
+     * of a given sequence {x_t} of observations.
+     *
+     * @param obsProbs - The T x S matrix of conditional
+     * observation probabilities, p(x_t|s_t).
+     * @param type - The type of sequence or sub-sequence.
+     * @return The observation sequence probability.
+     */
+    public double dataProbability(DataMatrix obsProbs, SequenceType type) {
+	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
+	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
+	return MarkovOneStepLibrary.dataProbability(startProbs, endProbs, transProbs, obsProbs);
+    }
+
     //**********************************************************************
     // Static methods.
 
