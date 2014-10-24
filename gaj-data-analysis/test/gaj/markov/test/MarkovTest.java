@@ -248,4 +248,27 @@ public class MarkovTest {
 	assertTrue(equals(expectedProb, obsProb, EPSILON));
     }
 
+    @Test
+    public void testAnalyserPredStates() {
+	System.out.println("testAnalyserPredSates:");
+	MarkovOneStepAnalyser analyser = getAnalyser();
+	IndexVector obsSeq = analyser.stateSequence(obsProbs3, SequenceType.Complete);
+	VectorFactory.display("argmax P(<s_1,...,s_T>|<x_1,...,x_T>)=", obsSeq, "\n");
+	double expectedProb = 0.0;
+	IndexVector expectedSeq = null;
+	for (int s1 = 0; s1 <= 1; s1++) {
+	    for (int s2 = 0; s2 <= 1; s2++) {
+		for (int s3 = 0; s3 <= 1; s3++) {
+		    IndexVector stateSeq = VectorFactory.newIndexVector(s1, s2, s3);
+		    double jointProb = analyser.jointProbability(stateSeq, obsProbs3, SequenceType.Complete);
+		    if (jointProb > expectedProb) {
+			expectedProb = jointProb;
+			expectedSeq = stateSeq;
+		    }
+		}
+	    }
+	}
+	assertTrue(VectorFactory.equals(expectedSeq, obsSeq));
+    }
+
 }

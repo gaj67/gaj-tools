@@ -325,6 +325,27 @@ public abstract class VectorFactory {
     }
 
     /**
+     * Determines whether or not two index vectors have equal values.
+     *
+     * @param v1 - The first vector.
+     * @param v2 - The second vector.
+     * @return A value of true (or false) if the two vectors do (or do not) agree
+     * on dimensions and values.
+     */
+    public static boolean equals(IndexVector v1, IndexVector v2) {
+	final int length = v1.size();
+	if (v2.size() != length) {
+	    return false;
+	}
+	for (int i = 0; i < length; i++) {
+	    if (v1.get(i) != v2.get(i)) {
+		return false;
+	    }
+	}
+	return true;
+    }
+
+    /**
      * Computes the lowest index of a maximal element of the vector.
      *
      * @param vec - The vector.

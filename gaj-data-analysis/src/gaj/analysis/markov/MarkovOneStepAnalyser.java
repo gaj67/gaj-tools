@@ -121,6 +121,27 @@ public class MarkovOneStepAnalyser {
 	return MarkovOneStepLibrary.dataProbability(startProbs, endProbs, transProbs, obsProbs);
     }
 
+    /**
+     * Computes the state sequence {s_t} that
+     * maximises the posterior probability, P({s_t}|{x_t}),
+     * for a known sequence {x_t} of observations.
+     *
+     * @param obsProbs - The T x S matrix of conditional
+     * observation probabilities, p(x_t|s_t).
+     * @param type - The type of sequence or sub-sequence.
+     * @return The most probable state sequence,
+     * or a value of null if this is potentially ambiguous.
+     */
+    public IndexVector stateSequence(DataMatrix obsProbs, SequenceType type) {
+	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
+	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
+	IndexVector stateSeq = MarkovOneStepLibrary.maximisePosteriorProbability(startProbs, endProbs, transProbs, obsProbs);
+	if (stateSeq == null) {
+	    throw new IllegalStateException("Could not uniquely determine the maximal state sequence");
+	}
+	return stateSeq;
+    }
+
     //**********************************************************************
     // Static methods.
 
