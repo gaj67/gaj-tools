@@ -400,7 +400,7 @@ public abstract class MarkovOneStepLibrary {
      * @return The most probable state sequence,
      * or a value of null if this is potentially ambiguous.
      */
-    public static /*@Nullable*/ IndexVector maximisePosteriorProbability(
+    public static /*@Nullable*/ IndexVector getOptimalStateSequence(
 	    DataVector startProbs,
 	    DataVector endProbs,
 	    DataMatrix transProbs, DataMatrix obsProbs)
@@ -413,13 +413,11 @@ public abstract class MarkovOneStepLibrary {
 	for (int t = numStages - 1; t >= 0; t--) {
 	    // Compute p(<x_1,...,x_T>, s_t, [s*_{t+1},...,s*_T>)
 	    //    = p(<x_1,...,x_t], s_t) p([x_{t+1},...,x_T>, [s*_{t+1},...,s*_T>|s_t)
-	    //    = alpa_t beta*_t.
+	    //    = alpha_t beta*_t.
 	    DataVector gamma = VectorFactory.multiply(alpha.getRow(t), beta);
 	    List<Integer> maxStates = VectorFactory.argMaxes(gamma);
 	    if (maxStates.size() != 1) {
-		// If there are multiple states with the same posterior probability,
-		// then we might arbitrarily choose a sub-optimal one,
-		// depending upon earlier stages in the path.
+		// Reject multiplicity.
 		return null;
 	    }
 	    int maxState = maxStates.get(0);

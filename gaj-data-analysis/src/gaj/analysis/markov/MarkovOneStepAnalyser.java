@@ -135,7 +135,7 @@ public class MarkovOneStepAnalyser {
     public IndexVector stateSequence(DataMatrix obsProbs, SequenceType type) {
 	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
 	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
-	IndexVector stateSeq = MarkovOneStepLibrary.maximisePosteriorProbability(startProbs, endProbs, transProbs, obsProbs);
+	IndexVector stateSeq = MarkovOneStepLibrary.getOptimalStateSequence(startProbs, endProbs, transProbs, obsProbs);
 	if (stateSeq == null) {
 	    throw new IllegalStateException("Could not uniquely determine the maximal state sequence");
 	}
