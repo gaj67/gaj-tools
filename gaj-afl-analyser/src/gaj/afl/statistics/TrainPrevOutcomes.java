@@ -70,7 +70,8 @@ public class TrainPrevOutcomes {
 	    if (prevMatch == null) {
 		prevRound = prevRound.prevRound();
 	    } else {
-		return prevMatch.getOutcome();
+		Outcome outcome = prevMatch.getOutcome();
+		return (team == prevMatch.getFixture().getHomeTeam()) ? outcome : outcome.reverse();
 	    }
 	}
 	return null;
@@ -78,6 +79,6 @@ public class TrainPrevOutcomes {
 
     private static double getPrevOutcomeFeature(Team team, Fixture fixture) {
 	Outcome outcome = getPrevOutcome(team, fixture);
-	return (Outcome.Win == outcome) ? 1 : (Outcome.Loss == outcome) ? 0 : 0.5;
+	return (outcome == null) ? 0 : (Outcome.Win == outcome) ? 1 : (Outcome.Loss == outcome) ? -1 : 0;
     }
 }
