@@ -25,10 +25,10 @@ import java.util.List;
 public class TrainNPrevOutcomes {
 
     private static final MatchFetcher fetcher = MatchDataFactory.getMatchFetcher();
-    private static final int MAX_NUM_OUTCOMES = 5;
+    private static final int MAX_NUM_OUTCOMES = 1;
 
     public static void main(String[] args) {
-	for (int numOutcomes = 1; numOutcomes < MAX_NUM_OUTCOMES; numOutcomes++) {
+	for (int numOutcomes = 0; numOutcomes <= MAX_NUM_OUTCOMES; numOutcomes++) {
 	    analyse(numOutcomes);
 	}
     }
@@ -36,7 +36,7 @@ public class TrainNPrevOutcomes {
     private static void analyse(int numOutcomes) {
 	System.out.println("---------------------------------------");
 	System.out.printf("Analysing over the history of the previous %d matches...%n", numOutcomes);
-	GoldData trainingData = getMatchData(fetcher.getMatches(2008, 2009, 2010, 2011), numOutcomes);
+	GoldData trainingData = getMatchData(fetcher.getMatches(2000, 2001, 2002, 2004, 2005, 2006, 2008, 2009, 2010, 2012), numOutcomes);
 	int n = 0, w = 0;
 	for (GoldDatum datum : trainingData) {
 	    n++;
@@ -46,7 +46,7 @@ public class TrainNPrevOutcomes {
 	}
 	double p = 1.0 * w / n;
 	System.out.printf("#games=%d, home-losses=%d, home-wins=%d, P(home-win)=%5.3f, P(home-loss)=%5.3f%n", n, n-w, w, p, 1-p);
-	GoldData testingData = getMatchData(fetcher.getMatches(2012, 2013), numOutcomes);
+	GoldData testingData = getMatchData(fetcher.getMatches(2003, 2007, 2011, 2013), numOutcomes);
 	LoggedClassifierTrainer.getTrainer(trainingData, testingData, AccelerationType.Quadratic).train(20);
     }
 
