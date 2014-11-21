@@ -1,0 +1,120 @@
+---------------------------------------
+Analysing over the history of the previous 0 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 ]
+15, [ -0.676163 0.591892 -0.694447 0.542714 ], [ -0.371792 ]
+Final state=SCORE_CONVERGED
+#iterations=15, time=0.20 seconds (13.53 ms/iter)
+Final classifier parameters =[ -0.371792 ]
+---------------------------------------
+Analysing over the history of the previous 1 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 0.000000 ]
+20, [ -0.657366 0.618919 -0.677605 0.591290 ], [ -0.433979 -0.301888 ]
+21, [ -0.657366 0.618919 -0.677605 0.591290 ], [ -0.433979 -0.301888 ]
+Final state=SCORE_CONVERGED
+#iterations=21, time=81.56 seconds (3883.81 ms/iter)
+Final classifier parameters =[ -0.433979 -0.301888 ]
+---------------------------------------
+Analysing over the history of the previous 2 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 0.000000 0.000000 ]
+20, [ -0.634002 0.634234 -0.666474 0.621441 ], [ -0.440948 -0.296082 -0.343780 ]
+21, [ -0.634002 0.634234 -0.666474 0.621441 ], [ -0.440948 -0.296082 -0.343780 ]
+Final state=SCORE_CONVERGED
+#iterations=21, time=157.03 seconds (7477.57 ms/iter)
+Final classifier parameters =[ -0.440948 -0.296082 -0.343780 ]
+---------------------------------------
+Analysing over the history of the previous 3 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 0.000000 0.000000 0.000000 ]
+20, [ -0.628150 0.631532 -0.649860 0.619765 ], [ -0.442510 -0.280893 -0.323761 -0.189881 ]
+23, [ -0.628150 0.631532 -0.649860 0.619765 ], [ -0.442510 -0.280893 -0.323761 -0.189881 ]
+Final state=SCORE_CONVERGED
+#iterations=23, time=247.84 seconds (10775.74 ms/iter)
+Final classifier parameters =[ -0.442510 -0.280893 -0.323761 -0.189881 ]
+---------------------------------------
+Analysing over the history of the previous 4 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 0.000000 0.000000 0.000000 0.000000 ]
+20, [ -0.624865 0.637838 -0.640545 0.633166 ], [ -0.436266 -0.276349 -0.310226 -0.166664 -0.144596 ]
+27, [ -0.624865 0.637838 -0.640545 0.633166 ], [ -0.436267 -0.276349 -0.310226 -0.166664 -0.144596 ]
+Final state=SCORE_CONVERGED
+#iterations=27, time=346.78 seconds (12843.56 ms/iter)
+Final classifier parameters =[ -0.436267 -0.276349 -0.310226 -0.166664 -0.144596 ]
+---------------------------------------
+Analysing over the history of the previous 5 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 ]
+20, [ -0.619878 0.648649 -0.635439 0.639866 ], [ -0.442809 -0.271521 -0.309454 -0.151640 -0.141778 -0.163837 ]
+24, [ -0.619878 0.648649 -0.635439 0.639866 ], [ -0.442809 -0.271521 -0.309455 -0.151640 -0.141778 -0.163838 ]
+Final state=SCORE_CONVERGED
+#iterations=24, time=398.29 seconds (16595.42 ms/iter)
+Final classifier parameters =[ -0.442809 -0.271521 -0.309455 -0.151640 -0.141778 -0.163838 ]
+---------------------------------------
+Analysing over the history of the previous 6 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 ]
+20, [ -0.611363 0.661712 -0.634807 0.644891 ], [ -0.446083 -0.270315 -0.303569 -0.135063 -0.129972 -0.140815 -0.242816 ]
+23, [ -0.611363 0.661712 -0.634808 0.644891 ], [ -0.446083 -0.270316 -0.303569 -0.135063 -0.129972 -0.140815 -0.242816 ]
+Final state=SCORE_CONVERGED
+#iterations=23, time=451.47 seconds (19629.09 ms/iter)
+Final classifier parameters =[ -0.446083 -0.270316 -0.303569 -0.135063 -0.129972 -0.140815 -0.242816 ]
+---------------------------------------
+Analysing over the history of the previous 7 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 ]
+20, [ -0.609497 0.662613 -0.629703 0.648241 ], [ -0.448390 -0.269520 -0.296898 -0.133635 -0.116966 -0.129225 -0.216263 -0.139312 ]
+32, [ -0.609497 0.662613 -0.629703 0.648241 ], [ -0.448391 -0.269521 -0.296898 -0.133635 -0.116966 -0.129225 -0.216263 -0.139312 ]
+Final state=MAX_SUB_ITERATIONS_EXCEEDED
+#iterations=32, time=596.61 seconds (18644.16 ms/iter)
+Final classifier parameters =[ -0.448391 -0.269521 -0.296898 -0.133635 -0.116966 -0.129225 -0.216263 -0.139312 ]
+---------------------------------------
+Analysing over the history of the previous 8 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 ]
+20, [ -0.608042 0.657658 -0.626579 0.649916 ], [ -0.450583 -0.271245 -0.292035 -0.125511 -0.112978 -0.121254 -0.209428 -0.127214 -0.115628 ]
+23, [ -0.608042 0.657658 -0.626579 0.649916 ], [ -0.450584 -0.271245 -0.292035 -0.125511 -0.112978 -0.121254 -0.209428 -0.127215 -0.115628 ]
+Final state=SCORE_CONVERGED
+#iterations=23, time=566.27 seconds (24620.48 ms/iter)
+Final classifier parameters =[ -0.450584 -0.271245 -0.292035 -0.125511 -0.112978 -0.121254 -0.209428 -0.127215 -0.115628 ]
+---------------------------------------
+Analysing over the history of the previous 9 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 ]
+20, [ -0.605819 0.662613 -0.623686 0.656616 ], [ -0.453740 -0.263959 -0.290601 -0.121517 -0.108872 -0.120360 -0.194075 -0.115828 -0.107267 -0.136172 ]
+23, [ -0.605819 0.662613 -0.623686 0.656616 ], [ -0.453741 -0.263959 -0.290601 -0.121517 -0.108872 -0.120360 -0.194075 -0.115828 -0.107267 -0.136172 ]
+Final state=SCORE_CONVERGED
+#iterations=23, time=618.88 seconds (26907.61 ms/iter)
+Final classifier parameters =[ -0.453741 -0.263959 -0.290601 -0.121517 -0.108872 -0.120360 -0.194075 -0.115828 -0.107267 -0.136172 ]
+---------------------------------------
+Analysing over the history of the previous 10 matches...
+#games=1110, home-losses=453, home-wins=657, P(home-win)=0.592, P(home-loss)=0.408
+Showing score trace: every 20 iterations
+Iteration, scores, prameters
+0, [ -0.693147 0.500000 -0.693147 0.500000 ], [ 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 ]
+20, [ -0.604055 0.665315 -0.622936 0.654941 ], [ -0.453089 -0.262018 -0.286398 -0.115775 -0.107217 -0.113653 -0.190795 -0.107432 -0.095564 -0.128648 -0.127002 ]
+23, [ -0.604055 0.665315 -0.622936 0.654941 ], [ -0.453090 -0.262018 -0.286398 -0.115775 -0.107217 -0.113654 -0.190795 -0.107432 -0.095565 -0.128648 -0.127002 ]
+Final state=SCORE_CONVERGED
+#iterations=23, time=667.86 seconds (29037.35 ms/iter)
+Final classifier parameters =[ -0.453090 -0.262018 -0.286398 -0.115775 -0.107217 -0.113654 -0.190795 -0.107432 -0.095565 -0.128648 -0.127002 ]
