@@ -1,17 +1,23 @@
-\documentclass[a4paper]{book}
-\usepackage{graphicx}
+\documentclass[a4paper]{article}
+\usepackage{graphicx,subcaption}
+\usepackage{amsmath,amsfonts}
 \title{Fundamentals of Financial Forecasting}
+\author{G.A. Jarrad}
 \begin{document}
-\chapter{Introduction}
+\maketitle
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+\section{Introduction}\label{sec:intro}
 A typical goal in the financial arena is to attempt to predict the future based upon knowledge of the past, in order to make profitable trades.
 In this document, we shall look primarily at the analysis of financial timeseries data, in particular the prices of stocks.
 For illustrative purposes, most of our examples will be drawn from the analysis of the price history of just a few stocks, as shown
 in Figure~\ref{fig:stock-prices}. Of course, in practice one must collect and analyse a large amount of data for a wide variety of stocks, 
 in order to obtain more general and robust predictive models.
 
-\chapter{Basic Time-Series Modelling}
+\section{Basic Time-Series Modelling}
 
-\section{Predictive Model}
+\subsection{Predictive Model}
 Consider the stock prices shown in Figure~\ref{fig:stock-prices},
 which vary daily over a period of time.
 Each sequence of prices for a given stock forms a time-series.
@@ -121,14 +127,14 @@ e^{T\;\bar{R}(t,t+T)} & = &
 \lim_{N\rightarrow\infty}\left(1+\frac{T\;\bar{R}(t,t+T)}{N}\right)^{N}\,.
 \end{eqnarray}
 
-\section{Stochastic Model}
+\subsection{Stochastic Model}
 
 In practice, the average rate of return
 is often treated synonymously with the instantaneous
 rate of return. This is because, 
 from the Mean Value Theorem 
 (for example, see equation~(\ref{eq:mean-value-theorem}) from Appendix~\ref{sec:mean-value-theorem}),
-there is a value $xi\in[t,t+T]$ such that $\bar{R}(t,t+T)=r(\xi)$.
+there is a value $\xi\in[t,t+T]$ such that $\bar{R}(t,t+T)=r(\xi)$.
 In other words, the averate rate of return over an interval equals the instantaneous rate of return at some point in the interval.
 
 Since the value of $\xi$ is unknown, we may treat it as a random variable,
@@ -211,7 +217,7 @@ Therefore, we conclude that, over the arbitrary interval $[t,t+T]$, the continuo
 \mbox{Var}[\bar{R}(t,t+T)]~=~\frac{\sigma^2}{T}\,.
 \end{eqnarray}
 
-\section{Relative Returns}
+\subsection{Relative Returns}
 Suppose, for the sake of argument, that we invest an initial amount
 $V(t_0)$ in a bank that offers an annual rate of interest compunded
 $n$ times a year. Then, letting $S_i$ be the relative return
@@ -285,7 +291,7 @@ E[\ln G_n(1+S)] & = &
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Appendix}
+\appendix
 \section{Mean Value Theorem}
 \label{sec:mean-value-theorem}
 The Mean Value Theorem states that the average value of a function
