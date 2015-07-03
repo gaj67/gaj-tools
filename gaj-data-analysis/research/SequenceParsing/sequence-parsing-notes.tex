@@ -1,11 +1,23 @@
-\documentclass{report}
+\documentclass[a4paper]{article}
+\usepackage{graphicx,subcaption}
+\usepackage{amsmath,amsfonts}
 \usepackage{qtree}
+\title{Notes on Sequence Parsing}
+\author{G.A. Jarrad}
 \begin{document}
-Consider an ordered sequence of tokens, 
-${\bf\tau}=(\tau_1,\tau_2,...,\tau_n)$.
-A parse of this sequence provides, under one interpretation,
-a nested partitioning of the tokens, e.g. either
-\\
+\maketitle
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+\section{Introduction}\label{sec:intro}
+The purpose of {\em sequence parsing} is to provide a hierarchically structured interpretation
+of a sequence of tokens, 
+$\vec{\tau}=(\tau_1,\tau_2,...,\tau_n)$.
+Our primary example is the English sentence $\vec{\tau}=({\tt The},{\tt cat},{\tt sat},{\tt on},{\tt the},{\tt mat})$,
+the parse of which has a variety of representations, as shown by (but not restricted to) 
+Figures~\ref{fig:bracketing}--\ref{fig:parse-tree}. It is important to note, however, that some
+natural languages are not so strictly ordered, and so a general sequence parse need not necessarily follow the same
+ordering as the token sequence.
 \begin{figure}[h]
 \centering
 \{
@@ -15,100 +27,64 @@ a nested partitioning of the tokens, e.g. either
    \{{\tt the\, mat}\}
   \}
  \}
-\}\,,
-\caption{Representing the parse as a bracketing of the tokens.}
+\}
+\caption{The parse represented as a hierarchical partitioning of the tokens.}
 \label{fig:bracketing}
 \end{figure}
-\\
-or
-\\
 \begin{figure}[h]
 \centering
-\underline{
-   \underline{{\tt The\, cat}}\,\,\,\strut
-   \underline{{\tt sat}\,
-         \underline{{\tt on}\,\,\strut
-            \underline{{\tt the\, mat}}
-         }\strut
-   }
-}\,.
-\caption{Representing the parse as a collection of token sub-sequences.}
+\(
+\underset{\rho_5}{\underline{
+   \underset{\rho_1}{\underline{\tt The\;\;cat}}\;\;
+   \underset{\rho_4}{\underline{{\tt sat}\;\;
+     \underset{\rho_3}{\underline{{\tt on}\;\;
+       \underset{\rho_2}{\underline{\tt the\;\;mat}}
+     }}
+  }}
+}}
+\)
+\caption{The parse represented as an ordered set of combination rules.}
 \label{fig:nesting}
 \end{figure}
-\\
-Under another interpretation, the parse forms a tree of nodes, e.g.
 \begin{figure}[h]
 \centering
-\Tree [  [ The cat ]  [ sat   [ on  [ the mat ] ] ] ] \,.
-\caption{Representing the parse as a tree of nodes.}
+\Tree [.S [.NP [.DET The ] [.N cat ] ] [.VP [.V sat ] [.PP [.P on ] [.NP [.DET the ] [.N mat ] ] ] ] ]
+\caption{The parse represented as a tree of nodes with  part-of-speech categories.}
 \label{fig:parse-tree}
 \end{figure}
-\\
-Thus, a parse tree can be characterised by a set of nodes and 
-a set of relations or rules linking these nodes. The parse nodes
-are divided into leaf nodes and derived nodes. 
-A {\em leaf} node represents all of the known information about a 
+
+Sequence parsing typically comprises two distinct stages: (i) {\em token analysis}, discussed more fully in 
+Section~\ref{sec:token-analysis}; 
+and (ii) {\em structure analysis}, discussed in Section~\ref{sec:structure-analysis}.
+Briefly, the purpose of token analysis is to deduce, for each token $\tau_i$, the set $\Lambda(\tau_i)$ of {\em leaf nodes}
+that represent plausible interpretations of the token. For example, in natural language understanding the leaf nodes
+might include categories such as part-of-speech, as shown in Figure~\ref{fig:parse-tree}. 
+The purpose of structure analysis is then to deduce a set $\Pi(\vec{\tau})$ of
+rules that recursively combine sequences of nodes into higher-order {\em derived nodes}, 
+until a single derived node spans the entire token sequence $\vec{\tau}$, 
+again as shown in Figure~\ref{fig:parse-tree}.
+
+In summary, $\Pi(\vec{\tau})$ may be characterised as a parse tree graph with a 
+set ${\cal V}$ of nodes (both leaf and derived), and 
+a set ${\cal R}$ of rules linking these nodes.
+Each leaf node represents known information about the corresponding 
 token, including the position of that token in the token sequence.
-A {\em derived} node represents a combination of a contiguous 
-sub-sequence of leaf and/or derived nodes.
-
-In order to define node contiguity, first observe from 
-Figure~\ref{fig:parse-tree} that each node $\nu$ spans some contiguous
-sub-sequence of tokens, e.g. $(\tau_i,\tau_{i+1},...,\tau_{i+k})$.
-Let $beta(\nu)$ be the index of the first token in the sub-sequence,
-e.g. $\beta(\nu)=i$, and let $\varepsilon(\nu)$ be the index of the 
-last token, e.g. $\varepsilon(\nu)=i+k$. Then the {\em span}
-of node $\nu$ is defined as the set of token indices
-\[
-\sigma(\nu)=\{j\in{\cal I}_n
-\;|\;\beta(\nu)\le j\le\varepsilon(\nu)\}\,,
-\]
-where ${\cal I}_n=\{1,2,...,n\}$.
-Hence, for two arbitrary nodes $\nu_1$ and $\nu_2$ to 
-be said to be {\em non-overlapping}, 
-their spans must be mutually exclusive,
-i.e. obey $\sigma(\nu_1)\bigcap\sigma(\nu_2)=\{\}$.
-Furthermore, for $\nu_1$ and $\nu_2$ to be {\em adjacent}, their spans
-must further obey either $\beta(\nu_1)=\varepsilon(\nu_2)+1$
-or $\beta(\nu_2)=\varepsilon(\nu_1)+1$.
-Finally, an arbitrary sequence $(\nu_1,\nu_2,...,\nu_m)$ of nodes
-is {\em contiguous} if and only if
-\[
-\beta(\nu_{i+1})=\varepsilon(\nu_i)+1,\, \forall i\in{\cal I}_{m-1}\,.
-\]
-
-Continuing now from previous remarks, a parse tree ${\cal P}$ may be 
-thought of as a set of node combination rules of the form
-\[
-\nu_1\;\nu_2\;...\;\nu_m \stackrel{\rho}{\rightarrow} \nu\;.
-\]
-In order to be a valid rule, 
-the sequence ${\pi}(\rho)=(\nu_1,\nu_2,...,\nu_m)$ of 
-so-called {\em predecessor} nodes must be contiguous, such that the 
-resulting derived node $\delta(\rho)=\nu$ has span
-\[
-\sigma(\nu)=\bigcup_{i=1}^{m}\sigma(\nu_i)\;,
-\]
-where $\beta(\nu)=\beta(\nu_1)$ and 
-$\varepsilon(\nu)=\varepsilon(\nu_m)$.
-In effect, the predecessor nodes partition the 
-tokens spanned by $\nu$ into mutually exclusive sub-sequences.
-
-Taken together, the set ${\cal P}$ of rules forms a parse
-of the whole token sequence, i.e.
-\[
-\exists\rho\in{\cal P},\,\sigma(\delta(\rho)) = {\cal I}_n\,.
-\]
-Furthermore, the rules must
-partition the token sequence into a tree of nested sub-sequences, i.e. 
-\[
-\forall \rho_1\in{\cal P},\,
-\forall \rho_2\in{\cal P}\backslash\{\rho_1\}
-,\,
-\sigma(\delta(\rho_1))\bigcap\sigma(\delta\rho_2))\ne\{\}
-\Rightarrow\sigma(\delta(\rho_1))\subset
-\sigma(\delta(\rho_2))\mbox{ or }
-\sigma(\delta(\rho_2))\subset\sigma(\delta(\rho_1))\,.
-\]
+Likewise, each derived node represents a 
+sequence of leaf and/or derived nodes, which includes knowledge of the positions of all corresponding tokens.
+In general, therefore, every node $\nu\in{\cal V}$ {\em spans} a set of tokens. Specifically, we define
+the span $\sigma(\nu)$ of node $\nu$ to be the ordered set of
+indices of the underlying tokens. 
+Consequently, each rule $\rho\in{\cal R}$ then takes the form
+\begin{eqnarray}
+\nu_{i_1}\;\nu_{i_2}\;\cdots\;\nu_{i_m} & \stackrel{\rho}{\rightarrow} & \nu_*\,,
+\end{eqnarray}
+where the derived node $\nu_*=\delta(\rho)$ combines the {\em predecessor} nodes 
+$\vec{\pi}(\rho)=(\nu_{i_1},\ldots,\nu_{i_m})$
+with a resulting ordered span of
+\begin{eqnarray}
+\sigma(\delta(\rho))=\bigcup_{\nu\in\vec{\pi}(\rho)}\sigma(\nu)\,.
+\end{eqnarray}
+ For example, if $\sigma(\nu_1)=\{2,1\}$ and $\sigma(\nu_2)=\{3\}$, then the rule
+$\nu_1\;\nu_2\rightarrow\nu_3$ implies that $\sigma(\nu_3)=\{2,1,3\}$.
 
 \end{document}
