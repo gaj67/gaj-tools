@@ -5,6 +5,10 @@
 \usepackage{tikz}
 \title{Notes on Sequence Modelling}
 \author{G.A. Jarrad}
+\usepackage{accents}
+\newcommand{\rvec}[1]{\accentset{\leftarrow}{#1}}
+
+
 \begin{document}
 \maketitle
 \numberwithin{equation}{section}
@@ -370,18 +374,18 @@ Then the model~\eqref{eq:1-stateful-markov-model} may be considered to be a {\em
 As such, the state of $S_t$ must be deduced from knowledge of the observed sequence $\vec{x}_n$. This is accomplished
 via the forward--backward algortithm. The forward step commences with stages $0$ and $1$, by defining
 \begin{eqnarray}
-  \alpha_1(s_1) & = & p(\iota_0,x_1,s_1)
+  \alpha_1(s_1) & = & p(\iota_0,X_1=x_1,S_1=s_1)
 \nonumber\\
 & = & p(\iota_0)\,p(S_1=s_1\,|\,\iota_0)\,p(X_1=x_1\,|\,S_1=s_1)
 \nonumber\\
 & = & p(\iota_0)\,p(s_1\,|\,\iota_0)\,p(x_1\,|\,s_1)
 \,,
 \end{eqnarray}
-from equation~\eqref{eq:1-stateful-markov-model}, where the explicit variables $S_t$ and $X_t$ may now be
+from equation~\eqref{eq:1-stateful-markov-model}, where the explicit variables $S_t$ and $X_t$ may be
 dropped for convenience when the context is unambiguous.
 Then it follows that
 \begin{eqnarray}
-  \alpha_2(s_2) & = & p(\iota_0,x_1,x_2,s_2)
+  \alpha_2(s_2) & = & p(\iota_0,X_1=x_1,X_2=x_2,S_2=s_2)
 \nonumber\\
 & = & \sum_{s_1\in{\cal S}}p(\iota_0,x_1,s_1)\,p(s_2\,|\,s_1)\,p(x_2\,|\,s_2)
 \nonumber\\
@@ -389,21 +393,22 @@ Then it follows that
 \end{eqnarray}
 and in general that
 \begin{eqnarray}
-   \alpha_t(s_t) & = & p(\iota_0,\vec{x}_t,s_t)
+   \alpha_t(s_t) & = & p(\iota_0,\vec{X}_t=\vec{x}_t,S_t=s_t)
 \nonumber\\
 & = & \left\{\sum_{s_{t-1}\in{\cal S}}\alpha_{t-1}(s_{t-1})\,p(s_t\,|\,s_{t-1})\right\}\,p(x_t\,|\,s_t)\,,
 \end{eqnarray}
 for $t=2,3,\ldots,n$.
 Consequently, we may predict $S_t$ from a partially observed sequence $\vec{x}_t$ via
 \begin{eqnarray}
-  p(s_t\,|\,\iota_0,\vec{x}_t) & = & \frac{p(\iota_0,\vec{x}_t,s_t)}{p(\iota_0,\vec{x}_t)}
+  p(S_t=s_t\,|\,\iota_0,\vec{X}_t=\vec{x}_t) & = & \frac{p(\iota_0,\vec{X}_t=\vec{x}_t,S_t=s_t)}
+     {p(\iota_0,\vec{X}_t=\vec{x}_t)}
 ~=~\frac{\alpha_t(s_t)}{\sum_{s_t'\in{\cal S}}\alpha_t(s_t')}\,.
 \end{eqnarray}
 Similarly, we may predict the next observation $X_{t+1}$ via
 \begin{eqnarray}
-  p(x_{t+1}\,|\,\iota_0,\vec{x}_t) 
+  p(X_{t+1}=x_{t+1}\,|\,\iota_0,\vec{X}_t=\vec{x}_t) 
 & = &
-  \frac{p(\iota_0,\vec{x}_t,x_{t+1})}{p(\iota_0,\vec{x}_t)}
+  \frac{p(\iota_0,\vec{X}_t=\vec{x}_t,X_{t+1}=x_{t+1})}{p(\iota_0,\vec{X}_t=\vec{x}_t)}
 \nonumber\\
 & = & 
  \frac{\sum_{s_{t+1}\in{\cal S}}\sum_{s_{t}\in{\cal S}}p(\iota_0,\vec{x}_t,s_t)\,p(s_{t+1}\,|\,s_t)\,p(x_{t+1}\,|\,s_{t+1})}
@@ -415,12 +420,12 @@ Similarly, we may predict the next observation $X_{t+1}$ via
 
 The backward step now commences with stage $n+1$, by defining
 \begin{eqnarray}
-  \beta_{n}(s_{n}) & = & p(\tau_{n+1}\,|\,s_{n})
+  \beta_{n}(s_{n}) & = & p(\tau_{n+1}\,|\,S_n=s_{n})
 \,,
 \end{eqnarray}
 and 
 \begin{eqnarray}
-  \beta_{n-1}(s_{n-1}) & = & p(x_{n},\tau_{n+1}\,|\,s_{n-1})
+  \beta_{n-1}(s_{n-1}) & = & p(X_n=x_{n},\tau_{n+1}\,|\,S_{n-1}=s_{n-1})
 \nonumber\\
 & = &
 \sum_{s_n\in{\cal S}}p(\tau_{n+1}\,|\,s_{n})\,p(x_n\,|\,s_n)\,p(s_n\,|\,s_{n-1})
@@ -429,34 +434,59 @@ and
 \sum_{s_n\in{\cal S}}\beta_n(s_{n})\,p(x_n\,|\,s_n)\,p(s_n\,|\,s_{n-1})
 \,.
 \end{eqnarray}
-In general, we recursively define
+In general, we let $\rvec{x}_t=(x_t,x_{t+1},\ldots,x_n)$, and then recursively define
 \begin{eqnarray}
-  \beta_{t}(s_{t}) & = & p(x_{t+1},\ldots,x_{n},\tau_{n+1}\,|\,s_{t})
+  \beta_{t}(s_{t}) & = & p(\rvec{X}_{t+1}=\rvec{x}_{t+1},\tau_{n+1}\,|\,S_t=s_{t})
 \nonumber\\
 & = &
 \sum_{s_{t+1}\in{\cal S}}
-  p(x_{t+2},\ldots,x_{n},\tau_{n+1}\,|\,s_{t+1})\,p(x_{t+1}\,|\,s_{t+1})\,p(s_{t+1}\,|\,s_t)
+  p(\rvec{x}_{t+2},\tau_{n+1}\,|\,s_{t+1})\,p(x_{t+1}\,|\,s_{t+1})\,p(s_{t+1}\,|\,s_t)
 \nonumber\\
 & = &
 \sum_{s_{t+1}\in{\cal S}}\beta_{t+1}(s_{t+1})\,p(x_{t+1}\,|\,s_{t+1})\,p(s_{t+1}\,|\,s_t)
 \,.
 \end{eqnarray}
-Consequently, we may now calculate the probability of an entirely observed sequence $\vec{x}_n$ as
+Consequently, for an observed sequence $\vec{x}_n$,  the forward--backward algorithm 
+gives the stage $t$ probability
 \begin{eqnarray}
-  p(\iota_0,\vec{x}_n,\tau_{n+1}) & = & 
-  \sum_{s_n\in{\cal S}}p(\iota_0,\vec{x}_n,s_n)\,p(\tau_{n+1}\,|\,s_n)
+  p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,S_t\!=\!s_t,\tau_{n+1}) & = & 
+  p(\iota_0,\vec{X}_t\!=\!\vec{x}_t,S_t\!=\!s_t)
+\nonumber\\&& 
+\;\;p(\rvec{X}_{t+1}=\rvec{x}_{t+1},\tau_{n+1}\,|\,S_t\!=\!s_t)
 \nonumber\\& = &
-  \sum_{s_n\in{\cal S}}\alpha_n(s_n)\beta_n(s_n)\,,
+  \alpha_t(s_t)\beta_t(s_t)\,.
 \end{eqnarray}
-and retrospectively predict $S_t$ given $\vec{x}_n$ via
+Thus, the probability of $\vec{x}_n$  is
 \begin{eqnarray}
-  p(s_t\,|\,\iota_0,\vec{x}_n,\tau_{n+1}) & = & 
-\frac{p(\iota_0,\vec{x}_n,s_t,\tau_{n+1})}
-       {p(\iota_0,\vec{x}_n,\tau_{n+1})}
+  p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1}) & = & 
+  \sum_{s_t\in{\cal S}}p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,S_t\!=\!s_t,\tau_{n+1})
 \nonumber\\& = &
-\frac{p(\iota_0,\vec{x}_t,s_t)\,p(x_{t+1},\ldots,x_n,\tau_{n+1}\,|\,s_t)}{p(\iota_0,\vec{x}_n,\tau_{n+1})}
+  \sum_{s_t\in{\cal S}}\alpha_t(s_t)\beta_t(s_t)\,,
+\end{eqnarray}
+and the posterior prediction of the state $S_t$ given $\vec{x}_n$ is subsequently given by
+\begin{eqnarray}
+\gamma_t(s_t) & = &
+  p(S_t\!=\!s_t\,|\,\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1}) 
+\nonumber\\& = & 
+\frac{p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,S_t\!=\!s_t,\tau_{n+1})}
+       {p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1})}
 \nonumber\\& = &
 \frac{\alpha_t(s_t)\beta_t(s_t)}{\sum_{s_t'\in{\cal S}}\alpha_t(s_t')\beta_t(s_t')}\,.
+\end{eqnarray}
+Likewise, the posterior prediction of the state transition from stage $t$ to stage $t+1$ is given by
+\begin{eqnarray}
+\xi_t(s_t,s_{t+1}) & = &
+   p(S_t\!=\!s_t,S_{t+1}\!=\!s_{t+1}\,|\,\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1})
+\nonumber\\& = & 
+\frac{p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,S_t\!=\!s_t,S_{t+1}\!=\!s_{t+1},\tau_{n+1})}
+        {p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1})}
+\nonumber\\& = & 
+\frac{p(\iota_0,\vec{x}_t,s_t)\,p(s_{t+1}\,|\,s_t)\,p(x_{t+1}\,|\,s_{t+1})\,p(\rvec{x}_{t+2},\tau_{n+1}\,|\,s_{t+1})}
+        {p(\iota_0,\vec{x}_n,\tau_{n+1})}
+\nonumber\\& = & 
+\frac{\alpha_t(s_t)\,p(s_{t+1}\,|\,s_t)\,p(x_{t+1}\,|\,s_{t+1})\,\beta_{t+1}(s_{t+1})}
+        {\sum_{s_t'\in{\cal S}}\alpha_t(s_t')\beta_t(s_t')}
+\,.
 \end{eqnarray}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
