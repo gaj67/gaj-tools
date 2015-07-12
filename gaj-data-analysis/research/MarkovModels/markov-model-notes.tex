@@ -7,6 +7,10 @@
 \author{G.A. Jarrad}
 \usepackage{accents}
 \newcommand{\rvec}[1]{\accentset{\leftarrow}{#1}}
+\newcommand{\Bb}[1]{%
+  \expandafter\def\csname#1#1\endcsname%
+  {\ensuremath{\mathbb #1}}}
+\Bb X\Bb S
 
 
 \begin{document}
@@ -14,9 +18,6 @@
 \numberwithin{equation}{section}
 \numberwithin{figure}{section}
 \numberwithin{table}{section}
-\section{Introduction}\label{sec:intro}
-blah, blah, blah
-
 \section{Random Sequence Processes}
 \label{sec:random-processes}
 Consider a random process $\vec{R}=(R_1,R_2,R_3,\ldots)$ that generates arbitrary sequences of values
@@ -328,7 +329,7 @@ by also imposing the first-order Markov assumption at the level
 of the state--value transitions themselves, leading to the restricted stateful  model
 \begin{eqnarray}
 p(\iota_0,\vec{S}_n,\vec{X}_n,\tau_{n+1}) & = & 
-p(\iota_0)\,p(S_1\,|\,\iota_0)\,p(X_1\,|\,S_1,\iota_0)
+p(\iota_0)\,p(S_1\,|\,\iota_0)\,p(X_1\,|\,S_1)
 \nonumber\\&&
 \prod_{t=2}^{n}p(S_t\,|\,S_{t-1})
 \,p(X_t\,|\,S_t)
@@ -488,6 +489,121 @@ Likewise, the posterior prediction of the state transition from stage $t$ to sta
         {\sum_{s_t'\in{\cal S}}\alpha_t(s_t')\beta_t(s_t')}
 \,.
 \end{eqnarray}
+
+\section{Hidden-state Parameter Estimation}
+
+Suppose now that the hidden-state Markov model~\eqref{eq:1-stateful-markov-model} implicitly depends upon some
+parameter $\theta$, the value of which needs to be estimated from observed data.
+In particular, let us assume that $\theta=(\Pi,\Gamma,\Omega)$,
+where $\Pi=(\vec{\pi}^+,\vec{\pi}^-,\vec{\pi}^*)$ 
+and $\Omega=(\vec{\omega}^+,\vec{\omega}^-,\vec{\omega}^*)$ respectively
+specify the possible distributions of the initial and final
+states of an arbitrary sequence (defined in further detail below),
+and $\Gamma$ represents the {\em stationary} distribution of state transitions between stages.
+
+For convenience, we now suppose that the discrete set of possible states is given by
+${\cal S}=\{\sigma_1,\sigma_2,\ldots,\sigma_S\}$.
+Then we may define the initial distributions of states via $\vec{\pi}=(\pi_{1},\pi_{2},\ldots,\pi_{S})$ where
+\begin{eqnarray}
+  \pi_{i}^+ & = & p(\iota_0\!=\!1\,|\,\theta)\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!1,\theta)\,,
+\\
+  \pi_{i}^- & = & p(\iota_0\!=\!0\,|\,\theta)\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!0,\theta)\,,
+\\
+  \pi_{i}^* & = & p(\iota_0\!=\!*\,|\,\theta)\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!*,\theta)\;\equiv\;p(S_1\!=\!\sigma_i\,|\,\theta)\,.
+\end{eqnarray}
+Similarly, the final distributions of states are defined by $\vec{\omega}=(\omega_1,\ldots,\omega_S)$ where
+\begin{eqnarray}
+  \omega_{i}^+ & = & p(\tau_{n+1}=1\,|\,S_n\!=\!\sigma_i,\theta)\,,
+\\
+  \omega_{i}^- & = & p(\tau_{n+1}=0\,|\,S_n\!=\!\sigma_i,\theta)\,,
+\\
+  \omega_{i}^* & = & p(\tau_{n+1}=*\,|\,S_n\!=\!\sigma_i,\theta)\;\equiv\;1\,.
+\end{eqnarray}
+Observe that $\omega^+_i+\omega^-_i=1$ for all $i=1,2,\ldots,S$.
+
+The last parameters of interest are the state transitions, specified by the matrix $\Gamma=[\Gamma_{i,j}]_{i,j=1}^{S}$ where
+\begin{eqnarray}
+  \Gamma_{i,j} & = & p(S_{t+1}\!=\!\sigma_j\,|\,S_t\!=\!\sigma_i,\theta)\,.
+\end{eqnarray}
+Observe that $\Gamma$ is assumed constant for all $t$.
+
+Now, since the value sequence $\vec{x}_n$ is assumed known, we may for convenience define
+\begin{eqnarray}
+  o_{t,i} & = & p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_i,\theta)\,,
+\end{eqnarray}
+although we are not concerned here with the internal parameterisation structure of $o_{t,i}$.
+Thus, the explicitly parameterised version of model~\eqref{eq:1-stateful-markov-model} is given by
+\begin{eqnarray}
+  p(\iota_0,\vec{S}_n\!=\!\vec{s}_n,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1}\,|\,\theta) 
+&\!\!=\!\!& 
+  \pi_{i_1}\prod_{t=1}^{n-1}\Gamma_{i_t,i_{t+1}}\prod_{t=1}^{n}o_{t,i_t}\,\omega_{i_n}
+\,,
+\label{eq:param-markov-model}
+\end{eqnarray}
+where the unknown state sequence $\vec{s}_n$ corresponding to $\vec{x}_n$ is arbitrarily
+specified by $\vec{s}_n=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$.
+
+Let us now suppose that we have observed an ordered set of value sequences
+$\XX=\{(\iota_0^{(d)},\vec{x}^{(d)},\tau_{|\vec{x}^{(d)}|+1}^{(d)})\}_{d=1}^{D}$.
+Notionally, we may also define the correspondingly ordered set $\SS=\{\vec{s}^{(d)}\}_{d=1}^D$
+of arbitrary state sequences.
+Hence, under the assumption that the observed sequences are independent, the joint log-likelihood of the data is given by
+\begin{eqnarray}
+  L(\theta) & = & \log p(\SS,\XX\,|\,\theta) 
+\nonumber\\& = & 
+\log\prod_{d=1}^D 
+p(\iota_0^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\tau_{|\vec{x}^{(d)}|+1}^{(d)}\,|\,\theta) 
+\nonumber\\& = & 
+\sum_{d=1}^D\log 
+p(\iota_0^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\tau_{|\vec{x}^{(d)}|+1}^{(d)}\,|\,\theta) 
+\nonumber\\& = & 
+\sum_{d=1}^D\log\ell^{(d)}(\theta)
+\,,
+\end{eqnarray}
+where
+\begin{eqnarray}
+  \ell^{(d)}(\theta) & = &
+  \pi_{i_1^{(d)}}^{(d)}\prod_{t=1}^{|\vec{x}^{(d)}|-1}
+\Gamma_{i_t^{(d)},i_{t+1}^{(d)}}\prod_{t=1}^{|\vec{x}^{(d)}|}o_{t,i_t^{(d)}}\,\omega_{i_{|\vec{x}^{(d)}|}^{(d)}}^{(d)}
+\,.
+\end{eqnarray}
+However, recall that $\SS$ is actually uknown. Hence, we take an expectation of the log-likelihood over all possible values of
+$\SS$, namely\footnote{Other expectations are possible, e.g.\ over $\SS\,|\,\XX,\theta$.}
+\begin{eqnarray}
+  Q(\theta) & = & E_{\SS,\XX|\theta}\left[\log p(\SS,\XX\,|\,\theta)\right]
+\nonumber\\& = & 
+E_{\SS,\XX|\theta}\left[
+\sum_{d=1}^D\log\ell^{(d)}(\theta)
+\right]
+\nonumber\\& = & 
+\sum_{d=1}^D E_{\SS,\XX|\theta}\left[
+\log\ell^{(d)}(\theta)
+\right]
+\nonumber\\& = & 
+\sum_{d=1}^D \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{|\vec{x}^{(d)}|}}^{S}
+\ell^{(d)}(\theta)\log\ell^{(d)}(\theta)
+\,.
+\end{eqnarray}
+In practice, it is difficult to optimise this nonlinear expression. A feasible alternative is to iteratively apply the {\em expectation--maximisation}
+(EM) algorithm:
+\begin{enumerate}
+\item {\em Expectation step:} Compute the expected log-likelihood conditioned on a known parameter estimate $\hat{\theta}_k$,
+namely
+\begin{eqnarray}
+  Q(\theta,\hat{\theta}_k) & = & E_{\SS,\XX|\hat{\theta}_k}\left[\log p(\SS,\XX\,|\,\theta)\right]
+\nonumber\\& = &
+\sum_{d=1}^D \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{|\vec{x}^{(d)}|}}^{S} 
+\ell^{(d)}(\hat{\theta}_k)\log\ell^{(d)}(\theta)\,.
+\end{eqnarray}
+
+\item {\em Maximisation step:} Obtain the optimal parameter estimate $\hat{\theta}_{k+1}$ that maximises the
+conditional expected log-likehood, namely
+\begin{eqnarray}
+\hat{\theta}_{k+1} & = & \arg\max_{\theta} Q(\theta,\hat{\theta}_k)\,.
+\end{eqnarray}
+\end{enumerate}
+These two steps are iterated until $\hat{\theta}_k$ has converged to the value $\hat{\theta}^*$ that globally maximises 
+$L(\hat{\theta}^*)=Q(\hat{\theta}^*,\hat{\theta}^*)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
