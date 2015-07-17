@@ -20,22 +20,37 @@
 \numberwithin{table}{section}
 \section{Random Sequence Processes}
 \label{sec:random-processes}
-Consider a random process $\vec{R}=(R_1,R_2,R_3,\ldots)$ that generates arbitrary sequences of values
+Consider a random process $R$, graphically depicted in Figure~\ref{fig:R-process}, that generates arbitrary sequences of values
 of the form $\vec{r}_n=(r_1,r_2,\ldots,r_n)$, where the length of any particular sequence is 
-determined by a random variable $N$,
-and the random variable $R_t$ denotes the $t$-th discrete stage in the sequence.
+governed by a random variable $N$. Let $\vec{R}_N=(R_1,R_2,\ldots,R_N)$ denote
+the corresponding sequence of random variables, where $R_t$ denotes the $t$-th discrete stage in the sequence.
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}]
+    \node[cnode] (1) at (0,0) {$R_1$};
+    \node[cnode] (2) at (2, 0)  {$R_2$};
+    \node (t) at (4, 0) {$\cdots$};
+    \node[cnode] (n) at (6, 0)  {$R_N$};
+
+    \draw[->] (1) edge (2) ;
+    \draw[->] (2) edge (t) ;
+    \draw[->] (t) edge (n) ;
+\end{tikzpicture}
+\caption{A random process $R$ for generating sequences of arbitrary length $N$. The arrows indicate transitions from one stage in the sequence to the next.}
+\label{fig:R-process}
+\end{figure}
+
 We assume that each $R_t$ randomly takes some discrete or continuous value $r_t\in{\cal R}$,
 and hence the probability (or probability density) of observing a particular
 sequence $\vec{r}_n$ of length $n$ is given by
 \begin{eqnarray}
-   p(\vec{R}=\vec{r}_n) & = & p(N=n)\; p(\vec{R}=\vec{r}_n\,|\,N=n)\,,
+   p(\vec{R}_N\!=\!\vec{r}_n) & = & p(N=n)\; p(\vec{R}_n\!=\!\vec{r}_n)\,,
 \end{eqnarray}
 where
 \begin{eqnarray}
-p(\vec{R}=\vec{r}_n\,|\,N=n)
-& = & p(\vec{R}_n=\vec{r}_n)~=~p(R_1=r_1,\ldots,R_n=r_n)\,.
+p(\vec{R}_n\!=\!\vec{r}_n) & = & p(R_1\!=\!r_1,\ldots,R_n\!=\!r_n)\,.
 \end{eqnarray}
-In practice, this definition presupposes that we know we have a {\em complete} sequence that was initiated
+In practice, this definition presupposes that we know we have observed a {\em complete} sequence that was initiated
 at stage 1 and terminated at stage $n$.
 Suppose instead that the sequence $\vec{r}_n$ was observed one stage at a time. How do we know if the
 underlying process has actually terminated, or will instead
@@ -52,24 +67,38 @@ denoted by $\langle\vec{r}_n]$, and futher defining an {\em end sequence} to be 
 that has a definite end but an indefinite start, denoted by $[\vec{r}_n\rangle$.
 
 Under this augmented notation, knowledge about the start of a sequence can be encapsulated in 
-a random indicator variable $\iota_0$, which takes on the value 1 if $R_1$ is definitely the first stage in the
-sequence, or the value 0 if it is not. Similarly, the random indicator variable $\tau_{n+1}$
-takes on the value 1 if $R_n$ is definitely the last stage in the sequence, or the value 0 if it is not.
-Notionally, these indicators can be thought to correspond to pseudo-stages 0 and $N+1$, such that
-the sequence is initiated at stage 0 and terminated at stage $N+1$.
-This augmented random process is depicted in Figure~\ref{fig:random-process}.
+a random indicator variable $\iota_t$, which takes on the value 1 if $R_{t+1}$ is definitely the first stage in the
+sequence, or the value 0 if it is not. Similarly, the random indicator variable $\tau_{t}$
+takes on the value 1 if $R_{t-1}$ is definitely the last stage in the sequence, or the value 0 if it is not.
+We assume that the random process $R$ only ever produces complete sequences described by $\langle\vec{R}_N\rangle$,
+independently of the observation process, which might provide partial or complete sequences of values.
+Notionally, the indicators $\iota_0$ and $\tau_{N+1}$ can be thought to correspond to pseudo-stages 0 and $N+1$, such that
+the generated sequence $\langle\vec{R}_N\rangle$ is initiated at stage 0 and terminated at stage $N+1$.
+This augmented random process is depicted in Figure~\ref{fig:random-process}. 
 \begin{figure}[hbt]
 \centering
-\begin{tikzpicture}[every node/.style={draw,circle,minimum size=3em,inner sep=3pt}]
-    \node (1) at (0,0) {$\iota_0$};
-    \node (2) at (2, 0)  {$\vec{R}$};
-    \node (3) at (4, 0) {$\tau_{N+1}$};
+\begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill, draw,circle,minimum size=1em}]
+    \node (0i) at (-1,0) [right] {$\stackrel{\iota_0=1}{}$};
+    \node[onode] (0) at (0,0) {};
+    \node[cnode] (1) at (2,0) {$R_1$};
+    \node[onode] (1t) at (2,-2) {};
+    \node[cnode] (2) at (4, 0)  {$R_2$};
+    \node[onode] (2t) at (4,-2) {};
+    \node[cnode] (3) at (6, 0)  {$R_3$};
+    \node[onode] (3t) at (6,-2) {};
+    \node (t) at (8, 0) {$\cdots$};
+    \node[onode] (tt) at (8, -2) {};
 
-    \draw[->] (1) edge (2) ;
-    \draw[->] (1) to[out=-30,in=-150] (3) ;
-    \draw[->] (2) edge (3) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau_1=0}{}$}  (1) ;
+    \draw[->] (0) edge node [pos=0.5, below left] {$\stackrel{\tau_1=1}{}$} (1t) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau_2=0}{}$}  (2) ;
+    \draw[->] (1) edge node [pos=0.5, below left] {$\stackrel{\tau_2=1}{}$} (2t) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau_3=0}{}$}  (3) ;
+    \draw[->] (2) edge node [pos=0.5, below left] {$\stackrel{\tau_3=1}{}$} (3t) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau_4=0}{}$}  (t) ;
+    \draw[->] (3) edge node [pos=0.5, below left] {$\stackrel{\tau_4=1}{}$} (tt) ;
 \end{tikzpicture}
-\caption{A random process for generating both complete and incomplete sequences of random length $N$,
+\caption{A random process for generating complete sequences of arbitrary length,
 with explicit stages for sequence initiation and termination.}
 \label{fig:random-process}
 \end{figure}
@@ -77,31 +106,34 @@ with explicit stages for sequence initiation and termination.}
 The probability of a given complete sequence $\langle\vec{r}_n\rangle$ is now defined as
 \begin{eqnarray}
    p(\langle\vec{r}_n\rangle)
-& = & p(\iota_0=1,R_1=r_1\ldots,R_n=r_n,\tau_{n+1}=1)
+& = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!1)
 \,,
 \end{eqnarray}
-such that $p(N=n)\equiv p(\iota_0=1,\tau_{n+1}=1)$.
+such that 
+\begin{eqnarray}
+   p(N\!=\!n) & = &  p(\iota_0\!=\!1,\tau_1\!=\!0,\ldots,\tau_n\!=\!0,\tau_{n+1}\!=\!1)\,.
+\end{eqnarray}
 Likewise, the probability
 of a given start sequence $\langle\vec{r}_n]$ is defined as
 \begin{eqnarray}
-p(\langle\vec{r}_n]) & = & p(\iota_0=1,R_1=r_1\ldots,R_n=r_n)\,,
+p(\langle\vec{r}_n]) 
+& = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n)\,,
 \end{eqnarray}
 and the probability of the end sequence $[\vec{r}_n\rangle$ is
 \begin{eqnarray}
 p([\vec{r}_n\rangle)
-& = & p(R_1=r_1\ldots,R_n=r_n,\tau_{n+1}=1)\,.
+& = & p(\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!1)\,.
 \end{eqnarray}
 In the special case where we know in advance that a start sequence definitely does not terminate
-at stage $n+1$ (i.e.\ $\tau_{n+1}=0$),  we may instead write
+at stage $n+1$,  we may instead write
 \begin{eqnarray}
 p(\langle\vec{r}_n!)
-& = & p(\iota_0=1,R_1=r_1\ldots,R_n=r_n,\tau_{n+1}=0)\,.
+& = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!0)\,.
 \end{eqnarray}
-Likewise, if an end sequence definitely does not initiate at stage
-0 (i.e.\ $\iota_0=0$), then
+Likewise, if an end sequence definitely does not initiate at stage 0, then
 \begin{eqnarray}
 p(!\vec{r}_n\rangle)
-& = & p(\iota_0=0,R_1=r_1\ldots,R_n=r_n,\tau_{n+1}=1)\,.
+& = & p(\iota_0\!=\!0,\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!1)\,.
 \end{eqnarray}
 The four remaining types of sequences, namely $[\vec{r}_n]$, $!\vec{r}_n]$, $[\vec{r}_n!$ and $!\vec{r}_n!$ , can be similarly defined.
 
@@ -473,6 +505,7 @@ and the posterior prediction of the state $S_t$ given $\vec{x}_n$ is subsequentl
        {p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1})}
 \nonumber\\& = &
 \frac{\alpha_t(s_t)\beta_t(s_t)}{\sum_{s_t'\in{\cal S}}\alpha_t(s_t')\beta_t(s_t')}\,.
+\label{eq:gamma-def}
 \end{eqnarray}
 Likewise, the posterior prediction of the state transition from stage $t$ to stage $t+1$ is given by
 \begin{eqnarray}
@@ -488,6 +521,7 @@ Likewise, the posterior prediction of the state transition from stage $t$ to sta
 \frac{\alpha_t(s_t)\,p(s_{t+1}\,|\,s_t)\,p(x_{t+1}\,|\,s_{t+1})\,\beta_{t+1}(s_{t+1})}
         {\sum_{s_t'\in{\cal S}}\alpha_t(s_t')\beta_t(s_t')}
 \,.
+\label{eq:xi-def}
 \end{eqnarray}
 
 \section{Hidden-state Parameter Estimation}
@@ -495,8 +529,8 @@ Likewise, the posterior prediction of the state transition from stage $t$ to sta
 Suppose now that the hidden-state Markov model~\eqref{eq:1-stateful-markov-model} implicitly depends upon some
 parameter $\theta$, the value of which needs to be estimated from observed data.
 In particular, let us assume that $\theta=(\Pi,\Gamma,\Omega)$,
-where $\Pi=(\vec{\pi}^+,\vec{\pi}^-,\vec{\pi}^*)$ 
-and $\Omega=(\vec{\omega}^+,\vec{\omega}^-,\vec{\omega}^*)$ respectively
+where $\Pi=(\vec{\pi}^+,\vec{\pi}^-)$ 
+and $\Omega=(\vec{\omega}^+,\vec{\omega}^-)$ respectively
 specify the possible distributions of the initial and final
 states of an arbitrary sequence (defined in further detail below),
 and $\Gamma$ represents the {\em stationary} distribution of state transitions between stages.
@@ -508,30 +542,28 @@ Then we may define the initial distributions of states via $\vec{\pi}=(\pi_{1},\
   \pi_{i}^+ & = & p(\iota_0\!=\!1\,|\,\theta)\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!1,\theta)\,,
 \\
   \pi_{i}^- & = & p(\iota_0\!=\!0\,|\,\theta)\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!0,\theta)\,,
-\\
-  \pi_{i}^* & = & p(\iota_0\!=\!*\,|\,\theta)\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!*,\theta)\;\equiv\;p(S_1\!=\!\sigma_i\,|\,\theta)\,.
 \end{eqnarray}
+such that $\pi_{i}^*=\pi_i^{+}+\pi_i^{-}=p(S_1\!=\!\sigma_i\,|\,\theta)$.
 Similarly, the final distributions of states are defined by $\vec{\omega}=(\omega_1,\ldots,\omega_S)$ where
 \begin{eqnarray}
   \omega_{i}^+ & = & p(\tau_{n+1}=1\,|\,S_n\!=\!\sigma_i,\theta)\,,
 \\
   \omega_{i}^- & = & p(\tau_{n+1}=0\,|\,S_n\!=\!\sigma_i,\theta)\,,
-\\
-  \omega_{i}^* & = & p(\tau_{n+1}=*\,|\,S_n\!=\!\sigma_i,\theta)\;\equiv\;1\,.
 \end{eqnarray}
-Observe that $\omega^+_i+\omega^-_i=1$ for all $i=1,2,\ldots,S$.
+such that $\omega_{i}^*=\omega_i^{+}+\omega_i^{-}=1$.
+Note that $\Pi$ and $\Omega$ describe the initial and terminal state distributions of the random process itself, not those of any observed sequences.
 
-The last parameters of interest are the state transitions, specified by the matrix $\Gamma=[\Gamma_{i,j}]_{i,j=1}^{S}$ where
+The last parameter of interest, specified by the matrix $\Gamma=[\Gamma_{i,j}]_{i,j=1}^{S}$, defines the state transitions
 \begin{eqnarray}
   \Gamma_{i,j} & = & p(S_{t+1}\!=\!\sigma_j\,|\,S_t\!=\!\sigma_i,\theta)\,.
 \end{eqnarray}
-Observe that $\Gamma$ is assumed constant for all $t$.
+Observe that the assumption of stationarity implies that $\Gamma$ is constant for all $t$.
 
-Now, since the value sequence $\vec{x}_n$ is assumed known, we may for convenience define
+Now, since the observed value sequence $\vec{x}_n$ is always here assumed to be known, we may for convenience define
 \begin{eqnarray}
   o_{t,i} & = & p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_i,\theta)\,,
 \end{eqnarray}
-although we are not concerned here with the internal parameterisation structure of $o_{t,i}$.
+although we are not concerned here with the internal parameterisation structure of $o_{t,i}$ itself.
 Thus, the explicitly parameterised version of model~\eqref{eq:1-stateful-markov-model} is given by
 \begin{eqnarray}
   p(\iota_0,\vec{S}_n\!=\!\vec{s}_n,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1}\,|\,\theta) 
@@ -544,7 +576,7 @@ where the unknown state sequence $\vec{s}_n$ corresponding to $\vec{x}_n$ is arb
 specified by $\vec{s}_n=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$.
 
 Let us now suppose that we have observed an ordered set of value sequences
-$\XX=\{(\iota_0^{(d)},\vec{x}^{(d)},\tau_{|\vec{x}^{(d)}|+1}^{(d)})\}_{d=1}^{D}$.
+$\XX=\{(\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)})\}_{d=1}^{D}$.
 Notionally, we may also define the correspondingly ordered set $\SS=\{\vec{s}^{(d)}\}_{d=1}^D$
 of arbitrary state sequences.
 Hence, under the assumption that the observed sequences are independent, the joint log-likelihood of the data is given by
@@ -552,48 +584,56 @@ Hence, under the assumption that the observed sequences are independent, the joi
   L(\theta) & = & \log p(\SS,\XX\,|\,\theta) 
 \nonumber\\& = & 
 \log\prod_{d=1}^D 
-p(\iota_0^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\tau_{|\vec{x}^{(d)}|+1}^{(d)}\,|\,\theta) 
+p(\iota_0^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)}\,|\,\theta) 
 \nonumber\\& = & 
 \sum_{d=1}^D\log 
-p(\iota_0^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\tau_{|\vec{x}^{(d)}|+1}^{(d)}\,|\,\theta) 
+p(\iota_0^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)}\,|\,\theta) 
 \nonumber\\& = & 
-\sum_{d=1}^D\log\ell^{(d)}(\theta)
+\sum_{d=1}^D L^{(d)}(\theta)
 \,,
 \end{eqnarray}
 where
 \begin{eqnarray}
-  \ell^{(d)}(\theta) & = &
-  \pi_{i_1^{(d)}}^{(d)}\prod_{t=1}^{|\vec{x}^{(d)}|-1}
-\Gamma_{i_t^{(d)},i_{t+1}^{(d)}}\prod_{t=1}^{|\vec{x}^{(d)}|}o_{t,i_t^{(d)}}\,\omega_{i_{|\vec{x}^{(d)}|}^{(d)}}^{(d)}
-\,.
+  L^{(d)}(\theta) & = &
+   \log\pi_{i_1^{(d)}}^{(d)}
+ + \sum_{t=1}^{n^{(d)}-1}\log\Gamma_{i_t^{(d)},i_{t+1}^{(d)}}
+ + \sum_{t=1}^{n^{(d)}}\log o_{t,i_t^{(d)}}
+ + \log\omega_{i_{n^{(d)}}^{(d)}}^{(d)}
+\,,
 \end{eqnarray}
+and $n^{(d)}=|\vec{x}^{(d)}|$.
+
 However, recall that $\SS$ is actually uknown. Hence, we take an expectation of the log-likelihood over all possible values of
-$\SS$, namely\footnote{Other expectations are possible, e.g.\ over $\SS\,|\,\XX,\theta$.}
+$\SS$, namely\footnote{Other expectations are possible, e.g.\ over the joint distribution $\SS,\XX\,|\,\theta$. This latter produces macro-averaged
+parameter estimates of the form $\sum_{d=1}^D\phi^{(d)}/\sum_{d=1}^D\psi^{(d)}$, whereas the discriminative distribution $\SS\,|\,\XX,\theta$
+often leads to micro-averaged estimates of the form $\sum_{d=1}^D\phi^{(d)}/\psi^{(d)}/D$.}
 \begin{eqnarray}
-  Q(\theta) & = & E_{\SS,\XX|\theta}\left[\log p(\SS,\XX\,|\,\theta)\right]
+  Q(\theta) & = & E_{\SS\,|\,\XX,\theta}\left[\log p(\SS,\XX\,|\,\theta)\right]
 \nonumber\\& = & 
-E_{\SS,\XX|\theta}\left[
-\sum_{d=1}^D\log\ell^{(d)}(\theta)
+E_{\SS\,|\,\XX\theta}\left[
+\sum_{d=1}^D L^{(d)}(\theta)
 \right]
 \nonumber\\& = & 
-\sum_{d=1}^D E_{\SS,\XX|\theta}\left[
-\log\ell^{(d)}(\theta)
+\sum_{d=1}^D E_{\SS\,|\,\XX,\theta}\left[
+L^{(d)}(\theta)
 \right]
 \nonumber\\& = & 
-\sum_{d=1}^D \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{|\vec{x}^{(d)}|}}^{S}
-\ell^{(d)}(\theta)\log\ell^{(d)}(\theta)
+\sum_{d=1}^D \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{n^{(d)}}}^{S}
+p(\vec{s}^{(d)}\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\theta) 
+\,L^{(d)}(\theta)
 \,.
 \end{eqnarray}
-In practice, it is difficult to optimise this nonlinear expression. A feasible alternative is to iteratively apply the {\em expectation--maximisation}
+In practice, it is difficult to optimise this nonlinear expression analytically. A feasible alternative is to iteratively apply the {\em expectation--maximisation}
 (EM) algorithm:
 \begin{enumerate}
 \item {\em Expectation step:} Compute the expected log-likelihood conditioned on a known parameter estimate $\hat{\theta}_k$,
 namely
 \begin{eqnarray}
-  Q(\theta,\hat{\theta}_k) & = & E_{\SS,\XX|\hat{\theta}_k}\left[\log p(\SS,\XX\,|\,\theta)\right]
+  Q(\theta,\hat{\theta}_k) & = & E_{\SS\,|\,\XX,\hat{\theta}_k}\left[\log p(\SS,\XX\,|\,\theta)\right]
 \nonumber\\& = &
-\sum_{d=1}^D \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{|\vec{x}^{(d)}|}}^{S} 
-\ell^{(d)}(\hat{\theta}_k)\log\ell^{(d)}(\theta)\,.
+\sum_{d=1}^D \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{n^{(d)}}}^{S} 
+p(\vec{s}^{(d)}\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\hat{\theta}_k)
+\,L^{(d)}(\theta)\,.
 \end{eqnarray}
 
 \item {\em Maximisation step:} Obtain the optimal parameter estimate $\hat{\theta}_{k+1}$ that maximises the
@@ -602,8 +642,50 @@ conditional expected log-likehood, namely
 \hat{\theta}_{k+1} & = & \arg\max_{\theta} Q(\theta,\hat{\theta}_k)\,.
 \end{eqnarray}
 \end{enumerate}
-These two steps are iterated until $\hat{\theta}_k$ has converged to the value $\hat{\theta}^*$ that globally maximises 
+These two steps are iterated until $\hat{\theta}_k$ has converged to a value $\hat{\theta}^*$ that maximises 
 $L(\hat{\theta}^*)=Q(\hat{\theta}^*,\hat{\theta}^*)$.
+
+blah about additivity
+
+\begin{eqnarray}
+  \frac{\partial Q}{\partial\Gamma_{i,j}} & = & 
+  \frac{\partial}{\partial\Gamma_{i,j}}
+  \sum_{d=1}^D
+  \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{n^{(d)}}}^{S} 
+  p(\vec{s}^{(d)}\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\hat{\theta}')
+  \sum_{t=1}^{n^{(d)}-1}\log\Gamma_{i_t^{(d)},i_{t+1}^{(d)}}
+\nonumber\\& = &
+  \sum_{d=1}^D
+  \sum_{t=1}^{n^{(d)}-1}
+  \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{n^{(d)}}}^{S} 
+  \delta(i^{(d)}_t=i)\delta(i^{(d)}_{t+1}=j)
+  \frac{p(\vec{s}^{(d)}\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\hat{\theta}')}
+  {\Gamma_{i,j}}
+\nonumber\\& = &
+  \sum_{d=1}^D
+  \sum_{t=1}^{n^{(d)}-1}
+  \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{n^{(d)}}}^{S} 
+  \delta(i^{(d)}_t=i)\delta(i^{(d)}_{t+1}=j)
+  \frac{p(\vec{s}^{(d)}\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\hat{\theta}')}
+  {\Gamma_{i,j}}
+\nonumber\\& = &
+  \frac{\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}p(S_t=\sigma_i,S_{t+1}=\sigma_j\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\hat{\theta}')}
+  {\Gamma_{i,j}}
+\nonumber\\& = &
+  \frac{\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \xi_t^{(d)}(\sigma_i,\sigma_j;\hat{\theta}')}
+  {\Gamma_{i,j}}
+\end{eqnarray}
+from equation~\eqref{eq:xi-def}. Now, subject to the constraint that $\sum_{j=1}^{S}\Gamma_{i,j}=1$, we induce the appropriate Lagrangian multiplier to
+provide the proper normalisation, and hence derive that the optimal parameter estimate is given by
+\begin{eqnarray}
+  \hat{\Gamma}^*_{i,j} & = &
+  \frac{\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \xi_t^{(d)}(\sigma_i,\sigma_j;\hat{\theta}')}
+  {\sum_{j=1}^{S}\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \xi_t^{(d)}(\sigma_i,\sigma_j;\hat{\theta}')}
+~=~
+  \frac{\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \xi_t^{(d)}(\sigma_i,\sigma_j;\hat{\theta}')}
+  {\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \gamma_t^{(d)}(\sigma_i;\hat{\theta}')}
+\end{eqnarray}
+from equation~\eqref{eq:gamma-def}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
