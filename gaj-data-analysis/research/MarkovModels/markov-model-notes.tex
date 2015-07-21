@@ -114,6 +114,7 @@ such that
 \begin{eqnarray}
    p(N\!=\!n) & = &  p(\iota_0\!=\!1,\tau_1\!=\!0,\ldots,\tau_n\!=\!0,\tau_{n+1}\!=\!1)\,.
 \end{eqnarray}
+This takes the form of a generalised Bernoulli sequence.
 Likewise, the probability
 of a given start sequence $\langle\vec{r}_n]$ is defined as
 \begin{eqnarray}
@@ -226,10 +227,11 @@ where each stage directly depends only on the previous stage {\em and} on the tr
 \section{Stateful Markov Sequence Processes}
 Consider the first-order Markov process $R$ depicted in Figure~\ref{fig:random-process}.
 Suppose now that the random variable $R_t$ at stage $t$ can be decomposed into the tuple
-$R_t=(S_t,X_t)$, where $S_t$ is a discrete random variable taking values $s_t\in{\cal S}$, and $X_t$
-is a discrete or continuous random variable taking values $x_t\in{\cal X}$.
+$R_t=(S_t,X_t)$, where $S_t$ is a random variable taking values $s_t\in{\cal S}$, and $X_t$
+is a random variable taking values $x_t\in{\cal X}$.
 We may call $S_t$ the {\em state} of the process at stage $t$, and $X_t$ its {\em value}.
-Hence, as is usual, we may suppose that $X_t$ depends upon $S_t$, such that the stage transitions are between states.
+As is usual, we presuppose that the stage transitions in the sequence generating process are primarily between states, e.g.\ from $S_{t-1}$ to $S_t$, 
+and hence it follows that the value is generated after the state has been determined, i.e.\ $X_t$ depends upon $S_t$.
 Keeping to the first-order Markov interpretation of stage-to-stage dependencies leads to
 the {\em stateful} process depicted in Figure~\ref{fig:stateful-process}, with full cross-dependencies between $(S_t,X_t)$ and
 $(S_{t+1},X_{t+1})$.
@@ -292,7 +294,9 @@ p(\iota_0)\,p(\tau_1\,|\,\iota_0)\,p(S_1\,|\,\iota_0,\tau_1)\,p(X_1\,|\,S_1)
 p(\tau_{n+1}\,|\,S_n)
 \,.
 \end{eqnarray}
-It is more usual, however, to further restrict the complexity of the stateful process
+Conditioning the state $S_t$ on both the previous state $S_{t-1}$ and its value $X_{t-1}$
+can be useful in some circumstances, e.g.\ in sequence classification problems.
+However, due to the increased complexity of such models, it is more usual to further restrict the stateful process
 by also imposing the first-order Markov assumption at the level
 of the state--value dependencies themselves. In terms of the process depicted in Figure~\ref{fig:stateful-process},
 this means retaining only direct node-to-node dependencies (rather than stage-to-stage dependencies).
@@ -306,6 +310,7 @@ p(\iota_0)\,p(\tau_1\,|\,\iota_0)\,p(S_1\,|\,\iota_0)\,p(X_1\,|\,S_1)
 \nonumber\\&&
 p(\tau_{n+1}\,|\,S_n)
 \,.
+\label{eq:stateful-1-model}
 \end{eqnarray}
 \begin{figure}[hbt]
 \centering
@@ -344,9 +349,53 @@ p(\tau_{n+1}\,|\,S_n)
 \label{fig:stateful-1-process}
 \end{figure}
 
-\section{Hidden-state Markov Sequence Processes}
+\section{Discrete-state, Stationary Sequence Processes}
 
-Consider the stateful, first-order Markov process depicted by Figure~\ref{fig:1-stateful-1-process}.
+The stateful, first-order Markov process depicted by Figure~\ref{fig:1-stateful-1-process} will henceforth be taken as our default process.
+Suppose additionally that the state $S_t$ at any stage $t$ may now only take {\em discrete} values in the set ${\cal S}=\{\sigma_1,\sigma_2,\ldots,\sigma_S\}$.
+Then model~\eqref{eq:stateful-1-model} may be parameterised in terms of arbitrary states $\vec{s}_n=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$,
+where the factors modelling the probabilities within stage $t$ depend only upon $\sigma_{i_t}$, and the factors modelling the transition between stage $t$ and stage $t+1$ 
+depend only upon $\sigma_{i_t}$ and $\sigma_{i_{t+1}}$.
+Let us further stipulate that the distributions of the model parameters corresponding to these factors are {\em stationary}, such the state probabilities within stage $t$ and between stages $t$ and $t+1$ 
+do not depend upon the value of $t$.
+Finally, we assume that the process does not generate zero-length sequences (which can be ignored in practice), so that $p(\tau_1=1\,|\,\iota_0=1)=1$.
+Consequently, model~\eqref{eq:stateful-1-model} can be explicitly rewritten in terms of the parameters $\theta=(\vec{\pi},\vec{\bar{\pi}},\Gamma,\vec{\omega},\vec{\bar{\omega}},\phi)$, 
+such that the probability of a complete sequence is given by
+\begin{eqnarray}
+p(\langle\vec{s}_n,\vec{x}_n\rangle\,|\,\theta) & = & \pi_{i_1}\,o_{i_1}(x_1)\prod_{t=1}^{n-1}\bar{\omega}_{i_t}\,\Gamma_{i_t,i_{t+1}}\,o_{i_{t+1}}(x_{t+1})\,\omega_{i_n}
+\,,
+\label{eq:p_s_x_g_theta}
+\end{eqnarray}
+where the initial state is governed by
+\begin{eqnarray}
+  \pi_{i_t} & = & p(\iota_{t-1}\!=\!1\,|\,\theta)\,p(S_t\!=\!\sigma_{i_t}\,|\,\iota_{t-1}\!=\!1,\theta)\,,
+\end{eqnarray}
+the terminal and non-terminal states are governed by
+\begin{eqnarray}
+  \omega_{i_t} & = & p(\tau_{t+1}=1\,|\,S_t\!=\!\sigma_{i_t},\theta)\,,
+\\
+  \bar{\omega}_{i_t} & = & p(\tau_{t+1}=0\,|\,S_t\!=\!\sigma_{i_t},\theta)~=~1-\omega_{i_t}\,,
+\end{eqnarray}
+and the transitions between states are governed by
+\begin{eqnarray}
+  \Gamma_{i_t,i_{t+1}} & = & p(S_{t+1}\!=\!\sigma_{i_{t+1}}\,|\,S_t\!=\!\sigma_{i_t},\theta)\,.
+\end{eqnarray}
+Observe that a transition from state $S_t=\sigma_{i_t}$ to state $S_{t+1}=\sigma_{i_{t+1}}$ means that $S_t$ is a non-terminal state; this is explicitly modelled by the
+presence of the $\bar{\omega}_{i_t}$ term. It also follows that $S_{t+1}$ is a non-initial state which, if modelled explicitly, would be represented by a corresponding $\bar{\pi}_{i_{t+1}}$ term, defined as
+\begin{eqnarray}
+  \bar{\pi}_{i_{t+1}} & = & p(\iota_t\!=\!0\,|\,\theta)\,p(S_{t+1}\!=\!\sigma_{i_{t+1}}\,|\,\iota_t\!=\!0,\theta)\,.
+\end{eqnarray}
+Instead, $\bar{\pi}_{i_{t+1}}$ is already implicitly implied by the explicit transition term $\Gamma_{i_t,i_{t+1}}$; this fact is important when it comes to parameter estimation (see Section~\ref{sec:param-estimation}).
+
+Now, recall that process~\ref{fig:1-stateful-1-process} primarily determines the state-to-state transitions in a sequence, and thus
+the state-to-value dependencies are secondary. Hence, for convenience, we have supposed in model~\eqref{eq:p_s_x_g_theta} that
+\begin{eqnarray}
+  o_{i_t}(x_t) & = & p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_{i_t},\phi)\,.
+\end{eqnarray}
+However, we do not elect here to explicitly declare the parameterisation structure of this probability model (see Section~\ref{sec:discrete-x} for a plausible model if $X_t$ takes discrete values). 
+It suffices for our calculations that each $o_{i_t}(x_t)$ is available when required.
+
+***********************
 Suppose now that the value of state $S_t$ at any stage $t$ is never observed, only the value of $X_t$.
 Then the model~\eqref{eq:1-stateful-markov-model} may be considered to be a {\em hidden-state} Markov model (or HMM).
 As such, the state of $S_t$ must be deduced from knowledge of the observed sequence $\vec{x}_n$. This is accomplished
