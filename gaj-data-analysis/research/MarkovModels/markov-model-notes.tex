@@ -349,174 +349,212 @@ p(\tau_{n+1}\,|\,S_n)
 \label{fig:stateful-1-process}
 \end{figure}
 
-\section{Discrete-state, Stationary Sequence Processes}
+\section{Discrete-state Sequence Models}
 
-The stateful, first-order Markov process depicted by Figure~\ref{fig:1-stateful-1-process} will henceforth be taken as our default process.
-Suppose additionally that the state $S_t$ at any stage $t$ may now only take {\em discrete} values in the set ${\cal S}=\{\sigma_1,\sigma_2,\ldots,\sigma_S\}$.
-Then model~\eqref{eq:stateful-1-model} may be parameterised in terms of arbitrary states $\vec{s}_n=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$,
+Consider the stateful, first-order Markov process depicted by Figure~\ref{fig:stateful-1-process}.
+Let us now restrict our attention to the class of models where
+the state $S_t$ at any stage $t$ may now only take {\em discrete} values in the set ${\cal S}=\{\sigma_1,\sigma_2,\ldots,\sigma_S\}$.
+Thus, the sequence model~\eqref{eq:stateful-1-model} may be parameterised in terms of arbitrary states $\vec{s}_n=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$,
 where the factors modelling the probabilities within stage $t$ depend only upon $\sigma_{i_t}$, and the factors modelling the transition between stage $t$ and stage $t+1$ 
 depend only upon $\sigma_{i_t}$ and $\sigma_{i_{t+1}}$.
-Let us further stipulate that the distributions of the model parameters corresponding to these factors are {\em stationary}, such the state probabilities within stage $t$ and between stages $t$ and $t+1$ 
-do not depend upon the value of $t$.
-Finally, we assume that the process does not generate zero-length sequences (which can be ignored in practice), so that $p(\tau_1=1\,|\,\iota_0=1)=1$.
-Consequently, model~\eqref{eq:stateful-1-model} can be explicitly rewritten in terms of the parameters $\theta=(\vec{\pi},\vec{\bar{\pi}},\Gamma,\vec{\omega},\vec{\bar{\omega}},\phi)$, 
-such that the probability of a complete sequence is given by
+For convenience, let us further assume that the process does not generate zero-length sequences\footnote{Zero-length sequences are usually undetectable in practice,
+unless the generating process explicitly indicates the start and end of such sequences. Even if clearly delimited, zero-length sequences may typically be ignored in
+most applications.}, so that $p(\tau_1=1\,|\,\iota_0=1)=1$.
+Consequently, model~\eqref{eq:stateful-1-model} can now be explicitly rewritten in terms of the parameters $\theta=(\vec{\pi},\vec{\bar{\pi}},\Gamma,\vec{\omega})$, 
+such that the probability of an arbitrary, complete sequence is given by
 \begin{eqnarray}
-p(\langle\vec{s}_n,\vec{x}_n\rangle\,|\,\theta) & = & \pi_{i_1}\,o_{i_1}(x_1)\prod_{t=1}^{n-1}\bar{\omega}_{i_t}\,\Gamma_{i_t,i_{t+1}}\,o_{i_{t+1}}(x_{t+1})\,\omega_{i_n}
+\hspace*{-5mm}
+p(\langle\vec{s},\vec{x}\rangle\,|\,\theta) & = & \pi_{1,i_1}\,o_{1,i_1}(x_1)\left\{\prod_{t=1}^{n-1}\bar{\omega}_{t,i_t}\,\Gamma_{t,i_t,i_{t+1}}\,o_{t,i_{t+1}}(x_{t+1})
+\right\}\,\omega_{n,i_n}
 \,,
 \label{eq:p_s_x_g_theta}
 \end{eqnarray}
-where the initial state is governed by
+where $n=|\vec{x}|=|\vec{s}|$.
+The initial state $S_1$ of the sequence at stage $t=1$ is governed by the general parameter
 \begin{eqnarray}
-  \pi_{i_t} & = & p(\iota_{t-1}\!=\!1\,|\,\theta)\,p(S_t\!=\!\sigma_{i_t}\,|\,\iota_{t-1}\!=\!1,\theta)\,,
+  \pi_{t,i} & = & p(\iota_{t-1}\!=\!1\,|\,\theta)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!1,\theta)\,,
 \end{eqnarray}
-the terminal and non-terminal states are governed by
+and the terminal and non-terminal transitions between stages $t$ and $t+1$ are governed by
 \begin{eqnarray}
-  \omega_{i_t} & = & p(\tau_{t+1}=1\,|\,S_t\!=\!\sigma_{i_t},\theta)\,,
+  \omega_{t,i} & = & p(\tau_{t+1}=1\,|\,S_t\!=\!\sigma_{i},\theta)\,,
 \\
-  \bar{\omega}_{i_t} & = & p(\tau_{t+1}=0\,|\,S_t\!=\!\sigma_{i_t},\theta)~=~1-\omega_{i_t}\,,
+  \bar{\omega}_{t,i} & = & p(\tau_{t+1}=0\,|\,S_t\!=\!\sigma_{i},\theta)~=~1-\omega_{t,i}\,,
 \end{eqnarray}
-and the transitions between states are governed by
+respectively. The possible transitions between the states $S_t$ and $S_{t+1}$ of consecutive stages $t$ and $t+1$ are governed by
 \begin{eqnarray}
-  \Gamma_{i_t,i_{t+1}} & = & p(S_{t+1}\!=\!\sigma_{i_{t+1}}\,|\,S_t\!=\!\sigma_{i_t},\theta)\,.
+  \Gamma_{t,i,j} & = & p(S_{t+1}\!=\!\sigma_{j}\,|\,S_t\!=\!\sigma_{i},\theta)\,.
 \end{eqnarray}
-Observe that a transition from state $S_t=\sigma_{i_t}$ to state $S_{t+1}=\sigma_{i_{t+1}}$ means that $S_t$ is a non-terminal state; this is explicitly modelled by the
-presence of the $\bar{\omega}_{i_t}$ term. It also follows that $S_{t+1}$ is a non-initial state which, if modelled explicitly, would be represented by a corresponding $\bar{\pi}_{i_{t+1}}$ term, defined as
+Clearly, a state transition from $S_t$ to $S_{t+1}$ implies a non-terminal transition from stage $t$ to $t+1$ in the sequence. 
+This is explicitly modelled by the presence of the $\bar{\omega}_{t,i_t}$ term,
+which is interpreted to mean that $S_t$ is a non-terminal state.
+It then follows that $S_{t+1}$ is a non-initial state which, if modelled explicitly, would be represented by a corresponding $\bar{\pi}_{t+1,i_{t+1}}$ term, defined by
 \begin{eqnarray}
-  \bar{\pi}_{i_{t+1}} & = & p(\iota_t\!=\!0\,|\,\theta)\,p(S_{t+1}\!=\!\sigma_{i_{t+1}}\,|\,\iota_t\!=\!0,\theta)\,.
+  \bar{\pi}_{t,i} & = & p(\iota_{t-1}\!=\!0\,|\,\theta)\,p(S_{t}\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!0,\theta)\,.
 \end{eqnarray}
-Instead, $\bar{\pi}_{i_{t+1}}$ is already implicitly implied by the explicit transition term $\Gamma_{i_t,i_{t+1}}$; this fact is important when it comes to parameter estimation (see Section~\ref{sec:param-estimation}).
+However, $\bar{\pi}_{t+1,i_{t+1}}$ is already implicit the explicit transition term $\Gamma_{t,i_t,i_{t+1}}$,
+since we cannot count state $S_{t+1}$ twice. This fact is important when it comes to parameter estimation (see Section~\ref{sec:param-estimation}).
 
-Now, recall that process~\ref{fig:1-stateful-1-process} primarily determines the state-to-state transitions in a sequence, and thus
-the state-to-value dependencies are secondary. Hence, for convenience, we have supposed in model~\eqref{eq:p_s_x_g_theta} that
+Lastly, the probabilities of observed values at stage $t$ are governed by
 \begin{eqnarray}
-  o_{i_t}(x_t) & = & p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_{i_t},\phi)\,.
+  o_{t,i}(x) & = & p(X_t\!=\!x\,|\,S_t\!=\!\sigma_{i},\theta) \hspace*{5mm}\forall x\in{\cal X}\,.
 \end{eqnarray}
-However, we do not elect here to explicitly declare the parameterisation structure of this probability model (see Section~\ref{sec:discrete-x} for a plausible model if $X_t$ takes discrete values). 
-It suffices for our calculations that each $o_{i_t}(x_t)$ is available when required.
+We do not, however, explicitly declare the parameterisation structure of this likelihood model (see Section~\ref{sec:discrete-x} for a plausible model if $X_t$ takes discrete values). 
+It suffices for our calculations that each $o_{t,i_t}(x_t)$ is available when required.
 
-***********************
-Suppose now that the value of state $S_t$ at any stage $t$ is never observed, only the value of $X_t$.
-Then the model~\eqref{eq:1-stateful-markov-model} may be considered to be a {\em hidden-state} Markov model (or HMM).
-As such, the state of $S_t$ must be deduced from knowledge of the observed sequence $\vec{x}_n$. This is accomplished
-via the forward--backward algortithm. The forward step commences with stages $0$ and $1$, by defining
+Note that all other types of incomplete sequences (see Section~\ref{sec:random-processes}) are handled similarly to complete sequences by modifying the first and/or last terms of model~\eqref{eq:p_s_x_g_theta}.
+For example, $!\vec{s},\vec{x}\rangle$ is modelled by replacing $\pi_{1,i_1}$ by $\bar{\pi}_{1,i_1}$, whereas $[\vec{s},\vec{x}\rangle$ is modelled by replacing $\pi_{1,i_1}$ by $\breve{\pi}_{1,i_1}$, where
 \begin{eqnarray}
-  \alpha_1(s_1) & = & p(\iota_0,X_1=x_1,S_1=s_1)
-\nonumber\\
-& = & p(\iota_0)\,p(S_1=s_1\,|\,\iota_0)\,p(X_1=x_1\,|\,S_1=s_1)
-\nonumber\\
-& = & p(\iota_0)\,p(s_1\,|\,\iota_0)\,p(x_1\,|\,s_1)
+  \breve{\pi}_{t,i} & = & \pi_{t,i}+\bar{\pi}_{t,i}
+\nonumber\\& = &
+  p(\iota_{t-1}\!=\!1)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!1,\theta)
++
+  p(\iota_{t-1}\!=\!0)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!0,\theta)
+\nonumber\\& = &
+  p(\iota_{t-1}\!=\!1,S_t\!=\!\sigma_{i}\,|\,\theta)
++
+  p(\iota_{t-1}\!=\!0,S_t\!=\!\sigma_{i}\,|\,\theta)
+\nonumber\\& = &
+  p(S_t\!=\!\sigma_{i}\,|\,\theta)\,.
+\end{eqnarray}
+Similarly, $\langle\vec{s},\vec{x}!$ is modelled by replacing $\omega_{n,i_{n}}$ by $\bar{\omega}_{n,i_{n}}$, whereas $\langle\vec{s},\vec{x}]$ 
+is modelled by replacing $\omega_{n,i_n}$ by $\breve{\omega}_{n,i_n}=\omega_{n,i_n}+\bar{\omega}_{n,i_n}\equiv 1$.
+
+\section{Posterior State Prediction}
+
+A {\em hidden-state} Markov model (or HMM) results from a stateful Markov sequence process like Figure~\ref{fig:stateful-1-process}, from which the values $\vec{x}$ are observed
+but the states $\vec{s}$ are not. The true state values are then said to be {\em missing} or {\em hidden}, and must be estimated from the observed data.
+In particular, a known problem is to deduce the state $S_t$ given $\vec{x}$, at each stage $t=1,2,\ldots,n$. This is accomplished
+via the {\em forward--backward algortithm}, which uses the causal nature of the process to notionally partitition the sequence into past and present stages $1,2,\ldots,t$ and future stages $t+1,t+2,\ldots,n$.
+The standard algorithm is modified here to include the stage-by-stage probabilities of sequence termination.
+Thus, the posterior state probabilities at stage $t$ for a complete sequence $\langle\vec{x}\rangle$ are given by
+\begin{eqnarray}
+   \gamma_{t,i} & = & p(S_t\!=\!\sigma_i\,|\,\langle\vec{x}\rangle,\theta)
+\nonumber\\& = &
+   \frac{p(S_t\!=\!\sigma_i,\langle\vec{x}\rangle\,|\,\theta)}
+        {p(\langle\vec{x}\rangle\,|\,\theta)}
+\nonumber\\& = &
+   \frac{p(S_t\!=\!\sigma_i,\langle\vec{x}_t]\,|\,\theta)\,p([\rvec{x}_{t+1}\rangle\,|\,S_t\!=\!\sigma_i,\theta)}
+        {\sum_{i'=1}^{S}p(S_t\!=\!\sigma_{i'},\langle\vec{x}_t]\,|\,\theta)\,p([\rvec{x}_{t+1}\rangle\,|\,S_t\!=\!\sigma_{i'},\theta)}
+\nonumber\\& = &
+   \frac{\alpha_{t,i}\,\beta_{t,i}}
+        {\sum_{i'=1}^{S}\alpha_{t,i}\,\beta_{t,i}}
 \,,
+\label{eq:gamma_t_i}
 \end{eqnarray}
-from equation~\eqref{eq:1-stateful-markov-model}, where the explicit variables $S_t$ and $X_t$ may be
-dropped for convenience when the context is unambiguous.
-Then it follows that
+where we have defined $\rvec{x}_{t}=(x_t,x_{t+1},\ldots,x_n)$ for all $t=1,2,\ldots,n$, with $n=|\vec{x}|$.
+
+The {\em forward step}, which incorporates information about the initiation of the sequence, is recursively defined via
 \begin{eqnarray}
-  \alpha_2(s_2) & = & p(\iota_0,X_1=x_1,X_2=x_2,S_2=s_2)
-\nonumber\\
-& = & \sum_{s_1\in{\cal S}}p(\iota_0,x_1,s_1)\,p(s_2\,|\,s_1)\,p(x_2\,|\,s_2)
-\nonumber\\
-& = & \sum_{s_1\in{\cal S}}\alpha_1(s_1)\,p(s_2\,|\,s_1)\,p(x_2\,|\,s_2)\,,
+   \alpha_{t,i} & = & p(S_t\!=\!\sigma_i,\langle\vec{x}_t]\,|\,\theta)
+\nonumber\\& = &
+   \sum_{j=1}^{S}p(S_{t-1}\!=\!\sigma_j,\langle\vec{x}_{t-1}]\,|\,\theta)
+      \,p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!\sigma_j,\theta)
+\nonumber\\&&
+    \hspace*{5mm}\,p(S_t\!=\!\sigma_i\,|\,S_{t-1}\!=\!\sigma_j,\theta)\,p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_i,\theta)
+\nonumber\\& = &
+   \left\{\sum_{j=1}^{S}\alpha_{t-1,j}\,\bar{\omega}_{t-1,j}\,\Gamma_{t-1,j,i}\right\}\,o_{t,i}(x_t)\,,
 \end{eqnarray}
-and in general that
+for $t=2,3,\ldots,n$. The forward step commences with
 \begin{eqnarray}
-   \alpha_t(s_t) & = & p(\iota_0,\vec{X}_t=\vec{x}_t,S_t=s_t)
-\nonumber\\
-& = & \left\{\sum_{s_{t-1}\in{\cal S}}\alpha_{t-1}(s_{t-1})\,p(s_t\,|\,s_{t-1})\right\}\,p(x_t\,|\,s_t)\,,
+  \alpha_{1,i} & = & p(S_1\!=\!\sigma_i,\langle x_1]\,|\,\theta)
+\nonumber\\& = & 
+  p(\iota_0\!=\!1)\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!1,\theta)\,p(X_1\!=\!x_1\,|\,S_1\!=\!\sigma_i,\theta)
+\nonumber\\& = & 
+  \pi_{1,i}\,o_{1,i}(x_1)
+\,.
 \end{eqnarray}
-for $t=2,3,\ldots,n$.
-Consequently, we may predict $S_t$ from a partially observed sequence $\vec{x}_t$ via
+Note that incompletely--initiated sequences such as $!\vec{x}]$ and $[\vec{x}]$ can also be handled by substituting $\bar{\pi}$ and $\breve{\pi}$ for $\pi$ in $\alpha$, thereby obtaining
+$\bar{\alpha}$ and $\breve{\alpha}$ respectively.
+
+Consequently, we may predict $S_t$ from a partially observed sequence $\langle\vec{x}_t]$ via
 \begin{eqnarray}
-  p(S_t=s_t\,|\,\iota_0,\vec{X}_t=\vec{x}_t) & = & \frac{p(\iota_0,\vec{X}_t=\vec{x}_t,S_t=s_t)}
-     {p(\iota_0,\vec{X}_t=\vec{x}_t)}
-~=~\frac{\alpha_t(s_t)}{\sum_{s_t'\in{\cal S}}\alpha_t(s_t')}\,.
+  p(S_t\!=\!\sigma_i\,|\,\langle\vec{x}_t],\theta) & = & 
+  \frac{p(S_t\!=\!\sigma_i,\langle\vec{x}_t]\,|\,\theta)}
+       {\sum_{i'=1}^{S}p(S_t\!=\!\sigma_{i'},\langle\vec{x}_t]\,|\,\theta)}
+\nonumber\\& = & 
+  \frac{\alpha_{t,i}}{\sum_{i'=1}^{S}\alpha_{t,i'}}\,.
 \end{eqnarray}
 Similarly, we may predict the next observation $X_{t+1}$ via
 \begin{eqnarray}
-  p(X_{t+1}=x_{t+1}\,|\,\iota_0,\vec{X}_t=\vec{x}_t) 
+  p(X_{t+1}\!=\!x_{t+1}\,|\,\langle\vec{x}_t],\theta) 
 & = &
-  \frac{p(\iota_0,\vec{X}_t=\vec{x}_t,X_{t+1}=x_{t+1})}{p(\iota_0,\vec{X}_t=\vec{x}_t)}
-\nonumber\\
-& = & 
- \frac{\sum_{s_{t+1}\in{\cal S}}\sum_{s_{t}\in{\cal S}}p(\iota_0,\vec{x}_t,s_t)\,p(s_{t+1}\,|\,s_t)\,p(x_{t+1}\,|\,s_{t+1})}
-        {p(\iota_0,\vec{x}_t)}
-\nonumber\\
-& = &
-  \frac{\sum_{s_{t+1}\in{\cal S}}\sum_{s_{t}\in{\cal S}}\alpha_t(s_t)\,p(s_{t+1}\,|\,s_t)\,p(x_{t+1}\,|\,s_{t+1})}{\sum_{s_t\in{\cal S}}\alpha_t(s_t)}\,.
+  \frac{p(\langle\vec{x}_{t+1}]\,|\,\theta)}
+       {p(\langle\vec{x}_{t}]\,|\,\theta)}
+\nonumber\\& = & 
+  \frac{\sum_{j=1}^S p(S_{t+1}\!=\!\sigma_j,\langle\vec{x}_{t+1}]\,|\,\theta)}
+       {\sum_{i=1}^S p(S_{t}\!=\!\sigma_i,\langle\vec{x}_{t}]\,|\,\theta)}
+\nonumber\\& = & 
+  \frac{\sum_{j=1}^S\left\{\sum_{i=1}^S\alpha_{t,i}\,\bar{\omega}_{t,i}\,\Gamma_{t,i,j}\right\}o_{t+1,j}(x_{t+1})}
+       {\sum_{i=1}^S\alpha_{t,i}}
+\,.
 \end{eqnarray}
 
-The backward step now commences with stage $n+1$, by defining
+The {\em backward step}, which incorporates information about the termination of the sequence, is now also recursively defined via
 \begin{eqnarray}
-  \beta_{n}(s_{n}) & = & p(\tau_{n+1}\,|\,S_n=s_{n})
+   \beta_{t,i} & = & p([\rvec{x}_{t+1}\rangle\,|\,S_t\!=\!\sigma_i,\theta)
+\nonumber\\& = & 
+   \sum_{j=1}^{S}p([\rvec{x}_{t+2}\rangle\,|\,S_{t+1}\!=\!\sigma_j,\theta)p(X_{t+1}=x_{t+1}\,|\,S_{t+1}\!=\!\sigma_j,\theta)
+       p(S_{t+1}\!=\!\sigma_j\,|\,S_t\!=\!\sigma_i,\theta)p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_i,\theta)
+\nonumber\\& = & 
+	\left\{\sum_{j=1}^{S}\beta_{t+1,j}o_{t+1,j}(x_{t+1})\Gamma_{t,i,j}\right\}\bar{\omega}_{t,i}
 \,,
 \end{eqnarray}
-and 
+for $t=n-1,n-2,\ldots,1$. The backward step commences with
 \begin{eqnarray}
-  \beta_{n-1}(s_{n-1}) & = & p(X_n=x_{n},\tau_{n+1}\,|\,S_{n-1}=s_{n-1})
-\nonumber\\
-& = &
-\sum_{s_n\in{\cal S}}p(\tau_{n+1}\,|\,s_{n})\,p(x_n\,|\,s_n)\,p(s_n\,|\,s_{n-1})
-\nonumber\\
-& = &
-\sum_{s_n\in{\cal S}}\beta_n(s_{n})\,p(x_n\,|\,s_n)\,p(s_n\,|\,s_{n-1})
-\,.
+   \beta_{n,i} & = & p(\tau_{n+1}\!=\!1\,|\,S_n\!=\!\sigma_i,\theta)~=~\omega_{n,i}\,.
 \end{eqnarray}
-In general, we let $\rvec{x}_t=(x_t,x_{t+1},\ldots,x_n)$, and then recursively define
+Note that incompletely--terminated sequences such as $[\vec{x}!$ and $[\vec{x}]$ can also be handled by substituting $\bar{\omega}$ and $\breve{\omega}$ for $\omega$ in $\beta$, thereby obtaining
+$\bar{\beta}$ and $\breve{\beta}$ respectively.
+
+The combination of the forward step with the backward step now enables us to use all of the information contained in the observed sequence, including its possible initiation and/or termination.
+Particularly, we can compute the joint probability of any observed sequence, as a prelude to estimating the state of each stage
+from equation~\eqref{eq:gamma_t_i}. For example, observe that
 \begin{eqnarray}
-  \beta_{t}(s_{t}) & = & p(\rvec{X}_{t+1}=\rvec{x}_{t+1},\tau_{n+1}\,|\,S_t=s_{t})
-\nonumber\\
+   p(\langle\vec{x}!\,|\,\theta) 
 & = &
-\sum_{s_{t+1}\in{\cal S}}
-  p(\rvec{x}_{t+2},\tau_{n+1}\,|\,s_{t+1})\,p(x_{t+1}\,|\,s_{t+1})\,p(s_{t+1}\,|\,s_t)
-\nonumber\\
-& = &
-\sum_{s_{t+1}\in{\cal S}}\beta_{t+1}(s_{t+1})\,p(x_{t+1}\,|\,s_{t+1})\,p(s_{t+1}\,|\,s_t)
-\,.
-\end{eqnarray}
-Consequently, for an observed sequence $\vec{x}_n$,  the forward--backward algorithm 
-gives the stage $t$ probability
-\begin{eqnarray}
-  p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,S_t\!=\!s_t,\tau_{n+1}) & = & 
-  p(\iota_0,\vec{X}_t\!=\!\vec{x}_t,S_t\!=\!s_t)
-\nonumber\\&& 
-\;\;p(\rvec{X}_{t+1}=\rvec{x}_{t+1},\tau_{n+1}\,|\,S_t\!=\!s_t)
+	\sum_{i=1}^{S}p(S_t\!=\!\sigma_i,\langle\vec{x}!\,|\,\theta)
 \nonumber\\& = &
-  \alpha_t(s_t)\beta_t(s_t)\,.
-\end{eqnarray}
-Thus, the probability of $\vec{x}_n$  is
-\begin{eqnarray}
-  p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1}) & = & 
-  \sum_{s_t\in{\cal S}}p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,S_t\!=\!s_t,\tau_{n+1})
+   \sum_{i=1}^{S}p(S_t\!=\!\sigma_i,\langle\vec{x}_t]\,|\,\theta)\,p([\rvec{x}_{t+1}!\,|\,S_t\!=\!\sigma_i,\theta) 
 \nonumber\\& = &
-  \sum_{s_t\in{\cal S}}\alpha_t(s_t)\beta_t(s_t)\,,
+   \sum_{i=1}^{S}\alpha_{t,i}\bar{\beta}_{t,i}\,,
 \end{eqnarray}
-and the posterior prediction of the state $S_t$ given $\vec{x}_n$ is subsequently given by
+for all $t=1,2,\ldots,n$.
+
+Finally, the forward--backward calculations also enable us to compute the posterior probabilities of the joint states of stages $t$ and $t+1$.
+For example, given the observed, complete sequence $\langle\vec{x}\rangle$, we obtain
 \begin{eqnarray}
-\gamma_t(s_t) & = &
-  p(S_t\!=\!s_t\,|\,\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1}) 
+\xi_{t,i,j} & = &
+   p(S_t\!=\!\sigma_i,S_{t+1}\!=\!\sigma_j\,|\,\langle\vec{x}\rangle,\theta)
 \nonumber\\& = & 
-\frac{p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,S_t\!=\!s_t,\tau_{n+1})}
-       {p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1})}
-\nonumber\\& = &
-\frac{\alpha_t(s_t)\beta_t(s_t)}{\sum_{s_t'\in{\cal S}}\alpha_t(s_t')\beta_t(s_t')}\,.
-\label{eq:gamma-def}
+   \frac{p(S_t\!=\!\sigma_i,S_{t+1}\!=\!\sigma_j,\langle\vec{x}\rangle\,|\,\theta)}
+        {p(\langle\vec{x}\rangle\,|\,\theta)}
+\,,
+\label{eq:xi_t_i_j}
 \end{eqnarray}
-Likewise, the posterior prediction of the state transition from stage $t$ to stage $t+1$ is given by
+where
 \begin{eqnarray}
-\xi_t(s_t,s_{t+1}) & = &
-   p(S_t\!=\!s_t,S_{t+1}\!=\!s_{t+1}\,|\,\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1})
+   p(S_t\!=\!\sigma_i,S_{t+1}\!=\!\sigma_j,\langle\vec{x}\rangle\,|\,\theta)
+& = & 
+   p(S_t\!=!\sigma_i,\langle\vec{x}_t]\,|\,\theta)
+     \,p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_i,\theta)
+     \,p(S_{t+1}\!=\!\sigma_j\,|\,S_t\!=\!\sigma_i,\theta)
+	 \,p([\rvec{x}_{t+1}]\,|\,S_{t+1}\!=\!\sigma_j,\theta)
 \nonumber\\& = & 
-\frac{p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,S_t\!=\!s_t,S_{t+1}\!=\!s_{t+1},\tau_{n+1})}
-        {p(\iota_0,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1})}
-\nonumber\\& = & 
-\frac{p(\iota_0,\vec{x}_t,s_t)\,p(s_{t+1}\,|\,s_t)\,p(x_{t+1}\,|\,s_{t+1})\,p(\rvec{x}_{t+2},\tau_{n+1}\,|\,s_{t+1})}
-        {p(\iota_0,\vec{x}_n,\tau_{n+1})}
-\nonumber\\& = & 
-\frac{\alpha_t(s_t)\,p(s_{t+1}\,|\,s_t)\,p(x_{t+1}\,|\,s_{t+1})\,\beta_{t+1}(s_{t+1})}
-        {\sum_{s_t'\in{\cal S}}\alpha_t(s_t')\beta_t(s_t')}
-\,.
-\label{eq:xi-def}
+   \alpha_{t,i}\bar{\omega}_{t,i}\Gamma_{t,i,j}\beta_{t+1,j}
+\,,
 \end{eqnarray}
+and thus
+\begin{eqnarray}
+   p(\langle\vec{x}\rangle\,|\,\theta)
+& = &
+   \sum_{i'=1}^{S}\sum_{j'=1}^{S}p(S_t\!=\!\sigma_i,S_{t+1}\!=\!\sigma_j,\langle\vec{x}\rangle\,|\,\theta)
+\nonumber\\& = & 
+   \sum_{i'=1}^{S}\sum_{j'=1}^{S}\alpha_{t,i'}\bar{\omega}_{t,i'}\Gamma_{t,i',j'}\beta_{t+1,j'}
+\nonumber\\& = & 
+   \sum_{i'=1}^{S}\alpha_{t,i'}\beta_{t,i'}
+\,,
+\end{eqnarray}
+as expected.
 
 \section{Hidden-state Parameter Estimation}
 
