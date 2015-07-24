@@ -1,4 +1,5 @@
 \documentclass[a4paper]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
 \usepackage{graphicx,subcaption}
 \usepackage{amsmath,amsfonts}
 \usepackage{qtree}
@@ -152,11 +153,11 @@ the causal sequence process leads to the fully-dependent, conditional model
 \begin{eqnarray}
 p(\langle\vec{r}_n\rangle) & = &
 p(\iota_0=1)
-\prod_{t=1}^{n}\left\{p(\tau_t\!=\!0\,|\,\iota_0\!=\!1,\vec{\tau}_{t-1}\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right.
 \nonumber\\&&
-\hspace*{20mm}\left.\times p(R_t\!=\!r_t\,|\,\iota_0\!=\!1,\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
+{}\times \prod_{t=1}^{n}\left\{p(\tau_t\!=\!0\,|\,\iota_0\!=\!1,\vec{\tau}_{t-1}\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})
+\,p(R_t\!=\!r_t\,|\,\iota_0\!=\!1,\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
 \nonumber\\&&
-p(\tau_{n+1}\!=\!1\:|\;\iota_0\!=\!1,\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
+{}\times p(\tau_{n+1}\!=\!1\:|\;\iota_0\!=\!1,\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
 \,.
 \label{eq:temporal-model}
 \end{eqnarray}
@@ -214,11 +215,10 @@ p(\langle\vec{r}_n\rangle) & = &
 p(\iota_0=1)\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!1)
 p(R_1\!=\!r_1\,|\,\iota_0\!=\!1,\tau_1\!=\!0)
 \nonumber\\&&
-\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,R_{t-1}\!=\!r_{t-1})\right.
+{}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,R_{t-1}\!=\!r_{t-1})
+\,p(R_t\!=\!r_t\,|\,\tau_t\!=\!0,R_{t-1}\!=\!r_{t-1})\right\}
 \nonumber\\&&
-\hspace*{10mm}\left.\times p(R_t\!=\!r_t\,|\,\tau_t\!=\!0,R_{t-1}\!=\!r_{t-1})\right\}
-\nonumber\\&&
-p(\tau_{n+1}\!=\!1\:|\;R_n\!=\!r_n)
+{}\times p(\tau_{n+1}\!=\!1\:|\;R_n\!=\!r_n)
 \,.
 \end{eqnarray}
 This is just the strict Markov interpretation of the random process depicted in Figure~\ref{fig:random-process},
@@ -287,11 +287,10 @@ Hence, the fully-structured stateful model is now given by
 p(\iota_0,\vec{S}_n,\vec{X}_n,\vec{\tau}_{n+1}) & = & 
 p(\iota_0)\,p(\tau_1\,|\,\iota_0)\,p(S_1\,|\,\iota_0,\tau_1)\,p(X_1\,|\,S_1)
 \nonumber\\&&
-\prod_{t=2}^{n}\left\{p(\tau_t\,|\,S_{t-1})\,p(S_t\,|\,\tau_t,S_{t-1},X_{t-1})\right.
+{}\times\prod_{t=2}^{n}\left\{p(\tau_t\,|\,S_{t-1})\,p(S_t\,|\,\tau_t,S_{t-1},X_{t-1})
+\,p(X_t\,|\,S_t,S_{t-1},X_{t-1})\right\}
 \nonumber\\&&
-\left.\hspace*{10mm}\times\, p(X_t\,|\,S_t,S_{t-1},X_{t-1})\right\}
-\nonumber\\&&
-p(\tau_{n+1}\,|\,S_n)
+{}\times p(\tau_{n+1}\,|\,S_n)
 \,.
 \end{eqnarray}
 Conditioning the state $S_t$ on both the previous state $S_{t-1}$ and its value $X_{t-1}$
@@ -299,16 +298,15 @@ can be useful in some circumstances, e.g.\ in sequence classification problems.
 However, due to the increased complexity of such models, it is more usual to further restrict the stateful process
 by also imposing the first-order Markov assumption at the level
 of the state--value dependencies themselves. In terms of the process depicted in Figure~\ref{fig:stateful-process},
-this means retaining only direct node-to-node dependencies (rather than stage-to-stage dependencies).
+this means retaining only direct node-to-node dependencies, rather than stage-to-stage dependencies.
 Hence, this restricted process, depicted in Figure~\ref{fig:stateful-1-process},
 corresponds to the sequence model
 \begin{eqnarray}
 p(\iota_0,\vec{S}_n,\vec{X}_n,\vec{\tau}_{n+1}) & = & 
 p(\iota_0)\,p(\tau_1\,|\,\iota_0)\,p(S_1\,|\,\iota_0)\,p(X_1\,|\,S_1)
 \nonumber\\&&
-\prod_{t=2}^{n}\left\{p(\tau_t\,|\,S_{t-1})\,p(S_t\,|\,S_{t-1})\,p(X_t\,|\,S_t)\right\}
-\nonumber\\&&
-p(\tau_{n+1}\,|\,S_n)
+{}\times\prod_{t=2}^{n}\left\{p(\tau_t\,|\,S_{t-1})\,p(S_t\,|\,S_{t-1})\,p(X_t\,|\,S_t)\right\}
+\,p(\tau_{n+1}\,|\,S_n)
 \,.
 \label{eq:stateful-1-model}
 \end{eqnarray}
@@ -417,9 +415,16 @@ For example, $!\vec{s},\vec{x}\rangle$ is modelled by replacing $\pi_{1,i_1}$ by
   p(S_t\!=\!\sigma_{i}\,|\,\theta)\,.
 \end{eqnarray}
 Similarly, $\langle\vec{s},\vec{x}!$ is modelled by replacing $\omega_{n,i_{n}}$ by $\bar{\omega}_{n,i_{n}}$, whereas $\langle\vec{s},\vec{x}]$ 
-is modelled by replacing $\omega_{n,i_n}$ by $\breve{\omega}_{n,i_n}=\omega_{n,i_n}+\bar{\omega}_{n,i_n}\equiv 1$.
+is modelled by replacing $\omega_{n,i_n}$ by $\breve{\omega}_{n,i_n}$, where
+\begin{eqnarray}
+   \breve{\omega}_{t,i} & = & \omega_{t,i}+\bar{\omega}_{t,i}
+\nonumber\\& = &
+   p(\tau_{t+1}\!=\!1\,|\,S_t\!=\!\sigma_i,\theta) + p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_i,\theta)
+\nonumber\\& = &
+  1\,.
+\end{eqnarray}
 
-\section{Posterior State Prediction}
+\subsection{Posterior State Prediction}
 
 A {\em hidden-state} Markov model (or HMM) results from a stateful Markov sequence process like Figure~\ref{fig:stateful-1-process}, from which the values $\vec{x}$ are observed
 but the states $\vec{s}$ are not. The true state values are then said to be {\em missing} or {\em hidden}, and must be estimated from the observed data.
@@ -450,7 +455,7 @@ The {\em forward step}, which incorporates information about the initiation of t
    \sum_{j=1}^{S}p(S_{t-1}\!=\!\sigma_j,\langle\vec{x}_{t-1}]\,|\,\theta)
       \,p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!\sigma_j,\theta)
 \nonumber\\&&
-    \hspace*{5mm}\,p(S_t\!=\!\sigma_i\,|\,S_{t-1}\!=\!\sigma_j,\theta)\,p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_i,\theta)
+    \hspace*{5mm}{}\times\,p(S_t\!=\!\sigma_i\,|\,S_{t-1}\!=\!\sigma_j,\theta)\,p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_i,\theta)
 \nonumber\\& = &
    \left\{\sum_{j=1}^{S}\alpha_{t-1,j}\,\bar{\omega}_{t-1,j}\,\Gamma_{t-1,j,i}\right\}\,o_{t,i}(x_t)\,,
 \end{eqnarray}
@@ -476,15 +481,15 @@ Consequently, we may predict $S_t$ from a partially observed sequence $\langle\v
 \end{eqnarray}
 Similarly, we may predict the next observation $X_{t+1}$ via
 \begin{eqnarray}
-  p(X_{t+1}\!=\!x_{t+1}\,|\,\langle\vec{x}_t],\theta) 
+  p(X_{t+1}\!=\!x\,|\,\langle\vec{x}_t],\theta) 
 & = &
-  \frac{p(\langle\vec{x}_{t+1}]\,|\,\theta)}
+  \frac{p(\langle\vec{x}_{t},x]\,|\,\theta)}
        {p(\langle\vec{x}_{t}]\,|\,\theta)}
 \nonumber\\& = & 
-  \frac{\sum_{j=1}^S p(S_{t+1}\!=\!\sigma_j,\langle\vec{x}_{t+1}]\,|\,\theta)}
+  \frac{\sum_{j=1}^S p(S_{t+1}\!=\!\sigma_j,\langle\vec{x}_{t},x]\,|\,\theta)}
        {\sum_{i=1}^S p(S_{t}\!=\!\sigma_i,\langle\vec{x}_{t}]\,|\,\theta)}
 \nonumber\\& = & 
-  \frac{\sum_{j=1}^S\left\{\sum_{i=1}^S\alpha_{t,i}\,\bar{\omega}_{t,i}\,\Gamma_{t,i,j}\right\}o_{t+1,j}(x_{t+1})}
+  \frac{\sum_{j=1}^S\left\{\sum_{i=1}^S\alpha_{t,i}\,\bar{\omega}_{t,i}\,\Gamma_{t,i,j}\right\}o_{t+1,j}(x)}
        {\sum_{i=1}^S\alpha_{t,i}}
 \,.
 \end{eqnarray}
@@ -493,10 +498,11 @@ The {\em backward step}, which incorporates information about the termination of
 \begin{eqnarray}
    \beta_{t,i} & = & p([\rvec{x}_{t+1}\rangle\,|\,S_t\!=\!\sigma_i,\theta)
 \nonumber\\& = & 
-   \sum_{j=1}^{S}p([\rvec{x}_{t+2}\rangle\,|\,S_{t+1}\!=\!\sigma_j,\theta)p(X_{t+1}=x_{t+1}\,|\,S_{t+1}\!=\!\sigma_j,\theta)
-       p(S_{t+1}\!=\!\sigma_j\,|\,S_t\!=\!\sigma_i,\theta)p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_i,\theta)
+   \sum_{j=1}^{S}p([\rvec{x}_{t+2}\rangle\,|\,S_{t+1}\!=\!\sigma_j,\theta)\,p(X_{t+1}=x_{t+1}\,|\,S_{t+1}\!=\!\sigma_j,\theta)
+\nonumber\\&& \hspace*{5mm}{}\times
+       p(S_{t+1}\!=\!\sigma_j\,|\,S_t\!=\!\sigma_i,\theta)\,p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_i,\theta)
 \nonumber\\& = & 
-	\left\{\sum_{j=1}^{S}\beta_{t+1,j}o_{t+1,j}(x_{t+1})\Gamma_{t,i,j}\right\}\bar{\omega}_{t,i}
+	\left\{\sum_{j=1}^{S}\beta_{t+1,j}\,o_{t+1,j}(x_{t+1})\,\Gamma_{t,i,j}\right\}\,\bar{\omega}_{t,i}
 \,,
 \end{eqnarray}
 for $t=n-1,n-2,\ldots,1$. The backward step commences with
@@ -537,10 +543,11 @@ where
 & = & 
    p(S_t\!=!\sigma_i,\langle\vec{x}_t]\,|\,\theta)
      \,p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_i,\theta)
+\nonumber\\&&{}\times
      \,p(S_{t+1}\!=\!\sigma_j\,|\,S_t\!=\!\sigma_i,\theta)
 	 \,p([\rvec{x}_{t+1}]\,|\,S_{t+1}\!=\!\sigma_j,\theta)
 \nonumber\\& = & 
-   \alpha_{t,i}\bar{\omega}_{t,i}\Gamma_{t,i,j}\beta_{t+1,j}
+   \alpha_{t,i}\,\bar{\omega}_{t,i}\,\Gamma_{t,i,j}\,\beta_{t+1,j}
 \,,
 \end{eqnarray}
 and thus
@@ -549,66 +556,49 @@ and thus
 & = &
    \sum_{i'=1}^{S}\sum_{j'=1}^{S}p(S_t\!=\!\sigma_i,S_{t+1}\!=\!\sigma_j,\langle\vec{x}\rangle\,|\,\theta)
 \nonumber\\& = & 
-   \sum_{i'=1}^{S}\sum_{j'=1}^{S}\alpha_{t,i'}\bar{\omega}_{t,i'}\Gamma_{t,i',j'}\beta_{t+1,j'}
+   \sum_{i'=1}^{S}\sum_{j'=1}^{S}\alpha_{t,i'}\,\bar{\omega}_{t,i'}\,\Gamma_{t,i',j'}\,\beta_{t+1,j'}
 \nonumber\\& = & 
-   \sum_{i'=1}^{S}\alpha_{t,i'}\beta_{t,i'}
+   \sum_{i'=1}^{S}\alpha_{t,i'}\,\beta_{t,i'}
 \,,
 \end{eqnarray}
 as expected.
 
-\section{Hidden-state Parameter Estimation}
+\subsection{Modelling Observed Data}
 
-Suppose now that the hidden-state Markov model~\eqref{eq:1-stateful-markov-model} implicitly depends upon some
-parameter $\theta$, the value of which needs to be estimated from observed data.
-In particular, let us assume that $\theta=(\Pi,\Gamma,\Omega)$,
-where $\Pi=(\vec{\pi}^+,\vec{\pi}^-)$ 
-and $\Omega=(\vec{\omega}^+,\vec{\omega}^-)$ respectively
-specify the possible distributions of the initial and final
-states of an arbitrary sequence (defined in further detail below),
-and $\Gamma$ represents the {\em stationary} distribution of state transitions between stages.
+%Suppose that we have observed an ordered set of sequences $\XX=\{\vec{v}^{(d)}\}_{d=1}^{D}$,
+Suppose that we have observed an ordered set of sequences $\XX=\{\vec{v}^{(d)}\}_{d=1}^{D}$,
+where each observation takes the form of $\vec{v}^{(d)}=(\iota^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\tau^{(d)})$.
+Here $\iota^{(d)}$ takes one of the values $0$, $1$, or $*$, corresponding to the sequence initiation marker $\langle$, $!$ or $[$, respectively.
+Note that $\iota^{(d)}=*$ is taken to mean that the true value of $\iota_0$ is unknown.
+Similarly, $\tau^{(d)}$ takes one of the values $0$, $1$, or $*$, corresponding to the sequence termination marker $\rangle$, $!$ or $]$, respectively,
+where $\tau^{(d)}=*$ means that the true value of $\tau_{|\vec{x}^{(d)}|+1}$ is unknown.
+The observed values $\vec{x}^{(d)}$ are assumed to be known and to form a non-empty, contiguous sequence (or sub-sequence).
+Hence, we may always assume here that $\vec{\tau}_{|\vec{x}^{(d)}|}=\vec{0}$.
+Finally, the values of the state sequence $\vec{s}^{(d)}$ might or might not be specified.
+In some circumstances, $\vec{s}^{(d)}$ is known; in others, some or all of these states might remain hidden.
 
-For convenience, we now suppose that the discrete set of possible states is given by
-${\cal S}=\{\sigma_1,\sigma_2,\ldots,\sigma_S\}$.
-Then we may define the initial distributions of states via $\vec{\pi}=(\pi_{1},\pi_{2},\ldots,\pi_{S})$ where
+In order to model the ambiguities that might be present in $\vec{v}^{(d)}$, we need some notation.
+For convenience, we define the data-specified initial state distribution of the $d$-th observation as
 \begin{eqnarray}
-  \pi_{i}^+ & = & p(\iota_0\!=\!1\,|\,\theta)\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!1,\theta)\,,
-\\
-  \pi_{i}^- & = & p(\iota_0\!=\!0\,|\,\theta)\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!0,\theta)\,,
+  \pi^{(d)}_{1,i} & = & \pi_{1,i}\delta(\iota_0^{(d)}=1)+\bar{\pi}_{1,i}\delta(\iota_0^{(d)}=0)\,,
 \end{eqnarray}
-such that $\pi_{i}^*=\pi_i^{+}+\pi_i^{-}=p(S_1\!=\!\sigma_i\,|\,\theta)$.
-Similarly, the final distributions of states are defined by $\vec{\omega}=(\omega_1,\ldots,\omega_S)$ where
+where $\delta(\cdot)=1$ (or $0$) if its argument is true (or false). Note that $\iota^{(d)}=*$ is taken to match both $\iota_0=1$ and $\iota_0=0$.
+Similarly, we define the data-specified terminal state distribution of the $d$-th observation as
 \begin{eqnarray}
-  \omega_{i}^+ & = & p(\tau_{n+1}=1\,|\,S_n\!=\!\sigma_i,\theta)\,,
-\\
-  \omega_{i}^- & = & p(\tau_{n+1}=0\,|\,S_n\!=\!\sigma_i,\theta)\,,
+  \omega^{(d)}_{1,i} & = & \omega_{1,i}\delta(\iota_0^{(d)}=1)+\bar{\omega}_{1,i}\delta(\iota_0^{(d)}=0)\,.
 \end{eqnarray}
-such that $\omega_{i}^*=\omega_i^{+}+\omega_i^{-}=1$.
-Note that $\Pi$ and $\Omega$ describe the initial and terminal state distributions of the random process itself, not those of any observed sequences.
+Finally, if the state $S_t$ of stage $t$ is known, then we define $s^{(d)}_t=\sigma_{i_t^{(d)}}$, for $i^{(d)}_t\in\{1,2,\ldots,S\}$.
+Otherwise, we define both $s^{(d)}_t=*$ and $i^{(d)}_t=*$.
+Hence, from model~\eqref{eq:p_s_x_g_theta}, we obtain
+\begin{eqnarray}
+   p(\vec{v}^{(d)}\,|\,\theta) 
+& = & 
+   \sum_{i_1=1}^{S}\delta(i_1^{(d)}\!=\!i_1)\cdots\sum_{i_n^{(d)}=1}^{S}\delta(i_{n^{(d)}}^{(d)}\!=\!i_{n^{(d)}})
 
-The last parameter of interest, specified by the matrix $\Gamma=[\Gamma_{i,j}]_{i,j=1}^{S}$, defines the state transitions
-\begin{eqnarray}
-  \Gamma_{i,j} & = & p(S_{t+1}\!=\!\sigma_j\,|\,S_t\!=\!\sigma_i,\theta)\,.
 \end{eqnarray}
-Observe that the assumption of stationarity implies that $\Gamma$ is constant for all $t$.
+where we have marginalised over any missing data.
 
-Now, since the observed value sequence $\vec{x}_n$ is always here assumed to be known, we may for convenience define
-\begin{eqnarray}
-  o_{t,i} & = & p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_i,\theta)\,,
-\end{eqnarray}
-although we are not concerned here with the internal parameterisation structure of $o_{t,i}$ itself.
-Thus, the explicitly parameterised version of model~\eqref{eq:1-stateful-markov-model} is given by
-\begin{eqnarray}
-  p(\iota_0,\vec{S}_n\!=\!\vec{s}_n,\vec{X}_n\!=\!\vec{x}_n,\tau_{n+1}\,|\,\theta) 
-&\!\!=\!\!& 
-  \pi_{i_1}\prod_{t=1}^{n-1}\Gamma_{i_t,i_{t+1}}\prod_{t=1}^{n}o_{t,i_t}\,\omega_{i_n}
-\,,
-\label{eq:param-markov-model}
-\end{eqnarray}
-where the unknown state sequence $\vec{s}_n$ corresponding to $\vec{x}_n$ is arbitrarily
-specified by $\vec{s}_n=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$.
-
-Let us now suppose that we have observed an ordered set of value sequences
-$\XX=\{(\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)})\}_{d=1}^{D}$.
+********************
 Notionally, we may also define the correspondingly ordered set $\SS=\{\vec{s}^{(d)}\}_{d=1}^D$
 of arbitrary state sequences.
 Hence, under the assumption that the observed sequences are independent, the joint log-likelihood of the data is given by
