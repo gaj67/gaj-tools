@@ -12,7 +12,8 @@
   \expandafter\def\csname#1#1\endcsname%
   {\ensuremath{\mathbb #1}}}
 \Bb X\Bb S
-
+\newcommand{\up}{\!\uparrow}
+\newcommand{\dn}{\downarrow\!\!}
 
 \begin{document}
 \maketitle
@@ -21,10 +22,10 @@
 \numberwithin{table}{section}
 \section{Random Sequence Processes}
 \label{sec:random-processes}
-Consider a random process $R$, graphically depicted in Figure~\ref{fig:R-process}, that generates arbitrary sequences of values
-of the form $\vec{r}_n=(r_1,r_2,\ldots,r_n)$, where the length of any particular sequence is 
-governed by a random variable $N$. Let $\vec{R}_N=(R_1,R_2,\ldots,R_N)$ denote
-the corresponding sequence of random variables, where $R_t$ denotes the $t$-th discrete stage in the sequence.
+Consider a random process $R$ that generates arbitrary-length sequences
+of the form $\vec{R}=(R_1,R_2,\ldots,R_N)$, where $N=|\vec{R}|$ is a random variable governing
+the length of a sequence, and $R_t$ is a random variable governing the value at {\em stage} $t$
+of the sequence. This sequence process is graphically depicted in Figure~\ref{fig:R-process}.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}]
@@ -43,38 +44,42 @@ the corresponding sequence of random variables, where $R_t$ denotes the $t$-th d
 
 We assume that each $R_t$ randomly takes some discrete or continuous value $r_t\in{\cal R}$,
 and hence the probability (or probability density) of observing a particular
-sequence $\vec{r}_n$ of length $n$ is given by
+sequence $\vec{r}$ of length $n=|\vec{r}|$ is given by
 \begin{eqnarray}
-   p(\vec{R}_N\!=\!\vec{r}_n) & = & p(N=n)\; p(\vec{R}_n\!=\!\vec{r}_n)\,,
+   p(\vec{R}\!=\!\vec{r}) & = & p(N=n)\,p(R_1\!=\!r_1,\ldots,R_n\!=\!r_n)\,.
 \end{eqnarray}
-where
-\begin{eqnarray}
-p(\vec{R}_n\!=\!\vec{r}_n) & = & p(R_1\!=\!r_1,\ldots,R_n\!=\!r_n)\,.
-\end{eqnarray}
-In practice, this definition presupposes that we know we have observed a {\em complete} sequence that was initiated
-at stage 1 and terminated at stage $n$.
-Suppose instead that the sequence $\vec{r}_n$ was observed one stage at a time. How do we know if the
+In practice, this definition presupposes that we know we have observed a {\em complete} sequence that started
+at stage 1 and ended at stage $n$.
+Suppose instead that the sequence $\vec{r}$ was observed one stage at a time. How do we know if the
 underlying process has actually terminated, or will instead
-continue to generate another observed value
-$r_{n+1}$, leading to the extended sequence $\vec{r}_{n+1}$? 
+continue to generate another observed value $r_{n+1}$? 
 Similarly, how do we know that the first observed value $r_1$ was not in fact
-part of a longer, unobserved sequence of values $(\ldots,r_0,r_1,\ldots)$?
+part of a longer, unobserved sequence of values?
+We assume that the random process $R$ only ever produces complete sequences,
+independently of the observation process, which might provide partial or complete sequences of values.
+Furthermore, if the random process does not signal the start and end of generated sequences,
+then an observed sequence might actually comprise a subsequence of multiple, contiguously generated sequences.
 
-In order to handle such difficulties, we consider any arbitrary sequence $\vec{r}_n$ to be {\em incomplete},
-and explicitly denote the corresponding, complete sequence as $\langle\vec{r}_n\rangle$.
-Additionally, we introduce the notion of {\em partially complete} sequences, 
-defining a {\em start sequence} to be a sequence that has a definite start but an indefinite end,
-denoted by $\langle\vec{r}_n]$, and futher defining an {\em end sequence} to be a sequence
-that has a definite end but an indefinite start, denoted by $[\vec{r}_n\rangle$.
+In order to handle such difficulties, we consider any arbitrary sequence $\vec{r}$ to be {\em incomplete},
+and explicitly denote the corresponding, complete sequence by $\langle\vec{r}\rangle$.
+We can now introduce the notion of {\em partially complete} sequences:
+let  $\langle\vec{r}$ be a {\em start sequence} that has a definite start but an indefinite end;
+and let $\vec{r}\rangle$ be an {\em end sequence} that has a definite end but an indefinite start.
+Furthermore, if we know that all of the values of $\vec{r}$ are contiguous values of the same sequence,
+then we can denote this by introducing additional, paired delimiters.
+Thus, we use the symbol $\uparrow$ to indicate that the true sequence definitely does not end at the observed
+value $r_n$, e.g.\ $\langle\vec{r}\up$, and the symbol $]$ to indicate that we are uncertain as to whether or not the
+sequence ends at $r_n$, but definitely does not end at an earlier stage, e.g.\ $\langle\vec{r}]$.
+Similarly, let $\downarrow$ indicate that the true sequence starts at an earlier stage than $r_1$, e.g.\ $\dn\vec{r}\rangle$,
+and let $[$ indicate that the sequence might start at $r_1$ or at an earlier stage, e.g.\ $[\vec{r}\rangle$. Clearly, we may also
+specify the remaining partial, contiguous sequences $[\vec{r}]$, $\dn\vec{r}]$, $[\vec{r}\up$ and $\dn\vec{r}\up$.
 
 Under this augmented notation, knowledge about the start of a sequence can be encapsulated in 
-a random indicator variable $\iota_t$, which takes on the value 1 if $R_{t+1}$ is definitely the first stage in the
-sequence, or the value 0 if it is not. Similarly, the random indicator variable $\tau_{t}$
-takes on the value 1 if $R_{t-1}$ is definitely the last stage in the sequence, or the value 0 if it is not.
-We assume that the random process $R$ only ever produces complete sequences described by $\langle\vec{R}_N\rangle$,
-independently of the observation process, which might provide partial or complete sequences of values.
-Notionally, the indicators $\iota_0$ and $\tau_{N+1}$ can be thought to correspond to pseudo-stages 0 and $N+1$, such that
-the generated sequence $\langle\vec{R}_N\rangle$ is initiated at stage 0 and terminated at stage $N+1$.
+a random indicator variable $\iota_{t-1}$, which takes on the value 1 if some observed $r_{t}$ is definitely the first stage in the
+true sequence, or the value 0 if it is not. Similarly, the random indicator variable $\tau_{t+1}$
+takes on the value 1 if $r_{t}$ is definitely the last stage in the true sequence, or the value 0 if it is not.
+Notionally, the indicators $\iota_0$ and $\tau_{n+1}$ can be thought to correspond to pseudo-stages 0 and $n+1$, such that
+the generated sequence is initiated at stage 0 and terminated at stage $N+1$.
 This augmented random process is depicted in Figure~\ref{fig:random-process}. 
 \begin{figure}[hbt]
 \centering
@@ -107,7 +112,7 @@ different possible (mutually exclusive) stage transition pathways.}
 
 The probability of a given complete sequence $\langle\vec{r}_n\rangle$ is now defined as
 \begin{eqnarray}
-   p(\langle\vec{r}_n\rangle)
+   p(\langle\vec{r}\rangle)
 & = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!1)
 \,,
 \end{eqnarray}
@@ -115,30 +120,38 @@ such that
 \begin{eqnarray}
    p(N\!=\!n) & = &  p(\iota_0\!=\!1,\tau_1\!=\!0,\ldots,\tau_n\!=\!0,\tau_{n+1}\!=\!1)\,.
 \end{eqnarray}
-This takes the form of a generalised Bernoulli sequence.
-Likewise, the probability
-of a given start sequence $\langle\vec{r}_n]$ is defined as
+This has the form of a generalised Bernoulli sequence.
+Conversely, the probability of the start sequence $\langle\vec{r}\up$ is
+\begin{eqnarray}
+p(\langle\vec{r}\up) 
+& = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!0)\,,
+\end{eqnarray}
+and the probability of the end sequence $\dn\vec{r}\rangle$ is
+\begin{eqnarray}
+p(\dn\vec{r}\rangle)
+& = & p(\iota_0\!=\!0,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!1)\,.
+\end{eqnarray}
+We may also write the probability of the ambiguous start sequence $\langle\vec{r}_n]$ as
 \begin{eqnarray}
 p(\langle\vec{r}_n]) 
-& = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n)\,,
+& = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!*)\,,
 \end{eqnarray}
-and the probability of the end sequence $[\vec{r}_n\rangle$ is
+where $\tau_{n+1}=*$ is just a shorthand to indicate that we are uncertain of the true value of $\tau_{n+1}$;
+probabilistically, the term has no effect and may be dropped.
+Likewise, the probability of the end sequence $[\vec{r}\rangle$ is
 \begin{eqnarray}
-p([\vec{r}_n\rangle)
-& = & p(\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!1)\,.
+p([\vec{r}\rangle)
+& = & p(\iota_0\!=\!*,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!1)\,.
 \end{eqnarray}
-In the special case where we know in advance that a start sequence definitely does not terminate
-at stage $n+1$,  we may instead write
+The likelihood of the other types of partial sequences can similarly be defined.
+Generically, we can write the likelihood of any complete or partially complete sequence as
 \begin{eqnarray}
-p(\langle\vec{r}_n!)
-& = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!0)\,.
+p(\underline{\iota},\vec{r},\underline{\tau})
+& = & p(\iota_0\!=\!\underline{\iota},\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!\underline{\tau})\,,
 \end{eqnarray}
-Likewise, if an end sequence definitely does not initiate at stage 0, then
-\begin{eqnarray}
-p(!\vec{r}_n\rangle)
-& = & p(\iota_0\!=\!0,\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!1)\,.
-\end{eqnarray}
-The four remaining types of sequences, namely $[\vec{r}_n]$, $!\vec{r}_n]$, $[\vec{r}_n!$ and $!\vec{r}_n!$ , can be similarly defined.
+where the observed sequence-start indicator $\underline{\iota}\in\{0,1,*\}$ corresponds to the delimiters
+$\downarrow$ ,$\langle$, and $[$, respectively, and the observed sequence-end indicator
+$\bar{\tau}\in\{0,1,*\}$ corresponds to the delimiters $\uparrow$, $\rangle$, and $]$, respectively.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Markov Sequence Processes}
@@ -148,22 +161,97 @@ We now assume that the process is also {\em causal}, meaning that each stage of 
 including the termination stage, depends only on the preceding stages.
 This causal process, depicted in Figure~\ref{fig:causal-process}, is simply the random process from
 Figure~\ref{fig:random-process} with additional, explicit dependencies (in the form of dashed arrows).
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
+    \node (0i) at (-1,0) [right] {$\stackrel{\iota_0=1}{}$};
+    \node[onode] (0) at (0,0) {};
+    \node[cnode] (1) at (2,0) {$R_1$};
+    \node[onode] (1t) at (2,-2.5) {};
+    \node[cnode] (2) at (4, 0)  {$R_2$};
+    \node[onode] (2t) at (4,-2.5) {};
+    \node[cnode] (3) at (6, 0)  {$R_3$};
+    \node[onode] (3t) at (6,-2.5) {};
+    \node (t) at (8, 0) {$\cdots$};
+    \node[onode] (tt) at (8, -2.5) {};
+
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau_1=0}{}$}  (1) ;
+    \draw[->] (0) edge node [pos=1, below left] {$\stackrel{\tau_1=1}{}$} (1t) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau_2=0}{}$}  (2) ;
+    \draw[->] (1) edge node [pos=1, below left] {$\stackrel{\tau_2=1}{}$} (2t) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau_3=0}{}$}  (3) ;
+    \draw[->] (2) edge node [pos=1, below left] {$\stackrel{\tau_3=1}{}$} (3t) ;
+    \draw[->] (3) edge node [pos=0.5, above] {}  (t) ;
+    \draw[->] (3) edge node [pos=0.5, below left] {} (tt) ;
+
+   \begin{scope}[dashed]
+    \draw[->] (0) to (2t) ;
+    \draw[->] (0) to[out=40,in=140] (2) ;
+    \draw[->] (0) to[out=45,in=135] (3) ;
+    \draw[->] (0) to[out=50,in=130] (t) ;
+    \draw[->] (0) to (3t) ;
+    \draw[->] (0) to (tt) ;
+    \draw[->] (1) to (tt) ;
+    \draw[->] (1) to (3t) ;
+    \draw[->] (2) to (tt) ;
+    \draw[->] (1) to[out=40,in=140] (3) ;
+    \draw[->] (1) to[out=45,in=135] (t) ;
+    \draw[->] (2) to[out=40,in=140] (t) ;
+   \end{scope}
+\end{tikzpicture}
+\caption{\em A fully-dependent, causal process for generating complete sequences of arbitrary length.
+Solid arrows indicate possible stage transitions. 
+Both dashed arrows and solid arrows indicate parent--child dependencies, such that the child node is conditionally dependent on the parent and all other ancestral nodes.}
+\label{fig:causal-process}
+\end{figure}
+
 Hence, under the Markov assumption of conditional independence,
-the causal sequence process leads to the fully-dependent, conditional model
+the causal sequence process leads to the full-dependency conditional model
 \begin{eqnarray}
-p(\langle\vec{r}_n\rangle) & = &
-p(\iota_0=1)
+p(\underline{\iota},\vec{r},\underline{\tau}) & = &
+p(\iota_0\!=\!\underline{\iota})
+\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
+\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+\,p(\tau_2\!=\!0\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0,R_1\!=\!r_1)
 \nonumber\\&&
-{}\times \prod_{t=1}^{n}\left\{p(\tau_t\!=\!0\,|\,\iota_0\!=\!1,\vec{\tau}_{t-1}\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})
-\,p(R_t\!=\!r_t\,|\,\iota_0\!=\!1,\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
+{}\times p(R_2\!=\!r_2\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0,R_1\!=\!r_1,\tau_2\!=\!0)
+\cdots
+p(R_n\!=\!r_n\,|\,\iota_0\!=\!1,\ldots,\tau_{n}\!=\!0)
 \nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!1\:|\;\iota_0\!=\!1,\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
+{}\times p(\tau_{n+1}\!=\!1\:|\;\iota_0\!=\!1,\ldots,R_n\!=\!r_n)
+\,.
+\label{eq:temporal-model-full}
+\end{eqnarray}
+We can generalise this model by defining the forward observation sub-sequence $\vec{r}_t=(r_1,r_2,\ldots,r_t)$,
+for $t=1,2,\ldots,n$.
+% For convenience, we also define $\vec{r}_0$ to be the empty sub-sequence; probabilistically,
+%this term has no effect, and may be dropped.
+Hence, we obtain
+\begin{eqnarray}
+p(\underline{\iota},\vec{r},\underline{\tau}) & = &
+p(\iota_0\!=\!\underline{\iota})
+\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
+\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+\nonumber\\&&
+{}\times
+\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_{t-1}\!=\!\vec{0},
+\vec{R}_{t-1}\!=\!\vec{r}_{t-1})
+\,p(R_t\!=\!r_t\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
+\nonumber\\&&
+{}\times p(\tau_{n+1}\!=\!\bar{\tau}\:|\;\iota_0\!=\!\underline{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
 \,.
 \label{eq:temporal-model}
 \end{eqnarray}
-The related models for partially complete or incomplete sequences can be similarly obtained
-by suitably modifying the corresponding boundary conditions for $\iota_0$ and $\tau_{n+1}$
---- refer to Section~\ref{sec:random-processes}.
+
+In practice, the full-dependency model is usually considerably simplified by 
+dropping some of the explicit (dashed) dependencies.
+For example, one might limit the 
+conditionality on past values to a maximum of $m$ depenencies.
+This leads to the so-called {\em $m$-th order Markov model}.
+An example from the realm of natural language understanding is the lexicographical analysis of the character
+sequences of words using bigrams (pairs of adjacent characters, corresponding to $m=1$), and trigrams 
+(triples of adjacent characters, corresponding to $m=2$), et cetera.
+The second-order Markov sequence process is depicted in Figure~\ref{fig:causal-process-2}.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
@@ -179,41 +267,32 @@ by suitably modifying the corresponding boundary conditions for $\iota_0$ and $\
     \node[onode] (tt) at (8, -2) {};
 
     \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau_1=0}{}$}  (1) ;
-    \draw[->] (0) edge node [pos=0.5, below left] {$\stackrel{\tau_1=1}{}$} (1t) ;
+    \draw[->] (0) edge node [pos=1, below left] {$\stackrel{\tau_1=1}{}$} (1t) ;
     \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau_2=0}{}$}  (2) ;
-    \draw[->] (1) edge node [pos=0.5, below left] {$\stackrel{\tau_2=1}{}$} (2t) ;
+    \draw[->] (1) edge node [pos=1, below left] {$\stackrel{\tau_2=1}{}$} (2t) ;
     \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau_3=0}{}$}  (3) ;
-    \draw[->] (2) edge node [pos=0.5, below left] {$\stackrel{\tau_3=1}{}$} (3t) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau_4=0}{}$}  (t) ;
-    \draw[->] (3) edge node [pos=0.5, below left] {$\stackrel{\tau_4=1}{}$} (tt) ;
+    \draw[->] (2) edge node [pos=1, below left] {$\stackrel{\tau_3=1}{}$} (3t) ;
+    \draw[->] (3) edge node [pos=0.5, above] {}  (t) ;
+    \draw[->] (3) edge node [pos=0.5, below left] {} (tt) ;
 
    \begin{scope}[dashed]
-    \draw[->] (0) to[out=-30,in=-150] (2) ;
-    \draw[->] (0) to[out=-40,in=-150] (3) ;
+    \draw[->] (0) to (2t) ;
+    \draw[->] (0) to[out=40,in=140] (2) ;
+    \draw[->] (1) to (3t) ;
+    \draw[->] (2) to (tt) ;
     \draw[->] (1) to[out=40,in=140] (3) ;
+    \draw[->] (2) to[out=40,in=140] (t) ;
    \end{scope}
 \end{tikzpicture}
-\caption{\em A fully-dependent, causal process for generating complete sequences of arbitrary length.
-Solid arrows indicate possible stage transitions.
-Both dashed arrows and solid arrows indicate parent--child dependencies, such that the child node is conditionally dependent on the parent and all other previous nodes.}
-\label{fig:causal-process}
+\caption{\em A second-order Markov process for generating complete sequences of arbitrary length.}
+\label{fig:causal-process-2}
 \end{figure}
-
-
-In practice, the causal model is usually simplified further by 
-dropping some of the explicit (dashed) dependencies.
-For example, one might limit the 
-conditionality on past values to a maximum number $m$ of depenencies.
-This leads to the so-called {\em $m$-th order Markov model}.
-An example from the realm of natural language understanding is the lexicographical analysis of the character
-sequences of words using bigrams (pairs of adjacent characters, corresponding to $m=1$), and trigrams 
-(triples of adjacent characters, corresponding to $m=2$), et cetera.
 
 In the special case of $m=1$, the first-order Markov model takes on the restricted conditional form
 \begin{eqnarray}
-p(\langle\vec{r}_n\rangle) & = &
-p(\iota_0=1)\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!1)
-p(R_1\!=\!r_1\,|\,\iota_0\!=\!1,\tau_1\!=\!0)
+p(\underline{\iota},\vec{r},\underline{\tau}) & = &
+p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
+p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
 \nonumber\\&&
 {}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,R_{t-1}\!=\!r_{t-1})
 \,p(R_t\!=\!r_t\,|\,\tau_t\!=\!0,R_{t-1}\!=\!r_{t-1})\right\}
@@ -221,7 +300,7 @@ p(R_1\!=\!r_1\,|\,\iota_0\!=\!1,\tau_1\!=\!0)
 {}\times p(\tau_{n+1}\!=\!1\:|\;R_n\!=\!r_n)
 \,.
 \end{eqnarray}
-This is just the strict Markov interpretation of the random process depicted in Figure~\ref{fig:random-process},
+This is just a Markov interpretation of the random process depicted in Figure~\ref{fig:random-process},
 where each stage directly depends only on the previous stage {\em and} on the transition path between the two adjacent stages.
 
 \section{Stateful Markov Sequence Processes}
@@ -230,8 +309,8 @@ Suppose now that the random variable $R_t$ at stage $t$ can be decomposed into t
 $R_t=(S_t,X_t)$, where $S_t$ is a random variable taking values $s_t\in{\cal S}$, and $X_t$
 is a random variable taking values $x_t\in{\cal X}$.
 We may call $S_t$ the {\em state} of the process at stage $t$, and $X_t$ its {\em value}.
-As is usual, we presuppose that the stage transitions in the sequence generating process are primarily between states, e.g.\ from $S_{t-1}$ to $S_t$, 
-and hence it follows that the value is generated after the state has been determined, i.e.\ $X_t$ depends upon $S_t$.
+As is usual, we presuppose that the stage transitions in the sequence generating process are primarily between states, e.g.\ from $S_{t-1}$ to $S_t$.
+It follows that the value is generated after the state has been determined, i.e.\ $X_t$ depends upon $S_t$.
 Keeping to the first-order Markov interpretation of stage-to-stage dependencies leads to
 the {\em stateful} process depicted in Figure~\ref{fig:stateful-process}, with full cross-dependencies between $(S_t,X_t)$ and
 $(S_{t+1},X_{t+1})$.
@@ -263,34 +342,44 @@ $(S_{t+1},X_{t+1})$.
     \draw[->] (3) edge (tt) ;
 
    \begin{scope}[dashed]
+    \draw[->] (0) to (1x) ;
     \draw[->] (1) to (1x) ;
     \draw[->] (1) to (2x) ;
     \draw[->] (1x) to (2) ;
     \draw[->] (1x) to (2x) ;
+    \draw[->] (1x) to (2t) ;
     \draw[->] (2) to (2x) ;
     \draw[->] (2) to (3x) ;
     \draw[->] (2x) to (3) ;
     \draw[->] (2x) to (3x) ;
+    \draw[->] (2x) to (3t) ;
     \draw[->] (3) to (3x) ;
     \draw[->] (3) to (tx) ;
     \draw[->] (3x) to (tx) ;
     \draw[->] (3x) to (t) ;
+    \draw[->] (3x) to (tt) ;
    \end{scope}
 \end{tikzpicture}
 \caption{\em A random process for generating complete, stateful  sequences of arbitrary length,
-with explicit cross-dependencies between the states and values of adjacent stages.}
+with explicit cross-dependencies between adjacent stages.}
 \label{fig:stateful-process}
 \end{figure}
 
 Hence, the fully-structured stateful model is now given by
 \begin{eqnarray}
-p(\iota_0,\vec{S}_n,\vec{X}_n,\vec{\tau}_{n+1}) & = & 
-p(\iota_0)\,p(\tau_1\,|\,\iota_0)\,p(S_1\,|\,\iota_0,\tau_1)\,p(X_1\,|\,S_1)
+p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}) & = & 
+p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
+\,p(S_1\!=\!s_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+\nonumber\\&&{}\times
+\,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1,\iota\!=\!\underline{\iota},\tau_1\!=\!0)
 \nonumber\\&&
-{}\times\prod_{t=2}^{n}\left\{p(\tau_t\,|\,S_{t-1})\,p(S_t\,|\,\tau_t,S_{t-1},X_{t-1})
-\,p(X_t\,|\,S_t,S_{t-1},X_{t-1})\right\}
+{}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
+\nonumber\\&&\hspace*{10mm}{}\times\left.
+\,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
+\nonumber\\&&\hspace*{10mm}{}\times\left.
+\,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right\}
 \nonumber\\&&
-{}\times p(\tau_{n+1}\,|\,S_n)
+{}\times p(\tau_{n+1}\!=\!\bar{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
 \,.
 \end{eqnarray}
 Conditioning the state $S_t$ on both the previous state $S_{t-1}$ and its value $X_{t-1}$
@@ -299,17 +388,7 @@ However, due to the increased complexity of such models, it is more usual to fur
 by also imposing the first-order Markov assumption at the level
 of the state--value dependencies themselves. In terms of the process depicted in Figure~\ref{fig:stateful-process},
 this means retaining only direct node-to-node dependencies, rather than stage-to-stage dependencies.
-Hence, this restricted process, depicted in Figure~\ref{fig:stateful-1-process},
-corresponds to the sequence model
-\begin{eqnarray}
-p(\iota_0,\vec{S}_n,\vec{X}_n,\vec{\tau}_{n+1}) & = & 
-p(\iota_0)\,p(\tau_1\,|\,\iota_0)\,p(S_1\,|\,\iota_0)\,p(X_1\,|\,S_1)
-\nonumber\\&&
-{}\times\prod_{t=2}^{n}\left\{p(\tau_t\,|\,S_{t-1})\,p(S_t\,|\,S_{t-1})\,p(X_t\,|\,S_t)\right\}
-\,p(\tau_{n+1}\,|\,S_n)
-\,.
-\label{eq:stateful-1-model}
-\end{eqnarray}
+This restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
@@ -347,82 +426,117 @@ p(\iota_0)\,p(\tau_1\,|\,\iota_0)\,p(S_1\,|\,\iota_0)\,p(X_1\,|\,S_1)
 \label{fig:stateful-1-process}
 \end{figure}
 
+The corresponding sequence model is now given by
+\begin{eqnarray}
+p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}) & = & 
+p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
+\,p(S_1\!=\!s_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+\,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1)
+\nonumber\\&&
+{}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1})
+\,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,,S_{t-1}\!=\!s_{t-1})\right.
+\nonumber\\&&\hspace*{10mm}{}\times\left.
+\,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t)\right\}
+\;p(\tau_{n+1}\!=\!\bar{\tau}\,|\,S_n\!=\!s_n)
+\,.
+\label{eq:stateful-1-model}
+\end{eqnarray}
+Observe that the $\tau_1$ dependency can additionally be dropped in practice,
+since zero-length sequences convey little information, and are in fact undetectable if the
+generating process does not explicitly indicate the start and end of sequences.
+
 \section{Discrete-state Sequence Models}
 
-Consider the stateful, first-order Markov process depicted by Figure~\ref{fig:stateful-1-process}.
-Let us now restrict our attention to the class of models where
-the state $S_t$ at any stage $t$ may now only take {\em discrete} values in the set ${\cal S}=\{\sigma_1,\sigma_2,\ldots,\sigma_S\}$.
-Thus, the sequence model~\eqref{eq:stateful-1-model} may be parameterised in terms of arbitrary states $\vec{s}_n=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$,
-where the factors modelling the probabilities within stage $t$ depend only upon $\sigma_{i_t}$, and the factors modelling the transition between stage $t$ and stage $t+1$ 
-depend only upon $\sigma_{i_t}$ and $\sigma_{i_{t+1}}$.
-For convenience, let us further assume that the process does not generate zero-length sequences\footnote{Zero-length sequences are usually undetectable in practice,
-unless the generating process explicitly indicates the start and end of such sequences. Even if clearly delimited, zero-length sequences may typically be ignored in
-most applications.}, so that $p(\tau_1=1\,|\,\iota_0=1)=1$.
-Consequently, model~\eqref{eq:stateful-1-model} can now be explicitly rewritten in terms of the parameters $\theta=(\vec{\pi},\vec{\bar{\pi}},\Gamma,\vec{\omega})$, 
-such that the probability of an arbitrary, complete sequence is given by
+Consider the stateful, first-order Markov process depicted by Figure~\ref{fig:stateful-1-process},
+and suppose for convenience that zero-length sequences are impossible.
+Let us now restrict our attention to the class of corresponding sequence models where
+the state $S_t$ at any stage $t$ may now only take {\em discrete} values in the set 
+${\cal S}=\{\sigma_1,\sigma_2,\ldots,\sigma_S\}$.
+Hence, the sequence of states may arbitrarily be specified as $\vec{s}=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$,
+where each $i_t\in\{1,2,\ldots,S\}$.
+In the event that a particular state $S_t$ is unobserved, we say that the state is {\em missing} or {\em hidden},
+and denote $i_t=*$ and $s_t=*$. In the situation where all values of $\vec{s}$ are unobserved,
+the sequence model~\eqref{eq:stateful-1-model} is known as a {\em hidden-state Markov model} (HMM).
+
+The sequence model~\eqref{eq:stateful-1-model}, with the $\tau_1$ dependency dropped,
+may now be explicitly conditioned on a general parameter $\theta$
+that governs the various discrete state distributions. Each term in the model depends directly on the stage index $t$ and 
+indirectly on the state index $i_t$. 
+Furthermore, each term represents either the initial state, the terminal state, or the non-terminal transitions
+between states at adjacent stages. Hence, let $\theta=(\vec{\pi},\Gamma,\vec{\omega})$, 
+such that the probability of an arbitrary, observed sequence (with no hidden states) is given by
 \begin{eqnarray}
-\hspace*{-5mm}
-p(\langle\vec{s},\vec{x}\rangle\,|\,\theta) & = & \pi_{1,i_1}\,o_{1,i_1}(x_1)\left\{\prod_{t=1}^{n-1}\bar{\omega}_{t,i_t}\,\Gamma_{t,i_t,i_{t+1}}\,o_{t,i_{t+1}}(x_{t+1})
-\right\}\,\omega_{n,i_n}
-\,,
+p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) & = & \underline{\pi}_{1,i_1}\,o_{1,i_1}(x_1)\left\{\prod_{t=1}^{n-1}\omega^-_{t,i_t}\,\Gamma_{t,i_t,i_{t+1}}\,o_{t,i_{t+1}}(x_{t+1})
+\right\}\,\underline{\omega}_{n,i_n}
+\,.
 \label{eq:p_s_x_g_theta}
 \end{eqnarray}
-where $n=|\vec{x}|=|\vec{s}|$.
-The initial state $S_1$ of the sequence at stage $t=1$ is governed by the general parameter
+The initial state $S_1$ of the sequence at stage $t=1$ is governed by the parameter $\vec{\pi}$, such that generically
 \begin{eqnarray}
-  \pi_{t,i} & = & p(\iota_{t-1}\!=\!1\,|\,\theta)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!1,\theta)\,,
+  \underline{\pi}_{1,i} & = & p(\iota_{0}\!=\!\underline{\iota}\,|\,\theta)
+\,p(S_1\!=\!\sigma_{i}\,|\,\iota_{0}\!=\!\underline{\iota},\theta)\,.
 \end{eqnarray}
-and the terminal and non-terminal transitions between stages $t$ and $t+1$ are governed by
+More generally, we define
 \begin{eqnarray}
-  \omega_{t,i} & = & p(\tau_{t+1}=1\,|\,S_t\!=\!\sigma_{i},\theta)\,,
+  \pi^-_{t,i} & = & p(\iota_{t-1}\!=\!0\,|\,\theta)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!0,\theta)\,,
 \\
-  \bar{\omega}_{t,i} & = & p(\tau_{t+1}=0\,|\,S_t\!=\!\sigma_{i},\theta)~=~1-\omega_{t,i}\,,
+  \pi^+_{t,i} & = & p(\iota_{t-1}\!=\!1\,|\,\theta)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!1,\theta)\,,
 \end{eqnarray}
-respectively. The possible transitions between the states $S_t$ and $S_{t+1}$ of consecutive stages $t$ and $t+1$ are governed by
+and
 \begin{eqnarray}
-  \Gamma_{t,i,j} & = & p(S_{t+1}\!=\!\sigma_{j}\,|\,S_t\!=\!\sigma_{i},\theta)\,.
+  \pi*_{t,i} & = & p(\iota_{t-1}\!=\!*\,|\,\theta)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!*,\theta)
+~=~
+  p(S_t\!=\!\sigma_i\,|\,\theta)~=~\pi^-_{t,i}+\pi^+_{t,i}\,.
 \end{eqnarray}
-Clearly, a state transition from $S_t$ to $S_{t+1}$ implies a non-terminal transition from stage $t$ to $t+1$ in the sequence. 
-This is explicitly modelled by the presence of the $\bar{\omega}_{t,i_t}$ term,
-which is interpreted to mean that $S_t$ is a non-terminal state.
-It then follows that $S_{t+1}$ is a non-initial state which, if modelled explicitly, would be represented by a corresponding $\bar{\pi}_{t+1,i_{t+1}}$ term, defined by
-\begin{eqnarray}
-  \bar{\pi}_{t,i} & = & p(\iota_{t-1}\!=\!0\,|\,\theta)\,p(S_{t}\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!0,\theta)\,.
-\end{eqnarray}
-However, $\bar{\pi}_{t+1,i_{t+1}}$ is already implicit the explicit transition term $\Gamma_{t,i_t,i_{t+1}}$,
-since we cannot count state $S_{t+1}$ twice. This fact is important when it comes to parameter estimation (see Section~\ref{sec:param-estimation}).
+Observe that each state $S_t$ for $t>1$ is a non-initial state, governed by $\pi^-_{t,i_t}$. However, such terms do
+not explicitly appear in model~\eqref{eq:p_s_x_g_theta}, except if $\underline{\iota}\ne 1$, 
+since they are already accounted for by the state transitions.
+These implicit terms become important when it comes to parameter estimation (see Section~\ref{sec:param-estimation}).
 
-Lastly, the probabilities of observed values at stage $t$ are governed by
+The terminal state $S_n$ at stage $t=n$ is likewise governed by the parameter $\vec{\omega}$, such that
+\begin{eqnarray}
+  \underline{\omega}_{n,i} & = & p(\tau_{n+1}\!=\!\underline{\tau}\,|\,S_n\!=\!\sigma_{i},\theta)\,,
+\end{eqnarray}
+where 
+\begin{eqnarray}
+  \omega_{t,i}^- & = & p(\tau_{t+1}\!=\!0\,|\,S_n\!=\!\sigma_{i},\theta)\,,
+\\
+  \omega_{t,i}^+ & = & p(\tau_{t+1}\!=\!1\,|\,S_n\!=\!\sigma_{i},\theta)\,,
+\end{eqnarray}
+and
+\begin{eqnarray}
+  \omega_{t,i}^* & = & p(\tau_{t+1}\!=\!*\,|\,S_n\!=\!\sigma_{i},\theta)
+~=~\omega^-_{t,i}+\omega^+_{t,i}~=~1\,.
+\end{eqnarray}
+Observe that each state $S_t$ for $t<n$ is a non-terminal state, and is explicitly modelled by the term
+$\omega^-_{t,i_t}$.
+
+Lastly, the permissible transitions between the states $S_t$ and $S_{t+1}$ of consecutive stages $t$ and $t+1$ are governed by
+the parameter $\Gamma$, where
+\begin{eqnarray}
+  \Gamma_{t,i,j} & = & p(S_{t+1}\!=\!\sigma_{j}\,|\,S_t\!=\!\sigma_{i},\tau_{t+1}\!=\!0,\theta)\,.
+\end{eqnarray}
+Note that the model also includes the likelihood of each observed value $x_t$ at stage $t$, for $t=1,2,\ldots,n$.
+This so-called {\em data likelihood} is governed by the separate model
 \begin{eqnarray}
   o_{t,i}(x) & = & p(X_t\!=\!x\,|\,S_t\!=\!\sigma_{i},\theta) \hspace*{5mm}\forall x\in{\cal X}\,.
 \end{eqnarray}
 We do not, however, explicitly declare the parameterisation structure of this likelihood model (see Section~\ref{sec:discrete-x} for a plausible model if $X_t$ takes discrete values). 
 It suffices for our calculations that each $o_{t,i_t}(x_t)$ is available when required.
 
-Note that all other types of incomplete sequences (see Section~\ref{sec:random-processes}) are handled similarly to complete sequences by modifying the first and/or last terms of model~\eqref{eq:p_s_x_g_theta}.
-For example, $!\vec{s},\vec{x}\rangle$ is modelled by replacing $\pi_{1,i_1}$ by $\bar{\pi}_{1,i_1}$, whereas $[\vec{s},\vec{x}\rangle$ is modelled by replacing $\pi_{1,i_1}$ by $\breve{\pi}_{1,i_1}$, where
+Finally, note that in the situtation where any state in the observed state sequence $\vec{s}$ is hidden, we have to marginalise model~\eqref{eq:p_s_x_g_theta} over each such missing state. Hence, in general, we may define
 \begin{eqnarray}
-  \breve{\pi}_{t,i} & = & \pi_{t,i}+\bar{\pi}_{t,i}
-\nonumber\\& = &
-  p(\iota_{t-1}\!=\!1)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!1,\theta)
-+
-  p(\iota_{t-1}\!=\!0)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!0,\theta)
-\nonumber\\& = &
-  p(\iota_{t-1}\!=\!1,S_t\!=\!\sigma_{i}\,|\,\theta)
-+
-  p(\iota_{t-1}\!=\!0,S_t\!=\!\sigma_{i}\,|\,\theta)
-\nonumber\\& = &
-  p(S_t\!=\!\sigma_{i}\,|\,\theta)\,.
+   p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) 
+& = & 
+   \sum_{i_1'=1}^{S}\delta(i_1'\!=\!i_1)\sum_{i_2'=1}^{S}\delta(i_2'\!=\!i_2)\cdots\sum_{i_n'=1}^{S}\delta(i_n'\!=\!i_n)\,
+\nonumber\\&&\hspace*{10mm}\underline{\pi}_{1,i_1'}\,o_{1,i_1'}(x_1)\,
+\left\{\prod_{t=1}^{n-1}\omega^-_{t,i_t'}\,\Gamma_{t,i_t',i_{t+1}'}\,o_{t,i_{t+1}'}(x_{t+1})
+\right\}\,\underline{\omega}_{n,i_n'}
+\,,
+\label{eq:p_s_x_g_theta:gen}
 \end{eqnarray}
-Similarly, $\langle\vec{s},\vec{x}!$ is modelled by replacing $\omega_{n,i_{n}}$ by $\bar{\omega}_{n,i_{n}}$, whereas $\langle\vec{s},\vec{x}]$ 
-is modelled by replacing $\omega_{n,i_n}$ by $\breve{\omega}_{n,i_n}$, where
-\begin{eqnarray}
-   \breve{\omega}_{t,i} & = & \omega_{t,i}+\bar{\omega}_{t,i}
-\nonumber\\& = &
-   p(\tau_{t+1}\!=\!1\,|\,S_t\!=\!\sigma_i,\theta) + p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_i,\theta)
-\nonumber\\& = &
-  1\,.
-\end{eqnarray}
+where $\delta(\cdot)$ is an indicator function taking the value $1$ (or $0$) if its argument is true (or false).
+Note that if $S_t$ is a hidden state, then $i_t=*$ and $\delta(i_t'\!=\!*)=1$ for all $i_t'\in\{1,2,\ldots,S\}$; otherwise, the summation over $i_t'$ collapses to the observed value $i_t$.
 
 \subsection{Posterior State Prediction}
 
@@ -594,7 +708,6 @@ Hence, from model~\eqref{eq:p_s_x_g_theta}, we obtain
    p(\vec{v}^{(d)}\,|\,\theta) 
 & = & 
    \sum_{i_1=1}^{S}\delta(i_1^{(d)}\!=\!i_1)\cdots\sum_{i_n^{(d)}=1}^{S}\delta(i_{n^{(d)}}^{(d)}\!=\!i_{n^{(d)}})
-
 \end{eqnarray}
 where we have marginalised over any missing data.
 
