@@ -110,7 +110,7 @@ different possible (mutually exclusive) stage transition pathways.}
 \label{fig:random-process}
 \end{figure}
 
-The probability of a given complete sequence $\langle\vec{r}_n\rangle$ is now defined as
+The probability of a given complete sequence $\langle\vec{r}\rangle$ is now defined as
 \begin{eqnarray}
    p(\langle\vec{r}\rangle)
 & = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!1)
@@ -131,9 +131,9 @@ and the probability of the end sequence $\dn\vec{r}\rangle$ is
 p(\dn\vec{r}\rangle)
 & = & p(\iota_0\!=\!0,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!1)\,.
 \end{eqnarray}
-We may also write the probability of the ambiguous start sequence $\langle\vec{r}_n]$ as
+We may also write the probability of the ambiguous start sequence $\langle\vec{r}]$ as
 \begin{eqnarray}
-p(\langle\vec{r}_n]) 
+p(\langle\vec{r}]) 
 & = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!*)\,,
 \end{eqnarray}
 where $\tau_{n+1}=*$ is just a shorthand to indicate that we are uncertain of the true value of $\tau_{n+1}$;
@@ -222,21 +222,20 @@ p(R_n\!=\!r_n\,|\,\iota_0\!=\!1,\ldots,\tau_{n}\!=\!0)
 \,.
 \label{eq:temporal-model-full}
 \end{eqnarray}
-We can generalise this model by defining the forward observation sub-sequence $\vec{r}_t=(r_1,r_2,\ldots,r_t)$,
-for $t=1,2,\ldots,n$.
-% For convenience, we also define $\vec{r}_0$ to be the empty sub-sequence; probabilistically,
-%this term has no effect, and may be dropped.
+We can generalise this model by first defining a forward observation sub-sequence $\vec{r}_t=(r_1,r_2,\ldots,r_t)$,
+for $t=1,2,\ldots,n$, where $\vec{r}_0$ is taken to be the empty sub-sequence by definition.
+ For later convenience, we also define the backward observation sub-sequence $\rvec{r}_t=(r_t,r_{t+1},\ldots,r_n)$,
+for $t=n,n-1,\ldots,1$; likewise, $\rvec{r}_{n+1}$ is an empty sub-sequence.
 Hence, we obtain
 \begin{eqnarray}
 p(\underline{\iota},\vec{r},\underline{\tau}) & = &
 p(\iota_0\!=\!\underline{\iota})
-\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
-\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+%\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+\prod_{t=1}^{n}\left\{p(\tau_t\!=\!0\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_{t-1}\!=\!\vec{0}_{t-1},
+\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right.
 \nonumber\\&&
-{}\times
-\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_{t-1}\!=\!\vec{0},
-\vec{R}_{t-1}\!=\!\vec{r}_{t-1})
-\,p(R_t\!=\!r_t\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
+\hspace*{20mm}{}\times \left.
+p(R_t\!=\!r_t\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_t\!=\!\vec{0}_t,\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
 \nonumber\\&&
 {}\times p(\tau_{n+1}\!=\!\bar{\tau}\:|\;\iota_0\!=\!\underline{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
 \,.
@@ -297,7 +296,7 @@ p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
 {}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,R_{t-1}\!=\!r_{t-1})
 \,p(R_t\!=\!r_t\,|\,\tau_t\!=\!0,R_{t-1}\!=\!r_{t-1})\right\}
 \nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!1\:|\;R_n\!=\!r_n)
+{}\times p(\tau_{n+1}\!=\!\underline{\tau}\:|\;R_n\!=\!r_n)
 \,.
 \end{eqnarray}
 This is just a Markov interpretation of the random process depicted in Figure~\ref{fig:random-process},
@@ -441,14 +440,15 @@ p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iot
 \,.
 \label{eq:stateful-1-model}
 \end{eqnarray}
-Observe that the $\tau_1$ dependency can additionally be dropped in practice,
-since zero-length sequences convey little information, and are in fact undetectable if the
-generating process does not explicitly indicate the start and end of sequences.
+%Observe that the $\tau_1$ dependency can additionally be dropped in practice,
+%since zero-length sequences convey little information, and are in fact undetectable if the
+%generating process does not explicitly indicate the start and end of sequences.
+So far, we have made no assumption as to whether the states take continuous values or discrete values.
+In the next section, we consider the important sub-class of models where the states are discrete-valued.
 
 \section{Discrete-state Sequence Models}
 
-Consider the stateful, first-order Markov process depicted by Figure~\ref{fig:stateful-1-process},
-and suppose for convenience that zero-length sequences are impossible.
+Consider the stateful, first-order Markov process depicted by Figure~\ref{fig:stateful-1-process}.
 Let us now restrict our attention to the class of corresponding sequence models where
 the state $S_t$ at any stage $t$ may now only take {\em discrete} values in the set 
 ${\cal S}=\{\sigma_1,\sigma_2,\ldots,\sigma_S\}$.
@@ -458,58 +458,54 @@ In the event that a particular state $S_t$ is unobserved, we say that the state 
 and denote $i_t=*$ and $s_t=*$. In the situation where all values of $\vec{s}$ are unobserved,
 the sequence model~\eqref{eq:stateful-1-model} is known as a {\em hidden-state Markov model} (HMM).
 
-The sequence model~\eqref{eq:stateful-1-model}, with the $\tau_1$ dependency dropped,
+The sequence model~\eqref{eq:stateful-1-model}
 may now be explicitly conditioned on a general parameter $\theta$
 that governs the various discrete state distributions. Each term in the model depends directly on the stage index $t$ and 
 indirectly on the state index $i_t$. 
 Furthermore, each term represents either the initial state, the terminal state, or the non-terminal transitions
 between states at adjacent stages. Hence, let $\theta=(\vec{\pi},\Gamma,\vec{\omega})$, 
-such that the probability of an arbitrary, observed sequence (with no hidden states) is given by
+such that the probability of an arbitrary, observed\footnote{We assume that all observed sequences are non-zero in length,
+since zero-length sequences are typically unobservable unless the generating process explicitly signals the start
+and end of each sequence. The modelling of zero-length sequences will require an extra parameter.} sequence (with no hidden states) is given by
 \begin{eqnarray}
-p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) & = & \underline{\pi}_{1,i_1}\,o_{1,i_1}(x_1)\left\{\prod_{t=1}^{n-1}\omega^-_{t,i_t}\,\Gamma_{t,i_t,i_{t+1}}\,o_{t,i_{t+1}}(x_{t+1})
-\right\}\,\underline{\omega}_{n,i_n}
+p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) & = & \pi_{\underline{\iota},1,i_1}\,o_{1,i_1}(x_1)\left\{\prod_{t=1}^{n-1}\omega_{0,t,i_t}\,\Gamma_{t,i_t,i_{t+1}}\,o_{t+1,i_{t+1}}(x_{t+1})
+\right\}\,\omega_{\underline{\tau},n,i_n}
 \,.
 \label{eq:p_s_x_g_theta}
 \end{eqnarray}
-The initial state $S_1$ of the sequence at stage $t=1$ is governed by the parameter $\vec{\pi}$, such that generically
+The initial state $S_1$ of the sequence at stage $t=1$ is governed by the parameter $\vec{\pi}$, where
 \begin{eqnarray}
-  \underline{\pi}_{1,i} & = & p(\iota_{0}\!=\!\underline{\iota}\,|\,\theta)
-\,p(S_1\!=\!\sigma_{i}\,|\,\iota_{0}\!=\!\underline{\iota},\theta)\,.
-\end{eqnarray}
-More generally, we define
-\begin{eqnarray}
-  \pi^-_{t,i} & = & p(\iota_{t-1}\!=\!0\,|\,\theta)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!0,\theta)\,,
+  \pi_{0,t,i} & = & p(\iota_{t-1}\!=\!0\,|\,\theta)\,p(\tau_t\!=\!0\,|\,\iota_{t-1}\!=\!0,\theta)
+      \,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!0,\tau_t\!=\!0,\theta)\,,
 \\
-  \pi^+_{t,i} & = & p(\iota_{t-1}\!=\!1\,|\,\theta)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!1,\theta)\,,
+  \pi_{1,t,i} & = & p(\iota_{t-1}\!=\!1\,|\,\theta)\,p(\tau_t\!=\!0\,|\,\iota_{t-1}\!=\!1,\theta)
+      \,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!1,\tau_t\!=\!0,\theta)\,,
 \end{eqnarray}
 and
 \begin{eqnarray}
-  \pi*_{t,i} & = & p(\iota_{t-1}\!=\!*\,|\,\theta)\,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!*,\theta)
-~=~
-  p(S_t\!=\!\sigma_i\,|\,\theta)~=~\pi^-_{t,i}+\pi^+_{t,i}\,.
+  \pi_{*,t,i} & = & p(\iota_{t-1}\!=\!*\,|\,\theta)\,p(\tau_t\!=\!0\,|\,\iota_{t-1}\!=\!*,\theta)
+      \,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!*,\tau_t\!=\!0,\theta)
+\nonumber\\& = &
+  p(\tau_t\!=\!0,S_t\!=\!\sigma_i\,|\,\theta)~=~\pi_{0,t,i}+\pi_{1,t,i}\,.
 \end{eqnarray}
-Observe that each state $S_t$ for $t>1$ is a non-initial state, governed by $\pi^-_{t,i_t}$. However, such terms do
+Observe that each state $S_t$ for $t>1$ is a non-initial state, governed by $\pi_{0,t,i_t}$. However, such terms do
 not explicitly appear in model~\eqref{eq:p_s_x_g_theta}, except if $\underline{\iota}\ne 1$, 
 since they are already accounted for by the state transitions.
 These implicit terms become important when it comes to parameter estimation (see Section~\ref{sec:param-estimation}).
 
-The terminal state $S_n$ at stage $t=n$ is likewise governed by the parameter $\vec{\omega}$, such that
+The terminal state $S_n$ at stage $t=n$ is likewise governed by the parameter $\vec{\omega}$, where
 \begin{eqnarray}
-  \underline{\omega}_{n,i} & = & p(\tau_{n+1}\!=\!\underline{\tau}\,|\,S_n\!=\!\sigma_{i},\theta)\,,
-\end{eqnarray}
-where 
-\begin{eqnarray}
-  \omega_{t,i}^- & = & p(\tau_{t+1}\!=\!0\,|\,S_n\!=\!\sigma_{i},\theta)\,,
+  \omega_{0,t,i} & = & p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_{i},\theta)\,,
 \\
-  \omega_{t,i}^+ & = & p(\tau_{t+1}\!=\!1\,|\,S_n\!=\!\sigma_{i},\theta)\,,
+  \omega_{1,t,i} & = & p(\tau_{t+1}\!=\!1\,|\,S_t\!=\!\sigma_{i},\theta)\,,
 \end{eqnarray}
 and
 \begin{eqnarray}
-  \omega_{t,i}^* & = & p(\tau_{t+1}\!=\!*\,|\,S_n\!=\!\sigma_{i},\theta)
-~=~\omega^-_{t,i}+\omega^+_{t,i}~=~1\,.
+  \omega_{*,t,i} & = & p(\tau_{t+1}\!=\!*\,|\,S_t\!=\!\sigma_{i},\theta)
+~=~\omega_{0,t,i}+\omega_{1,t,i}~=~1\,.
 \end{eqnarray}
 Observe that each state $S_t$ for $t<n$ is a non-terminal state, and is explicitly modelled by the term
-$\omega^-_{t,i_t}$.
+$\omega_{0,t,i_t}$.
 
 Lastly, the permissible transitions between the states $S_t$ and $S_{t+1}$ of consecutive stages $t$ and $t+1$ are governed by
 the parameter $\Gamma$, where
@@ -529,14 +525,139 @@ Finally, note that in the situtation where any state in the observed state seque
    p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) 
 & = & 
    \sum_{i_1'=1}^{S}\delta(i_1'\!=\!i_1)\sum_{i_2'=1}^{S}\delta(i_2'\!=\!i_2)\cdots\sum_{i_n'=1}^{S}\delta(i_n'\!=\!i_n)\,
-\nonumber\\&&\hspace*{10mm}\underline{\pi}_{1,i_1'}\,o_{1,i_1'}(x_1)\,
-\left\{\prod_{t=1}^{n-1}\omega^-_{t,i_t'}\,\Gamma_{t,i_t',i_{t+1}'}\,o_{t,i_{t+1}'}(x_{t+1})
-\right\}\,\underline{\omega}_{n,i_n'}
+\nonumber\\&&\hspace*{10mm}\pi_{\underline{\iota},1,i_1'}\,o_{1,i_1'}(x_1)\,
+\left\{\prod_{t=1}^{n-1}\omega_{0,t,i_t'}\,\Gamma_{t,i_t',i_{t+1}'}\,o_{t+1,i_{t+1}'}(x_{t+1})
+\right\}\,\omega_{\underline{\tau},n,i_n'}
 \,,
 \label{eq:p_s_x_g_theta:gen}
 \end{eqnarray}
 where $\delta(\cdot)$ is an indicator function taking the value $1$ (or $0$) if its argument is true (or false).
 Note that if $S_t$ is a hidden state, then $i_t=*$ and $\delta(i_t'\!=\!*)=1$ for all $i_t'\in\{1,2,\ldots,S\}$; otherwise, the summation over $i_t'$ collapses to the observed value $i_t$.
+The observation likelihood given by model~\eqref{eq:p_s_x_g_theta:gen} can be efficiently computed by an
+extension of the forward--backward algorithm, described in the next section.
+
+\subsection{Extended Forward--Backward Algorithm}
+
+The sequence model~\eqref{eq:p_s_x_g_theta:gen} can be efficiently evaluated by marginalising over the state of each stage
+in turn, using a modification of the {\em forward--backward algorithm} to include knowledge of
+sequence initiation and termination.
+ The forward pass involves first summing over all terms containing $i_1'$, then over all remaining terms containing $i_2'$,
+and so on up to summing over $i_n'$. This is equivalent to evaluating the reordered model
+\begin{eqnarray}
+   p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) 
+& = & 
+   \left\{\sum_{i_n'=1}^{S}\delta(i_n'\!=\!i_n)
+%\left\{\sum_{i_{n-1}'=1}^{S}\delta(i_{n-1}'\!=\!i_{n-1})\right.
+\cdots
+\right\{\sum_{i_2'=1}^{S}\delta(i_2'\!=\!i_2)
+\nonumber\\&&
+\hspace*{10mm}{}\times
+\left\{\sum_{i_1'=1}^{S}\delta(i_1'\!=\!i_1)\,
+\pi_{\underline{\iota},1,i_1'}\,o_{1,i_1'}(x_1)\,\omega_{0,1,i_1'}\,\Gamma_{1,i_1',i_{2}'}\right\}
+\nonumber\\&&
+\left.\rule{0pt}{7mm}
+o_{2,i_{2}'}(x_{2})\omega_{0,2,i_{2}'}\,\Gamma_{2,i_{2}',i_{3}'}\right\}
+\cdots
+%\left.\rule{0pt}{7mm}\omega_{0,n-1,i_{n-1}'}\,\Gamma_{n-1,i_{n-1}',i_{n}'}\right\}
+\left.\rule{0pt}{7mm}\,o_{n,i_{n}'}(x_{n})
+\,\omega_{\underline{\tau},n,i_n'}\right\}
+\,.
+\label{eq:forward}
+\end{eqnarray}
+Conversely, the backaward pass reverses the order of evaluation, first summing over all terms containing $i_n'$,
+and then over all remaining terms containing $i_{n-1}'$, and so on down to summing over $i_1'$.
+This is equivalent to evaluating the reordered model
+\begin{eqnarray}
+   p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) 
+& = & 
+   \left\{\sum_{i_1'=1}^{S}\delta(i_1'\!=\!i_1)\,
+\pi_{\underline{\iota},1,i_1'}\,o_{1,i_1'}(x_1)\,\omega_{0,1,i'_{1}}\,
+\cdots\right.
+\nonumber\\&&
+{}\times\left\{\sum_{i_{n-1}'=1}^{S}\delta(i_{n-1}'\!=\!i_{n-1})\,
+\Gamma_{n-2,i_{n-2}',i_{n-1}'}\,o_{n-1,i_{n-1}'}(x_{n-1})\,\omega_{0,n-1,i'_{n-1}}\right.
+\nonumber\\&&
+\hspace*{4mm}{}\times
+\left.\rule{0pt}{7mm}\left\{\sum_{i_n'=1}^{S}\delta(i_n'\!=\!i_n)\,
+\Gamma_{n-1,i_{n-1}',i_{n}'}\,o_{n,i_{n}'}(x_{n})
+\,\omega_{\underline{\tau},n,i_n'}\right\}\right\}
+\cdots\left.\rule{0pt}{7mm}\right\}
+\,.
+\label{eq:backward}
+\end{eqnarray}
+
+A more efficient mechanism for evaluation comes from making use of the first-order Markov dependencies.
+Notionally, from the process depicted in Figure~\ref{fig:stateful-1-process}, we may arbitrarily consider the transition from 
+some stage $t$ to stage $t+1$,
+and partition the sequence into: (i) past values from the initial node up to and including $S_t$ and $X_t$;
+and (ii) future values from $S_{t+1}$ and $X_{t+1}$ up to and including the terminal node.
+Note that the termination or non-termination of stage $t$ is governed by $\tau_{t+1}$, which is
+therefore a future value.
+The Markov dependency then implies that the future values are conditioned only on state $S_t$
+via $\tau_{t+1}$ and $S_{t+1}$.
+Hence, remembering that notionally $s_t=\sigma_{i_t}$, model~\eqref{eq:p_s_x_g_theta:gen} reduces to
+\begin{eqnarray}
+   p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) 
+& = & 
+   \sum_{i_t'=1}^{S}\delta(i_t'\!=\!i_t)\,p(\underline{\iota},\vec{s}_{t-1},\vec{x}_t,S_t=\sigma_{i'_t}\,|\,\theta) 
+\,p(\rvec{s}_{t+1},\rvec{x}_{t+1},\underline{\tau}\,|\,S_t=\sigma_{i'_t},\theta) 
+\nonumber\\& = &
+  \sum_{i=1}^{S}\delta(i\!=\!i_t)\,\alpha_{t,i}\,\beta_{t,i}\,.
+\end{eqnarray}
+The forward step $\alpha_{t,i}$ is recursively defined as
+\begin{eqnarray}
+   \alpha_{t,i} & = & p(\underline{\iota},\vec{s}_{t-1},\vec{x}_t,S_t=\sigma_{i}\,|\,\theta) 
+\nonumber\\& = &
+   \sum_{j=1}^{S}\delta(j=i_{t-1})\,p(\underline{\iota},\vec{s}_{t-2},\vec{x}_{t-1},S_{t-1}=\sigma_{j}\,|\,\theta) 
+      \,p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!\sigma_j,\theta)
+\nonumber\\&&
+    \hspace*{5mm}{}\times\,p(S_t\!=\!\sigma_i\,|\,\tau_{t}\!=\!0,S_{t-1}\!=\!\sigma_j,\theta)
+\,p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_i,\theta)
+\nonumber\\& = &
+   \left\{\sum_{j=1}^{S}\delta(j=i_{t-1})\,\alpha_{t-1,j}\,\omega_{0,t-1,j}\,\Gamma_{t-1,j,i}\right\}\,o_{t,i}(x_t)\,,
+\end{eqnarray}
+for $t=2,3,\ldots,n$. The forward pass commences with the first step
+\begin{eqnarray}
+  \alpha_{1,i} & = & p(\underline{\iota},x_1,S_1=\sigma_{i}\,|\,\theta) 
+\nonumber\\& = & 
+  p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota\!=\!\underline{\iota},\theta)
+\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0,\theta)\,p(X_1\!=\!x_1\,|\,S_1\!=\!\sigma_i,\theta)
+\nonumber\\& = & 
+  \pi_{\underline{\iota},1,i}\,o_{1,i}(x_1)
+\,.
+\end{eqnarray}
+Observe that if we substitute $\alpha_{1,j}$ into $\alpha_{2,i}$, then the result is just
+the entire summation over $i'_1$ from the forward model~\eqref{eq:forward} multiplied by
+the next term $o_{2,i}(x_2)$ from the $i_2'$ summation.
+Also note that the standard forward pass derivation commences with $\pi_{*,1,i}$ and does not include the
+$\delta(\cdot)$ or $\omega$ terms.
+
+Conversely to the forward pass, the backward step $\beta_{t,i}$ is recursively defined as
+\begin{eqnarray}
+   \beta_{t,i} & = & p(\rvec{s}_{t+1},\rvec{x}_{t+1},\underline{\tau}\,|\,S_t\!=\!\sigma_{i},\theta) 
+\nonumber\\& = & 
+   \sum_{j=1}^{S}\delta(j\!=\!i_{t+1})\,
+p(\rvec{s}_{t+2},\rvec{x}_{t+2},\underline{\tau}\,|\,S_{t+1}\!=\!\sigma_{j},\theta) 
+\,p(X_{t+1}=x_{t+1}\,|\,S_{t+1}\!=\!\sigma_j,\theta)
+\nonumber\\&& \hspace*{5mm}{}\times
+       p(S_{t+1}\!=\!\sigma_j\,|\,\tau_{t+1}\!=\!0,S_t\!=\!\sigma_i,\theta)
+\,p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_i,\theta)
+\nonumber\\& = & 
+	\left\{\sum_{j=1}^{S}\delta(j\!=\!i_{t+1})\,\beta_{t+1,j}\,o_{t+1,j}(x_{t+1})\,\Gamma_{t,i,j}\right\}
+\,\omega_{0,t,i}
+\,,
+\end{eqnarray}
+for $t=n-1,n-2,\ldots,1$. The backward pass commences with the first step
+\begin{eqnarray}
+   \beta_{n,i} & = & p(\tau_{n+1}\!=\!\underline{\tau}\,|\,S_n\!=\!\sigma_i,\theta)
+~=~\omega_{\underline{\tau},n,i}\,.
+\end{eqnarray}
+Observe that if we substitute $\beta_{n,j}$ into $\beta_{n-1,i}$, then the result is just
+the entire summation over $i'_n$ from the backward model~\eqref{eq:backward} multiplied by the previous term
+$\omega_{0,n-1,i'_{n-1}}$ from the $i'_{n-1}$ summation.
+Also note that the standard backward pass derivation commences with the equivalent of $\omega_{*,n,i}=1$,
+and does not include the $\delta(\cdot)$ or $\omega$ terms.
+
 
 \subsection{Posterior State Prediction}
 
@@ -609,20 +730,6 @@ Similarly, we may predict the next observation $X_{t+1}$ via
 \end{eqnarray}
 
 The {\em backward step}, which incorporates information about the termination of the sequence, is now also recursively defined via
-\begin{eqnarray}
-   \beta_{t,i} & = & p([\rvec{x}_{t+1}\rangle\,|\,S_t\!=\!\sigma_i,\theta)
-\nonumber\\& = & 
-   \sum_{j=1}^{S}p([\rvec{x}_{t+2}\rangle\,|\,S_{t+1}\!=\!\sigma_j,\theta)\,p(X_{t+1}=x_{t+1}\,|\,S_{t+1}\!=\!\sigma_j,\theta)
-\nonumber\\&& \hspace*{5mm}{}\times
-       p(S_{t+1}\!=\!\sigma_j\,|\,S_t\!=\!\sigma_i,\theta)\,p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_i,\theta)
-\nonumber\\& = & 
-	\left\{\sum_{j=1}^{S}\beta_{t+1,j}\,o_{t+1,j}(x_{t+1})\,\Gamma_{t,i,j}\right\}\,\bar{\omega}_{t,i}
-\,,
-\end{eqnarray}
-for $t=n-1,n-2,\ldots,1$. The backward step commences with
-\begin{eqnarray}
-   \beta_{n,i} & = & p(\tau_{n+1}\!=\!1\,|\,S_n\!=\!\sigma_i,\theta)~=~\omega_{n,i}\,.
-\end{eqnarray}
 Note that incompletely--terminated sequences such as $[\vec{x}!$ and $[\vec{x}]$ can also be handled by substituting $\bar{\omega}$ and $\breve{\omega}$ for $\omega$ in $\beta$, thereby obtaining
 $\bar{\beta}$ and $\breve{\beta}$ respectively.
 
