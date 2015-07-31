@@ -11,7 +11,7 @@
 \newcommand{\Bb}[1]{%
   \expandafter\def\csname#1#1\endcsname%
   {\ensuremath{\mathbb #1}}}
-\Bb X\Bb S\Bb V
+\Bb X\Bb S\Bb V\Bb Z
 \newcommand{\up}{\!\uparrow}
 \newcommand{\dn}{\downarrow\!}
 
@@ -446,7 +446,7 @@ p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iot
 So far, we have made no assumption as to whether the states take continuous values or discrete values.
 In the next section, we consider the important sub-class of models where the states are discrete-valued.
 
-\section{Discrete-state Sequence Models}
+\section{Discrete-state Sequence Models}\label{sec:discrete-state}
 
 Consider the stateful, first-order Markov process depicted by Figure~\ref{fig:stateful-1-process}.
 Let us now restrict our attention to the class of corresponding sequence models where
@@ -463,7 +463,7 @@ may now be explicitly conditioned on a general parameter $\theta$
 that governs the various discrete state distributions. Each term in the model depends directly on the stage index $t$ and 
 indirectly on the state index $i_t$. 
 Furthermore, each term represents either the initial state, the terminal state, or the non-terminal transitions
-between states at adjacent stages. Hence, let $\theta=(\vec{\pi},\Gamma,\vec{\omega})$, 
+between states at adjacent stages. Hence, let $\theta=(\Pi,\Gamma,\Omega)$, 
 such that the probability of an arbitrary, observed\footnote{We assume that all observed sequences are non-zero in length,
 since zero-length sequences are typically unobservable unless the generating process explicitly signals the start
 and end of each sequence. The modelling of zero-length sequences will require an extra parameter.} sequence (with no hidden states) is given by
@@ -491,7 +491,7 @@ and
 Observe that each state $S_t$ for $t>1$ is a non-initial state, governed by $\pi_{0,t,i_t}$. However, such terms do
 not explicitly appear in model~\eqref{eq:p_s_x_g_theta}, except if $\underline{\iota}\ne 1$, 
 since they are already accounted for by the state transitions.
-These implicit terms become important when it comes to parameter estimation (see Section~\ref{sec:param-estimation}).
+These implicit terms become important when it comes to parameter estimation (see Section~\ref{sec:estimate-known}).
 
 The terminal state $S_n$ at stage $t=n$ is likewise governed by the parameter $\vec{\omega}$, where
 \begin{eqnarray}
@@ -769,77 +769,183 @@ p(\dn\rvec{s}_{t+2},\rvec{x}_{t+2},\underline{\tau}\,|\,S_{t+1}\!=\!\sigma_j,\th
 \alpha_{t,i}\,\omega_{0,t,i}\,\Gamma_{t,i,j}\,o_{t+1,j}(x_{t+1})\,\beta_{t+1,j}\,,
 \end{eqnarray}
 from the forward pass~\eqref{eq:alpha} and the backward pass~\eqref{eq:beta}.
+Observe that
+\begin{eqnarray}
+   \gamma_{t,i} & = & p(S_t\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta)
+\nonumber\\& = &
+\sum_{j=1}^{S}p(S_t\!=\!\sigma_i,S_{t+1}\!=\!\sigma_j\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta)
+~=~\sum_{j=1}^{S}\gamma_{t,i,j}\,,
+\label{eq:xi_to_gamma}
+\end{eqnarray}
+from equation~\eqref{eq:gamma_t_i}.
 
-\subsection{Posterior Parameter Estimation}
+\subsection{Posterior Parameter Estimation with Known Data}\label{sec:estimate-known}
 
-We desire to estimate the model parameter $\theta$ given an ordered set $\VV=\{\vec{v}^{(d)}\}_{d=1}^{D}$ of observed state and value sequences,
+We desire to estimate the model parameter $\theta=(\Pi,\Gamma,\Omega)$ given an 
+ordered set $\VV=\{\vec{v}^{(d)}\}_{d=1}^{D}$ of observed state and value sequences,
 where each observation takes the form of $\vec{v}^{(d)}=(\underline{\iota}^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\underline{\tau}^{(d)})$.
 As before, we assume that $\vec{x}^{(d)}$ is a contiguous sequence of observed values with no missing values, whereas each `observed' state
 $s_t$ might either be known, i.e.\ $s_t=\sigma_{i_t}$, or missing, i.e.\ $s_t=*$ and $i_t=*$.
-Hence, from equation~\eqref{eq:p_s_x_g_theta:gen} we obtain the likelihood of the $d$-th observed sequence as
-\begin{eqnarray}
-  p(v^{(d)}\,|\,\theta) & = & 
-   \sum_{i_1'=1}^{S}\delta(i_1'\!=\!i_1^{(d)})\sum_{i_2'=1}^{S}\delta(i_2'\!=\!i_2^{(d)})\cdots\sum_{i_{n^{(d)}}'=1}^{S}\delta(i_{n^{(d)}}'\!=\!i_{n^{(d)}}^{(d)})\,
-\nonumber\\&&{}\times\pi_{\underline{\iota}^{(d)},1,i_1'}\,o_{1,i_1'}(x_1^{(d)})\,
-\left\{\prod_{t=1}^{n^{(d)}-1}\omega_{0,t,i_t'}\,\Gamma_{t,i_t',i_{t+1}'}\,o_{t+1,i_{t+1}'}(x_{t+1}^{(d)})
-\right\}\,\omega_{\underline{\tau}^{(d)},{n^{(d)}},i_{n^{(d)}}'}\,,
-\end{eqnarray}
-where $n^{(d)}=|\vec{x}^{(d)}|$.
-Now, under the assumption that the observed sequences are independent, the joint log-likelihood of the data is given by
-\begin{eqnarray}
-  L(\theta) & = & \log p(\VV\,|\,\theta) 
-\nonumber\\& = & 
-\log\prod_{d=1}^D 
-p(\iota_0^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)}\,|\,\theta) 
-\nonumber\\& = & 
-\sum_{d=1}^D\log 
-p(\iota_0^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)}\,|\,\theta) 
-\nonumber\\& = & 
-\sum_{d=1}^D L^{(d)}(\theta)
-\,,
-\end{eqnarray}
-where
-\begin{eqnarray}
-  L^{(d)}(\theta) & = &
-   \log\pi_{i_1^{(d)}}^{(d)}
- + \sum_{t=1}^{n^{(d)}-1}\log\Gamma_{i_t^{(d)},i_{t+1}^{(d)}}
- + \sum_{t=1}^{n^{(d)}}\log o_{t,i_t^{(d)}}
- + \log\omega_{i_{n^{(d)}}^{(d)}}^{(d)}
-\,,
-\end{eqnarray}
-and $n^{(d)}=|\vec{x}^{(d)}|$.
+Similarly, the sequence initiation and termination markers, $\underline{\iota}^{(d)}$ and $\underline{\tau}^{(d)}$ respectively,
+might also be known or unknown.
+In this section, let us suppose that each $\vec{v}^{(d)}$ is entirely known. The case of hidden data is analysed in the next section.
 
-However, recall that $\SS$ is actually uknown. Hence, we take an expectation of the log-likelihood over all possible values of
-$\SS$, namely\footnote{Other expectations are possible, e.g.\ over the joint distribution $\SS,\XX\,|\,\theta$. This latter produces macro-averaged
-parameter estimates of the form $\sum_{d=1}^D\phi^{(d)}/\sum_{d=1}^D\psi^{(d)}$, whereas the discriminative distribution $\SS\,|\,\XX,\theta$
-often leads to micro-averaged estimates of the form $\sum_{d=1}^D\phi^{(d)}/\psi^{(d)}/D$.}
+Due to the typical shortage of observed data, let us additionally assume that the distributions for the sub-parameters are stationary in time; 
+that is, $\Gamma_{t,i,j}\equiv\Gamma_{i,j}$ for any stage $t$, 
+and likewise $\pi_{\underline{\iota},t,i}\equiv\omega_{\underline{\iota},i}$,
+$\omega_{\underline{\tau},t,i}\equiv\omega_{\underline{\tau},i}$ and $o_{t,i}(x)\equiv o_{i}(x)$.
+Then, from equation~\eqref{eq:p_s_x_g_theta}, we obtain the likelihood of the $d$-th observed sequence as
 \begin{eqnarray}
-  Q(\theta) & = & E_{\SS\,|\,\XX,\theta}\left[\log p(\SS,\XX\,|\,\theta)\right]
-\nonumber\\& = & 
-E_{\SS\,|\,\XX\theta}\left[
-\sum_{d=1}^D L^{(d)}(\theta)
-\right]
-\nonumber\\& = & 
-\sum_{d=1}^D E_{\SS\,|\,\XX,\theta}\left[
-L^{(d)}(\theta)
-\right]
-\nonumber\\& = & 
-\sum_{d=1}^D \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{n^{(d)}}}^{S}
-p(\vec{s}^{(d)}\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\theta) 
-\,L^{(d)}(\theta)
+  \!\!\!p(v^{(d)}\,|\,\theta) & = & 
+   \pi_{\underline{\iota}^{(d)},i_1^{(d)}}\,o_{i_1^{(d)}}(x_1^{(d)})\,
+\left\{\prod_{t=1}^{n^{(d)}-1}\omega_{0,i_t^{(d)}}\,\Gamma_{i_t^{(d)},i_{t+1}^{(d)}}\,o_{i_{t+1}^{(d)}}(x_{t+1}^{(d)})
+\right\}\,\omega_{\underline{\tau}^{(d)},i^{(d)}_{n^{(d)}}}\,,
+\end{eqnarray}
+where $n^{(d)}=|\vec{x}^{(d)}|$, and the log-likelihood as
+\begin{eqnarray}
+  \ell(v^{(d)}\,|\,\theta) & = &
+   \log\pi_{\underline{\iota}^{(d)},i_1^{(d)}}
+ + \sum_{t=1}^{n^{(d)}-1}\log\omega_{0,i_t^{(d)}}\Gamma_{i_t^{(d)},i_{t+1}^{(d)}}
+ + \sum_{t=1}^{n^{(d)}}\log o_{i_t^{(d)}}(x_{i_t^{(d)}})
+ + \log\omega_{\underline{\tau}^{(d)},i_{n^{(d)}}^{(d)}}\,.
+\label{eq:log-prob-d}
+\end{eqnarray}
+Now, under the assumption that the observed sequences are independent, the log-likelihood of the observed data is given by
+\begin{eqnarray}
+  L(\theta) & = & \log p(\VV\,|\,\theta)
+~=~\log\prod_{d=1}^D p(v^{(d)}\,|\,\theta) 
+~=~ \sum_{d=1}^D \ell(v^{(d)},\theta)
 \,.
 \end{eqnarray}
-In practice, it is difficult to optimise this nonlinear expression analytically. A feasible alternative is to iteratively apply the {\em expectation--maximisation}
+Hence, to estimate $\theta$ we maximise the log-likelihood subject to the necessary (Lagrangian) constraints on the sub-parameters.
+Starting with the state transitions, we maximise
+\begin{eqnarray}
+  F_{\Gamma}(\theta) & = & \sum_{d=1}^D \sum_{t=1}^{n^{(d)}-1}\log\Gamma_{i_t^{(d)},i_{t+1}^{(d)}}
+-\sum_{i=1}^{S}\lambda_i\left(\sum_{j=1}^{S}\Gamma_{i,j}-1\right)
+\label{eq:F_gamma}
+\\
+  \Rightarrow \frac{\partial F_{\Gamma}(\theta)}{\partial\Gamma_{i,j}} & = &
+\sum_{d=1}^D \sum_{t=1}^{n^{(d)}-1}\delta(i=i_t^{(d)})\,\delta(j=i_{t+1}^{(d)})\,\frac{1}{\Gamma_{i,j}}-\lambda_{i}
+~=~0 \mbox{ when }\theta=\hat{\theta}
+\nonumber\\
+  \Rightarrow\hat{\lambda}_i & = & \sum_{j=1}^{S}\sum_{d=1}^D \sum_{t=1}^{n^{(d)}-1}\delta(i=i_t^{(d)})\,\delta(j=i_{t+1}^{(d)})
+~=~\sum_{d=1}^D \sum_{t=1}^{n^{(d)}-1}\delta(i=i_t^{(d)})
+\nonumber\\
+  \Rightarrow\hat{\Gamma}_{i,j} & = & 
+  \frac{\sum_{d=1}^D \sum_{t=1}^{n^{(d)}-1}\delta(i=i_t^{(d)})\,\delta(j=i_{t+1}^{(d)})}
+          {\sum_{d=1}^D \sum_{t=1}^{n^{(d)}-1}\delta(i=i_t^{(d)})}\,.
+\end{eqnarray}
+Observe that this estimate corresponds to counting all the transitions from state $i$ to state $j$ across all the data, and then normalising these counts by the sum over $j$.
+
+Similarly, for sequence termination or non-termination, we maximise
+\begin{eqnarray}
+  F_{\Omega}(\theta) & = & \sum_{d=1}^D \left\{\sum_{t=1}^{n^{(d)}-1}\log\omega_{0,i_{t}^{(d)}}+\log\omega_{\underline{\tau}^{(d)},i_{n^{(d)}}^{(d)}}\right\}
+-\sum_{i=1}^{S}\lambda_i\left(\omega_{0,i}+\omega_{1,i}-1\right)
+\\
+\Rightarrow\frac{\partial F_{\Omega}(\theta)}{\partial\omega_{0,i}} & = &
+\sum_{d=1}^D \left\{\sum_{t=1}^{n^{(d)}-1}\frac{\delta(i=i_{t}^{(d)})}{\omega_{0,i}}
+   +\frac{\delta(\underline{\tau}^{(d)}\!=\!0)\,\delta(i=i_{n^{(d)}}^{(d)})}{\omega_{0,i}}\right\}
+-\lambda_i\,,
+\nonumber\\
+\frac{\partial F_{\Omega}(\theta)}{\partial\omega_{1,i}} & = &
+\sum_{d=1}^D \left\{\frac{\delta(\underline{\tau}^{(d)}\!=\!1)\,\delta(i=i_{n^{(d)}}^{(d)})}{\omega_{1,i}}\right\}
+-\lambda_i\,.
+\end{eqnarray}
+Hence, by multiplying the two derivatives by $\omega_{0,i}$ and $\omega_{1,i}$, respectively, adding the terms and setting the result to zero, we obtain
+\begin{eqnarray}
+\hat{\lambda}_i & = & \sum_{d=1}^D \sum_{t=1}^{n^{(d)}}\delta(i=i_{t}^{(d)})
+\nonumber\\
+\Rightarrow \hat{\omega}_{0,i} & = & 
+\frac{\sum_{d=1}^D \left\{\sum_{t=1}^{n^{(d)}-1}\delta(i=i_{t}^{(d)})
+   +\delta(\underline{\tau}^{(d)}\!=\!0)\,\delta(i=i_{n^{(d)}}^{(d)})\right\}}
+     {\sum_{d=1}^D \sum_{t=1}^{n^{(d)}}\delta(i=i_{t}^{(d)})}\,,
+\nonumber\\
+\hat{\omega}_{1,i} & = & \frac{\sum_{d=1}^D\delta(\underline{\tau}^{(d)}\!=\!1)\,\delta(i=i_{n^{(d)}}^{(d)})}
+                                                  {\sum_{d=1}^D \sum_{t=1}^{n^{(d)}}\delta(i=i_{t}^{(d)})}\,.
+\end{eqnarray}
+Observe that this latter estimate corresponds to counting the various terminal states over all observed sequences, and then normalising these counts by the overall count of each state.
+Also note that we have assumed that $\underline{\tau}^{(d)}$ is known; unfortunately, these estimates will be inaccurate if $\underline{\tau}^{(d)}$ is unknown,
+since they ascribe equal weight to $\underline{\tau}^{(d)}=0$ and $\underline{\tau}^{(d)}=1$ regardless of $v^{(d)}$.
+The correct estimates in the case of missing data will be analysed in the next section.
+
+Finally, for sequence initiation or non-initiation, we recall the comment made in Section~\ref{sec:discrete-state} that each stage transition is both explicitly a non-terminal
+transition and implicitly a non-initial transtion; that is, each state transition $\Gamma_{t,i,j}$ also implies a sequence non-initiation $\pi_{0,t+1,j}$.
+Hence, from equation~\eqref{eq:log-prob-d}, we maximise the function
+\begin{eqnarray}
+  F_{\Pi}(\theta) & = & \sum_{d=1}^D \left\{\log\pi_{\underline{\iota}^{(d)},i_1^{(d)}}+\sum_{t=2}^{n^{(d)}}\log\pi_{0,i_{t}^{(d)}}\right\}
+-\lambda\left(\sum_{i=1}^{S}\{\pi_{0,i}+\pi_{1,i}\}-1\right)
+\\
+\Rightarrow\frac{\partial F_{\Pi}(\theta)}{\partial\pi_{0,i}} & = &
+  \sum_{d=1}^D \left\{\frac{\delta(\underline{\iota}^{(d)}\!=\!0)\,\delta(i_1^{(d)}\!=\!i)}{\pi_{0,i}}
++\sum_{t=2}^{n^{(d)}}\frac{\delta(i_t^{(d)}\!=\!i)}{\pi_{0,i}}\right\}-\lambda\,,
+\nonumber\\
+\frac{\partial F_{\Pi}(\theta)}{\partial\pi_{1,i}} & = &
+  \sum_{d=1}^D \left\{\frac{\delta(\underline{\iota}^{(d)}\!=\!1)\,\delta(i_1^{(d)}\!=\!i)}{\pi_{1,i}}\right\}-\lambda\,.
+\end{eqnarray}
+Thus, by multiplying the two derivatives by $\pi_{0,i}$ and $\pi_{1,i}$, respectively, adding and summing the terms over $i$, and setting the result to zero, we obtain
+\begin{eqnarray}
+\hat{\lambda} & = & \sum_{i=1}^{S}\sum_{d=1}^{D}\sum_{t=1}^{n^{(d)}}\delta(i_t^{(d)}\!=\!i)~=~\sum_{d=1}^{D}n^{(d)}
+\nonumber\\
+\Rightarrow \hat{\pi}_{0,i} & = & \frac{\sum_{d=1}^{D} \left\{\delta(\underline{\iota}^{(d)}\!=\!0)\,\delta(i_1^{(d)}\!=\!i)
+  +\sum_{t=2}^{n^{(d)}}\delta(i_t^{(d)}\!=\!i)\right\}}
+                                                               {\sum_{d=1}^{D}n^{(d)}}\,,
+\nonumber\\
+\hat{\pi}_{1,i} & = & \frac{\sum_{d=1}^{D} \delta(\underline{\iota}^{(d)}\!=\!1)\,\delta(i_1^{(d)}\!=\!i)}
+                                                               {\sum_{d=1}^{D}n^{(d)}}\,.
+\end{eqnarray}
+Observe that this latter estimate corresponds to counting the various initial states over all observed sequences, and then normalising these counts by the overall count of all states.
+Also note that these estimates are inaccurate if $\underline{\iota}$ is unknown; the correct estimates are derived in the next section.
+
+\subsection{Posterior Parameter Estimation with Missing Data}
+
+In contrast to Section~\ref{sec:estimate-known}, suppose now that any or all values of $\underline{\iota}^{(d)}$, $\underline{\tau}^{(d)}$ and $\vec{s}^{(d)}$ may be unknown
+when observing the $d$-th sequence $v^{(d)}$. The basic procedure is then to first estimate these missing values from the observed data $\VV$, and then to estimate the 
+most likely model parameter value $\hat{\theta}$ given $\VV$ and the missing values. This is the principle of the {\em expectation--maximisation} (EM) algorithm, which underlies the
+modified {\em Baum--Welch} parameter estimation algorithm derived here.
+
+Suppose we let $\ZZ=\{z^{(d)}\}_{d=1}^{D}$ denote the ordered set of missing values
+corresponding to the observed values $\VV=\{v^{(d)}\}_{d=1}^{D}$, where $z^{(d)}=(\overline{\underline{\iota}^{(d)}},\overline{\vec{s}^{(d)}},\overline{\underline{\tau}^{(d)}})$;
+that is, notionally $\ZZ$ contains the true (but still unknown) values missing from $\VV$.
+Hence, we take an expectation of the log-likelihood over all possible values of
+$\ZZ$, namely\footnote{Other expectations are possible, e.g.\ over the joint distribution $\ZZ,\VV\,|\,\theta$. This latter produces macro-averaged
+parameter estimates of the form $\sum_{d=1}^D\phi^{(d)}/\sum_{d=1}^D\psi^{(d)}$, whereas the discriminative distribution $\ZZ\,|\,\VV,\theta$
+often leads to micro-averaged estimates of the form $\sum_{d=1}^D[\phi^{(d)}/\psi^{(d)}]/D$.}
+\begin{eqnarray}
+  Q(\theta) & = & E_{\ZZ\,|\,\VV,\theta}\left[\log p(\ZZ,\VV\,|\,\theta)\right]
+\nonumber\\& = & 
+E_{\ZZ\,|\,\VV,\theta}\left[\sum_{d=1}^D \log p(z^{(d)},v^{(d)}\,|\,\theta)\right]
+\nonumber\\& = & 
+\sum_{d=1}^D E_{\ZZ\,|\,\VV,\theta}\left[
+\ell(\overline{\underline{\iota}^{(d)}},\overline{\vec{s}^{(d)}},\vec{x}^{(d)},\overline{\underline{\tau}^{(d)}}\,|\,\theta)
+\right]
+\nonumber\\& = & 
+\sum_{d=1}^D \sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}\cdots\sum_{\overline{i_{n^{(d)}}}}^{S}
+\sum_{\overline{\underline{\tau}}=0}^{1}
+p(\overline{\underline{\iota}},\overline{\vec{s}},\overline{\underline{\tau}}\,|\,\underline{\iota}^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\underline{\tau}^{(d)},\theta) 
+\,\ell(\overline{\underline{\iota}},\overline{\vec{s}},\vec{x}^{(d)},\overline{\underline{\tau}}\,|\,\theta)
+\nonumber\\& = &
+\sum_{d=1}^D \sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}\cdots\sum_{\overline{i_{n^{(d)}}}}^{S}
+\sum_{\overline{\underline{\tau}}=0}^{1}
+p(z\,|\,v^{(d)},\theta) \,\ell(\overline{v^{(d)}}\,|\,\theta)
+\,,
+\end{eqnarray}
+where $z=(\overline{\underline{\iota}},\overline{\vec{s}},\overline{\underline{\tau}})$ and 
+$\overline{v^{(d)}}=(\overline{\underline{\iota}},\overline{\vec{s}},\vec{x}^{(d)},\overline{\underline{\tau}})$.
+In principle, the optimal parameter value $\hat{\theta}$ is estimated by maximising this expected log-likelihood subject to parameter constraints.
+
+In practice, it is difficult to optimise this nonlinear expression analytically. A feasible alternative is to iteratively apply the
 (EM) algorithm:
 \begin{enumerate}
 \item {\em Expectation step:} Compute the expected log-likelihood conditioned on a known parameter estimate $\hat{\theta}_k$,
 namely
 \begin{eqnarray}
-  Q(\theta,\hat{\theta}_k) & = & E_{\SS\,|\,\XX,\hat{\theta}_k}\left[\log p(\SS,\XX\,|\,\theta)\right]
+  Q(\theta,\hat{\theta}_k) & = & E_{\ZZ\,|\,\VV,\hat{\theta}_k}\left[\log p(\ZZ,\VV\,|\,\theta)\right]
 \nonumber\\& = &
-\sum_{d=1}^D \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{n^{(d)}}}^{S} 
-p(\vec{s}^{(d)}\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\hat{\theta}_k)
-\,L^{(d)}(\theta)\,.
+\sum_{d=1}^D \sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}\cdots\sum_{\overline{i_{n^{(d)}}}}^{S}
+\sum_{\overline{\underline{\tau}}=0}^{1}
+p(z\,|\,v^{(d)},\hat{\theta}_k) 
+\,\ell(\overline{v^{(d)}}\,|\,\theta)
+\,.
 \end{eqnarray}
 
 \item {\em Maximisation step:} Obtain the optimal parameter estimate $\hat{\theta}_{k+1}$ that maximises the
@@ -851,47 +957,38 @@ conditional expected log-likehood, namely
 These two steps are iterated until $\hat{\theta}_k$ has converged to a value $\hat{\theta}^*$ that maximises 
 $L(\hat{\theta}^*)=Q(\hat{\theta}^*,\hat{\theta}^*)$.
 
-blah about additivity
+Hence, following the derivation of equation~\eqref{eq:F_gamma}, we iteratively estimate the state transitions by maximising
+\begin{eqnarray}
+  F_{\Gamma}(\theta,\hat{\theta}) & = & 
+\sum_{d=1}^D
+\sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}\cdots\sum_{\overline{i_{n^{(d)}}}=1}^{S}
+\sum_{\overline{\underline{\tau}}=0}^{1}
+\sum_{t=1}^{n^{(d)}-1}p(z\,|\,v^{(d)},\hat{\theta})\,\log\Gamma_{\overline{i_t},\overline{i_{t+1}}}
+-\sum_{i=1}^{S}\lambda_i\left(\sum_{j=1}^{S}\Gamma_{i,j}-1\right)
+\nonumber\\& = &
+\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}
+\sum_{i=1}^{S}\sum_{j=1}^{S}
+p(S_t\!=\!\sigma_{i},S_{t+1}\!=\!\sigma_j\,|\,v^{(d)},\hat{\theta})\,\log\Gamma_{i,j}
+-\sum_{i=1}^{S}\lambda_i\left(\sum_{j=1}^{S}\Gamma_{i,j}-1\right)
+\nonumber\\& = &
+\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}
+\sum_{i=1}^{S}\sum_{j=1}^{S}
+\hat{\xi}_{t,i,j}^{(d)}\,\log\Gamma_{i,j}
+-\sum_{i=1}^{S}\lambda_i\left(\sum_{j=1}^{S}\Gamma_{i,j}-1\right)\,,
+\end{eqnarray}
+from equation~\eqref{eq:xi_t_i_j}.
+It follows that
+\begin{eqnarray}
+  \frac{\partial F_{\Gamma}(\theta,\hat{\theta})}{\partial\Gamma_{i,j}} & = & 
+\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}\frac{\hat{\xi}_{t,i,j}^{(d)}}{\Gamma_{i,j}}-\lambda_i
+~=~0 \mbox{ when }\theta=\hat{\theta}^*
+\nonumber\\
+\Rightarrow \hat{\Gamma}^*_{i,j} & = & 
+  \frac{\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \hat{\xi}_{t,i,j}^{(d)}}
+          {\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \hat{\gamma}_{t,i}^{(d)}}
+\end{eqnarray}
+from equation~\eqref{eq:xi_to_gamma}. 
 
-\begin{eqnarray}
-  \frac{\partial Q}{\partial\Gamma_{i,j}} & = & 
-  \frac{\partial}{\partial\Gamma_{i,j}}
-  \sum_{d=1}^D
-  \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{n^{(d)}}}^{S} 
-  p(\vec{s}^{(d)}\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\hat{\theta}')
-  \sum_{t=1}^{n^{(d)}-1}\log\Gamma_{i_t^{(d)},i_{t+1}^{(d)}}
-\nonumber\\& = &
-  \sum_{d=1}^D
-  \sum_{t=1}^{n^{(d)}-1}
-  \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{n^{(d)}}}^{S} 
-  \delta(i^{(d)}_t=i)\delta(i^{(d)}_{t+1}=j)
-  \frac{p(\vec{s}^{(d)}\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\hat{\theta}')}
-  {\Gamma_{i,j}}
-\nonumber\\& = &
-  \sum_{d=1}^D
-  \sum_{t=1}^{n^{(d)}-1}
-  \sum_{i_1^{(d)}=1}^{S}\cdots\sum_{i^{(d)}_{n^{(d)}}}^{S} 
-  \delta(i^{(d)}_t=i)\delta(i^{(d)}_{t+1}=j)
-  \frac{p(\vec{s}^{(d)}\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\hat{\theta}')}
-  {\Gamma_{i,j}}
-\nonumber\\& = &
-  \frac{\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}p(S_t=\sigma_i,S_{t+1}=\sigma_j\,|\,\iota_0^{(d)},\vec{x}^{(d)},\tau_{n^{(d)}+1}^{(d)},\hat{\theta}')}
-  {\Gamma_{i,j}}
-\nonumber\\& = &
-  \frac{\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \xi_t^{(d)}(\sigma_i,\sigma_j;\hat{\theta}')}
-  {\Gamma_{i,j}}
-\end{eqnarray}
-from equation~\eqref{eq:xi-def}. Now, subject to the constraint that $\sum_{j=1}^{S}\Gamma_{i,j}=1$, we induce the appropriate Lagrangian multiplier to
-provide the proper normalisation, and hence derive that the optimal parameter estimate is given by
-\begin{eqnarray}
-  \hat{\Gamma}^*_{i,j} & = &
-  \frac{\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \xi_t^{(d)}(\sigma_i,\sigma_j;\hat{\theta}')}
-  {\sum_{j=1}^{S}\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \xi_t^{(d)}(\sigma_i,\sigma_j;\hat{\theta}')}
-~=~
-  \frac{\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \xi_t^{(d)}(\sigma_i,\sigma_j;\hat{\theta}')}
-  {\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \gamma_t^{(d)}(\sigma_i;\hat{\theta}')}
-\end{eqnarray}
-from equation~\eqref{eq:gamma-def}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
