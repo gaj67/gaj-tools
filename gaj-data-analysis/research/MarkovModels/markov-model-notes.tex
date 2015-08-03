@@ -644,6 +644,7 @@ for $t=2,3,\ldots,n$. The forward pass commences with the first step
 \nonumber\\& = & 
   \pi_{\underline{\iota},1,i}\,o_{1,i}(x_1)
 \,.
+\label{eq:alpha_1}
 \end{eqnarray}
 Hence, observe that $\alpha_{2,i'_2}$, is just
 the entire summation over $i'_1$ from the forward model~\eqref{eq:forward}.
@@ -682,6 +683,7 @@ for $t=n-1,n-2,\ldots,1$. The backward pass commences with the first step
 \begin{eqnarray}
    \beta_{n,i} & = & p(\tau_{n+1}\!=\!\underline{\tau}\,|\,S_n\!=\!\sigma_i,\theta)
 ~=~\omega_{\underline{\tau},n,i}\,.
+\label{eq:beta_n}
 \end{eqnarray}
 Observe that $\bar{\beta}_{n-1,i'_{n-1}}$ is just
 the entire summation over $i'_n$ from the backward model~\eqref{eq:backward}.
@@ -710,39 +712,40 @@ For instance, from equation~\eqref{eq:forward-backward}, the posterior probabili
 \end{eqnarray}
 Observe that $\gamma_{t,i}$ reduces to $\delta(i=i_t)$ in the special case where $s_t=\sigma_{i_t}$ is known.
 
-Similarly, we may predict the next state $S_{n+1}$ in a given, partially observed sequence via
+Similarly, we may predict the next state $S_{n+1}$ in a given (complete or partially observed) sequence of length $n=|\vec{x}|$ via
 \begin{eqnarray}
-  p(\dn\sigma_i\,|\,\underline{\iota},\vec{s}_n,\vec{x}_n,\underline{\tau},\theta)  
+  p(\dn\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta)  
 & = &
-  p(\tau_{n+1}\!=\!0,S_{n+1}\!=\!\sigma_i\,|\,\underline{\iota},\vec{s}_n,\vec{x}_n,\underline{\tau},\theta) 
+  p(\tau_{n+1}\!=\!0,S_{n+1}\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
 \nonumber\\& = &
-  \frac{p(\tau_{n+1}\!=\!0,S_{n+1}\!=\!\sigma_i,\underline{\iota},\vec{s}_n,\vec{x}_n,\underline{\tau}\,|\,\theta)}
-       {p(\underline{\iota},\vec{s}_n,\vec{x}_n,\underline{\tau}\,|\,\theta)}
+  \frac{p(\tau_{n+1}\!=\!0,S_{n+1}\!=\!\sigma_i,\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta)}
+       {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta)}
 \nonumber\\& = & 
-  \delta(\underline{\tau}\!=\!0)
-  \frac{p(\underline{\iota},\vec{s}_n\circ\sigma_i,\vec{x}_n\,|\,\theta)}
-       {p(\underline{\iota},\vec{s}_n,\vec{x}_n,\underline{\tau}\,|\,\theta)}
+  \delta(\underline{\tau}\!=\!0)\,
+  \frac{p(\underline{\iota},\vec{s}\circ\sigma_i,\vec{x}\,|\,\theta)}
+       {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta)}
 \nonumber\\& = & 
-  \delta(\underline{\tau}\!=\!0)
+  \delta(\underline{\tau}\!=\!0)\,
   \frac{\bar{\alpha}_{n+1,i}}
-       {\sum_{i'=1}^S\delta(i\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}
+       {\sum_{i'=1}^S\delta(i'\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}
 \,,
 \end{eqnarray}
 from equation~\eqref{eq:alpha-bar}.
 Consequently, we may also predict the future value of $X_{t+1}$ via
 \begin{eqnarray}
-  p(\dn x\,|\,\underline{\iota},\vec{s}_n,\vec{x}_n,\underline{\tau},\theta)  
+  p(\dn x\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta)  
 & = &
-\sum_{i=1}^{S}p(\dn \sigma_i,x\,|\,\underline{\iota},\vec{s}_n,\vec{x}_n,\underline{\tau},\theta) 
+\sum_{i=1}^{S}p(\dn \sigma_i,x\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
 \nonumber\\& = &
-\sum_{i=1}^{S}p(\dn \sigma_i\,|\,\underline{\iota},\vec{s}_n,\vec{x}_n,\underline{\tau},\theta)\,p(X_{n+1}\!=\!x\,|\,S_{n+1}\!=\!\sigma_i,\theta)
+\sum_{i=1}^{S}p(\dn \sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta)\,p(X_{n+1}\!=\!x\,|\,S_{n+1}\!=\!\sigma_i,\theta)
 \nonumber\\& = &
-  \delta(\underline{\tau}\!=\!0)
+  \delta(\underline{\tau}\!=\!0)\,
   \frac{\sum_{i=1}^{S}\bar{\alpha}_{n+1,i}\,o_{n+1,i}(x)}
-       {\sum_{i'=1}^S\delta(i\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}\,.
+       {\sum_{i'=1}^S\delta(i'\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}\,.
 \end{eqnarray}
 
-Finally, the forward--backward calculations also enable us to compute the posterior probabilities of the joint states of stages $t$ and $t+1$ via
+Proceding to predicting stage transitions, 
+the forward--backward calculations also enable us to compute the posterior probabilities of the joint states of stages $t$ and $t+1$ via
 \begin{eqnarray}
 \xi_{t,i,j} & = &
    p(S_t\!=\!\sigma_i,S_{t+1}\!=\!\sigma_j\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta)
@@ -750,12 +753,12 @@ Finally, the forward--backward calculations also enable us to compute the poster
    \frac{p(S_t\!=\!\sigma_i,S_{t+1}\!=\!\sigma_j,\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta)}
         {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta)}
 \nonumber\\& = & 
-\frac{\sum_{i=1}^{S}\sum_{j=1}^{S}\delta(i=i_{t})\delta(j=i_{t+1})\,
-   p(\underline{\iota},\vec{s}_{t-1}\circ\sigma_{i}\circ\sigma_{j}\circ\rvec{s}_{t+2},\vec{x},\underline{\tau}\,|\,\theta)}
+\delta(i=i_{t})\delta(j=i_{t+1})\,
+   \frac{p(\underline{\iota},\vec{s}_{t-1}\circ\sigma_{i}\circ\sigma_{j}\circ\rvec{s}_{t+2},\vec{x},\underline{\tau}\,|\,\theta)}
         {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta)}
 \nonumber\\& = & 
-\frac{\sum_{i=1}^{S}\sum_{j=1}^{S}\delta(i=i_{t})\delta(j=i_{t+1})\,\alpha_{t,i}\,\omega_{0,t,i}\,\Gamma_{t,i,j}\,o_{t+1,j}(x_{t+1})\,\beta_{t+1,j}}
-{\sum_{i'=1}^S\delta(i\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}\,,
+\delta(i=i_{t})\delta(j=i_{t+1})\,\frac{\alpha_{t,i}\,\omega_{0,t,i}\,\Gamma_{t,i,j}\,o_{t+1,j}(x_{t+1})\,\beta_{t+1,j}}
+{\sum_{i'=1}^S\delta(i'\!=\!i_t)\,\alpha_{t,i'}\,\beta_{t,i'}}\,,
 \label{eq:xi_t_i_j}
 \end{eqnarray}
 since
@@ -778,6 +781,49 @@ Observe that
 \label{eq:xi_to_gamma}
 \end{eqnarray}
 from equation~\eqref{eq:gamma_t_i}.
+
+Finally, the modified forward--backward algorithm also allows us to predict the start and/or end of partially observed sequences.
+For instance, at the start of a sequence we can predict
+\begin{eqnarray}
+    p(\iota_0\!=\!\underline{\iota}',S_1\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
+& = &
+   \frac{p(\iota_0\!=\!\underline{\iota}',S_1\!=\!\sigma_i,\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
+           {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
+\nonumber\\& = &
+   \delta(\underline{\iota}'\!=\!\underline{\iota})\,\delta(i\!=\!i_1)\,
+\frac{p(\underline{\iota}',\sigma_i\circ\vec{s}_2,\vec{x},\underline{\tau}\,|\,\theta) }
+           {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
+\nonumber\\& = &
+   \delta(\underline{\iota}'\!=\!\underline{\iota})\,\delta(i\!=\!i_1)\,
+\frac{\pi_{\underline{\iota}',1,i}\,o_{1,i}(x_1)\,\beta_{1,i}}
+{\sum_{i'=1}^S\delta(i'\!=\!i_1)\,\alpha_{1,i'}\,\beta_{1,i'}}\,,
+\end{eqnarray}
+from equations~\eqref{eq:forward-backward} and \eqref{eq:alpha_1}. It then follows that
+\begin{eqnarray}
+    p(\iota_0\!=\!\underline{\iota}'\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
+& = &
+   \delta(\underline{\iota}'\!=\!\underline{\iota})\,
+\frac{\sum_{i=1}^{S}\delta(i\!=\!i_1)\,\pi_{\underline{\iota}',1,i}\,o_{1,i}(x_1)\,\beta_{1,i}}
+{\sum_{i'=1}^S\delta(i'\!=\!i_1)\,\alpha_{1,i'}\,\beta_{1,i'}}
+\,.
+\end{eqnarray}
+Likewise, at the end of a sequence we can predict
+\begin{eqnarray}
+    p(\tau_{n+1}\!=\!\underline{\tau}'\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
+& = &
+   \frac{p(\tau_{n+1}\!=\!\underline{\tau}',\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
+           {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
+\nonumber\\& = &
+\delta(\underline{\tau}'\!=\!\underline{\tau})\,
+\frac{p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}'\,|\,\theta) }
+       {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
+\nonumber\\& = &
+\delta(\underline{\tau}'\!=\!\underline{\tau})\,
+\frac{\sum_{i=1}^{S}\delta(i\!=\!i_n)\,\alpha_{n,i}\,\omega_{\underline{\tau}',n,i}}
+{\sum_{i'=1}^S\delta(i'\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}
+\,,
+\end{eqnarray}
+from equations~\eqref{eq:forward-backward} and \eqref{eq:beta_n}.
 
 \subsection{Posterior Parameter Estimation with Known Data}\label{sec:estimate-known}
 
@@ -916,17 +962,17 @@ often leads to micro-averaged estimates of the form $\sum_{d=1}^D[\phi^{(d)}/\ps
 E_{\ZZ\,|\,\VV,\theta}\left[\sum_{d=1}^D \log p(z^{(d)},v^{(d)}\,|\,\theta)\right]
 \nonumber\\& = & 
 \sum_{d=1}^D E_{\ZZ\,|\,\VV,\theta}\left[
-\ell(\overline{\underline{\iota}^{(d)}},\overline{\vec{s}^{(d)}},\vec{x}^{(d)},\overline{\underline{\tau}^{(d)}}\,|\,\theta)
+\ell(\overline{\underline{\iota}^{(d)}},\overline{\vec{s}^{(d)}},\vec{x}^{(d)},\overline{\underline{\tau}^{(d)}};\theta)
 \right]
 \nonumber\\& = & 
 \sum_{d=1}^D \sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}\cdots\sum_{\overline{i_{n^{(d)}}}}^{S}
 \sum_{\overline{\underline{\tau}}=0}^{1}
 p(\overline{\underline{\iota}},\overline{\vec{s}},\overline{\underline{\tau}}\,|\,\underline{\iota}^{(d)},\vec{s}^{(d)},\vec{x}^{(d)},\underline{\tau}^{(d)},\theta) 
-\,\ell(\overline{\underline{\iota}},\overline{\vec{s}},\vec{x}^{(d)},\overline{\underline{\tau}}\,|\,\theta)
+\,\ell(\overline{\underline{\iota}},\overline{\vec{s}},\vec{x}^{(d)},\overline{\underline{\tau}};\theta)
 \nonumber\\& = &
 \sum_{d=1}^D \sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}\cdots\sum_{\overline{i_{n^{(d)}}}}^{S}
 \sum_{\overline{\underline{\tau}}=0}^{1}
-p(z\,|\,v^{(d)},\theta) \,\ell(\overline{v^{(d)}}\,|\,\theta)
+p(z\,|\,v^{(d)},\theta) \,\ell(\overline{v^{(d)}};\theta)
 \,,
 \end{eqnarray}
 where $z=(\overline{\underline{\iota}},\overline{\vec{s}},\overline{\underline{\tau}})$ and 
@@ -934,7 +980,7 @@ $\overline{v^{(d)}}=(\overline{\underline{\iota}},\overline{\vec{s}},\vec{x}^{(d
 In principle, the optimal parameter value $\hat{\theta}$ is estimated by maximising this expected log-likelihood subject to parameter constraints.
 
 In practice, it is difficult to optimise this nonlinear expression analytically. A feasible alternative is to iteratively apply the
-(EM) algorithm:
+EM algorithm:
 \begin{enumerate}
 \item {\em Expectation step:} Compute the expected log-likelihood conditioned on a known parameter estimate $\hat{\theta}_k$,
 namely
@@ -944,7 +990,7 @@ namely
 \sum_{d=1}^D \sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}\cdots\sum_{\overline{i_{n^{(d)}}}}^{S}
 \sum_{\overline{\underline{\tau}}=0}^{1}
 p(z\,|\,v^{(d)},\hat{\theta}_k) 
-\,\ell(\overline{v^{(d)}}\,|\,\theta)
+\,\ell(\overline{v^{(d)}};\theta)
 \,.
 \end{eqnarray}
 
@@ -955,7 +1001,7 @@ conditional expected log-likehood, namely
 \end{eqnarray}
 \end{enumerate}
 These two steps are iterated until $\hat{\theta}_k$ has converged to a value $\hat{\theta}^*$ that maximises 
-$L(\hat{\theta}^*)=Q(\hat{\theta}^*,\hat{\theta}^*)$.
+$Q(\hat{\theta}^*)=Q(\hat{\theta}^*,\hat{\theta}^*)$.
 
 Hence, following the derivation of equation~\eqref{eq:F_gamma}, we iteratively estimate the state transitions by maximising
 \begin{eqnarray}
