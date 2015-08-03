@@ -785,8 +785,9 @@ from equation~\eqref{eq:gamma_t_i}.
 Finally, the modified forward--backward algorithm also allows us to predict the start and/or end of partially observed sequences.
 For instance, at the start of a sequence we can predict
 \begin{eqnarray}
+    \kappa_{\underline{\iota}',i} & = &
     p(\iota_0\!=\!\underline{\iota}',S_1\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
-& = &
+\nonumber\\& = &
    \frac{p(\iota_0\!=\!\underline{\iota}',S_1\!=\!\sigma_i,\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
            {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
 \nonumber\\& = &
@@ -797,6 +798,7 @@ For instance, at the start of a sequence we can predict
    \delta(\underline{\iota}'\!=\!\underline{\iota})\,\delta(i\!=\!i_1)\,
 \frac{\pi_{\underline{\iota}',1,i}\,o_{1,i}(x_1)\,\beta_{1,i}}
 {\sum_{i'=1}^S\delta(i'\!=\!i_1)\,\alpha_{1,i'}\,\beta_{1,i'}}\,,
+\label{eq:p_i0_s1_g_v}
 \end{eqnarray}
 from equations~\eqref{eq:forward-backward} and \eqref{eq:alpha_1}. It then follows that
 \begin{eqnarray}
@@ -809,21 +811,33 @@ from equations~\eqref{eq:forward-backward} and \eqref{eq:alpha_1}. It then follo
 \end{eqnarray}
 Likewise, at the end of a sequence we can predict
 \begin{eqnarray}
-    p(\tau_{n+1}\!=\!\underline{\tau}'\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
+    p(\tau_{n+1}\!=\!\underline{\tau}',S_n\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
 & = &
-   \frac{p(\tau_{n+1}\!=\!\underline{\tau}',\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
+   \frac{p(\tau_{n+1}\!=\!\underline{\tau}',S_n\!=\!\sigma_i,\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
            {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
 \nonumber\\& = &
-\delta(\underline{\tau}'\!=\!\underline{\tau})\,
-\frac{p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}'\,|\,\theta) }
+\delta(\underline{\tau}'\!=\!\underline{\tau})\,\delta(i\!=\!i_n)\,
+\frac{p(\underline{\iota},\vec{s}_{n-1}\circ\sigma_i,\vec{x},\underline{\tau}'\,|\,\theta) }
        {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
 \nonumber\\& = &
-\delta(\underline{\tau}'\!=\!\underline{\tau})\,
-\frac{\sum_{i=1}^{S}\delta(i\!=\!i_n)\,\alpha_{n,i}\,\omega_{\underline{\tau}',n,i}}
+\delta(\underline{\tau}'\!=\!\underline{\tau})\,\delta(i\!=\!i_n)\,
+\frac{\alpha_{n,i}\,\omega_{\underline{\tau}',n,i}}
 {\sum_{i'=1}^S\delta(i'\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}
 \,,
 \end{eqnarray}
-from equations~\eqref{eq:forward-backward} and \eqref{eq:beta_n}.
+from equations~\eqref{eq:forward-backward} and \eqref{eq:beta_n}. It then follows that
+\begin{eqnarray}
+    p(\tau_{n+1}\!=\!\underline{\tau}'\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
+& = &
+    \sum_{i=1}^S p(\tau_{n+1}\!=\!\underline{\tau}',S_n\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
+\nonumber\\& = &
+\delta(\underline{\tau}'\!=\!\underline{\tau})\,
+\frac{\sum_{i=1}^S\delta(i\!=\!i_n)\,\alpha_{n,i}\,\omega_{\underline{\tau}',n,i}}
+{\sum_{i'=1}^S\delta(i'\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}
+\,.
+\end{eqnarray}
+An example of the use of these posterior predictions is given in Section~\ref{sec:estimate-missing}, when estimating the model parameters from 
+observations with missing data.
 
 \subsection{Posterior Parameter Estimation with Known Data}\label{sec:estimate-known}
 
@@ -920,6 +934,7 @@ Hence, from equation~\eqref{eq:log-prob-d}, we maximise the function
 \begin{eqnarray}
   F_{\Pi}(\theta) & = & \sum_{d=1}^D \left\{\log\pi_{\underline{\iota}^{(d)},i_1^{(d)}}+\sum_{t=2}^{n^{(d)}}\log\pi_{0,i_{t}^{(d)}}\right\}
 -\lambda\left(\sum_{i=1}^{S}\{\pi_{0,i}+\pi_{1,i}\}-1\right)
+\label{eq:F:pi}
 \\
 \Rightarrow\frac{\partial F_{\Pi}(\theta)}{\partial\pi_{0,i}} & = &
   \sum_{d=1}^D \left\{\frac{\delta(\underline{\iota}^{(d)}\!=\!0)\,\delta(i_1^{(d)}\!=\!i)}{\pi_{0,i}}
@@ -942,7 +957,7 @@ Thus, by multiplying the two derivatives by $\pi_{0,i}$ and $\pi_{1,i}$, respect
 Observe that this latter estimate corresponds to counting the various initial states over all observed sequences, and then normalising these counts by the overall count of all states.
 Also note that these estimates are inaccurate if $\underline{\iota}$ is unknown; the correct estimates are derived in the next section.
 
-\subsection{Posterior Parameter Estimation with Missing Data}
+\subsection{Posterior Parameter Estimation with Missing Data}\label{sec:estimate-missing}
 
 In contrast to Section~\ref{sec:estimate-known}, suppose now that any or all values of $\underline{\iota}^{(d)}$, $\underline{\tau}^{(d)}$ and $\vec{s}^{(d)}$ may be unknown
 when observing the $d$-th sequence $v^{(d)}$. The basic procedure is then to first estimate these missing values from the observed data $\VV$, and then to estimate the 
@@ -1003,38 +1018,107 @@ conditional expected log-likehood, namely
 These two steps are iterated until $\hat{\theta}_k$ has converged to a value $\hat{\theta}^*$ that maximises 
 $Q(\hat{\theta}^*)=Q(\hat{\theta}^*,\hat{\theta}^*)$.
 
-Hence, following the derivation of equation~\eqref{eq:F_gamma}, we iteratively estimate the state transitions by maximising
+Following the methodology of Section~\ref{sec:estimate-known}, we now break the optimisation of $Q(\theta,\hat{\theta})$
+down into separate maximisation problems over each sub-parameter.
+For instance, we iteratively estimate the state transitions $\Gamma$ by optimising
 \begin{eqnarray}
-  F_{\Gamma}(\theta,\hat{\theta}) & = & 
+  Q_{\Gamma}(\theta,\hat{\theta}) & = & 
 \sum_{d=1}^D
 \sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}\cdots\sum_{\overline{i_{n^{(d)}}}=1}^{S}
 \sum_{\overline{\underline{\tau}}=0}^{1}
 \sum_{t=1}^{n^{(d)}-1}p(z\,|\,v^{(d)},\hat{\theta})\,\log\Gamma_{\overline{i_t},\overline{i_{t+1}}}
--\sum_{i=1}^{S}\lambda_i\left(\sum_{j=1}^{S}\Gamma_{i,j}-1\right)
 \nonumber\\& = &
 \sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}
 \sum_{i=1}^{S}\sum_{j=1}^{S}
 p(S_t\!=\!\sigma_{i},S_{t+1}\!=\!\sigma_j\,|\,v^{(d)},\hat{\theta})\,\log\Gamma_{i,j}
--\sum_{i=1}^{S}\lambda_i\left(\sum_{j=1}^{S}\Gamma_{i,j}-1\right)
 \nonumber\\& = &
 \sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}
 \sum_{i=1}^{S}\sum_{j=1}^{S}
 \hat{\xi}_{t,i,j}^{(d)}\,\log\Gamma_{i,j}
--\sum_{i=1}^{S}\lambda_i\left(\sum_{j=1}^{S}\Gamma_{i,j}-1\right)\,,
+\,,
 \end{eqnarray}
-from equation~\eqref{eq:xi_t_i_j}.
-It follows that
+subject to the appropriate contraints. Note that use has been made of equation~\eqref{eq:xi_t_i_j}.
+Hence, borrowing the Lagrangian constraints from equation~\eqref{eq:F_gamma}, we estimate the value $\hat{\Gamma}'$ that maximises
 \begin{eqnarray}
+  F_{\Gamma}(\theta,\hat{\theta}) & = & 
+\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}
+\sum_{i=1}^{S}\sum_{j=1}^{S}
+\hat{\xi}_{t,i,j}^{(d)}\,\log\Gamma_{i,j}
+-\sum_{i=1}^{S}\lambda_i\left(\sum_{j=1}^{S}\Gamma_{i,j}-1\right)
+\\
+\Rightarrow
   \frac{\partial F_{\Gamma}(\theta,\hat{\theta})}{\partial\Gamma_{i,j}} & = & 
 \sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}\frac{\hat{\xi}_{t,i,j}^{(d)}}{\Gamma_{i,j}}-\lambda_i
-~=~0 \mbox{ when }\theta=\hat{\theta}^*
+~=~0 \mbox{ when }\theta=\hat{\theta}'
 \nonumber\\
-\Rightarrow \hat{\Gamma}^*_{i,j} & = & 
+\Rightarrow \hat{\lambda}_{i}' & = & \sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}\sum_{j=1}^{S}\hat{\xi}_{t,i,j}~=~\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1}\hat{\gamma}_{t,i}
+\nonumber\\
+\Rightarrow \hat{\Gamma}_{i,j}' & = & 
   \frac{\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \hat{\xi}_{t,i,j}^{(d)}}
           {\sum_{d=1}^D\sum_{t=1}^{n^{(d)}-1} \hat{\gamma}_{t,i}^{(d)}}
 \end{eqnarray}
 from equation~\eqref{eq:xi_to_gamma}. 
 
+Similarly, we iteratively estimate the sequence initiation distributions $\pi_{0,i}$ and $\pi_{1,i}$ by optimising
+\begin{eqnarray}
+  Q_{\Pi}(\theta,\hat{\theta}) & = & 
+\sum_{d=1}^D
+\sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}\cdots\sum_{\overline{i_{n^{(d)}}}=1}^{S}
+\sum_{\overline{\underline{\tau}}=0}^{1}
+p(z\,|\,v^{(d)},\hat{\theta})\,
+\left\{\log\pi_{\overline{\underline{\iota}},\overline{i_1}}+\sum_{t=2}^{n^{(d)}}\log\pi_{0,\overline{i_{t}}}\right\}
+\nonumber\\& = &
+\sum_{d=1}^D\left\{
+\sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}
+p(\iota_0\!=\!\overline{\underline{\iota}},S_1\!=\!\sigma_{\overline{i_1}}\,|\,v^{(d)},\hat{\theta})\,
+\log\pi_{\overline{\underline{\iota}},\overline{i_1}}\right.
+\nonumber\\&&\hspace*{10mm}
++\left.\sum_{t=2}^{n^{(d)}}\sum_{\overline{i_t}=1}^{S}
+p(S_t\!=\!\sigma_{\overline{i_t}}\,|\,v^{(d)},\hat{\theta})\,
+\log\pi_{0,\overline{i_t}}\right\}
+\nonumber\\& = &
+\sum_{d=1}^D\sum_{i=1}^{S}\left\{
+\sum_{\underline{\iota}'=0}^{1}
+\hat{\kappa}_{\underline{\iota}',i}^{(d)}\log\pi_{\underline{\iota}',i}
++\sum_{t=2}^{n^{(d)}}
+\hat{\gamma}_{t,i}^{(d)}\log\pi_{0,i}\right\}
+\end{eqnarray}
+subject to the appropriate contraints. Note that we have utilised equations~\eqref{eq:xi_t_i_j} and \eqref{eq:p_i0_s1_g_v}.
+Hence, borrowing the Lagrangian constraint of equation~\eqref{eq:F:pi}, we maximise
+\begin{eqnarray}
+  F_{\Pi}(\theta,\hat{\theta}) & = & 
+\sum_{d=1}^D\sum_{i=1}^{S}\left\{
+\sum_{\underline{\iota}'=0}^{1}
+\hat{\kappa}^{(d)}_{\underline{\iota}',i}
+\log\pi_{\underline{\iota}',i}
++\sum_{t=2}^{n^{(d)}}
+\hat{\gamma}_{t,i}\,\log\pi_{0,i}\right\}
+-\lambda\left(\sum_{i=1}^{S}\{\pi_{0,i}+\pi_{1,i}\}-1\right)
+\\
+\Rightarrow\frac{\partial F_{\Pi}(\theta,\hat{\theta})}{\partial\pi_{0,i}}
+& = &
+\sum_{d=1}^D\left\{\frac{\hat{\kappa}^{(d)}_{0,i}}{\pi_{0,i}}+\sum_{t=2}^{n^{(d)}}\frac{\hat{\gamma}_{t,i}}{\pi_{0,i}}\right\}-\lambda
+~=~0\mbox{ when }\theta=\hat{\theta}'\,,
+\nonumber\\
+\frac{\partial F_{\Pi}(\theta,\hat{\theta})}{\partial\pi_{1,i}}
+& = &
+\sum_{d=1}^D\frac{\hat{\kappa}^{(d)}_{1,i}}{\pi_{1,i}}-\lambda
+~=~0\mbox{ when }\theta=\hat{\theta}'
+\nonumber\\
+\Rightarrow\hat{\lambda}' & = & \sum_{d=1}^D\sum_{i=1}^{S}\left\{\hat{\kappa}^{(d)}_{0,i}+\hat{\kappa}^{(d)}_{1,i}+\sum_{t=2}^{n^{(d)}}\hat{\gamma}^{(d)}_{t,i}\right\}
+~=~\sum_{d=1}^D\sum_{i=1}^{S}\sum_{t=1}^{n^{(d)}}\hat{\gamma}^{(d)}_{t,i}~=~\sum_{d=1}^D n^{(d)}\,,
+\end{eqnarray}
+which leads to
+\begin{eqnarray}
+\hat{\pi}_{0,i}' & = & 
+  \frac{\sum_{d=1}^D\left\{\hat{\kappa}^{(d)}_{0,i}+\sum_{t=2}^{n^{(d)}}\hat{\gamma}^{(d)}_{t,i}\right\}}
+          {\sum_{d=1}^D n^{(d)}}\,,
+\nonumber\\
+\hat{\pi}_{1,i}' & = & 
+  \frac{\sum_{d=1}^D\hat{\kappa}^{(d)}_{1,i}}
+          {\sum_{d=1}^D n^{(d)}}\,.
+\end{eqnarray}
+from . 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
