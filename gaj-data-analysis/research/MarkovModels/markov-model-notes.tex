@@ -811,8 +811,9 @@ from equations~\eqref{eq:forward-backward} and \eqref{eq:alpha_1}. It then follo
 \end{eqnarray}
 Likewise, at the end of a sequence we can predict
 \begin{eqnarray}
+   \zeta_{\underline{\tau}',i} & = &
     p(\tau_{n+1}\!=\!\underline{\tau}',S_n\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
-& = &
+\nonumber\\& = &
    \frac{p(\tau_{n+1}\!=\!\underline{\tau}',S_n\!=\!\sigma_i,\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
            {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
 \nonumber\\& = &
@@ -824,6 +825,7 @@ Likewise, at the end of a sequence we can predict
 \frac{\alpha_{n,i}\,\omega_{\underline{\tau}',n,i}}
 {\sum_{i'=1}^S\delta(i'\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}
 \,,
+\label{eq:p_tnp1_sn_g_v}
 \end{eqnarray}
 from equations~\eqref{eq:forward-backward} and \eqref{eq:beta_n}. It then follows that
 \begin{eqnarray}
@@ -901,6 +903,7 @@ Similarly, for sequence termination or non-termination, we maximise
 \begin{eqnarray}
   F_{\Omega}(\theta) & = & \sum_{d=1}^D \left\{\sum_{t=1}^{n^{(d)}-1}\log\omega_{0,i_{t}^{(d)}}+\log\omega_{\underline{\tau}^{(d)},i_{n^{(d)}}^{(d)}}\right\}
 -\sum_{i=1}^{S}\lambda_i\left(\omega_{0,i}+\omega_{1,i}-1\right)
+\label{eq:F:omega}
 \\
 \Rightarrow\frac{\partial F_{\Omega}(\theta)}{\partial\omega_{0,i}} & = &
 \sum_{d=1}^D \left\{\sum_{t=1}^{n^{(d)}-1}\frac{\delta(i=i_{t}^{(d)})}{\omega_{0,i}}
@@ -922,6 +925,7 @@ Hence, by multiplying the two derivatives by $\omega_{0,i}$ and $\omega_{1,i}$, 
 \nonumber\\
 \hat{\omega}_{1,i} & = & \frac{\sum_{d=1}^D\delta(\underline{\tau}^{(d)}\!=\!1)\,\delta(i=i_{n^{(d)}}^{(d)})}
                                                   {\sum_{d=1}^D \sum_{t=1}^{n^{(d)}}\delta(i=i_{t}^{(d)})}\,.
+\label{eq:F:omega:sol}
 \end{eqnarray}
 Observe that this latter estimate corresponds to counting the various terminal states over all observed sequences, and then normalising these counts by the overall count of each state.
 Also note that we have assumed that $\underline{\tau}^{(d)}$ is known; unfortunately, these estimates will be inaccurate if $\underline{\tau}^{(d)}$ is unknown,
@@ -1118,7 +1122,72 @@ which leads to
   \frac{\sum_{d=1}^D\hat{\kappa}^{(d)}_{1,i}}
           {\sum_{d=1}^D n^{(d)}}\,.
 \end{eqnarray}
-from . 
+
+Finally, we iteratively estimate the sequence termination distributions $\omega_{0,i}$ and $\omega_{1,i}$ by optimising
+\begin{eqnarray}
+  Q_{\Omega}(\theta,\hat{\theta}) & = & 
+\sum_{d=1}^D
+\sum_{\overline{\underline{\iota}}=0}^{1}\sum_{\overline{i_1}=1}^{S}\cdots\sum_{\overline{i_{n^{(d)}}}=1}^{S}
+\sum_{\overline{\underline{\tau}}=0}^{1}
+p(z\,|\,v^{(d)},\hat{\theta})\,
+\left\{\sum_{t=1}^{n^{(d)}-1}\log\omega_{0,\overline{i_t}}+\log\omega_{\overline{\underline{\tau}},\overline{i_{n^{(d)}}}}\right\}
+\nonumber\\& = &
+\sum_{d=1}^D\left\{\sum_{t=1}^{n^{(d)}-1}\sum_{\overline{i_t}=1}^{S}
+p(S_t\!=\!\sigma_{\overline{i_t}}\,|\,v^{(d)},\hat{\theta})\,
+\log\omega_{0,\overline{i_t}}\right.
+\nonumber\\&&\hspace*{10mm}
++\left.\sum_{\overline{i_n^{(d)}}=1}^{S}
+\sum_{\overline{\underline{\tau}}=0}^{1}
+p(\tau_{n^{(d)}+1}\!=\!\overline{\underline{\tau}},S_{n^{(d)}}\!=\!\sigma_{\overline{i_{n^{(d)}}}}\,|\,v^{(d)},\hat{\theta})\,
+\log\omega_{\overline{\underline{\tau}},\overline{i_{n^{(d)}}}}\right\}
+\nonumber\\& = &
+\sum_{d=1}^D\sum_{i=1}^{S}\left\{
+\sum_{t=1}^{n^{(d)}-1}
+\hat{\gamma}_{t,i}^{(d)}\log\omega_{0,i}+
+\sum_{\underline{\tau}'=0}^{1}
+\hat{\zeta}_{\underline{\tau}',i}^{(d)}\log\omega_{\underline{\tau}',i}
+\right\}
+\end{eqnarray}
+subject to the appropriate contraints. Note that we have utilised equations~\eqref{eq:xi_t_i_j} and \eqref{eq:p_tnp1_sn_g_v}.
+Hence, borrowing the Lagrangian constraint of equation~\eqref{eq:F:omega}, we maximise
+\begin{eqnarray}
+  F_{\Omega}(\theta,\hat{\theta}) & = & 
+\sum_{d=1}^D\sum_{i=1}^{S}\left\{
+\sum_{t=1}^{n^{(d)}-1}
+\hat{\gamma}_{t,i}^{(d)}\log\omega_{0,i}+
+\sum_{\underline{\tau}'=0}^{1}
+\hat{\zeta}_{\underline{\tau}',i}^{(d)}\log\omega_{\underline{\tau}',i}
+\right\}
+-\sum_{i=1}^{S}\lambda_i\left(\omega_{0,i}+\omega_{1,i}-1\right)
+\\
+\Rightarrow
+  \frac{\partial F_{\Omega}(\theta,\hat{\theta})}{\partial\omega_{0,i}} & = &
+\sum_{d=1}^D\left\{
+\sum_{t=1}^{n^{(d)}-1}
+\frac{\hat{\gamma}_{t,i}^{(d)}}{\omega_{0,i}}+
+\frac{\hat{\zeta}_{0,i}^{(d)}}{\omega_{0,i}}
+\right\}-\lambda_i~=~0\mbox{ when }\theta=\hat{\theta}'\,,
+\nonumber\\
+  \frac{\partial F_{\Omega}(\theta,\hat{\theta})}{\partial\omega_{1,i}} & = &
+\sum_{d=1}^D\left\{
+\frac{\hat{\zeta}_{1,i}^{(d)}}{\omega_{1,i}}
+\right\}-\lambda_i~=~0\mbox{ when }\theta=\hat{\theta}'
+\nonumber\\
+\Rightarrow\hat{\lambda}_i' & = & \sum_{d=1}^D\left\{
+\sum_{t=1}^{n^{(d)}-1}\hat{\gamma}_{t,i}^{(d)}+\hat{\zeta}_{0,i}^{(d)}+\hat{\zeta}_{1,i}^{(d)}\right\}
+~=~\sum_{d=1}^D\sum_{t=1}^{n^{(d)}}\hat{\gamma}_{t,i}^{(d)}
+\nonumber\\
+\Rightarrow \hat{\omega}_{0,i}' & = &
+\frac{\sum_{d=1}^D\left\{
+           \sum_{t=1}^{n^{(d)}-1}\hat{\gamma}_{t,i}^{(d)}+\hat{\zeta}_{0,i}^{(d)}\right\}}
+       {\sum_{d=1}^D\sum_{t=1}^{n^{(d)}}\hat{\gamma}_{t,i}^{(d)}}\,,
+\nonumber\\
+\hat{\omega}_{1,i}' & = & 
+\frac{\sum_{d=1}^D\hat{\zeta}_{1,i}^{(d)}}
+       {\sum_{d=1}^D\sum_{t=1}^{n^{(d)}}\hat{\gamma}_{t,i}^{(d)}}~=~1-\hat{\omega}_{0,i}'\,.
+\end{eqnarray}
+Observe in comparison to equation~\eqref{eq:F:omega:sol} for known data that each certainty, represented by a $\delta(\cdot)$ term, has now been replaced
+by a corresponding posterior probability.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
