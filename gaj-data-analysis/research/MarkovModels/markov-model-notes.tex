@@ -487,6 +487,7 @@ and
       \,p(S_t\!=\!\sigma_{i}\,|\,\iota_{t-1}\!=\!*,\tau_t\!=\!0,\theta)
 \nonumber\\& = &
   p(\tau_t\!=\!0,S_t\!=\!\sigma_i\,|\,\theta)~=~\pi_{0,t,i}+\pi_{1,t,i}\,.
+\label{eq:pi:*}
 \end{eqnarray}
 Observe that each state $S_t$ for $t>1$ is a non-initial state, governed by $\pi_{0,t,i_t}$. However, such terms do
 not explicitly appear in model~\eqref{eq:p_s_x_g_theta}, except if $\underline{\iota}\ne 1$, 
@@ -785,9 +786,8 @@ from equation~\eqref{eq:gamma_t_i}.
 Finally, the modified forward--backward algorithm also allows us to predict the start and/or end of partially observed sequences.
 For instance, at the start of a sequence we can predict
 \begin{eqnarray}
-    \kappa_{\underline{\iota}',i} & = &
     p(\iota_0\!=\!\underline{\iota}',S_1\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
-\nonumber\\& = &
+& = &
    \frac{p(\iota_0\!=\!\underline{\iota}',S_1\!=\!\sigma_i,\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
            {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
 \nonumber\\& = &
@@ -797,23 +797,37 @@ For instance, at the start of a sequence we can predict
 \nonumber\\& = &
    \delta(\underline{\iota}'\!=\!\underline{\iota})\,\delta(i\!=\!i_1)\,
 \frac{\pi_{\underline{\iota}',1,i}\,o_{1,i}(x_1)\,\beta_{1,i}}
-{\sum_{i'=1}^S\delta(i'\!=\!i_1)\,\alpha_{1,i'}\,\beta_{1,i'}}\,,
+{\sum_{i'=1}^S\delta(i'\!=\!i_1)\,\alpha_{1,i'}\,\beta_{1,i'}}
+\nonumber\\& = &
+\delta(\underline{\iota}'\!=\!\underline{\iota})\,\gamma_{1,i}\,\frac{\pi_{\underline{\iota}',1,i}}{\bar{\alpha}_{1,i}}~=~
+\gamma_{1,i}\,\kappa_{\underline{\iota}',1,i}
+\,,
 \label{eq:p_i0_s1_g_v}
 \end{eqnarray}
-from equations~\eqref{eq:forward-backward} and \eqref{eq:alpha_1}. It then follows that
+where
+\begin{eqnarray}
+   \kappa_{\underline{\iota}',1,i} & = &
+    p(\iota_0\!=\!\underline{\iota}'\,|\,S_1\!=\!\sigma_i,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
+~=~\left\{\begin{array}{ll}
+  \delta(\underline{\iota}'\!=\!\underline{\iota}) & \mbox{if }\underline{\iota}=0 \mbox{ or } 1
+\\
+  \frac{\pi_{\underline{\iota}',1,i}}{\pi_{0,1,i}+\pi_{1,1,i}} & \mbox{if }\underline{\iota}=*
+\end{array}\right.\,,
+\end{eqnarray}
+from equations~\eqref{eq:forward-backward}, \eqref{eq:alpha_1} and \eqref{eq:pi:*}. 
+It then follows that
 \begin{eqnarray}
     p(\iota_0\!=\!\underline{\iota}'\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
 & = &
-   \delta(\underline{\iota}'\!=\!\underline{\iota})\,
-\frac{\sum_{i=1}^{S}\delta(i\!=\!i_1)\,\pi_{\underline{\iota}',1,i}\,o_{1,i}(x_1)\,\beta_{1,i}}
-{\sum_{i'=1}^S\delta(i'\!=\!i_1)\,\alpha_{1,i'}\,\beta_{1,i'}}
+\sum_{i=1}^S
+    p(\iota_0\!=\!\underline{\iota}',S_1\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
+~=~\sum_{i=1}^S\gamma_{1,i}\,\kappa_{\underline{\iota}',1,i}
 \,.
 \end{eqnarray}
 Likewise, at the end of a sequence we can predict
 \begin{eqnarray}
-   \zeta_{\underline{\tau}',i} & = &
     p(\tau_{n+1}\!=\!\underline{\tau}',S_n\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
-\nonumber\\& = &
+& = &
    \frac{p(\tau_{n+1}\!=\!\underline{\tau}',S_n\!=\!\sigma_i,\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
            {p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}\,|\,\theta) }
 \nonumber\\& = &
@@ -824,18 +838,27 @@ Likewise, at the end of a sequence we can predict
 \delta(\underline{\tau}'\!=\!\underline{\tau})\,\delta(i\!=\!i_n)\,
 \frac{\alpha_{n,i}\,\omega_{\underline{\tau}',n,i}}
 {\sum_{i'=1}^S\delta(i'\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}
+\nonumber\\& = &
+\delta(\underline{\tau}'\!=\!\underline{\tau})\,\gamma_{n,i}\frac{\omega_{\underline{\tau}',n,i}}{\beta_{n,i}}
+~=~\gamma_{n,i}\,\zeta_{\underline{\tau}',n,i}
 \,,
 \label{eq:p_tnp1_sn_g_v}
+\end{eqnarray}
+where
+\begin{eqnarray}
+  \zeta_{\underline{\tau}',n,i} & = &
+    p(\tau_{n+1}\!=\!\underline{\tau}'\,|\,S_n\!=\!\sigma_i,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
+~=~\left\{\begin{array}{ll}
+\delta(\underline{\tau}'\!=\!\underline{\tau}) & \mbox{if } \underline{\tau}=0 \mbox{ or } 1\\
+\omega_{\underline{\tau}',n,i} & \mbox{if } \underline{\tau}=*
+\end{array}\right.\,,
 \end{eqnarray}
 from equations~\eqref{eq:forward-backward} and \eqref{eq:beta_n}. It then follows that
 \begin{eqnarray}
     p(\tau_{n+1}\!=\!\underline{\tau}'\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
 & = &
     \sum_{i=1}^S p(\tau_{n+1}\!=\!\underline{\tau}',S_n\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta) 
-\nonumber\\& = &
-\delta(\underline{\tau}'\!=\!\underline{\tau})\,
-\frac{\sum_{i=1}^S\delta(i\!=\!i_n)\,\alpha_{n,i}\,\omega_{\underline{\tau}',n,i}}
-{\sum_{i'=1}^S\delta(i'\!=\!i_n)\,\alpha_{n,i'}\,\beta_{n,i'}}
+~=~\sum_{i=1}^S \gamma_{n,i}\,\zeta_{\underline{\tau}',n,i}
 \,.
 \end{eqnarray}
 An example of the use of these posterior predictions is given in Section~\ref{sec:estimate-missing}, when estimating the model parameters from 
@@ -1083,7 +1106,7 @@ p(S_t\!=\!\sigma_{\overline{i_t}}\,|\,v^{(d)},\hat{\theta})\,
 \nonumber\\& = &
 \sum_{d=1}^D\sum_{i=1}^{S}\left\{
 \sum_{\underline{\iota}'=0}^{1}
-\hat{\kappa}_{\underline{\iota}',i}^{(d)}\log\pi_{\underline{\iota}',i}
+\hat{\gamma}^{(d)}_{1,i}\,\hat{\kappa}_{\underline{\iota}',1,i}^{(d)}\log\pi_{\underline{\iota}',i}
 +\sum_{t=2}^{n^{(d)}}
 \hat{\gamma}_{t,i}^{(d)}\log\pi_{0,i}\right\}
 \end{eqnarray}
@@ -1093,33 +1116,36 @@ Hence, borrowing the Lagrangian constraint of equation~\eqref{eq:F:pi}, we maxim
   F_{\Pi}(\theta,\hat{\theta}) & = & 
 \sum_{d=1}^D\sum_{i=1}^{S}\left\{
 \sum_{\underline{\iota}'=0}^{1}
-\hat{\kappa}^{(d)}_{\underline{\iota}',i}
+\hat{\gamma}^{(d)}_{1,i}\,\hat{\kappa}^{(d)}_{\underline{\iota}',1,i}
 \log\pi_{\underline{\iota}',i}
 +\sum_{t=2}^{n^{(d)}}
 \hat{\gamma}_{t,i}\,\log\pi_{0,i}\right\}
--\lambda\left(\sum_{i=1}^{S}\{\pi_{0,i}+\pi_{1,i}\}-1\right)
+\nonumber\\&&
+{}-\lambda\left(\sum_{i=1}^{S}\{\pi_{0,i}+\pi_{1,i}\}-1\right)
 \\
 \Rightarrow\frac{\partial F_{\Pi}(\theta,\hat{\theta})}{\partial\pi_{0,i}}
 & = &
-\sum_{d=1}^D\left\{\frac{\hat{\kappa}^{(d)}_{0,i}}{\pi_{0,i}}+\sum_{t=2}^{n^{(d)}}\frac{\hat{\gamma}_{t,i}}{\pi_{0,i}}\right\}-\lambda
+\sum_{d=1}^D\left\{\frac{\hat{\gamma}^{(d)}_{1,i}\,\hat{\kappa}^{(d)}_{0,1,i}}{\pi_{0,i}}+\sum_{t=2}^{n^{(d)}}\frac{\hat{\gamma}_{t,i}}{\pi_{0,i}}\right\}-\lambda
 ~=~0\mbox{ when }\theta=\hat{\theta}'\,,
 \nonumber\\
 \frac{\partial F_{\Pi}(\theta,\hat{\theta})}{\partial\pi_{1,i}}
 & = &
-\sum_{d=1}^D\frac{\hat{\kappa}^{(d)}_{1,i}}{\pi_{1,i}}-\lambda
+\sum_{d=1}^D\frac{\hat{\gamma}^{(d)}_{1,i}\,\hat{\kappa}^{(d)}_{1,1,i}}{\pi_{1,i}}-\lambda
 ~=~0\mbox{ when }\theta=\hat{\theta}'
 \nonumber\\
-\Rightarrow\hat{\lambda}' & = & \sum_{d=1}^D\sum_{i=1}^{S}\left\{\hat{\kappa}^{(d)}_{0,i}+\hat{\kappa}^{(d)}_{1,i}+\sum_{t=2}^{n^{(d)}}\hat{\gamma}^{(d)}_{t,i}\right\}
+\Rightarrow\hat{\lambda}' & = & \sum_{d=1}^D
+\sum_{i=1}^{S}\left\{\hat{\gamma}^{(d)}_{1,i}\,\hat{\kappa}^{(d)}_{0,1,i}
++\hat{\gamma}^{(d)}_{1,i}\,\hat{\kappa}^{(d)}_{1,1,i}+\sum_{t=2}^{n^{(d)}}\hat{\gamma}^{(d)}_{t,i}\right\}
 ~=~\sum_{d=1}^D\sum_{i=1}^{S}\sum_{t=1}^{n^{(d)}}\hat{\gamma}^{(d)}_{t,i}~=~\sum_{d=1}^D n^{(d)}\,,
 \end{eqnarray}
 which leads to
 \begin{eqnarray}
 \hat{\pi}_{0,i}' & = & 
-  \frac{\sum_{d=1}^D\left\{\hat{\kappa}^{(d)}_{0,i}+\sum_{t=2}^{n^{(d)}}\hat{\gamma}^{(d)}_{t,i}\right\}}
+  \frac{\sum_{d=1}^D\left\{\hat{\gamma}^{(d)}_{1,i}\,\hat{\kappa}^{(d)}_{0,1,i}+\sum_{t=2}^{n^{(d)}}\hat{\gamma}^{(d)}_{t,i}\right\}}
           {\sum_{d=1}^D n^{(d)}}\,,
 \nonumber\\
 \hat{\pi}_{1,i}' & = & 
-  \frac{\sum_{d=1}^D\hat{\kappa}^{(d)}_{1,i}}
+  \frac{\sum_{d=1}^D\hat{\gamma}^{(d)}_{1,i}\,\hat{\kappa}^{(d)}_{1,1,i}}
           {\sum_{d=1}^D n^{(d)}}\,.
 \end{eqnarray}
 
@@ -1145,7 +1171,7 @@ p(\tau_{n^{(d)}+1}\!=\!\overline{\underline{\tau}},S_{n^{(d)}}\!=\!\sigma_{\over
 \sum_{t=1}^{n^{(d)}-1}
 \hat{\gamma}_{t,i}^{(d)}\log\omega_{0,i}+
 \sum_{\underline{\tau}'=0}^{1}
-\hat{\zeta}_{\underline{\tau}',i}^{(d)}\log\omega_{\underline{\tau}',i}
+\hat{\gamma}^{(d)}_{n^{(d)},i}\,\hat{\zeta}_{\underline{\tau}',n^{(d)},i}^{(d)}\log\omega_{\underline{\tau}',i}
 \right\}
 \end{eqnarray}
 subject to the appropriate contraints. Note that we have utilised equations~\eqref{eq:xi_t_i_j} and \eqref{eq:p_tnp1_sn_g_v}.
@@ -1156,34 +1182,36 @@ Hence, borrowing the Lagrangian constraint of equation~\eqref{eq:F:omega}, we ma
 \sum_{t=1}^{n^{(d)}-1}
 \hat{\gamma}_{t,i}^{(d)}\log\omega_{0,i}+
 \sum_{\underline{\tau}'=0}^{1}
-\hat{\zeta}_{\underline{\tau}',i}^{(d)}\log\omega_{\underline{\tau}',i}
+\hat{\gamma}^{(d)}_{n^{(d)},i}\,\hat{\zeta}_{\underline{\tau}',n^{(d)},i}^{(d)}\log\omega_{\underline{\tau}',i}
 \right\}
--\sum_{i=1}^{S}\lambda_i\left(\omega_{0,i}+\omega_{1,i}-1\right)
+\nonumber\\&&
+{}-\sum_{i=1}^{S}\lambda_i\left(\omega_{0,i}+\omega_{1,i}-1\right)
 \\
 \Rightarrow
   \frac{\partial F_{\Omega}(\theta,\hat{\theta})}{\partial\omega_{0,i}} & = &
 \sum_{d=1}^D\left\{
 \sum_{t=1}^{n^{(d)}-1}
 \frac{\hat{\gamma}_{t,i}^{(d)}}{\omega_{0,i}}+
-\frac{\hat{\zeta}_{0,i}^{(d)}}{\omega_{0,i}}
+\frac{\hat{\gamma}^{(d)}_{n^{(d)},i}\,\hat{\zeta}_{0,n^{(d)},i}^{(d)}}{\omega_{0,i}}
 \right\}-\lambda_i~=~0\mbox{ when }\theta=\hat{\theta}'\,,
 \nonumber\\
   \frac{\partial F_{\Omega}(\theta,\hat{\theta})}{\partial\omega_{1,i}} & = &
 \sum_{d=1}^D\left\{
-\frac{\hat{\zeta}_{1,i}^{(d)}}{\omega_{1,i}}
+\frac{\hat{\gamma}^{(d)}_{n^{(d)},i}\,\hat{\zeta}_{1,n^{(d)},i}^{(d)}}{\omega_{1,i}}
 \right\}-\lambda_i~=~0\mbox{ when }\theta=\hat{\theta}'
 \nonumber\\
 \Rightarrow\hat{\lambda}_i' & = & \sum_{d=1}^D\left\{
-\sum_{t=1}^{n^{(d)}-1}\hat{\gamma}_{t,i}^{(d)}+\hat{\zeta}_{0,i}^{(d)}+\hat{\zeta}_{1,i}^{(d)}\right\}
+\sum_{t=1}^{n^{(d)}-1}\hat{\gamma}_{t,i}^{(d)}+\hat{\gamma}^{(d)}_{n^{(d)},i}\,\hat{\zeta}_{0,n^{(d)},i}^{(d)}
++\hat{\gamma}^{(d)}_{n^{(d)},i}\,\hat{\zeta}_{1,n^{(d)},i}^{(d)}\right\}
 ~=~\sum_{d=1}^D\sum_{t=1}^{n^{(d)}}\hat{\gamma}_{t,i}^{(d)}
 \nonumber\\
 \Rightarrow \hat{\omega}_{0,i}' & = &
 \frac{\sum_{d=1}^D\left\{
-           \sum_{t=1}^{n^{(d)}-1}\hat{\gamma}_{t,i}^{(d)}+\hat{\zeta}_{0,i}^{(d)}\right\}}
+           \sum_{t=1}^{n^{(d)}-1}\hat{\gamma}_{t,i}^{(d)}+\hat{\gamma}^{(d)}_{n^{(d)},i}\,\hat{\zeta}_{0,n^{(d)},i}^{(d)}\right\}}
        {\sum_{d=1}^D\sum_{t=1}^{n^{(d)}}\hat{\gamma}_{t,i}^{(d)}}\,,
 \nonumber\\
 \hat{\omega}_{1,i}' & = & 
-\frac{\sum_{d=1}^D\hat{\zeta}_{1,i}^{(d)}}
+\frac{\sum_{d=1}^D\hat{\gamma}^{(d)}_{n^{(d)},i}\,\hat{\zeta}_{1,n^{(d)},i}^{(d)}}
        {\sum_{d=1}^D\sum_{t=1}^{n^{(d)}}\hat{\gamma}_{t,i}^{(d)}}~=~1-\hat{\omega}_{0,i}'\,.
 \end{eqnarray}
 Observe in comparison to equation~\eqref{eq:F:omega:sol} for known data that each certainty, represented by a $\delta(\cdot)$ term, has now been replaced
