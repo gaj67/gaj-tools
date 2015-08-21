@@ -4,6 +4,7 @@
 package gaj.iterators.io;
 
 import gaj.iterators.core.IteratorFactory;
+import gaj.iterators.core.ResourceIterator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

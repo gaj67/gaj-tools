@@ -4,8 +4,7 @@
 package gaj.template.text;
 
 import gaj.iterators.core.IterableIterator;
-import gaj.iterators.io.ResourceIterator;
-
+import gaj.iterators.core.ResourceIterator;
 import java.io.IOException;
 import java.util.Iterator;
 

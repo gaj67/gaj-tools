@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.iterators.io;
+package gaj.iterators.core;
 
 /**
  * Provides a mechanism for allowing the propagation of a runtime-based IOException,

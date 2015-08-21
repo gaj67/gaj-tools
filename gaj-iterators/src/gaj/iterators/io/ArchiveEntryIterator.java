@@ -3,6 +3,7 @@
  */
 package gaj.iterators.io;
 
+import gaj.iterators.core.ResourceIterator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
