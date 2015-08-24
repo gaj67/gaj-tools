@@ -3,7 +3,6 @@
 #################
 
 *.pydevproject
-.project
 .metadata
 bin/
 test-bin/
@@ -14,7 +13,6 @@ tmp/
 *~.nib
 *.class
 local.properties
-.classpath
 .settings/
 .loadpath
 
