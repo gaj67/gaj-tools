@@ -5,11 +5,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CheckGutenbergProperties {
+
+    private static final String START_OF_WORD = "<h1>";
+    private static final String END_OF_WORD = "</h1>";
+    private static final String START_OF_TAG = "<tag>";
+    private static final String END_OF_TAG = "</tag>";
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -21,6 +28,7 @@ public class CheckGutenbergProperties {
 
     private static void read(String path) throws IOException {
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
+            Set<String> words = new HashSet<>();
             Map<String,AtomicInteger> tagTypes = new HashMap<>();
             List<AtomicInteger> tagCounts = new ArrayList<>();
             String line = null;
@@ -33,7 +41,8 @@ public class CheckGutenbergProperties {
                 if (line == null) {
                     break;
                 }
-                if (!line.contains("<h1>")) {
+                String word = getWord(line);
+                if (word == null) {
                     line = null;
                     continue;
                 }
@@ -49,6 +58,10 @@ public class CheckGutenbergProperties {
                         countTagTypes(tagTypes, tags);
                         countTagFreqs(tagCounts, tags.size());
                         tagCounter += tags.size();
+                        if (tags.isEmpty() && !words.contains(word)) {
+                            System.out.printf("No tags for word %s%n", word);
+                        }
+                        words.add(word);
                         continue wordloop;
                     }
                     if (line.contains("<hw>")) {
@@ -63,16 +76,29 @@ public class CheckGutenbergProperties {
 
     }
 
+    private static String getWord(String line) {
+        int sidx = line.indexOf(START_OF_WORD);
+        if (sidx < 0) {
+            return null;
+        }
+        sidx += START_OF_WORD.length();
+        int eidx = line.indexOf(END_OF_WORD);
+        if (eidx < 0) {
+            throw new IllegalStateException("Missing end tag for word definition on line: " + line);
+        }
+        return line.substring(sidx, eidx);
+    }
+
     private static List<String> getTags(String line) {
         List<String> tags = new ArrayList<>();
         int sidx = -1;
         while (true) {
-            sidx = (sidx < 0) ? line.indexOf("<tt>") : line.indexOf("<tt>", sidx);
+            sidx = (sidx < 0) ? line.indexOf(START_OF_TAG) : line.indexOf(START_OF_TAG, sidx);
             if (sidx < 0) {
                 break;
             }
-            sidx += 4;
-            int eidx = line.indexOf("</tt>", sidx);
+            sidx += START_OF_TAG.length();
+            int eidx = line.indexOf(END_OF_TAG, sidx);
             if (eidx < 0) {
                 throw new IllegalStateException("Missing tag end on line: " + line);
             }
