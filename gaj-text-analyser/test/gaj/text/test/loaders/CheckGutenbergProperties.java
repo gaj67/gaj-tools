@@ -29,6 +29,7 @@ public class CheckGutenbergProperties {
     private static void read(String path) throws IOException {
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
             Set<String> words = new HashSet<>();
+            Set<String> taglessWords = new HashSet<>();
             Map<String,AtomicInteger> tagTypes = new HashMap<>();
             List<AtomicInteger> tagCounts = new ArrayList<>();
             String line = null;
@@ -58,10 +59,11 @@ public class CheckGutenbergProperties {
                         countTagTypes(tagTypes, tags);
                         countTagFreqs(tagCounts, tags.size());
                         tagCounter += tags.size();
-                        if (tags.isEmpty() && !words.contains(word)) {
-                            System.out.printf("No tags for word %s%n", word);
+                        if (tags.isEmpty()) {
+                        	taglessWords.add(word);
+                        } else {
+                            words.add(word);
                         }
-                        words.add(word);
                         continue wordloop;
                     }
                     if (line.contains("<hw>")) {
@@ -72,9 +74,22 @@ public class CheckGutenbergProperties {
             System.out.printf("#words=%d, #tags=%d%n", wordCounter, tagCounter);
             System.out.printf("#tag-types=%d%ntag-types=%s%n", tagTypes.size(), tagTypes);
             System.out.printf("tag-freqs=%s%n", tagCounts);
+            for (String word : taglessWords) {
+            	if (!words.contains(word)) {
+            		System.out.printf("No tags for: %s%n", word);
+            	}
+            }
         }
 
     }
+
+	private static boolean isNoGood(Set<String> words, String word,
+			List<String> tags) 
+	{
+		return tags.isEmpty() && !words.contains(word)
+				&& !word.startsWith("-") && !word.endsWith("-")
+				&& !word.contains(" ");
+	}
 
     private static String getWord(String line) {
         int sidx = line.indexOf(START_OF_WORD);
