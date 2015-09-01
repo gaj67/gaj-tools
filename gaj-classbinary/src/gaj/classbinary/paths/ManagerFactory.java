@@ -4,7 +4,8 @@
 package gaj.classbinary.paths;
 
 import gaj.iterators.core.Filter;
-import gaj.iterators.core.IteratorFactory;
+import gaj.iterators.utilities.IteratorFactory;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collections;

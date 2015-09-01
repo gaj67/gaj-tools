@@ -1,7 +1,14 @@
 /*
- * (c) Geoff Jarrad, 2013.
+ * (c) Geoff Jarrad, 2013. Updated 2015.
  */
-package gaj.iterators.core;
+package gaj.iterators.utilities;
+
+import gaj.iterators.core.Filter;
+import gaj.iterators.core.IterableIterator;
+import gaj.iterators.core.MultiSequenceIterator;
+import gaj.iterators.core.Producer;
+import gaj.iterators.core.ProducerIterator;
+import gaj.iterators.core.SequenceIterator;
 
 import java.util.Enumeration;
 import java.util.Iterator;

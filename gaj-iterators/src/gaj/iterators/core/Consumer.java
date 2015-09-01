@@ -12,6 +12,6 @@ public interface Consumer<T> {
      * denoting the end of the sequence.
      * @return A value of true (or false) if the item has (or has not) been consumed.
      */
-    boolean consume(T item);
+    boolean consume(/*@Nullable*/ T item);
 
 }

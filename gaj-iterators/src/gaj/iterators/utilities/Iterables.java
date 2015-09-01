@@ -3,15 +3,18 @@
  */
 package gaj.iterators.utilities;
 
+import gaj.iterators.core.Producer;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Encapsulates various collection-type operations on iterables and iterators
+ * Encapsulates various collection-type operations on sequences.
  */
 public abstract class Iterables {
 
@@ -21,9 +24,9 @@ public abstract class Iterables {
      * Adds all of the iterator elements to the collection.
      * 
      * @param collection - A collection of elements.
-     * @param iterator - An iterator over another collection of elements.
+     * @param iterator - An iterator over a sequence.
      */
-    public static <T> void addAll(Collection<T> collection, Iterator<? extends T> iterator) {
+    public static <T> void addAll(Collection<? super T> collection, Iterator<? extends T> iterator) {
         while (iterator.hasNext()) {
             collection.add(iterator.next());
         }
@@ -33,12 +36,50 @@ public abstract class Iterables {
      * Adds all of the iterable elements to the collection.
      * 
      * @param collection - A collection of elements.
-     * @param iterable - An instance that is iterable over another collection of elements.
+     * @param iterable - An iterable over a sequence.
      */
-    public static <T> void addAll(Collection<T> collection, Iterable<? extends T> iterable) {
+    public static <T> void addAll(Collection<? super T> collection, Iterable<? extends T> iterable) {
         for (T elem : iterable) {
             collection.add(elem);
         }
+    }
+
+    /**
+     * Adds all of the enumeration elements to the collection.
+     * 
+     * @param collection - A collection of elements.
+     * @param enumerator - An enumerator over a sequence.
+     */
+    public static <T> void addAll(Collection<? super T> collection, Enumeration<? extends T> enumerator) {
+        while (enumerator.hasMoreElements()) {
+            collection.add(enumerator.nextElement());
+        }
+    }
+
+    /**
+     * Adds all of an array of elements to the collection.
+     * 
+     * @param collection - A collection of elements.
+     * @param array - An array of items.
+     */
+    public static <T> void addAll(Collection<? super T> collection, T[] array) {
+    	for (int i = 0; i < array.length; i++) {
+    		collection.add(array[i]);
+    	}
+    }
+
+    /**
+     * Adds all of the producer items to the collection.
+     * 
+     * @param collection - A collection of elements.
+     * @param producer - A producer of items.
+     */
+    public static <T> void addAll(Collection<? super T> collection, Producer<? extends T> producer) {
+    	while (true) {
+    		T item = producer.produce();
+    		if (item == null) break;
+    		collection.add(item);
+    	}
     }
 
     /**
@@ -55,7 +96,7 @@ public abstract class Iterables {
 			list = _list;
     	} else if (iterable instanceof Collection) {
     		Collection<? extends T> collection = (Collection<? extends T>) iterable;
-    		list = new ArrayList<T>(collection.size()); 
+    		list = new ArrayList<>(collection.size()); 
     		list.addAll(collection);
     	} else {
     		list = new ArrayList<>();
@@ -71,8 +112,32 @@ public abstract class Iterables {
      * @return A list of the iterated elements.
      */
     public static <T> List<T> asList(Iterator<? extends T> iterator) {
-    	List<T> list = new ArrayList<T>();
+    	List<T> list = new ArrayList<>();
     	addAll(list, iterator);
+    	return list;
+    }
+
+    /**
+     * Constructs a list of the elements, in order, provided by the given enumerator instance.
+     * 
+     * @param enumerator - An enumerator over elements.
+     * @return A list of the iterated elements.
+     */
+    public static <T> List<T> asList(Enumeration<? extends T> enumerator) {
+    	List<T> list = new ArrayList<>();
+    	addAll(list, enumerator);
+    	return list;
+    }
+
+    /**
+     * Constructs a list of the elements, in order, provided by the given producer instance.
+     * 
+     * @param producer - A producer of items.
+     * @return A list of the iterated elements.
+     */
+    public static <T> List<T> asList(Producer<? extends T> producer) {
+    	List<T> list = new ArrayList<>();
+    	addAll(list, producer);
     	return list;
     }
 

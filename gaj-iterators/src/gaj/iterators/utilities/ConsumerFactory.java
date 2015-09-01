@@ -1,8 +1,12 @@
 /*
  * (c) Geoff Jarrad, 2015.
  */
-package gaj.iterators.core;
+package gaj.iterators.utilities;
 
+import gaj.iterators.core.Consumer;
+import gaj.iterators.core.Producer;
+
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 
@@ -14,14 +18,31 @@ public abstract class ConsumerFactory {
     private ConsumerFactory() {}
 
     /**
-     * Provides a consumer that accepts any item.
+     * Provides a consumer that discards all items.
      * 
      * @return A consumer of items.
      */
     public static <T> Consumer<T> newConsumer() {
     	return new Consumer<T>() {
 			@Override
-			public boolean consume(T item) {
+			public boolean consume(/*@Nullable*/ T item) {
+				return true;
+			}
+    	};
+    }
+    
+    /**
+     * Provides a consumer that adds all non-null items to a collection.
+     * 
+     * @param collection - A collection of items.
+     * @return A consumer of items.
+     */
+    public static <T> Consumer<T> newConsumer(Collection<? super T> collection) {
+    	return new Consumer<T>() {
+			@Override
+			public boolean consume(/*@Nullable*/ T item) {
+				if (item != null) 
+					return collection.add(item);
 				return true;
 			}
     	};
@@ -105,10 +126,10 @@ public abstract class ConsumerFactory {
     }
 
     /**
-     * Consumes an producer of items.
+     * Consumes a producer of items.
      *  
      * @param consumer - A consumer of items.
-     * @param producer - An producer of non-null items.
+     * @param producer - A producer of non-null items.
      */
     public static <T> void consume(Consumer<? super T> consumer, final Producer<? extends T> producer) {
     	while (true) {

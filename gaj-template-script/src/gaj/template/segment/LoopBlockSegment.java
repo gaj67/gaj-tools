@@ -3,7 +3,7 @@
  */
 package gaj.template.segment;
 
-import gaj.iterators.core.IteratorFactory;
+import gaj.iterators.utilities.IteratorFactory;
 import gaj.template.data.Embedder;
 import gaj.template.data.ScriptData;
 import gaj.template.data.ScriptDataFactory;

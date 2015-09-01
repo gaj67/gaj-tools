@@ -11,7 +11,8 @@ import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.packages.PackageFactory;
 import gaj.iterators.core.Filter;
 import gaj.iterators.core.IterableIterator;
-import gaj.iterators.core.IteratorFactory;
+import gaj.iterators.utilities.IteratorFactory;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;

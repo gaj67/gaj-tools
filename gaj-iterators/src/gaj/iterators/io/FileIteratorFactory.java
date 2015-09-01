@@ -4,8 +4,9 @@
 package gaj.iterators.io;
 
 import gaj.iterators.core.IterableIterator;
-import gaj.iterators.core.IteratorFactory;
 import gaj.iterators.core.ResourceIterator;
+import gaj.iterators.utilities.IteratorFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
