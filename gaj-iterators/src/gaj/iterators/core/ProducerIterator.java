@@ -1,7 +1,7 @@
 package gaj.iterators.core;
 
 /**
- * Encapsulates a producer of a sequence of items.
+ * Encapsulates a combined producer and iterable-iterator of a sequence of items.
  */
 public abstract class ProducerIterator<T> extends IterableIterator<T> implements Producer<T> {
 
@@ -14,8 +14,10 @@ public abstract class ProducerIterator<T> extends IterableIterator<T> implements
     @Override
     public boolean hasNext() {
         if (hasNext) {
-            if (item == null) item = produce();
-            if (item == null) hasNext = false;
+            if (item == null) {
+            	item = produce();
+                if (item == null) hasNext = false;
+            }
             return hasNext;
         }
         return false;

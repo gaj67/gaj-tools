@@ -24,8 +24,9 @@ public abstract class IteratorFactory {
     // Iterators over a single sequence.
 
     /**
-     * 
-     * @return An iterable-iterator over an empty 'collection'.
+     * Provides an iterable-iterator over an empty sequence.
+     *  
+     * @return An iterable-iterator.
      */
     public static <T> IterableIterator<T> newIterator() {
         return new IterableIterator<T>() {
@@ -42,10 +43,12 @@ public abstract class IteratorFactory {
     }
 
     /**
+     * Provides an iterable-iterator over a non-null, singleton sequence.
      * 
-     * @return An iterable-iterator over a non-null singleton 'collection'.
+     * @param item - The non-null, singleton item.
+     * @return An iterable-iterator.
      */
-    public static <T> IterableIterator<T> newIterator(final T singleton) {
+    public static <T> IterableIterator<T> newIterator(final T item) {
         return new IterableIterator<T>() {
             private boolean hasNext = true;
 
@@ -58,7 +61,7 @@ public abstract class IteratorFactory {
             public T next() {
                 if (hasNext) {
                     hasNext = false;
-                    return singleton;
+                    return item;
                 }
                 return halt("End of singleton iteration");
             }
@@ -66,10 +69,13 @@ public abstract class IteratorFactory {
     }
 
     /**
-     * 
-     * @return An iterable-iterator over a non-null repeated 'collection'.
+     * Provides an iterable-iterator over a non-null, repeated sequence.
+     *
+     * @param item - The non-null item to be repeated.
+     * @param count - The length of the sequence.
+     * @return An iterable-iterator.
      */
-    public static <T> IterableIterator<T> newIterator(final T token, final int count) {
+    public static <T> IterableIterator<T> newIterator(final T item, final int count) {
         return new IterableIterator<T>() {
             private int counter = count;
             
@@ -82,7 +88,7 @@ public abstract class IteratorFactory {
             public T next() {
                 if (counter > 0) {
                     counter--;
-                    return token;
+                    return item;
                 }
                 return halt("End of repeated token iteration");
             }
@@ -90,9 +96,10 @@ public abstract class IteratorFactory {
     }
 
     /**
-     * 
-     * @param iterator - An iterator over some arbitrary collection.
-     * @return An iterable-iterator bound to the given iterator.
+     * Provides an iterable-iterator over an iterator sequence.
+     *  
+     * @param iterator - An iterator over some arbitrary sequence.
+     * @return An iterable-iterator.
      */
     public static <T> IterableIterator<T> newIterator(final Iterator<? extends T> iterator) {
         return new IterableIterator<T>() {
@@ -109,9 +116,10 @@ public abstract class IteratorFactory {
     }
 
     /**
+     * Provides an iterable-iterator over an iterable sequence.
      * 
-     * @param iterable - An iterable over some arbitrary collection.
-     * @return An iterable-iterator bound to the given iterable.
+     * @param iterable - An iterable over some arbitrary sequence.
+     * @return An iterable-iterator.
      */
     public static <T> IterableIterator<T> newIterator(final Iterable<? extends T> iterable) {
         return new SequenceIterator<T>() {
@@ -123,9 +131,10 @@ public abstract class IteratorFactory {
     }
 
     /**
+     * Provides an iterable-iterator over an enumerated sequence.
      * 
-     * @param enumerator - An enumeration instance for some arbitrary collection.
-     * @return An iterable-iterator bound to the given enumerator.
+     * @param enumerator - An enumeration instance for some arbitrary sequence.
+     * @return An iterable-iterator.
      */
     public static <T> IterableIterator<T> newIterator(final Enumeration<? extends T> enumerator) {
         return new IterableIterator<T>() {
@@ -142,9 +151,10 @@ public abstract class IteratorFactory {
     }
 
     /**
+     * Provides an iterable-iterator over an array of items. 
      * 
-     * @param array - An array of elements to be iterated.
-     * @return An iterable-enumerator bound to the given array.
+     * @param array - An array of elements.
+     * @return An iterable-enumerator.
      */
     public static <T> IterableIterator<T> newIterator(final T[] array) {
         return new IterableIterator<T>() {
@@ -162,11 +172,27 @@ public abstract class IteratorFactory {
         };
     }
 
+    /**
+     * Provides an iterable-iterator over a sequence producer.
+     * 
+     * @param producer - A producer of items.
+     * @return An iterable-enumerator bound.
+     */
+    public static <T> IterableIterator<T> newIterator(final Producer<T> producer) {
+        return new ProducerIterator<T>() {
+			@Override
+			public T produce() {
+				return producer.produce();
+			}
+        };
+    }
+
     //===================================================================================
     // Filtered iterators over a single sequence.
 
     /**
-     * Creates a filtered iterator.
+     * Creates a filtered iterable-iterator.
+     * 
      * @param iterable - An iterable over elements of the input type.
      * @param filter - A filter that transforms elements to the output type, and/or causes elements
      * to be skipped during iteration.
@@ -204,6 +230,7 @@ public abstract class IteratorFactory {
     // Iterators over multiple sequences.
 
     /**
+     * Provides an iterable-iterator over an array of sequences.
      * 
      * @param iterators - An array of iterator instances.
      * @return A multi-sequence iterable-iterator bound to the given array elements.
@@ -223,6 +250,7 @@ public abstract class IteratorFactory {
     }
 
     /**
+     * Provides an iterable-iterator over an array of sequences.
      * 
      * @param iterables - An array of iterable instances.
      * @return A multi-sequence iterable-iterator bound to the given array elements.
@@ -242,7 +270,8 @@ public abstract class IteratorFactory {
     }
 
     /**
-     * 
+     * Provides an iterable-iterator over a sequence of sequences.
+     *   
      * @param iterables - An iterable of iterable instances.
      * @return A multi-sequence iterable-iterator bound to the given iterables.
      */
@@ -264,46 +293,47 @@ public abstract class IteratorFactory {
     // Filtered iterators over multiple sequences.
 
     /**
-     * Creates a filtered iterator.
+     * Creates a filtered iterable-iterator.
      * @param iterable - An iterable over elements of the input type.
      * @param filter - A filter that transforms elements to the output type, and/or causes elements
      * to be skipped during iteration.
      * @return A filtered iterable-iterator bound to the given filter and input iterable.
      */
     public static <T,V> IterableIterator<V> newMultiIterator(final Iterable<? extends T> iterable, final Filter<T,Iterable<? extends V>> filter) {
-        return newMultiIterator(
-                new IterableIterator<Iterable<? extends V>>() {
-                    private /*@LazyNonNull*/ Iterator<? extends T> iterator = null;
-                    private /*@Nullable*/ Iterable<? extends V> element = null;
+    	return newMultiIterator(
+    			new IterableIterator<Iterable<? extends V>>() {
+    				private /*@LazyNonNull*/ Iterator<? extends T> iterator = null;
+    				private /*@Nullable*/ Iterable<? extends V> element = null;
 
-                    @Override
-                    public boolean hasNext() {
-                        if (iterator == null) {
-                            iterator = iterable.iterator(); // Deferred construction.
-                        }
-                        while (element == null && iterator.hasNext()) {
-                            element = filter.filter(iterator.next());
-                        }
-                        return element != null;
-                    }
+    				@Override
+    				public boolean hasNext() {
+    					if (iterator == null) {
+    						iterator = iterable.iterator(); // Deferred construction.
+    					}
+    					while (element == null && iterator.hasNext()) {
+    						element = filter.filter(iterator.next());
+    					}
+    					return element != null;
+    				}
 
-                    @Override
-                    /*@SuppressWarnings("nullness")*/
-                    public Iterable<? extends V>  next() {
-                        if (hasNext()) {
-                            Iterable<? extends V>  elem = element;
-                            element = null;
-                            return elem;
-                        }
-                        return halt("End of filtered iteration");
-                    }
-                });
+    				@Override
+    				/*@SuppressWarnings("nullness")*/
+    				public Iterable<? extends V>  next() {
+    					if (hasNext()) {
+    						Iterable<? extends V>  elem = element;
+    						element = null;
+    						return elem;
+    					}
+    					return halt("End of filtered iteration");
+    				}
+    			});
     }
 
     /**
+     * Provides an iterable-iterator over a sequence of maps.
      * 
      * @param maps - An iterable of maps.
-     * @return A multi-sequence iterable-iterator bound to the keys of the maps.
+     * @return A iterable-iterator bound to the keys of the maps.
      */
     public static <K,V> IterableIterator<K> newMapKeysMultiIterator(final Iterable<? extends Map<? extends K,V>> maps) {
         return new MultiSequenceIterator<K>() {
@@ -320,9 +350,10 @@ public abstract class IteratorFactory {
     }
 
     /**
-     * 
+     * Provides an iterable-iterator over a sequence of maps.
+     *  
      * @param maps - An iterable of maps.
-     * @return A multi-sequence iterable-iterator bound to the values of the maps.
+     * @return A iterable-iterator bound to the values of the maps.
      */
     public static <K,V> IterableIterator<V> newMapValuesMultiIterator(final Iterable<? extends Map<K,? extends V>> maps) {
         return new MultiSequenceIterator<V>() {
