@@ -1,6 +1,7 @@
 package gaj.text.freedictionary;
 
 import java.io.IOException;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -8,24 +9,34 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class MyDefaultHandler extends DefaultHandler {
+/**
+ * Optionally delegates all methods to another handler.
+ */
+public class DelegatingHandler extends DefaultHandler {
 
-    private DefaultHandler handler = null;
+	private DefaultHandler handler = null;
 
-    public MyDefaultHandler() {
-    }
+	/**
+	 * Discards all data until {@link setHandler}() is called.
+	 */
+	public DelegatingHandler() {}
+	
+	/**
+	 * Delegates all data to the given handler.
+	 * 
+	 * @param handler - The delegated handler.
+	 */
+	public DelegatingHandler(DefaultHandler handler) {
+		this.handler = handler;
+	}
 
-    public MyDefaultHandler(DefaultHandler handler) {
-        this.handler = handler;
-    }
+	public DefaultHandler getHandler() {
+		return handler;
+	}
 
-    public DefaultHandler getHandler() {
-        return handler;
-    }
-
-    public void setHandler(DefaultHandler handler) {
-        this.handler = handler;
-    }
+	public void setHandler(DefaultHandler handler) {
+		this.handler = handler;
+	}
 
     @Override
     public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {

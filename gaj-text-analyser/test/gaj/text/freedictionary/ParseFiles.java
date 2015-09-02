@@ -26,7 +26,7 @@ public class ParseFiles {
     private static void analyseFile(File path) {
         try (InputStream is = new FileInputStream(path)) {
             SAXParserImpl parser = SAXParserImpl.newInstance(null);
-            DefaultHandler handler = new FreeDictionaryHandler();
+            DefaultHandler handler = new SectionsHandler();
             parser.parse(is, handler);
         } catch (IOException | SAXException e) {
             System.out.printf("Failed to analyse: " + path + " because: " + e.getMessage());
