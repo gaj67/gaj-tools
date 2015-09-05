@@ -8,7 +8,7 @@ import static gaj.text.freedictionary.StructureDefinition.SECTION_TYPE_HM;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-public class SectionsHandler extends DelegatingHandler {
+/*package-private*/ class SectionsHandler extends DelegatingHandler {
 
 	// TODO Pass in DefinitionConsumer to constructor and pass to delegate handlers.
 	
@@ -22,8 +22,8 @@ public class SectionsHandler extends DelegatingHandler {
                 		setHandler(new HMSectionHandler());
                 		break;
                 	case SECTION_TYPE_HC:
-                		setHandler(new HCSectionHandler());
-                		break;
+                		//setHandler(new HCSectionHandler());
+                		//break;
                 	default:
                 		setHandler(null);
                 		break;
