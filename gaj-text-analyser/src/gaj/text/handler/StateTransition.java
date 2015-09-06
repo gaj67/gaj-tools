@@ -11,7 +11,7 @@ public interface StateTransition<S> {
 	 * 
 	 * @return The new state, or a value of null to retain the current state.
 	 */
-	/*@Nullable*/ S getNewState();
+	/*@Nullable*/ S getTransitionState();
 	
 	/**
 	 * This action will be performed immediately before

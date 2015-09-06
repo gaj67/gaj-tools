@@ -13,6 +13,14 @@ public interface ContextStateGetter<T> extends StateGetter<T> {
 	/*@Nullable*/ T getParentState();
 
 	/**
+	 * Obtains the number of ancestral states in the state history, other than the current state.
+	 * May be used an an index into {@link #getAncestralState}().
+	 * 
+	 * @return The number of ancestral states.
+	 */
+	int numAncestralStates();
+	
+	/**
 	 * Obtains the specified ancestral state in the state history.
 	 * 
 	 * @param index - Specifies the index of the state history: 0=current; 1=parent;

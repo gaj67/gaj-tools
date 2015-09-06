@@ -6,16 +6,23 @@ import java.util.Map.Entry;
 
 import org.xml.sax.Attributes;
 
-/*package-private*/ class ElementEvent implements Event<String> {
+/*package-private*/ class SAXEvent implements Event<SAXEventType, String> {
 
+	private final SAXEventType type;
 	private final String name;
 	private final Attributes attrs;
 	
 	private Map<String, String> mappedAttrs = null;
 
-	/*package-private*/ ElementEvent(/*@Nullable*/ String name, /*@Nullable*/ Attributes attrs) {
+	/*package-private*/ SAXEvent(/*@Nullable*/ SAXEventType type, /*@Nullable*/ String name, /*@Nullable*/ Attributes attrs) {
+		this.type = type;
 		this.name = name;
 		this.attrs = attrs;
+	}
+
+	@Override
+	public /*@Nullable*/ SAXEventType getType() {
+		return type;
 	}
 
 	@Override
