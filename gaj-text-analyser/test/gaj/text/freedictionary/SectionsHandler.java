@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
             	// Delegate to specialised section handler.
             	switch (getSectionType(attributes)) {
                 	case SECTION_TYPE_HM:
-                		setHandler(new HMSectionHandler());
+                		setHandler(new HMSectionRuleHandler());
                 		break;
                 	case SECTION_TYPE_HC:
                 		//setHandler(new HCSectionHandler());

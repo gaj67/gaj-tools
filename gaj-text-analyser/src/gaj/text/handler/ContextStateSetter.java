@@ -3,7 +3,7 @@ package gaj.text.handler;
 /**
  * Maintains a history of ancestral states of an object.
  */
-public interface ContextStateSetter<T> extends StateSetter<T> {
+public interface ContextStateSetter<S> extends StateSetter<S> {
 
 	/**
 	 * Moves the current state to the parent state in the history, and sets the current state
@@ -16,7 +16,7 @@ public interface ContextStateSetter<T> extends StateSetter<T> {
 	 * @param state - The new (possibly null) state.
 	 */
 	@Override
-	void setState(/*@Nullable*/ T state);
+	void setState(/*@Nullable*/ S state);
 
 	/**
 	 * Removes the current state from the history, thereby restoring the parent state

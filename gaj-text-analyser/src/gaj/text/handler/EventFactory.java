@@ -13,6 +13,15 @@ public abstract class EventFactory {
 	}
 	
 	public static SAXEvent newSAXEvent(/*@Nullable*/ SAXEventType type, /*@Nullable*/ String name, /*@Nullable*/ Attributes attrs) {
-		return new SAXEvent(type, name, attrs); 
+		return new SAXEvent(type, name, attrs);
     }
+
+	public static SAXEvent newSAXEvent(/*@Nullable*/ SAXEventType type, /*@Nullable*/ String name) {
+		return new SAXEvent(type, name, null);
+	}
+
+	public static SAXEvent newSAXEvent(/*@Nullable*/ SAXEventType type) {
+		return new SAXEvent(type, null, null);
+	}
+
 }

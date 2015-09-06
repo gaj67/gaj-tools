@@ -17,7 +17,8 @@ public abstract class RuleFactory {
 			/*@Nullabl*/ S transitionState,
 			/*@Nullabl*/ Action postTransitionAction)
 	{
-		ContextStateGetter<S> stateGetter = StateFactory.newContextStateGetter(transitionState, parentState, previousState);
+		@SuppressWarnings("unchecked")
+		ContextStateGetter<S> stateGetter = StateFactory.newContextStateGetter(previousState, state, parentState);
 		StateTransition<S> stateTransition = StateFactory.newStateTransition(transitionState, preTransitionAction, postTransitionAction);
 		Event<T,V> event = EventFactory.newMappedEvent(eventType, eventLabel, eventProperties);
 		return newRule(stateGetter, event, stateTransition);

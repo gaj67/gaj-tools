@@ -56,6 +56,10 @@ package gaj.text.freedictionary;
 	 * May transition to {@link #ITEM} or {@link #SUBITEM}, depending upon context.
 	 */
 	EXAMPLE(true),
+	/**
+	 * Indicates that the state history should be rewound to the parent state.
+	 */
+	REWIND(null),
 	;
 
 	private final boolean isTextual;

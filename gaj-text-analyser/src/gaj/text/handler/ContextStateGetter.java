@@ -3,14 +3,14 @@ package gaj.text.handler;
 /**
  * Obtains the history of ancestral states of an object.
  */
-public interface ContextStateGetter<T> extends StateGetter<T> {
+public interface ContextStateGetter<S> extends StateGetter<S> {
 
 	/**
 	 * Obtains the parent state, which might also be the previous state.
 	 * 
 	 * @return The parent state, or a value of null if no parent state was set.
 	 */
-	/*@Nullable*/ T getParentState();
+	/*@Nullable*/ S getParentState();
 
 	/**
 	 * Obtains the number of ancestral states in the state history, other than the current state.
@@ -27,6 +27,6 @@ public interface ContextStateGetter<T> extends StateGetter<T> {
 	 * 2=grandparent; etc. A value of null will be returned for a negative index. 
 	 * @return The ancestral state, or a value of null if no ancestral state was set.
 	 */
-	/*@Nullable*/ T getAncestralState(int index);
+	/*@Nullable*/ S getAncestralState(int index);
 
 }
