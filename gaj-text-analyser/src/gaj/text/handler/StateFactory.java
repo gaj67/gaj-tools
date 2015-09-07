@@ -4,18 +4,18 @@ public abstract class StateFactory {
 
 	private StateFactory() {}
 	
-	public static <S> StateGetter<S> newStateGetter(/*@Nullable*/ S previousState, /*@Nullable*/ S state) {
-		return new StateGetter<S>() {
-			@Override
-			public /*@Nullable*/ S getState() {
-				return state;
-			}
+	public static <S> StateGetter<S> newStateGetter(final /*@Nullable*/ S previousState, final /*@Nullable*/ S state) {
+	    return new StateGetter<S>() {
+	        @Override
+	        public /*@Nullable*/ S getState() {
+	            return state;
+	        }
 
-			@Override
-			public /*@Nullable*/ S getPreviousState() {
-				return previousState;
-			}
-		};
+	        @Override
+	        public /*@Nullable*/ S getPreviousState() {
+	            return previousState;
+	        }
+	    };
 	}
 
 	/**
@@ -25,7 +25,8 @@ public abstract class StateFactory {
 	 * [current, parent, grandparent, ...].
 	 * @return A contextual state-getter.
 	 */
-	public static <S> ContextStateGetter<S> newContextStateGetter(/*@Nullable*/ S previousState, S/*@Nullable*/... stateHistory) {
+	@SafeVarargs
+    public static <S> ContextStateGetter<S> newContextStateGetter(final /*@Nullable*/ S previousState, final S/*@Nullable*/... stateHistory) {
 		return new ContextStateGetter<S>() {
 			@Override
 			public /*@Nullable*/ S getState() {
@@ -54,24 +55,24 @@ public abstract class StateFactory {
 		};
 	}
 
-	public static <S> StateTransition<S> newStateTransition(
-			/*@Nullable*/ S transitionState, 
-			/*@Nullable*/ Action preTransitionAction, 
-			/*@Nullable*/ Action postTransitionAction) 
+	public static <S,T> StateTransition<S,T> newStateTransition(
+			final /*@Nullable*/ S transitionState, 
+			final /*@Nullable*/ Action<T> preTransitionAction, 
+			final /*@Nullable*/ Action<T> postTransitionAction) 
 	{
-		return new StateTransition<S>() {
+		return new StateTransition<S,T>() {
 			@Override
 			public /*@Nullable*/ S getTransitionState() {
 				return transitionState;
 			}
 
 			@Override
-			public /*@Nullable*/ Action getPreTransitionAction() {
+			public /*@Nullable*/ Action<T> getPreTransitionAction() {
 				return preTransitionAction;
 			}
 
 			@Override
-			public /*@Nullable*/ Action getPostTransitionAction() {
+			public /*@Nullable*/ Action<T> getPostTransitionAction() {
 				return postTransitionAction;
 			}
 		};

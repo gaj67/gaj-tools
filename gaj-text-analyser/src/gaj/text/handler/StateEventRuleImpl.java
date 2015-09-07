@@ -6,12 +6,12 @@ import java.util.Map;
 
 	private final StateGetter<S> stateGetter;
 	private final Event<T, V> event;
-	private final StateTransition<S> stateTransition;
+	private final StateTransition<S,Event<T,V>> stateTransition;
 
 	/*package-private*/ StateEventRuleImpl(
 			/*@Nullable*/ StateGetter<S> stateGetter,
 			/*@Nullable*/ Event<T, V> event, 
-			/*@Nullable*/ StateTransition<S> stateTransition) 
+			/*@Nullable*/ StateTransition<S,Event<T,V>> stateTransition) 
 	{
 		this.stateGetter = stateGetter;
 		this.event = event;
@@ -54,7 +54,7 @@ import java.util.Map;
 	}
 
 	@Override
-	public /*@Nullable*/ StateTransition<S> getStateTransition() {
+	public /*@Nullable*/ StateTransition<S,Event<T,V>> getStateTransition() {
 		return stateTransition;
 	}
 

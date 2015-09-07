@@ -4,7 +4,7 @@ package gaj.text.handler;
 /**
  * A state transition rule for a stateful event handler.
  */
-public interface StateTransition<S> {
+public interface StateTransition<S,T> {
 
 	/**
 	 * The new state to which to transition.
@@ -19,7 +19,7 @@ public interface StateTransition<S> {
 	 *  
 	 * @return An action to perform, or a value of null to not perform any action.
 	 */
-	/*@Nullable*/ Action getPreTransitionAction();
+	/*@Nullable*/ Action<T> getPreTransitionAction();
 	
 	/**
 	 * This action will be performed immediately after
@@ -27,6 +27,6 @@ public interface StateTransition<S> {
 	 *  
 	 * @return An action to perform, or a value of null to not perform any action.
 	 */
-	/*@Nullable*/ Action getPostTransitionAction();
+	/*@Nullable*/ Action<T> getPostTransitionAction();
 	
 }

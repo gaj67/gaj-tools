@@ -6,7 +6,7 @@ package gaj.text.handler;
 	/*package-private*/ ContextStateEventRuleImpl(
 			/*@Nullable*/ ContextStateGetter<S> stateGetter,
 			/*@Nullable*/ Event<T, V> event, 
-			/*@Nullable*/ StateTransition<S> stateTransition) 
+			/*@Nullable*/ StateTransition<S,Event<T,V>> stateTransition) 
 	{
 		super(stateGetter, event, stateTransition);
 	}
@@ -26,8 +26,9 @@ package gaj.text.handler;
 		ContextStateGetter<S> myStateGetter = getStateGetter();
 		final int numAncestors = myStateGetter.numAncestralStates();
 		for (int i = 1; i <= numAncestors; i++) {
-			if (!matchesState(myStateGetter.getAncestralState(i), stateGetter.getAncestralState(i)))
-				return false;
+			if (!matchesState(myStateGetter.getAncestralState(i), stateGetter.getAncestralState(i))) {
+                return false;
+            }
 		}
 		return true;
 	}
