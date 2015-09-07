@@ -4,7 +4,12 @@ import java.util.Collection;
 
 public abstract class StatefulSAXEventRuleHandler<S> extends StatefulSAXEventHandler<S> {
 
-    protected StatefulSAXEventRuleHandler() {}
+	/**
+	 * Temporary place holder for the event that triggers a rule.
+	 */
+    private SAXEvent event;
+
+	protected StatefulSAXEventRuleHandler() {}
 
     protected abstract Collection<? extends StateEventRule<S,SAXEventType,String>> getRules();
 
@@ -13,11 +18,12 @@ public abstract class StatefulSAXEventRuleHandler<S> extends StatefulSAXEventHan
         final Collection<? extends StateEventRule<S,SAXEventType,String>> rules = getRules();
         for (StateEventRule<S, SAXEventType, String> rule : rules) {
             if (rule.matches(this, event)) {
-                StateTransition<S, Event<SAXEventType, String>> transition = rule.getStateTransition();
+                StateTransition<S> transition = rule.getStateTransition();
                 if (transition != null) {
-                    Action<Event<SAXEventType, String>> action = transition.getPreTransitionAction();
+                	setEvent(event);
+                    Action action = transition.getPreTransitionAction();
                     if (action != null) {
-                        action.perform(event);
+                        action.perform();
                     }
                     S newState = transition.getTransitionState();
                     if (newState != null) {
@@ -25,12 +31,20 @@ public abstract class StatefulSAXEventRuleHandler<S> extends StatefulSAXEventHan
                     }
                     action = transition.getPostTransitionAction();
                     if (action != null) {
-                        action.perform(event);
+                        action.perform();
                     }
                 }
                 break;
             }
         }
     }
+
+	protected void setEvent(SAXEvent event) {
+		this.event = event;
+	}
+
+	protected SAXEvent getEvent() {
+		return this.event;
+	}
 
 }

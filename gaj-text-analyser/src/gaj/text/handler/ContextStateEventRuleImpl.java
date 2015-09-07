@@ -6,7 +6,7 @@ package gaj.text.handler;
 	/*package-private*/ ContextStateEventRuleImpl(
 			/*@Nullable*/ ContextStateGetter<S> stateGetter,
 			/*@Nullable*/ Event<T, V> event, 
-			/*@Nullable*/ StateTransition<S,Event<T,V>> stateTransition) 
+			/*@Nullable*/ StateTransition<S> stateTransition) 
 	{
 		super(stateGetter, event, stateTransition);
 	}

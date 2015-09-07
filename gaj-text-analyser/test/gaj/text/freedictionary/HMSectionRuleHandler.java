@@ -1,11 +1,16 @@
 package gaj.text.freedictionary;
 
+import static gaj.text.freedictionary.StructureDefinition.HM_SECTION_ATTRS;
+import static gaj.text.freedictionary.StructureDefinition.HM_SEGMENT_ATTRS;
+import static gaj.text.freedictionary.StructureDefinition.SECTION_TAG;
+import static gaj.text.freedictionary.StructureDefinition.SECTION_WORD_TAG;
+import static gaj.text.freedictionary.StructureDefinition.SEGMENT_TAG;
 import gaj.text.handler.Action;
 import gaj.text.handler.ContextStateEventRule;
 import gaj.text.handler.ContextStateEventRuleFactory;
 import gaj.text.handler.ContextfStatefulSAXEventRuleHandler;
-import gaj.text.handler.Event;
 import gaj.text.handler.SAXEventType;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,17 +19,12 @@ import java.util.Map;
 
 public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<State> {
 
-    @SuppressWarnings("serial")
-    private static Map<String,String> HM_SECTION_ATTRS = new HashMap<String,String>() {{
-        put("data-src", "hm");
-    }};
+    private static final String SECTION_WORD_KEY = "sectionWord";
 
     private List<ContextStateEventRule<State, SAXEventType, String>> rules = null;
 
-    private boolean captureText = false;
-
-    private final StringBuilder buf = new StringBuilder();
-
+    private final Map<String, String> sectionData = new HashMap<>();
+    
     @Override
     protected State nullState() {
         return State.INIT;
@@ -43,52 +43,107 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
     protected Collection<? extends ContextStateEventRule<State, SAXEventType, String>> getRules() {
         if (rules == null) {
             rules = new ArrayList<>();
-            Action<Event<SAXEventType, String>> postStateAction = new Action<Event<SAXEventType, String>>() {
-                @Override
-                public void perform(Event<SAXEventType, String> event) {
-                    System.out.printf("Action! ");
-                }
-            };
-            Action<Event<SAXEventType, String>> captureTextOn = new Action<Event<SAXEventType, String>>() {
-                @Override
-                public void perform(Event<SAXEventType, String> event) {
-                    captureText = true;
-                }
-            };
-            Action<Event<SAXEventType, String>> captureTextOff = new Action<Event<SAXEventType, String>>() {
-                @Override
-                public void perform(Event<SAXEventType, String> event) {
-                    captureText = false;
-                }
-            };
-            Action<Event<SAXEventType, String>> bufferText = new Action<Event<SAXEventType, String>>() {
-                @Override
-                public void perform(Event<SAXEventType, String> event) {
-                    if (captureText) {
-                        buf.append(event.getLabel());
-                    }
-                }
-            };
             rules.add(ContextStateEventRuleFactory.newRule(
                     State.INIT,
-                    SAXEventType.BEGIN_ELEMENT, "section", HM_SECTION_ATTRS,
-                    State.SECTION, postStateAction));
+                    SAXEventType.BEGIN_ELEMENT, SECTION_TAG, HM_SECTION_ATTRS,
+                    State.SECTION, clearSectionData));
             rules.add(ContextStateEventRuleFactory.newRule(
                     State.SECTION,
-                    SAXEventType.BEGIN_ELEMENT, "h2",
+                    SAXEventType.BEGIN_ELEMENT, SECTION_WORD_TAG,
                     State.WORD, captureTextOn));
             rules.add(ContextStateEventRuleFactory.<State, SAXEventType, String> newRule(
-                    SAXEventType.CHARACTERS, bufferText));
+                    SAXEventType.CHARACTERS, appendTextBuffer));
             rules.add(ContextStateEventRuleFactory.newRule(
                     State.WORD,
-                    SAXEventType.END_ELEMENT, "h2",
-                    State.REWIND, captureTextOff));
+                    SAXEventType.END_ELEMENT, SECTION_WORD_TAG,
+                    State.REWIND, getSectionWord));
+//    		return SEGMENT_TAG.equals(localName) && SEGMENT_TYPE_HM.equals(attributes.getValue(SEGMENT_TYPE));
             rules.add(ContextStateEventRuleFactory.newRule(
                     State.SECTION,
-                    SAXEventType.END_ELEMENT, "section",
-                    State.INIT, postStateAction));
+                    SAXEventType.BEGIN_ELEMENT, SEGMENT_TAG, HM_SEGMENT_ATTRS,
+                    State.SEGMENT));
+            rules.add(ContextStateEventRuleFactory.newRule(
+                    State.SEGMENT,
+                    SAXEventType.END_ELEMENT, SEGMENT_TAG,
+                    State.REWIND, addSegmentData));
+            rules.add(ContextStateEventRuleFactory.newRule(
+                    State.SECTION,
+                    SAXEventType.END_ELEMENT, SECTION_TAG,
+                    State.INIT, sendSectionData));
         }
         return rules;
     }
+
+	protected void clearSectionData() {
+		sectionData.clear();
+		clearTextBuffer();
+		captureTextOff();
+	}
+
+	protected void getSectionWord() {
+		sectionData.put(SECTION_WORD_KEY, getTextBuffer());
+		clearTextBuffer();
+		captureTextOff();
+	}
+
+	protected void addSegmentData() {
+		System.out.printf("segmentData");
+	}
+
+	protected void sendSectionData() {
+		System.out.printf("sectionData=%s%n", sectionData);
+	}
+
+	//*************************************************************************
+	// Section for Java 7 (non-lambda) compatibility.
+	
+    private final Action captureTextOff = new Action() {
+        @Override
+        public void perform() {
+            captureTextOff();
+        }
+    };
+
+    private final Action captureTextOn = new Action() {
+        @Override
+        public void perform() {
+            captureTextOn();
+        }
+    };
+
+    private final Action clearSectionData = new Action() {
+        @Override
+        public void perform() {
+            clearSectionData();
+        }
+    };
+    
+    private final Action getSectionWord = new Action() {
+        @Override
+        public void perform() {
+            getSectionWord();
+        }
+    };
+
+    private final Action sendSectionData = new Action() {
+        @Override
+        public void perform() {
+            sendSectionData();
+        }
+    };
+
+    private final Action appendTextBuffer = new Action() {
+        @Override
+        public void perform() {
+            appendTextBuffer();
+        }
+    };
+
+    private final Action addSegmentData = new Action() {
+        @Override
+        public void perform() {
+            addSegmentData();
+        }
+    };
 
 }

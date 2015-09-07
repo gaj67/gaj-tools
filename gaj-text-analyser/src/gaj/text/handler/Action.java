@@ -3,13 +3,11 @@ package gaj.text.handler;
 /**
  * Specifies an action to be performed.
  */
-public interface Action<T> {
+public interface Action {
 
 	/**
-	 * Performs the action with the given context.
-	 * 
-	 * @param context - The context with which to perform the action.
+	 * Performs the action.
 	 */
-	void perform(T context);
+	void perform();
 	
 }

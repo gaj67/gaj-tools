@@ -34,6 +34,6 @@ public interface StateEventRule<S,T,V> {
      *
      * @return The state transition to perform.
      */
-    StateTransition<S, Event<T, V>> getStateTransition();
+    StateTransition<S> getStateTransition();
 
 }

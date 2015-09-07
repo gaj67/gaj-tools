@@ -14,11 +14,11 @@ public abstract class ContextStateEventRuleFactory {
             /*@Nullable*/ String eventLabel,
             /*@Nullable*/ Map<String,V> eventProperties,
             /*@Nullable*/ S transitionState,
-            /*@Nullable*/ Action<Event<T,V>> postTransitionAction,
-            /*@Nullable*/ Action<Event<T,V>> preTransitionAction) 
+            /*@Nullable*/ Action postTransitionAction,
+            /*@Nullable*/ Action preTransitionAction) 
     {
         ContextStateGetter<S> stateGetter = StateFactory.newContextStateGetter(previousState, state, parentState);
-        StateTransition<S,Event<T,V>> stateTransition = StateFactory.newStateTransition(transitionState, preTransitionAction, postTransitionAction);
+        StateTransition<S> stateTransition = StateFactory.newStateTransition(transitionState, preTransitionAction, postTransitionAction);
         Event<T,V> event = EventFactory.newMappedEvent(eventType, eventLabel, eventProperties);
         return newRule(stateGetter, event, stateTransition);
     }
@@ -29,10 +29,10 @@ public abstract class ContextStateEventRuleFactory {
             /*@Nullable*/ String eventLabel,
             /*@Nullable*/ Map<String,V> eventProperties,
             /*@Nullable*/ S transitionState,
-            /*@Nullable*/ Action<Event<T,V>> postTransitionAction)
+            /*@Nullable*/ Action postTransitionAction)
     {
         ContextStateGetter<S> stateGetter = StateFactory.newContextStateGetter(null, state, null);
-        StateTransition<S,Event<T,V>> stateTransition = StateFactory.newStateTransition(transitionState, null, postTransitionAction);
+        StateTransition<S> stateTransition = StateFactory.newStateTransition(transitionState, null, postTransitionAction);
         Event<T,V> event = EventFactory.newMappedEvent(eventType, eventLabel, eventProperties);
         return newRule(stateGetter, event, stateTransition);
     }
@@ -42,10 +42,10 @@ public abstract class ContextStateEventRuleFactory {
             /*@Nullable*/ T eventType,
             /*@Nullable*/ String eventLabel,
             /*@Nullable*/ S transitionState,
-            /*@Nullable*/ Action<Event<T,V>> postTransitionAction)
+            /*@Nullable*/ Action postTransitionAction)
     {
         ContextStateGetter<S> stateGetter = StateFactory.newContextStateGetter(null, state);
-        StateTransition<S,Event<T,V>> stateTransition = StateFactory.newStateTransition(transitionState, null, postTransitionAction);
+        StateTransition<S> stateTransition = StateFactory.newStateTransition(transitionState, null, postTransitionAction);
         Event<T, V> event = EventFactory.newMappedEvent(eventType, eventLabel);
         return newRule(stateGetter, event, stateTransition);
     }
@@ -54,10 +54,10 @@ public abstract class ContextStateEventRuleFactory {
             /*@Nullable*/ S state,
             /*@Nullable*/ T eventType,
             /*@Nullable*/ S transitionState,
-            /*@Nullable*/ Action<Event<T,V>> postTransitionAction)
+            /*@Nullable*/ Action postTransitionAction)
     {
         ContextStateGetter<S> stateGetter = StateFactory.newContextStateGetter(null, state, null);
-        StateTransition<S,Event<T,V>> stateTransition = StateFactory.newStateTransition(transitionState, null, postTransitionAction);
+        StateTransition<S> stateTransition = StateFactory.newStateTransition(transitionState, null, postTransitionAction);
         Event<T,V> event = EventFactory.newMappedEvent(eventType, null, null);
         return newRule(stateGetter, event, stateTransition);
     }
@@ -65,15 +65,24 @@ public abstract class ContextStateEventRuleFactory {
     public static <S,T,V> ContextStateEventRule<S,T,V> newRule(
             /*@Nullable*/ ContextStateGetter<S> stateGetter,
             /*@Nullable*/ Event<T,V> event,
-            /*@Nullable*/ StateTransition<S,Event<T,V>> stateTransition)
+            /*@Nullable*/ StateTransition<S> stateTransition)
     {
         return new ContextStateEventRuleImpl<S, T, V>(stateGetter, event, stateTransition);
     }
 
-    public static <S, T, V> ContextStateEventRule<S, T, V> newRule(T eventType, Action<Event<T, V>> action) {
-        StateTransition<S,Event<T,V>> stateTransition = StateFactory.newStateTransition(null, null, action);
+    public static <S, T, V> ContextStateEventRule<S, T, V> newRule(T eventType, Action action) {
+        StateTransition<S> stateTransition = StateFactory.newStateTransition(null, null, action);
         Event<T,V> event = EventFactory.newMappedEvent(eventType, null, null);
         return new ContextStateEventRuleImpl<S, T, V>(null, event, stateTransition);
     }
+
+	public static <S, T, V> ContextStateEventRule<S, T, V> newRule(
+			S state, T eventType, String eventLabel,
+			Map<String, V> eventAttrs, S transitionState) 
+	{
+        StateTransition<S> stateTransition = StateFactory.newStateTransition(transitionState, null, null);
+        Event<T,V> event = EventFactory.newMappedEvent(eventType, eventLabel, eventAttrs);
+        return new ContextStateEventRuleImpl<S, T, V>(null, event, stateTransition);
+	}
 
 }

@@ -55,24 +55,24 @@ public abstract class StateFactory {
 		};
 	}
 
-	public static <S,T> StateTransition<S,T> newStateTransition(
+	public static <S> StateTransition<S> newStateTransition(
 			final /*@Nullable*/ S transitionState, 
-			final /*@Nullable*/ Action<T> preTransitionAction, 
-			final /*@Nullable*/ Action<T> postTransitionAction) 
+			final /*@Nullable*/ Action preTransitionAction, 
+			final /*@Nullable*/ Action postTransitionAction) 
 	{
-		return new StateTransition<S,T>() {
+		return new StateTransition<S>() {
 			@Override
 			public /*@Nullable*/ S getTransitionState() {
 				return transitionState;
 			}
 
 			@Override
-			public /*@Nullable*/ Action<T> getPreTransitionAction() {
+			public /*@Nullable*/ Action getPreTransitionAction() {
 				return preTransitionAction;
 			}
 
 			@Override
-			public /*@Nullable*/ Action<T> getPostTransitionAction() {
+			public /*@Nullable*/ Action getPostTransitionAction() {
 				return postTransitionAction;
 			}
 		};

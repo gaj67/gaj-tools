@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import org.xml.sax.Attributes;
 
-/*package-private*/ class SAXEvent implements Event<SAXEventType, String> {
+public class SAXEvent implements Event<SAXEventType, String> {
 
 	private final SAXEventType type;
 	private final String name;
