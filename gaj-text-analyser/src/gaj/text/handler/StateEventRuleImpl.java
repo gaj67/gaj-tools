@@ -26,12 +26,23 @@ import java.util.Map;
 	protected boolean matchesState(StateGetter<S> stateGetter) {
 		return this.stateGetter == null ||
 				   matchesState(this.stateGetter.getState(), stateGetter.getState())
-				   && matchesState(this.stateGetter.getPreviousState(), stateGetter.getPreviousState());
+				   && matchesState(this.stateGetter.getPreviousState(), stateGetter.getPreviousState())
+				   && matchesAncestralStates(stateGetter);
 	}
 
 	protected boolean matchesState(/*@Nullable*/ S ruleState, S handlerState) {
 		return ruleState == null || ruleState.equals(handlerState);
 	}
+
+    private boolean matchesAncestralStates(StateGetter<S> stateGetter) {
+        final int numAncestors = this.stateGetter.numAncestralStates();
+        for (int i = 1; i <= numAncestors; i++) {
+            if (!matchesState(this.stateGetter.getAncestralState(i), stateGetter.getAncestralState(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 	protected boolean matchesEvent(Event<T, V> event) {
 		return this.event == null || 

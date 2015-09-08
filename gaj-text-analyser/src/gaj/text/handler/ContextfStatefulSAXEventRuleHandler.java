@@ -4,9 +4,9 @@ import java.util.Collection;
 
 public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStatefulSAXEventHandler<S> {
 
-	/**
-	 * Temporary place holder for the event that triggers a rule.
-	 */
+    /**
+     * Temporary place holder for the event that triggers a rule.
+     */
     private SAXEvent event;
 
     /**
@@ -20,21 +20,21 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
     private final StringBuilder buf = new StringBuilder();
 
 
-	protected ContextfStatefulSAXEventRuleHandler() {}
+    protected ContextfStatefulSAXEventRuleHandler() {}
 
-    protected abstract Collection<? extends ContextStateEventRule<S,SAXEventType,String>> getRules();
+    protected abstract Collection<? extends StateEventRule<S, SAXEventType, String>> getRules();
 
     @Override
     protected void handleEvent(SAXEvent event) {
-        final Collection<? extends ContextStateEventRule<S,SAXEventType,String>> rules = getRules();
+        final Collection<? extends StateEventRule<S, SAXEventType, String>> rules = getRules();
         System.out.printf("Event: %s[%s]%s ", event.getType(), event.getLabel(), event.getProperties());
         System.out.printf("Before: %s->%s(%s) ", getParentState(), getState(), getPreviousState());
-        for (ContextStateEventRule<S, SAXEventType, String> rule : rules) {
+        for (StateEventRule<S, SAXEventType, String> rule : rules) {
             if (rule.matches(this, event)) {
                 System.out.printf("Have rule ");
                 StateTransition<S> transition = rule.getStateTransition();
                 if (transition != null) {
-                	setEvent(event);
+                    setEvent(event);
                     Action action = transition.getPreTransitionAction();
                     if (action != null) {
                         action.perform();
@@ -55,36 +55,36 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
         System.out.println("No rule!");
     }
 
-	protected void setEvent(SAXEvent event) {
-		this.event = event;
-	}
+    protected void setEvent(SAXEvent event) {
+        this.event = event;
+    }
 
-	protected SAXEvent getEvent() {
-		return this.event;
-	}
+    protected SAXEvent getEvent() {
+        return this.event;
+    }
 
-	protected void captureTextOn() {
-		captureText = true;
-	}
+    protected void captureTextOn() {
+        captureText = true;
+    }
 
-	protected void captureTextOff() {
-		captureText = false;
-	}
+    protected void captureTextOff() {
+        captureText = false;
+    }
 
-	protected void appendTextBuffer() {
-		if (captureText) {
+    protected void appendTextBuffer() {
+        if (captureText) {
             buf.append(getEvent().getLabel());
         }
-	}
+    }
 
-	protected void clearTextBuffer() {
-		if (captureText) {
+    protected void clearTextBuffer() {
+        if (captureText) {
             buf.append(getEvent().getLabel());
         }
-	}
+    }
 
-	protected String getTextBuffer() {
+    protected String getTextBuffer() {
         return buf.toString();
-	}
+    }
 
 }
