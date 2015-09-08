@@ -1,8 +1,11 @@
-package gaj.text.handler;
+package gaj.text.handler.sax;
 
+import gaj.text.handler.Action;
+import gaj.text.handler.StateEventRule;
+import gaj.text.handler.StateTransition;
 import java.util.Collection;
 
-public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStatefulSAXEventHandler<S> {
+public abstract class StatefulSAXEventRuleHandler<S> extends StatefulSAXEventHandler<S> {
 
     /**
      * Temporary place holder for the event that triggers a rule.
@@ -19,16 +22,15 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
      */
     private final StringBuilder buf = new StringBuilder();
 
+    protected StatefulSAXEventRuleHandler() {}
 
-    protected ContextfStatefulSAXEventRuleHandler() {}
-
-    protected abstract Collection<? extends StateEventRule<S, SAXEventType, String>> getRules();
+    protected abstract Collection<? extends StateEventRule<S,SAXEventType,String>> getRules();
 
     @Override
-    protected void handleEvent(SAXEvent event) {
-        final Collection<? extends StateEventRule<S, SAXEventType, String>> rules = getRules();
+    public void handle(SAXEvent event) {
         System.out.printf("Event: %s[%s]%s ", event.getType(), event.getLabel(), event.getProperties());
-        System.out.printf("Before: %s->%s(%s) ", getParentState(), getState(), getPreviousState());
+        System.out.printf("Before: %s->%s ", getPreviousState(), getState());
+        final Collection<? extends StateEventRule<S, SAXEventType, String>> rules = getRules();
         for (StateEventRule<S, SAXEventType, String> rule : rules) {
             if (rule.matches(this, event)) {
                 System.out.printf("Have rule ");
@@ -48,7 +50,7 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
                         action.perform();
                     }
                 }
-                System.out.printf("After: %s->%s(%s)%n", getParentState(), getState(), getPreviousState());
+                System.out.printf("After: %s->%s%n", getPreviousState(), getState());
                 return;
             }
         }

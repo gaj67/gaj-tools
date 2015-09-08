@@ -1,5 +1,6 @@
-package gaj.text.handler;
+package gaj.text.handler.core;
 
+import gaj.text.handler.core.SimpleStatefulImpl;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  *
  * @param <S> - The type of state.
  */
-public class ContextStatefulImpl<S> extends SimpleStatefulImpl<S> {
+/*package-private*/ class ContextStatefulImpl<S> extends SimpleStatefulImpl<S> {
 
     private final List<S> ancestors = new ArrayList<>();
 

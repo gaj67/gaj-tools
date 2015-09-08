@@ -1,7 +1,7 @@
-package gaj.text.handler;
+package gaj.text.handler.core;
 
+import gaj.text.handler.Event;
 import java.util.Map;
-import org.xml.sax.Attributes;
 
 public abstract class EventFactory {
 
@@ -17,18 +17,6 @@ public abstract class EventFactory {
 
     public static <T, V> Event<T, V> newMappedEvent(/* @Nullable */T type) {
         return new MappedEvent<T, V>(type, null, null);
-    }
-
-    public static SAXEvent newSAXEvent(/*@Nullable*/ SAXEventType type, /*@Nullable*/ String name, /*@Nullable*/ Attributes attrs) {
-        return new SAXEvent(type, name, attrs);
-    }
-
-    public static SAXEvent newSAXEvent(/*@Nullable*/ SAXEventType type, /*@Nullable*/ String name) {
-        return new SAXEvent(type, name, null);
-    }
-
-    public static SAXEvent newSAXEvent(/*@Nullable*/ SAXEventType type) {
-        return new SAXEvent(type, null, null);
     }
 
 }

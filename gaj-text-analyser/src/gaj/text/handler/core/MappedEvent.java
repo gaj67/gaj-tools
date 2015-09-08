@@ -1,5 +1,6 @@
-package gaj.text.handler;
+package gaj.text.handler.core;
 
+import gaj.text.handler.Event;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;

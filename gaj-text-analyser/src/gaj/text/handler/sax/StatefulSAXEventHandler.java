@@ -1,9 +1,12 @@
-package gaj.text.handler;
+package gaj.text.handler.sax;
+
+import gaj.text.handler.Stateful;
+
 
 
 /**
  * A SAX event handler that maintains the current state and, for convenience, the previous state.
- * 
+ *
  * @param S - The type of state.
  */
 public abstract class StatefulSAXEventHandler<S> extends SAXEventHandler implements Stateful<S> {
@@ -41,6 +44,26 @@ public abstract class StatefulSAXEventHandler<S> extends SAXEventHandler impleme
     @Override
     public /*@Nullable*/ S getPreviousState() {
         return prevState;
+    }
+
+    @Override
+    public S getParentState() {
+        return nullState();
+    }
+
+    @Override
+    public int numAncestralStates() {
+        return 0;
+    }
+
+    @Override
+    public S getAncestralState(int index) {
+        return (index == 0) ? getState() : nullState();
+    }
+
+    @Override
+    public void rewindState() {
+        throw new IllegalStateException("Cannot rewind - state history is not being maintained");
     }
 
 }

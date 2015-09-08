@@ -1,4 +1,6 @@
-package gaj.text.handler;
+package gaj.text.handler.core;
+
+import gaj.text.handler.Stateful;
 
 /**
  * Implements a simple stateful object that does NOT preserve state history,
@@ -6,7 +8,7 @@ package gaj.text.handler;
  *
  * @param S - The type of state.
  */
-public class SimpleStatefulImpl<S> implements Stateful<S> {
+/*package-private*/ class SimpleStatefulImpl<S> implements Stateful<S> {
 
     private S state = nullState();
     private S prevState = nullState();

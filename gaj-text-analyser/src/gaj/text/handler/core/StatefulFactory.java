@@ -1,4 +1,8 @@
-package gaj.text.handler;
+package gaj.text.handler.core;
+
+import gaj.text.handler.Action;
+import gaj.text.handler.StateGetter;
+import gaj.text.handler.StateTransition;
 
 public abstract class StatefulFactory {
 

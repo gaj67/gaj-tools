@@ -1,5 +1,9 @@
-package gaj.text.handler;
+package gaj.text.handler.core;
 
+import gaj.text.handler.Event;
+import gaj.text.handler.StateEventRule;
+import gaj.text.handler.StateGetter;
+import gaj.text.handler.StateTransition;
 import java.util.Map;
 
 /*package-private*/ class StateEventRuleImpl<S, T, V> implements StateEventRule<S, T, V> {

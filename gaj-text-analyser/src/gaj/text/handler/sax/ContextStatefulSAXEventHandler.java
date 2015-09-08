@@ -1,4 +1,4 @@
-package gaj.text.handler;
+package gaj.text.handler.sax;
 
 import java.util.ArrayList;
 import java.util.List;

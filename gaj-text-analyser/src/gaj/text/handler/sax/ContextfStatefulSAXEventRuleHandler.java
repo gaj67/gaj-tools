@@ -1,8 +1,11 @@
-package gaj.text.handler;
+package gaj.text.handler.sax;
 
+import gaj.text.handler.Action;
+import gaj.text.handler.StateEventRule;
+import gaj.text.handler.StateTransition;
 import java.util.Collection;
 
-public abstract class StatefulSAXEventRuleHandler<S> extends StatefulSAXEventHandler<S> {
+public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStatefulSAXEventHandler<S> {
 
     /**
      * Temporary place holder for the event that triggers a rule.
@@ -19,15 +22,16 @@ public abstract class StatefulSAXEventRuleHandler<S> extends StatefulSAXEventHan
      */
     private final StringBuilder buf = new StringBuilder();
 
-    protected StatefulSAXEventRuleHandler() {}
 
-    protected abstract Collection<? extends StateEventRule<S,SAXEventType,String>> getRules();
+    protected ContextfStatefulSAXEventRuleHandler() {}
+
+    protected abstract Collection<? extends StateEventRule<S, SAXEventType, String>> getRules();
 
     @Override
-    protected void handleEvent(SAXEvent event) {
+    public void handle(SAXEvent event) {
+        final Collection<? extends StateEventRule<S, SAXEventType, String>> rules = getRules();
         System.out.printf("Event: %s[%s]%s ", event.getType(), event.getLabel(), event.getProperties());
         System.out.printf("Before: %s->%s(%s) ", getParentState(), getState(), getPreviousState());
-        final Collection<? extends StateEventRule<S, SAXEventType, String>> rules = getRules();
         for (StateEventRule<S, SAXEventType, String> rule : rules) {
             if (rule.matches(this, event)) {
                 System.out.printf("Have rule ");
