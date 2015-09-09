@@ -11,18 +11,22 @@ import gaj.text.handler.Stateful;
  */
 /*package-private*/ class SimpleStatefulImpl<S> implements Stateful<S> {
 
-    private S state = nullState();
-    private S prevState = nullState();
+    private S state;
+    private S prevState;
 
-    protected SimpleStatefulImpl() {}
+    protected SimpleStatefulImpl() {
+    	state = nullState();
+    	prevState = nullState();
+    }
 
     protected SimpleStatefulImpl(/*@Nullable*/ S state) {
-        setState(state);
+    	state = toState(state);
+    	prevState = nullState();
     }
 
     protected SimpleStatefulImpl(/*@Nullable*/ S previousState, /*@Nullable*/ S state) {
-        setState(previousState);
-        setState(state);
+    	state = toState(state);
+    	prevState = toState(previousState);
     }
 
     @Override

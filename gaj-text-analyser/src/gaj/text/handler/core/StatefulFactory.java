@@ -17,7 +17,7 @@ public abstract class StatefulFactory {
     }
 
     @SafeVarargs
-    public static <S> StateGetter<S> newStateGetter(/*@Nullable*/ S previousState, /*@Nullable*/ S state, /*@Nulable*/ S parentState, S/*@Nullable*/... ancestralStates) {
+    public static <S> StateGetter<S> newStateGetter(/*@Nullable*/ S previousState, /*@Nullable*/ S state, /*@Nullable*/ S parentState, S/*@Nullable*/... ancestralStates) {
         return new ContextStatefulImpl<S>(previousState, state, parentState, ancestralStates);
     }
 

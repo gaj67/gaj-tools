@@ -36,7 +36,7 @@ import java.util.List;
         ancestors.add(toState(parentState));
     }
 
-    @Override
+	@Override
     public void setState(/*@Nullable*/ S state) {
         ancestors.add(getState());
         super.setState(state);

@@ -6,7 +6,9 @@ import gaj.text.handler.StateGetter;
 import gaj.text.handler.StateTransition;
 import gaj.text.handler.core.StateEventRuleFactory;
 import gaj.text.handler.core.StatefulFactory;
+
 import java.util.Map;
+
 import org.xml.sax.Attributes;
 
 public abstract class StateSAXEventRuleFactory {
@@ -92,5 +94,34 @@ public abstract class StateSAXEventRuleFactory {
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState);
         return StateEventRuleFactory.newRule(stateGetter, event, stateTransition);
     }
+
+	public static <S> StateEventRule<S, SAXEvent> newRule(
+			/*@Nullable*/ S previousState,
+            /*@Nullable*/ S state,
+            /*@Nullable*/ SAXEventType eventType,
+            /*@Nullable*/ String eventLabel,
+            /*@Nullable*/ S transitionState,
+            /*@Nullable*/ Action postTransitionAction)
+	{
+        StateGetter<S> stateGetter = StatefulFactory.newStateGetter(previousState, state);
+        SAXEvent event = SAXEventFactory.newEvent(eventType, eventLabel);
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, postTransitionAction);
+        return newRule(stateGetter, event, stateTransition);
+	}
+
+	public static <S> StateEventRule<S, SAXEvent> newRule(
+			/*@Nullable*/ S previousState,
+            /*@Nullable*/ S state,
+            /*@Nullable*/ S parentState,
+            /*@Nullable*/ SAXEventType eventType,
+            /*@Nullable*/ String eventLabel,
+            /*@Nullable*/ S transitionState,
+            /*@Nullable*/ Action postTransitionAction)
+	{
+        StateGetter<S> stateGetter = StatefulFactory.newStateGetter(previousState, state, parentState);
+        SAXEvent event = SAXEventFactory.newEvent(eventType, eventLabel);
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, postTransitionAction);
+        return newRule(stateGetter, event, stateTransition);
+	}
 
 }

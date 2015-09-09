@@ -1,17 +1,13 @@
 package gaj.text.freedictionary;
 
-import static gaj.text.freedictionary.StructureDefinition.HM_SECTION_ATTRS;
-import static gaj.text.freedictionary.StructureDefinition.HM_SEGMENT_ATTRS;
-import static gaj.text.freedictionary.StructureDefinition.SECTION_TAG;
-import static gaj.text.freedictionary.StructureDefinition.SECTION_WORD_TAG;
-import static gaj.text.freedictionary.StructureDefinition.SEGMENT_DEF_TAG;
-import static gaj.text.freedictionary.StructureDefinition.SEGMENT_TAG;
+import static gaj.text.freedictionary.StructureDefinition.*;
 import gaj.text.handler.Action;
 import gaj.text.handler.StateEventRule;
 import gaj.text.handler.sax.ContextfStatefulSAXEventRuleHandler;
 import gaj.text.handler.sax.SAXEvent;
 import gaj.text.handler.sax.SAXEventType;
 import gaj.text.handler.sax.StateSAXEventRuleFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -59,7 +55,7 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
             rules.add(StateSAXEventRuleFactory.<State> newRule(
                     SAXEventType.CHARACTERS, appendTextBuffer));
             rules.add(StateSAXEventRuleFactory.newRule(
-                    State.WORD,
+                    null, State.WORD, State.SECTION,
                     SAXEventType.END_ELEMENT, SECTION_WORD_TAG,
                     State.REWIND, getSectionWord));
             rules.add(StateSAXEventRuleFactory.newRule(
@@ -74,6 +70,19 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
                     State.TAG,
                     SAXEventType.END_ELEMENT, SEGMENT_DEF_TAG,
                     State.REWIND, getSegmentTag));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    State.TAG, State.SEGMENT,
+                    SAXEventType.BEGIN_ELEMENT, SEGMENT_WORD_TAG,
+                    State.WORD, captureTextOn));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    null, State.WORD, State.SEGMENT,
+                    SAXEventType.END_ELEMENT, SEGMENT_WORD_TAG,
+                    State.REWIND, addSegmentWord));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    State.WORD, State.SEGMENT,
+                    SAXEventType.BEGIN_ELEMENT, SEGMENT_WORD_TAG,
+                    State.WORD, captureTextOn));
+            // TODO handle intra-word elements.
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
                     SAXEventType.END_ELEMENT, SEGMENT_TAG,
@@ -111,6 +120,18 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
         } else {
             segmentData.put(SEGMENT_TAG_KEY, tag + getTextBuffer());
         }
+        clearTextBuffer();
+        captureTextOff();
+    }
+
+    protected void addSegmentWord() {
+        @SuppressWarnings("unchecked")
+		List<String> words = (List<String>) segmentData.get(SEGMENT_WORDS_KEY);
+        if (words == null) {
+        	words = new ArrayList<>();
+            segmentData.put(SEGMENT_WORDS_KEY, words);
+        }
+        words.add(getTextBuffer());
         clearTextBuffer();
         captureTextOff();
     }
@@ -188,6 +209,13 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
         @Override
         public void perform() {
             getSegmentTag();
+        }
+    };
+
+    private final Action addSegmentWord = new Action() {
+        @Override
+        public void perform() {
+            addSegmentWord();
         }
     };
 
