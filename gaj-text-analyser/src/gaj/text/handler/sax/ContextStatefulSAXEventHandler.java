@@ -1,11 +1,12 @@
 package gaj.text.handler.sax;
 
+import gaj.text.handler.StateGetter;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A SAX event handler that maintains a state history.
- * 
+ *
  * @param S - The type of state.
  */
 public abstract class ContextStatefulSAXEventHandler<S> extends StatefulSAXEventHandler<S> {
@@ -39,7 +40,22 @@ public abstract class ContextStatefulSAXEventHandler<S> extends StatefulSAXEvent
     @Override
     public /*@Nullable*/ S getAncestralState(int index) {
         return (index < 0 || index > ancestors.size()) ? nullState()
-               : (index == 0) ? getState() : ancestors.get(ancestors.size() - index);
+                : (index == 0) ? getState() : ancestors.get(ancestors.size() - index);
+    }
+
+    @Override
+    public boolean matches(StateGetter<S> stateGetter) {
+        return super.matches(stateGetter) && matchesAncestralStates(stateGetter);
+    }
+
+    private boolean matchesAncestralStates(StateGetter<S> stateGetter) {
+        final int numStates = ancestors.size();
+        for (int i = 1; i <= numStates; i++) {
+            if (!matchesState(ancestors.get(numStates - i), stateGetter.getAncestralState(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

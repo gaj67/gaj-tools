@@ -25,14 +25,14 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
 
     protected ContextfStatefulSAXEventRuleHandler() {}
 
-    protected abstract Collection<? extends StateEventRule<S, SAXEventType, String>> getRules();
+    protected abstract Collection<StateEventRule<S, SAXEvent>> getRules();
 
     @Override
     public void handle(SAXEvent event) {
-        final Collection<? extends StateEventRule<S, SAXEventType, String>> rules = getRules();
+        final Collection<StateEventRule<S, SAXEvent>> rules = getRules();
         System.out.printf("Event: %s[%s]%s ", event.getType(), event.getLabel(), event.getProperties());
         System.out.printf("Before: %s->%s(%s) ", getParentState(), getState(), getPreviousState());
-        for (StateEventRule<S, SAXEventType, String> rule : rules) {
+        for (StateEventRule<S, SAXEvent> rule : rules) {
             if (rule.matches(this, event)) {
                 System.out.printf("Have rule ");
                 StateTransition<S> transition = rule.getStateTransition();
@@ -81,9 +81,7 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
     }
 
     protected void clearTextBuffer() {
-        if (captureText) {
-            buf.append(getEvent().getLabel());
-        }
+        buf.setLength(0);
     }
 
     protected String getTextBuffer() {

@@ -28,13 +28,13 @@ import java.util.Map.Entry;
     }
 
     @Override
-    public boolean hasProperty(String name, /*@Nullable*/ V value) {
+    public boolean hasProperty(String name, /*@Nullable*/ Object value) {
         V prop = properties.get(name);
         return value == null && prop == null || value != null && value.equals(prop);
     }
 
     @Override
-    public boolean hasProperties(Map<String, V> keyValues) {
+    public boolean hasProperties(Map<String, ?> keyValues) {
         for (Entry<String, V> entry : properties.entrySet()) {
             if (!hasProperty(entry.getKey(), entry.getValue())) {
                 return false;
@@ -49,8 +49,27 @@ import java.util.Map.Entry;
     }
 
     @Override
-    public Map<String, V> getProperties() {
+    public /*@Nullable*/ Map<String, V> getProperties() {
         return Collections.unmodifiableMap(properties);
+    }
+
+    @Override
+    public boolean matches(Event<?, ?> event) {
+        return matchesEventType(getType(), event.getType())
+                && matchesEventLabel(getLabel(), event.getLabel())
+                && matchesEventProperties(getProperties(), event);
+    }
+
+    private boolean matchesEventType(/*@Nullable*/ T myEventType, Object theirEventType) {
+        return myEventType == null || myEventType.equals(theirEventType);
+    }
+
+    private boolean matchesEventLabel(/*@Nullable*/ String myEventLabel, String theirEventLabel) {
+        return myEventLabel == null || myEventLabel.equals(theirEventLabel);
+    }
+
+    private boolean matchesEventProperties(/* @Nullable */Map<String, V> myEventProperties, Event<?, ?> event) {
+        return myEventProperties == null || event.hasProperties(myEventProperties);
     }
 
 }

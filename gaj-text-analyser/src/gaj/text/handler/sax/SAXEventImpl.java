@@ -1,5 +1,6 @@
 package gaj.text.handler.sax;
 
+import gaj.text.handler.Event;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,7 +31,7 @@ import org.xml.sax.Attributes;
     }
 
     @Override
-    public boolean hasProperty(String name, /*@Nullable*/ String value) {
+    public boolean hasProperty(String name, /*@Nullable*/ Object value) {
         if (attrs == null) {
             return value == null;
         }
@@ -39,8 +40,8 @@ import org.xml.sax.Attributes;
     }
 
     @Override
-    public boolean hasProperties(Map<String, String> keyValues) {
-        for (Entry<String, String> entry : keyValues.entrySet()) {
+    public boolean hasProperties(Map<String, ?> keyValues) {
+        for (Entry<String, ?> entry : keyValues.entrySet()) {
             if (!hasProperty(entry.getKey(), entry.getValue())) {
                 return false;
             }
@@ -65,6 +66,25 @@ import org.xml.sax.Attributes;
             }
         }
         return mappedAttrs ;
+    }
+
+    @Override
+    public boolean matches(Event<?, ?> event) {
+        return matchesEventType(getType(), event.getType())
+                && matchesEventLabel(getLabel(), event.getLabel())
+                && matchesEventProperties(getProperties(), event);
+    }
+
+    private boolean matchesEventType(/*@Nullable*/ SAXEventType myEventType, Object theirEventType) {
+        return myEventType == null || myEventType.equals(theirEventType);
+    }
+
+    private boolean matchesEventLabel(/*@Nullable*/ String myEventLabel, String theirEventLabel) {
+        return myEventLabel == null || myEventLabel.equals(theirEventLabel);
+    }
+
+    private boolean matchesEventProperties(/*@Nullable*/ Map<String, String> myEventProperties, Event<?, ?> event) {
+        return myEventProperties == null || event.hasProperties(myEventProperties);
     }
 
 }

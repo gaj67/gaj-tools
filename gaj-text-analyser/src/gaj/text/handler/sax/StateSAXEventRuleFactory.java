@@ -1,94 +1,96 @@
-package gaj.text.handler.core;
+package gaj.text.handler.sax;
 
 import gaj.text.handler.Action;
-import gaj.text.handler.Event;
 import gaj.text.handler.StateEventRule;
 import gaj.text.handler.StateGetter;
 import gaj.text.handler.StateTransition;
+import gaj.text.handler.core.StateEventRuleFactory;
+import gaj.text.handler.core.StatefulFactory;
 import java.util.Map;
+import org.xml.sax.Attributes;
 
-public abstract class StateEventRuleFactory {
+public abstract class StateSAXEventRuleFactory {
 
-    private StateEventRuleFactory() {}
+    private StateSAXEventRuleFactory() {}
 
-    public static <S,T,V> StateEventRule<S,Event<T,V>> newRule(
+    public static <S> StateEventRule<S, SAXEvent> newRule(
             /*@Nullable*/ S state,
             /*@Nullable*/ S parentState,
             /*@Nullable*/ S previousState,
-            /*@Nullable*/ T eventType,
+            /*@Nullable*/ SAXEventType eventType,
             /*@Nullable*/ String eventLabel,
-            /*@Nullable*/ Map<String,V> eventProperties,
+            /*@Nullable*/ Map<String,String> eventProperties,
             /*@Nullable*/ S transitionState,
             /*@Nullable*/ Action postTransitionAction,
             /*@Nullable*/ Action preTransitionAction)
     {
         StateGetter<S> stateGetter = StatefulFactory.newStateGetter(previousState, state, parentState);
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, preTransitionAction, postTransitionAction);
-        Event<T,V> event = EventFactory.newEvent(eventType, eventLabel, eventProperties);
+        SAXEvent event = SAXEventFactory.newEvent(eventType, eventLabel, eventProperties);
         return newRule(stateGetter, event, stateTransition);
     }
 
-    public static <S,T,V> StateEventRule<S,Event<T,V>> newRule(
+    public static <S> StateEventRule<S, SAXEvent> newRule(
             /*@Nullable*/ S state,
-            /*@Nullable*/ T eventType,
+            /*@Nullable*/ SAXEventType eventType,
             /*@Nullable*/ String eventLabel,
-            /*@Nullable*/ Map<String,V> eventProperties,
+            /*@Nullable*/ Map<String,String> eventProperties,
             /*@Nullable*/ S transitionState,
             /*@Nullable*/ Action postTransitionAction)
     {
         StateGetter<S> stateGetter = StatefulFactory.newStateGetter(state);
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, postTransitionAction);
-        Event<T,V> event = EventFactory.newEvent(eventType, eventLabel, eventProperties);
+        SAXEvent event = SAXEventFactory.newEvent(eventType, eventLabel, eventProperties);
         return newRule(stateGetter, event, stateTransition);
     }
 
-    public static <S,T,V> StateEventRule<S,Event<T,V>> newRule(
+    public static <S> StateEventRule<S, SAXEvent> newRule(
             /*@Nullable*/ S state,
-            /*@Nullable*/ T eventType,
+            /*@Nullable*/ SAXEventType eventType,
             /*@Nullable*/ String eventLabel,
             /*@Nullable*/ S transitionState,
             /*@Nullable*/ Action postTransitionAction)
     {
         StateGetter<S> stateGetter = StatefulFactory.newStateGetter(state);
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, postTransitionAction);
-        Event<T, V> event = EventFactory.newEvent(eventType, eventLabel);
+        SAXEvent event = SAXEventFactory.newEvent(eventType, eventLabel);
         return newRule(stateGetter, event, stateTransition);
     }
 
-    public static <S,T,V> StateEventRule<S,Event<T,V>> newRule(
+    public static <S> StateEventRule<S, SAXEvent> newRule(
             /*@Nullable*/ S state,
-            /*@Nullable*/ T eventType,
+            /*@Nullable*/ SAXEventType eventType,
             /*@Nullable*/ S transitionState,
             /*@Nullable*/ Action postTransitionAction)
     {
         StateGetter<S> stateGetter = StatefulFactory.newStateGetter(state);
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, postTransitionAction);
-        Event<T,V> event = EventFactory.newEvent(eventType);
+        SAXEvent event = SAXEventFactory.newEvent(eventType);
         return newRule(stateGetter, event, stateTransition);
     }
 
-    public static <S,E extends Event<?,?>> StateEventRule<S,E> newRule(
+    public static <S> StateEventRule<S, SAXEvent> newRule(
             /*@Nullable*/ StateGetter<S> stateGetter,
-            /*@Nullable*/ E event,
+            /*@Nullable*/ SAXEvent event,
             /*@Nullable*/ StateTransition<S> stateTransition)
     {
-        return new StateEventRuleImpl<S, E>(stateGetter, event, stateTransition);
+        return StateEventRuleFactory.newRule(stateGetter, event, stateTransition);
     }
 
-    public static <S, T, V> StateEventRule<S, Event<T,V>> newRule(T eventType, Action action) {
+    public static <S> StateEventRule<S, SAXEvent> newRule(SAXEventType eventType, Action action) {
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(action);
-        Event<T, V> event = EventFactory.newEvent(eventType);
-        return new StateEventRuleImpl<S, Event<T,V>>(null, event, stateTransition);
+        SAXEvent event = SAXEventFactory.newEvent(eventType);
+        return StateEventRuleFactory.<S,SAXEvent>newRule(null, event, stateTransition);
     }
 
-    public static <S, T, V> StateEventRule<S, Event<T,V>> newRule(
-            S state, T eventType, String eventLabel,
-            Map<String, V> eventAttrs, S transitionState)
+    public static <S> StateEventRule<S, SAXEvent> newRule(
+            S state, SAXEventType eventType, String eventLabel,
+            Attributes eventAttrs, S transitionState)
     {
         StateGetter<S> stateGetter = StatefulFactory.newStateGetter(state);
-        Event<T,V> event = EventFactory.newEvent(eventType, eventLabel, eventAttrs);
+        SAXEvent event = SAXEventFactory.newEvent(eventType, eventLabel, eventAttrs);
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState);
-        return new StateEventRuleImpl<S, Event<T,V>>(stateGetter, event, stateTransition);
+        return StateEventRuleFactory.newRule(stateGetter, event, stateTransition);
     }
 
 }

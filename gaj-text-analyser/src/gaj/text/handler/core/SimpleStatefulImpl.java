@@ -1,5 +1,6 @@
 package gaj.text.handler.core;
 
+import gaj.text.handler.StateGetter;
 import gaj.text.handler.Stateful;
 
 /**
@@ -67,6 +68,16 @@ import gaj.text.handler.Stateful;
     @Override
     public void rewindState() {
         throw new IllegalStateException("Cannot rewind - state history is not being maintained");
+    }
+
+    @Override
+    public boolean matches(StateGetter<S> stateGetter) {
+        return matchesState(getState(), stateGetter.getState())
+                && matchesState(getPreviousState(), stateGetter.getPreviousState());
+    }
+
+    protected boolean matchesState(/*@Nullable*/ S myState, S theirState) {
+        return myState == null || myState.equals(theirState);
     }
 
 }

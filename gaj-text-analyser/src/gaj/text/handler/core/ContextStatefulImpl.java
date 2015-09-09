@@ -1,6 +1,6 @@
 package gaj.text.handler.core;
 
-import gaj.text.handler.core.SimpleStatefulImpl;
+import gaj.text.handler.StateGetter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +67,21 @@ import java.util.List;
     @Override
     public /*@Nullable*/ S nullState() {
         return null;
+    }
+
+    @Override
+    public boolean matches(StateGetter<S> stateGetter) {
+        return super.matches(stateGetter) && matchesAncestralStates(stateGetter);
+    }
+
+    private boolean matchesAncestralStates(StateGetter<S> stateGetter) {
+        final int numStates = ancestors.size();
+        for (int i = 1; i <= numStates; i++) {
+            if (!matchesState(ancestors.get(numStates - i), stateGetter.getAncestralState(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

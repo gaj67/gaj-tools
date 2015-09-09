@@ -24,14 +24,14 @@ public abstract class StatefulSAXEventRuleHandler<S> extends StatefulSAXEventHan
 
     protected StatefulSAXEventRuleHandler() {}
 
-    protected abstract Collection<? extends StateEventRule<S,SAXEventType,String>> getRules();
+    protected abstract Collection<StateEventRule<S, SAXEvent>> getRules();
 
     @Override
     public void handle(SAXEvent event) {
         System.out.printf("Event: %s[%s]%s ", event.getType(), event.getLabel(), event.getProperties());
         System.out.printf("Before: %s->%s ", getPreviousState(), getState());
-        final Collection<? extends StateEventRule<S, SAXEventType, String>> rules = getRules();
-        for (StateEventRule<S, SAXEventType, String> rule : rules) {
+        final Collection<StateEventRule<S, SAXEvent>> rules = getRules();
+        for (StateEventRule<S, SAXEvent> rule : rules) {
             if (rule.matches(this, event)) {
                 System.out.printf("Have rule ");
                 StateTransition<S> transition = rule.getStateTransition();

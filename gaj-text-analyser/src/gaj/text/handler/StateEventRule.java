@@ -4,7 +4,7 @@ package gaj.text.handler;
 /**
  * A state transition rule for a stateful event handler.
  */
-public interface StateEventRule<S,T,V> {
+public interface StateEventRule<S, E extends Event<?, ?>> {
 
     /**
      * Obtains the getter describing the rule state, to match against the handler state.
@@ -18,7 +18,7 @@ public interface StateEventRule<S,T,V> {
      *
      * @return The event, or a value of null if any handler event should match.
      */
-    /*@Nullable*/ Event<T,V> getEvent();
+    /* @Nullable */E getEvent();
 
     /**
      * Indicates whether or not the rule matches the given state for the given event.
@@ -27,7 +27,7 @@ public interface StateEventRule<S,T,V> {
      * @param event - The event to be matched.
      * @return A value of true (or false) if the rule matches.
      */
-    boolean matches(StateGetter<S> stateGetter, Event<T,V> event);
+    boolean matches(StateGetter<S> stateGetter, E event);
 
     /**
      * If the rule matches, then this state transition will be performed.
