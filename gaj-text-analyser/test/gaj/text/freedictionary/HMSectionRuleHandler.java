@@ -81,7 +81,7 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
                     SAXEventType.END_ELEMENT, SECTION_TAG,
-                    State.INIT, sendSectionData));
+                    State.REWIND, sendSectionData));
         }
         return rules;
     }
@@ -123,7 +123,9 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
             segments = new ArrayList<>();
             sectionData.put(SECTION_SEGMENTS_KEY, segments);
         }
-        segments.add(segmentData);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> segment = (Map<String, Object>) ((HashMap<String, Object>) segmentData).clone();
+        segments.add(segment);
     }
 
     protected void sendSectionData() {
