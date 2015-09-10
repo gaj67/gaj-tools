@@ -1,13 +1,17 @@
 package gaj.text.freedictionary;
 
-import static gaj.text.freedictionary.StructureDefinition.*;
-import gaj.text.handler.Action;
+import static gaj.text.freedictionary.StructureDefinition.HM_SECTION_ATTRS;
+import static gaj.text.freedictionary.StructureDefinition.HM_SEGMENT_ATTRS;
+import static gaj.text.freedictionary.StructureDefinition.SECTION_TAG;
+import static gaj.text.freedictionary.StructureDefinition.SECTION_WORD_TAG;
+import static gaj.text.freedictionary.StructureDefinition.SEGMENT_DEF_TAG;
+import static gaj.text.freedictionary.StructureDefinition.SEGMENT_TAG;
+import static gaj.text.freedictionary.StructureDefinition.SEGMENT_WORD_TAG;
 import gaj.text.handler.StateEventRule;
 import gaj.text.handler.sax.ContextfStatefulSAXEventRuleHandler;
 import gaj.text.handler.sax.SAXEvent;
 import gaj.text.handler.sax.SAXEventType;
 import gaj.text.handler.sax.StateSAXEventRuleFactory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,50 +51,50 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.INIT,
                     SAXEventType.BEGIN_ELEMENT, SECTION_TAG, HM_SECTION_ATTRS,
-                    State.SECTION, clearSectionData));
+                    State.SECTION, this::clearSectionData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
                     SAXEventType.BEGIN_ELEMENT, SECTION_WORD_TAG,
-                    State.WORD, captureTextOn));
+                    State.WORD, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.<State> newRule(
-                    SAXEventType.CHARACTERS, appendTextBuffer));
+                    SAXEventType.CHARACTERS, this::appendTextBuffer));
             rules.add(StateSAXEventRuleFactory.newRule(
                     null, State.WORD, State.SECTION,
                     SAXEventType.END_ELEMENT, SECTION_WORD_TAG,
-                    State.REWIND, getSectionWord));
+                    State.REWIND, this::getSectionWord));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
                     SAXEventType.BEGIN_ELEMENT, SEGMENT_TAG, HM_SEGMENT_ATTRS,
-                    State.SEGMENT, clearSegmentData));
+                    State.SEGMENT, this::clearSegmentData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
                     SAXEventType.BEGIN_ELEMENT, SEGMENT_DEF_TAG,
-                    State.TAG, captureTextOn));
+                    State.TAG, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.TAG,
                     SAXEventType.END_ELEMENT, SEGMENT_DEF_TAG,
-                    State.REWIND, getSegmentTag));
+                    State.REWIND, this::getSegmentTag));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.TAG, State.SEGMENT,
                     SAXEventType.BEGIN_ELEMENT, SEGMENT_WORD_TAG,
-                    State.WORD, captureTextOn));
+                    State.WORD, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.newRule(
                     null, State.WORD, State.SEGMENT,
                     SAXEventType.END_ELEMENT, SEGMENT_WORD_TAG,
-                    State.REWIND, addSegmentWord));
+                    State.REWIND, this::addSegmentWord));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.WORD, State.SEGMENT,
                     SAXEventType.BEGIN_ELEMENT, SEGMENT_WORD_TAG,
-                    State.WORD, captureTextOn));
+                    State.WORD, this::captureTextOn));
             // TODO handle intra-word elements.
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
                     SAXEventType.END_ELEMENT, SEGMENT_TAG,
-                    State.REWIND, addSegmentData));
+                    State.REWIND, this::addSegmentData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
                     SAXEventType.END_ELEMENT, SECTION_TAG,
-                    State.REWIND, sendSectionData));
+                    State.REWIND, this::sendSectionData));
         }
         return rules;
     }
@@ -152,78 +156,5 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
     protected void sendSectionData() {
         System.out.printf("sectionData=%s%n", sectionData);
     }
-
-    //*************************************************************************
-    // Section for Java 7 (non-lambda) compatibility.
-
-    private final Action captureTextOff = new Action() {
-        @Override
-        public void perform() {
-            captureTextOff();
-        }
-    };
-
-    private final Action captureTextOn = new Action() {
-        @Override
-        public void perform() {
-            captureTextOn();
-        }
-    };
-
-    private final Action clearSectionData = new Action() {
-        @Override
-        public void perform() {
-            clearSectionData();
-        }
-    };
-
-    private final Action getSectionWord = new Action() {
-        @Override
-        public void perform() {
-            getSectionWord();
-        }
-    };
-
-    private final Action sendSectionData = new Action() {
-        @Override
-        public void perform() {
-            sendSectionData();
-        }
-    };
-
-    private final Action appendTextBuffer = new Action() {
-        @Override
-        public void perform() {
-            appendTextBuffer();
-        }
-    };
-
-    private final Action clearSegmentData = new Action() {
-        @Override
-        public void perform() {
-            clearSegmentData();
-        }
-    };
-
-    private final Action getSegmentTag = new Action() {
-        @Override
-        public void perform() {
-            getSegmentTag();
-        }
-    };
-
-    private final Action addSegmentWord = new Action() {
-        @Override
-        public void perform() {
-            addSegmentWord();
-        }
-    };
-
-    private final Action addSegmentData = new Action() {
-        @Override
-        public void perform() {
-            addSegmentData();
-        }
-    };
 
 }
