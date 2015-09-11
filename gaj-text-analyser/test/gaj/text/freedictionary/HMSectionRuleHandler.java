@@ -43,66 +43,66 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
             rules = new ArrayList<>();
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.INIT,
-                    StructureDefinition.START_HM_SECTION,
+                    HMSectionEvents.START_SECTION,
                     State.SECTION, this::clearSectionData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
-                    StructureDefinition.START_HM_SECTION_WORD,
+                    HMSectionEvents.START_SECTION_WORD,
                     State.WORD, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.<State> newRule(
                     SAXEventType.CHARACTERS, this::appendTextBuffer));
             rules.add(StateSAXEventRuleFactory.newRule(
                     null, State.WORD, State.SECTION,
-                    StructureDefinition.END_HM_SECTION_WORD,
+                    HMSectionEvents.END_SECTION_WORD,
                     State.REWIND, this::getSectionWord));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
-                    StructureDefinition.START_HM_SEGMENT,
+                    HMSectionEvents.START_SEGMENT,
                     State.SEGMENT, this::clearSegmentData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
-                    StructureDefinition.START_HM_SEGMENT_TAG,
+                    HMSectionEvents.START_SEGMENT_TAG,
                     State.TAG, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.TAG,
-                    StructureDefinition.END_HM_SEGMENT_TAG,
+                    HMSectionEvents.END_SEGMENT_TAG,
                     State.REWIND, this::getSegmentTag));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.TAG, State.SEGMENT,
-                    StructureDefinition.START_HM_SEGMENT_WORD,
+                    HMSectionEvents.START_SEGMENT_WORD,
                     State.WORD, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.newRule(
                     null, State.WORD, State.SEGMENT,
-                    StructureDefinition.END_HM_SEGMENT_WORD,
+                    HMSectionEvents.END_SEGMENT_WORD,
                     State.REWIND, this::addSegmentWord));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.WORD, State.SEGMENT,
-                    StructureDefinition.START_HM_SEGMENT_WORD,
+                    HMSectionEvents.START_SEGMENT_WORD,
                     State.WORD, this::captureTextOn));
             // TODO handle intra-word elements.
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
-                    StructureDefinition.START_HM_SEGMENT_ITEM,
+                    HMSectionEvents.START_SEGMENT_ITEM,
                     State.ITEM));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.ITEM,
-                    StructureDefinition.START_HM_SEGMENT_SUBITEM,
+                    HMSectionEvents.START_SEGMENT_SUBITEM,
                     State.SUBITEM));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SUBITEM,
-                    StructureDefinition.END_HM_SEGMENT_SUBITEM,
+                    HMSectionEvents.END_SEGMENT_SUBITEM,
                     State.REWIND));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.ITEM,
-                    StructureDefinition.END_HM_SEGMENT_ITEM,
+                    HMSectionEvents.END_SEGMENT_ITEM,
                     State.REWIND));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
-                    StructureDefinition.END_HM_SEGMENT,
+                    HMSectionEvents.END_SEGMENT,
                     State.REWIND, this::addSegmentData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
-                    StructureDefinition.END_HM_SECTION,
+                    HMSectionEvents.END_SECTION,
                     State.REWIND, this::sendSectionData));
         }
         return rules;

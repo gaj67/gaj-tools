@@ -1,40 +1,39 @@
 package gaj.text.freedictionary;
 
+import gaj.text.handler.sax.SAXEvent;
+import gaj.text.handler.sax.SAXEventHandler;
 import java.io.IOException;
-
-import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Optionally delegates all methods to another handler.
  */
-public class DelegatingHandler extends DefaultHandler {
+public class DelegatingSAXEventHandler extends SAXEventHandler {
 
-	private DefaultHandler handler = null;
+    private SAXEventHandler handler = null;
 
 	/**
 	 * Discards all data until {@link setHandler}() is called.
 	 */
-	public DelegatingHandler() {}
+	public DelegatingSAXEventHandler() {}
 	
 	/**
 	 * Delegates all data to the given handler.
 	 * 
 	 * @param handler - The delegated handler.
 	 */
-	public DelegatingHandler(DefaultHandler handler) {
+    public DelegatingSAXEventHandler(SAXEventHandler handler) {
 		this.handler = handler;
 	}
 
-	public DefaultHandler getHandler() {
+    public SAXEventHandler getHandler() {
 		return handler;
 	}
 
-	public void setHandler(DefaultHandler handler) {
+    public void setHandler(SAXEventHandler handler) {
 		this.handler = handler;
 	}
 
@@ -93,34 +92,6 @@ public class DelegatingHandler extends DefaultHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if (handler != null) {
-            handler.startElement(uri, localName, qName, attributes);
-        }
-    }
-
-    @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (handler != null) {
-            handler.endElement(uri, localName, qName);
-        }
-    }
-
-    @Override
-    public void characters(char ch[], int start, int length) throws SAXException {
-        if (handler != null) {
-            handler.characters(ch, start, length);
-        }
-    }
-
-    @Override
-    public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
-        if (handler != null) {
-            handler.ignorableWhitespace(ch, start, length);
-        }
-    }
-
-    @Override
     public void processingInstruction(String target, String data) throws SAXException {
         if (handler != null) {
             handler.processingInstruction(target, data);
@@ -154,6 +125,13 @@ public class DelegatingHandler extends DefaultHandler {
             handler.fatalError(e);
         } else {
             throw e;
+        }
+    }
+
+    @Override
+    public void handle(SAXEvent event) {
+        if (handler != null) {
+            handler.handle(event);
         }
     }
 
