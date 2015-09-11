@@ -20,12 +20,12 @@ import gaj.text.handler.Stateful;
     }
 
     protected SimpleStatefulImpl(/*@Nullable*/ S state) {
-    	state = toState(state);
+    	this.state = toState(state);
     	prevState = nullState();
     }
 
     protected SimpleStatefulImpl(/*@Nullable*/ S previousState, /*@Nullable*/ S state) {
-    	state = toState(state);
+    	this.state = toState(state);
     	prevState = toState(previousState);
     }
 

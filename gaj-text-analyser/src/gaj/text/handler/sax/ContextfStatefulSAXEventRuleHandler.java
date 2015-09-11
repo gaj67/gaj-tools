@@ -32,31 +32,39 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
         final Collection<StateEventRule<S, SAXEvent>> rules = getRules();
         System.out.printf("Event: %s[%s]%s ", event.getType(), event.getLabel(), event.getProperties());
         System.out.printf("Before: %s->%s(%s) ", getParentState(), getState(), getPreviousState());
+        int i = -1;
         for (StateEventRule<S, SAXEvent> rule : rules) {
+        	i++;
             if (rule.matches(this, event)) {
-                System.out.printf("Have rule ");
-                StateTransition<S> transition = rule.getStateTransition();
-                if (transition != null) {
-                    setEvent(event);
-                    Action action = transition.getPreTransitionAction();
-                    if (action != null) {
-                        action.perform();
-                    }
-                    S newState = transition.getTransitionState();
-                    if (newState != null) {
-                        setState(newState);
-                    }
-                    action = transition.getPostTransitionAction();
-                    if (action != null) {
-                        action.perform();
-                    }
-                }
+                System.out.printf("Have rule %d ", i);
+                execute(event, rule);
                 System.out.printf("After: %s->%s(%s)%n", getParentState(), getState(), getPreviousState());
                 return;
             }
         }
         System.out.println("No rule!");
+        execute(event, null);
     }
+
+	protected void execute(SAXEvent event, /*@Nullable*/ StateEventRule<S, SAXEvent> rule) {
+		if (rule == null) return;
+		StateTransition<S> transition = rule.getStateTransition();
+		if (transition != null) {
+		    setEvent(event);
+		    Action action = transition.getPreTransitionAction();
+		    if (action != null) {
+		        action.perform();
+		    }
+		    S newState = transition.getTransitionState();
+		    if (newState != null) {
+		        setState(newState);
+		    }
+		    action = transition.getPostTransitionAction();
+		    if (action != null) {
+		        action.perform();
+		    }
+		}
+	}
 
     protected void setEvent(SAXEvent event) {
         this.event = event;
