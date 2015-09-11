@@ -6,9 +6,7 @@ import gaj.text.handler.StateGetter;
 import gaj.text.handler.StateTransition;
 import gaj.text.handler.core.StateEventRuleFactory;
 import gaj.text.handler.core.StatefulFactory;
-
 import java.util.Map;
-
 import org.xml.sax.Attributes;
 
 public abstract class StateSAXEventRuleFactory {
@@ -123,5 +121,29 @@ public abstract class StateSAXEventRuleFactory {
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, postTransitionAction);
         return newRule(stateGetter, event, stateTransition);
 	}
+
+    public static <S> StateEventRule<S, SAXEvent> newRule(S previousState, S state, S parentState, SAXEvent event, S transitionState, Action postTransitionAction) {
+        StateGetter<S> stateGetter = StatefulFactory.newStateGetter(previousState, state, parentState);
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, postTransitionAction);
+        return newRule(stateGetter, event, stateTransition);
+    }
+
+    public static <S> StateEventRule<S, SAXEvent> newRule(S previousState, S state, SAXEvent event, S transitionState, Action postTransitionAction) {
+        StateGetter<S> stateGetter = StatefulFactory.newStateGetter(previousState, state);
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, postTransitionAction);
+        return newRule(stateGetter, event, stateTransition);
+    }
+
+    public static <S> StateEventRule<S, SAXEvent> newRule(S state, SAXEvent event, S transitionState, Action postTransitionAction) {
+        StateGetter<S> stateGetter = StatefulFactory.newStateGetter(state);
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, postTransitionAction);
+        return newRule(stateGetter, event, stateTransition);
+    }
+
+    public static <S> StateEventRule<S, SAXEvent> newRule(S state, SAXEvent event, S transitionState) {
+        StateGetter<S> stateGetter = StatefulFactory.newStateGetter(state);
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState);
+        return newRule(stateGetter, event, stateTransition);
+    }
 
 }

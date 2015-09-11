@@ -1,10 +1,5 @@
 package gaj.text.freedictionary;
 
-import static gaj.text.freedictionary.StructureDefinition.getSectionType;
-import static gaj.text.freedictionary.StructureDefinition.SECTION_TAG;
-import static gaj.text.freedictionary.StructureDefinition.SECTION_TYPE_HC;
-import static gaj.text.freedictionary.StructureDefinition.SECTION_TYPE_HM;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -40,7 +35,7 @@ import org.xml.sax.SAXException;
     public void endElement(String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
         switch (localName) {
-            case SECTION_TAG:
+            case "section":
             	// Turn off delegation.
              	setHandler(null);
                 break;
