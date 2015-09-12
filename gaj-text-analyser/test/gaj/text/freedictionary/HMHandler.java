@@ -5,23 +5,28 @@ import gaj.text.handler.sax.ContextfStatefulSAXEventRuleHandler;
 import gaj.text.handler.sax.SAXEvent;
 import gaj.text.handler.sax.SAXEventType;
 import gaj.text.handler.sax.StateSAXEventRuleFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<State> {
+public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
 
     private static final String SECTION_WORD_KEY = "word";
     private static final String SECTION_SEGMENTS_KEY = "segments";
     private static final String SEGMENT_WORDS_KEY = "words";
     private static final String SEGMENT_TAG_KEY = "tag";
+	private static final String SEGMENT_ITEMS_KEY = "items";
+	private static final String ITEM_SUBITEMS_KEY = "subitems";
 
     private List<StateEventRule<State, SAXEvent>> rules = null;
 
-    private final Map<String, Object> sectionData = new HashMap<>();
-    private final Map<String, Object> segmentData = new HashMap<>();
+    private Map<String, Object> sectionData = null;
+    private Map<String, Object> segmentData = null;
+    private Map<String, Object> itemData = null;
+    private Map<String, Object> subitemData = null;
 
     @Override
     public State nullState() {
@@ -43,73 +48,73 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
             rules = new ArrayList<>();
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.INIT,
-                    HMSectionEvents.START_SECTION,
-                    State.SECTION, this::clearSectionData));
+                    HMEvents.START_SECTION,
+                    State.SECTION, this::initSectionData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
-                    HMSectionEvents.START_SECTION_WORD,
+                    HMEvents.START_SECTION_WORD,
                     State.WORD, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.<State> newRule(
                     SAXEventType.CHARACTERS, this::appendTextBuffer));
             rules.add(StateSAXEventRuleFactory.newRule(
                     null, State.WORD, State.SECTION,
-                    HMSectionEvents.END_SECTION_WORD,
+                    HMEvents.END_SECTION_WORD,
                     State.REWIND, this::getSectionWord));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
-                    HMSectionEvents.START_SEGMENT,
-                    State.SEGMENT, this::clearSegmentData));
+                    HMEvents.START_SEGMENT,
+                    State.SEGMENT, this::initSegmentData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
-                    HMSectionEvents.START_SEGMENT_TAG,
+                    HMEvents.START_SEGMENT_TAG,
                     State.TAG, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.TAG,
-                    HMSectionEvents.END_SEGMENT_TAG,
+                    HMEvents.END_SEGMENT_TAG,
                     State.REWIND, this::getSegmentTag));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.TAG, State.SEGMENT,
-                    HMSectionEvents.START_SEGMENT_WORD,
+                    HMEvents.START_SEGMENT_WORD,
                     State.WORD, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.newRule(
                     null, State.WORD, State.SEGMENT,
-                    HMSectionEvents.END_SEGMENT_WORD,
+                    HMEvents.END_SEGMENT_WORD,
                     State.REWIND, this::addSegmentWord));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.WORD, State.SEGMENT,
-                    HMSectionEvents.START_SEGMENT_WORD,
+                    HMEvents.START_SEGMENT_WORD,
                     State.WORD, this::captureTextOn));
             // TODO handle intra-word elements.
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
-                    HMSectionEvents.START_SEGMENT_ITEM,
-                    State.ITEM));
+                    HMEvents.START_SEGMENT_ITEM,
+                    State.ITEM, this::initItemData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.ITEM,
-                    HMSectionEvents.START_SEGMENT_SUBITEM,
-                    State.SUBITEM));
+                    HMEvents.START_SEGMENT_SUBITEM,
+                    State.SUBITEM, this::initSubItemData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SUBITEM,
-                    HMSectionEvents.END_SEGMENT_SUBITEM,
-                    State.REWIND));
+                    HMEvents.END_SEGMENT_SUBITEM,
+                    State.REWIND, this::addSubItemData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.ITEM,
-                    HMSectionEvents.END_SEGMENT_ITEM,
-                    State.REWIND));
+                    HMEvents.END_SEGMENT_ITEM,
+                    State.REWIND, this::addItemData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
-                    HMSectionEvents.END_SEGMENT,
+                    HMEvents.END_SEGMENT,
                     State.REWIND, this::addSegmentData));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
-                    HMSectionEvents.END_SECTION,
+                    HMEvents.END_SECTION,
                     State.REWIND, this::sendSectionData));
         }
         return rules;
     }
 
-    protected void clearSectionData() {
-        sectionData.clear();
+    protected void initSectionData() {
+        sectionData = new HashMap<>();
         clearTextBuffer();
         captureTextOff();
     }
@@ -120,8 +125,8 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
         captureTextOff();
     }
 
-    protected void clearSegmentData() {
-        segmentData.clear();
+    protected void initSegmentData() {
+        segmentData = new HashMap<>();
         clearTextBuffer();
         captureTextOff();
     }
@@ -149,6 +154,42 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
         captureTextOff();
     }
 
+    protected void initItemData() {
+        itemData = new HashMap<>();
+        clearTextBuffer();
+        captureTextOff();
+    }
+
+    protected void initSubItemData() {
+        subitemData = new HashMap<>();
+        clearTextBuffer();
+        captureTextOff();
+    }
+
+    protected void addSubItemData() {
+        System.out.printf("subitemData=%s%n", subitemData);
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> subitems = (List<Map<String, Object>>) itemData.get(ITEM_SUBITEMS_KEY);
+        if (subitems == null) {
+            subitems = new ArrayList<>();
+            itemData.put(ITEM_SUBITEMS_KEY, subitems);
+        }
+        subitems.add(subitemData);
+        subitemData = null;
+    }
+
+    protected void addItemData() {
+        System.out.printf("itemData=%s%n", itemData);
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> items = (List<Map<String, Object>>) segmentData.get(SEGMENT_ITEMS_KEY);
+        if (items == null) {
+            items = new ArrayList<>();
+            segmentData.put(SEGMENT_ITEMS_KEY, items);
+        }
+        items.add(itemData);
+        itemData = null;
+    }
+
     protected void addSegmentData() {
         System.out.printf("segmentData=%s%n", segmentData);
         @SuppressWarnings("unchecked")
@@ -157,13 +198,13 @@ public class HMSectionRuleHandler extends ContextfStatefulSAXEventRuleHandler<St
             segments = new ArrayList<>();
             sectionData.put(SECTION_SEGMENTS_KEY, segments);
         }
-        @SuppressWarnings("unchecked")
-        Map<String, Object> segment = (Map<String, Object>) ((HashMap<String, Object>) segmentData).clone();
-        segments.add(segment);
+        segments.add(segmentData);
+        segmentData = null;
     }
 
     protected void sendSectionData() {
         System.out.printf("sectionData=%s%n", sectionData);
+        sectionData = null;
     }
 
 }

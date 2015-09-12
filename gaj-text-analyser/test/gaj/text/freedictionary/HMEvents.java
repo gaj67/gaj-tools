@@ -4,7 +4,7 @@ import gaj.text.handler.sax.SAXEvent;
 import gaj.text.handler.sax.SAXEventFactory;
 import gaj.text.handler.sax.SAXEventType;
 
-public abstract class HMSectionEvents {
+public abstract class HMEvents {
 
     public static final String SECTION_TYPE_HC = "hc_dict";
 
@@ -38,6 +38,6 @@ public abstract class HMSectionEvents {
     public static final SAXEvent END_SEGMENT = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "div");
     public static final SAXEvent END_SECTION = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "section");
 
-    private HMSectionEvents() {}
+    private HMEvents() {}
 
 }

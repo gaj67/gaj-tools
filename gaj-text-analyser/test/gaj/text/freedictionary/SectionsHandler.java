@@ -1,5 +1,6 @@
 package gaj.text.freedictionary;
 
+import gaj.text.handler.sax.DelegatingSAXEventHandler;
 import gaj.text.handler.sax.SAXEvent;
 
 /*package-private*/ class SectionsHandler extends DelegatingSAXEventHandler {
@@ -8,10 +9,10 @@ import gaj.text.handler.sax.SAXEvent;
 
     @Override
     public void handle(SAXEvent event) {
-        if (HMSectionEvents.START_SECTION.matches(event)) {
-            setHandler(new HMSectionRuleHandler());
+        if (HMEvents.START_SECTION.matches(event)) {
+            setHandler(new HMHandler());
             super.handle(event);
-        } else if (HMSectionEvents.END_SECTION.matches(event)) {
+        } else if (HMEvents.END_SECTION.matches(event)) {
             super.handle(event);
             setHandler(null);
         } else {

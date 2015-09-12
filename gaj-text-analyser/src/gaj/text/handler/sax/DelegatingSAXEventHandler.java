@@ -1,8 +1,7 @@
-package gaj.text.freedictionary;
+package gaj.text.handler.sax;
 
-import gaj.text.handler.sax.SAXEvent;
-import gaj.text.handler.sax.SAXEventHandler;
 import java.io.IOException;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
