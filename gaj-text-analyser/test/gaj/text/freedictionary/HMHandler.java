@@ -20,6 +20,7 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     private static final String SEGMENT_TAG_KEY = "tag";
 	private static final String SEGMENT_ITEMS_KEY = "items";
 	private static final String ITEM_SUBITEMS_KEY = "subitems";
+	private static final String EXAMPLES_KEY = "examples";
 
     private List<StateEventRule<State, SAXEvent>> rules = null;
 
@@ -49,7 +50,7 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.INIT,
                     HMEvents.START_SECTION,
-                    State.SECTION, this::initSectionData));
+                    State.SECTION, this::initSection));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
                     HMEvents.START_SECTION_WORD,
@@ -63,7 +64,7 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
                     HMEvents.START_SEGMENT,
-                    State.SEGMENT, this::initSegmentData));
+                    State.SEGMENT, this::initSegment));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
                     HMEvents.START_SEGMENT_TAG,
@@ -88,32 +89,40 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
                     HMEvents.START_SEGMENT_ITEM,
-                    State.ITEM, this::initItemData));
+                    State.ITEM, this::initItem));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.ITEM,
                     HMEvents.START_SEGMENT_SUBITEM,
-                    State.SUBITEM, this::initSubItemData));
+                    State.SUBITEM, this::initSubItem));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    State.SUBITEM,
+                    HMEvents.START_SEGMENT_EXAMPLE,
+                    State.EXAMPLE, this::captureTextOn));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    State.EXAMPLE,
+                    HMEvents.END_SEGMENT_EXAMPLE,
+                    State.REWIND, this::addExample));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SUBITEM,
                     HMEvents.END_SEGMENT_SUBITEM,
-                    State.REWIND, this::addSubItemData));
+                    State.REWIND, this::addSubItem));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.ITEM,
                     HMEvents.END_SEGMENT_ITEM,
-                    State.REWIND, this::addItemData));
+                    State.REWIND, this::addItem));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SEGMENT,
                     HMEvents.END_SEGMENT,
-                    State.REWIND, this::addSegmentData));
+                    State.REWIND, this::addSegment));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
                     HMEvents.END_SECTION,
-                    State.REWIND, this::sendSectionData));
+                    State.REWIND, this::addSection));
         }
         return rules;
     }
 
-    protected void initSectionData() {
+    protected void initSection() {
         sectionData = new HashMap<>();
         clearTextBuffer();
         captureTextOff();
@@ -125,7 +134,7 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
         captureTextOff();
     }
 
-    protected void initSegmentData() {
+    protected void initSegment() {
         segmentData = new HashMap<>();
         clearTextBuffer();
         captureTextOff();
@@ -154,19 +163,33 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
         captureTextOff();
     }
 
-    protected void initItemData() {
+    protected void initItem() {
         itemData = new HashMap<>();
         clearTextBuffer();
         captureTextOff();
     }
 
-    protected void initSubItemData() {
+    protected void initSubItem() {
         subitemData = new HashMap<>();
         clearTextBuffer();
         captureTextOff();
     }
 
-    protected void addSubItemData() {
+    protected void addExample() {
+    	String example = getTextBuffer();
+    	clearTextBuffer();
+        System.out.printf("example=%s%n", example);
+        @SuppressWarnings("unchecked")
+        List<String> examples = (List<String>) itemData.get(EXAMPLES_KEY);
+        if (examples == null) {
+            examples = new ArrayList<>();
+            subitemData.put(EXAMPLES_KEY, examples);
+        }
+        examples.add(example);
+        example = null;
+    }
+
+    protected void addSubItem() {
         System.out.printf("subitemData=%s%n", subitemData);
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> subitems = (List<Map<String, Object>>) itemData.get(ITEM_SUBITEMS_KEY);
@@ -178,7 +201,7 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
         subitemData = null;
     }
 
-    protected void addItemData() {
+    protected void addItem() {
         System.out.printf("itemData=%s%n", itemData);
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> items = (List<Map<String, Object>>) segmentData.get(SEGMENT_ITEMS_KEY);
@@ -190,7 +213,7 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
         itemData = null;
     }
 
-    protected void addSegmentData() {
+    protected void addSegment() {
         System.out.printf("segmentData=%s%n", segmentData);
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> segments = (List<Map<String, Object>>) sectionData.get(SECTION_SEGMENTS_KEY);
@@ -202,7 +225,7 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
         segmentData = null;
     }
 
-    protected void sendSectionData() {
+    protected void addSection() {
         System.out.printf("sectionData=%s%n", sectionData);
         sectionData = null;
     }
