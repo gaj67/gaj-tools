@@ -60,6 +60,10 @@ package gaj.text.freedictionary;
 	 * Indicates that the state history should be rewound to the parent state.
 	 */
 	REWIND(null),
+    /**
+     * Indicates some unexpected structural element that should be ignored.
+     */
+    OTHER(null),
 	;
 
 	private final boolean isTextual;

@@ -5,7 +5,6 @@ import gaj.text.handler.sax.ContextfStatefulSAXEventRuleHandler;
 import gaj.text.handler.sax.SAXEvent;
 import gaj.text.handler.sax.SAXEventType;
 import gaj.text.handler.sax.StateSAXEventRuleFactory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -92,6 +91,14 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
                     State.ITEM, this::initItem));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.ITEM,
+                    HMEvents.START_SEGMENT_EXAMPLE,
+                    State.EXAMPLE, this::captureTextOn));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    null, State.EXAMPLE, State.ITEM,
+                    HMEvents.END_SEGMENT_EXAMPLE,
+                    State.REWIND, this::addItemExample));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    State.ITEM,
                     HMEvents.START_SEGMENT_SUBITEM,
                     State.SUBITEM, this::initSubItem));
             rules.add(StateSAXEventRuleFactory.newRule(
@@ -99,9 +106,9 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
                     HMEvents.START_SEGMENT_EXAMPLE,
                     State.EXAMPLE, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.newRule(
-                    State.EXAMPLE,
+                    null, State.EXAMPLE, State.SUBITEM,
                     HMEvents.END_SEGMENT_EXAMPLE,
-                    State.REWIND, this::addExample));
+                    State.REWIND, this::addSubItemExample));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SUBITEM,
                     HMEvents.END_SEGMENT_SUBITEM,
@@ -118,6 +125,11 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
                     State.SECTION,
                     HMEvents.END_SECTION,
                     State.REWIND, this::addSection));
+            // Expect the unexpected
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    HMEvents.START_OTHER, State.OTHER));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    State.OTHER, HMEvents.END_OTHER, State.REWIND));
         }
         return rules;
     }
@@ -169,24 +181,36 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
         captureTextOff();
     }
 
+    protected void addItemExample() {
+        String example = getTextBuffer();
+        clearTextBuffer();
+        System.out.printf("example=%s%n", example);
+        @SuppressWarnings("unchecked")
+        List<String> examples = (List<String>) itemData.get(EXAMPLES_KEY);
+        if (examples == null) {
+            examples = new ArrayList<>();
+            itemData.put(EXAMPLES_KEY, examples);
+        }
+        examples.add(example);
+    }
+
     protected void initSubItem() {
         subitemData = new HashMap<>();
         clearTextBuffer();
         captureTextOff();
     }
 
-    protected void addExample() {
+    protected void addSubItemExample() {
     	String example = getTextBuffer();
     	clearTextBuffer();
         System.out.printf("example=%s%n", example);
         @SuppressWarnings("unchecked")
-        List<String> examples = (List<String>) itemData.get(EXAMPLES_KEY);
+        List<String> examples = (List<String>) subitemData.get(EXAMPLES_KEY);
         if (examples == null) {
             examples = new ArrayList<>();
             subitemData.put(EXAMPLES_KEY, examples);
         }
         examples.add(example);
-        example = null;
     }
 
     protected void addSubItem() {

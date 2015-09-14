@@ -146,4 +146,9 @@ public abstract class StateSAXEventRuleFactory {
         return newRule(stateGetter, event, stateTransition);
     }
 
+    public static <S> StateEventRule<S, SAXEvent> newRule(SAXEvent event, S transitionState) {
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState);
+        return newRule(null, event, stateTransition);
+    }
+
 }

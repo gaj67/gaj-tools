@@ -14,9 +14,11 @@ public abstract class HMEvents {
      *      <div class="pseg">*
      *          <i>tag</i>+  <b>word</b>*
      *          <div class="ds-list">*
+     *              <span class="illustration">example</span>?
      *              <div class="sds-list">*
-     *                  <span class="illustration">example</span>
+     *                  <span class="illustration">example</span>?
      *              </div>
+     *              <div class="notx">ignore this</div>?
      *          </div>
      *      </div>
      *  </section>
@@ -37,6 +39,8 @@ public abstract class HMEvents {
     public static final SAXEvent END_SEGMENT_ITEM = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "div");
     public static final SAXEvent END_SEGMENT = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "div");
     public static final SAXEvent END_SECTION = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "section");
+    public static final SAXEvent START_OTHER = SAXEventFactory.newEvent(SAXEventType.BEGIN_ELEMENT, "div");
+    public static final SAXEvent END_OTHER = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "div");
 
     private HMEvents() {}
 
