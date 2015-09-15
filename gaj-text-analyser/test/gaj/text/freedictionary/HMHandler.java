@@ -123,13 +123,23 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
                     State.REWIND, this::addSegment));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.SECTION,
+                    HMEvents.START_SECTION_REP,
+                    null, this::addSection));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    State.SECTION,
+                    HMEvents.END_SECTION_REP,
+                    null, this::initSection));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    State.SECTION,
                     HMEvents.END_SECTION,
                     State.REWIND, this::addSection));
             // Expect the unexpected
             rules.add(StateSAXEventRuleFactory.newRule(
-                    HMEvents.START_OTHER, State.OTHER));
+                    State.OTHER, SAXEventType.BEGIN_ELEMENT, State.OTHER));
             rules.add(StateSAXEventRuleFactory.newRule(
-                    State.OTHER, HMEvents.END_OTHER, State.REWIND));
+                    State.OTHER, SAXEventType.END_ELEMENT, State.REWIND));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    SAXEventType.BEGIN_ELEMENT, State.OTHER));
         }
         return rules;
     }

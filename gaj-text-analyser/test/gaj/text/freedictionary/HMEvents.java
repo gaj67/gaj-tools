@@ -21,9 +21,12 @@ public abstract class HMEvents {
      *              <div class="notx">ignore this</div>?
      *          </div>
      *      </div>
+     *      <hr class="hmsep"/>? (additional section data, including h2 and pseg)
      *  </section>
      */
     public static final SAXEvent START_SECTION = SAXEventFactory.newEvent(SAXEventType.BEGIN_ELEMENT, "section", "data-src", "hm");
+    public static final SAXEvent START_SECTION_REP = SAXEventFactory.newEvent(SAXEventType.BEGIN_ELEMENT, "hr", "class", "hmsep");
+    public static final SAXEvent END_SECTION_REP = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "hr");
     public static final SAXEvent START_SECTION_WORD = SAXEventFactory.newEvent(SAXEventType.BEGIN_ELEMENT, "h2");
     public static final SAXEvent END_SECTION_WORD = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "h2");
     public static final SAXEvent START_SEGMENT = SAXEventFactory.newEvent(SAXEventType.BEGIN_ELEMENT, "div", "class", "pseg");
@@ -39,8 +42,6 @@ public abstract class HMEvents {
     public static final SAXEvent END_SEGMENT_ITEM = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "div");
     public static final SAXEvent END_SEGMENT = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "div");
     public static final SAXEvent END_SECTION = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "section");
-    public static final SAXEvent START_OTHER = SAXEventFactory.newEvent(SAXEventType.BEGIN_ELEMENT, "div");
-    public static final SAXEvent END_OTHER = SAXEventFactory.newEvent(SAXEventType.END_ELEMENT, "div");
 
     private HMEvents() {}
 

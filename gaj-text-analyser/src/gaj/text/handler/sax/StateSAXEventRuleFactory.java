@@ -14,9 +14,9 @@ public abstract class StateSAXEventRuleFactory {
     private StateSAXEventRuleFactory() {}
 
     public static <S> StateEventRule<S, SAXEvent> newRule(
+            /*@Nullable*/ S previousState,
             /*@Nullable*/ S state,
             /*@Nullable*/ S parentState,
-            /*@Nullable*/ S previousState,
             /*@Nullable*/ SAXEventType eventType,
             /*@Nullable*/ String eventLabel,
             /*@Nullable*/ Map<String,String> eventProperties,
@@ -147,6 +147,19 @@ public abstract class StateSAXEventRuleFactory {
     }
 
     public static <S> StateEventRule<S, SAXEvent> newRule(SAXEvent event, S transitionState) {
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState);
+        return newRule(null, event, stateTransition);
+    }
+
+    public static <S> StateEventRule<S, SAXEvent> newRule(S state, SAXEventType eventType, S transitionState) {
+        StateGetter<S> stateGetter = StatefulFactory.newStateGetter(state);
+        SAXEvent event = SAXEventFactory.newEvent(eventType);
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState);
+        return newRule(stateGetter, event, stateTransition);
+    }
+
+    public static <S> StateEventRule<S, SAXEvent> newRule(SAXEventType eventType, S transitionState) {
+        SAXEvent event = SAXEventFactory.newEvent(eventType);
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState);
         return newRule(null, event, stateTransition);
     }
