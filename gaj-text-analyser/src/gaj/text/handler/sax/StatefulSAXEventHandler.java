@@ -22,6 +22,7 @@ public abstract class StatefulSAXEventHandler<S> extends SAXEventHandler impleme
      *
      * @return The (possibly null) state corresponding to null.
      */
+    @SuppressWarnings("null")
     @Override
     public /*@Nullable*/ S nullState() {
         return null;

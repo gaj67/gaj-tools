@@ -64,6 +64,7 @@ import java.util.List;
                 : (index == 0) ? getState() : ancestors.get(ancestors.size() - index);
     }
 
+    @SuppressWarnings("null")
     @Override
     public /*@Nullable*/ S nullState() {
         return null;

@@ -7,6 +7,8 @@ import java.util.Collection;
 
 public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStatefulSAXEventHandler<S> {
 
+    private static final boolean IS_TRACE = Boolean.parseBoolean(System.getProperty("trace", "false"));
+
     /**
      * Temporary place holder for the event that triggers a rule.
      */
@@ -30,19 +32,24 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
     @Override
     public void handle(SAXEvent event) {
         final Collection<StateEventRule<S, SAXEvent>> rules = getRules();
-        System.out.printf("Event: %s[%s]%s ", event.getType(), event.getLabel(), event.getProperties());
-        System.out.printf("Before: %s->%s(%s) ", getParentState(), getState(), getPreviousState());
+        if (IS_TRACE) {
+            System.out.printf("Event: %s[%s]%s ", event.getType(), event.getLabel(), event.getProperties());
+            System.out.printf("Before: %s->%s(%s) ", getParentState(), getState(), getPreviousState());
+        }
         int i = -1;
         for (StateEventRule<S, SAXEvent> rule : rules) {
         	i++;
             if (rule.matches(this, event)) {
-                System.out.printf("Have rule %d ", i);
+                if (IS_TRACE)
+                    System.out.printf("Have rule %d ", i);
                 execute(event, rule);
-                System.out.printf("After: %s->%s(%s)%n", getParentState(), getState(), getPreviousState());
+                if (IS_TRACE)
+                    System.out.printf("After: %s->%s(%s)%n", getParentState(), getState(), getPreviousState());
                 return;
             }
         }
-        System.out.println("No rule!");
+        if (IS_TRACE)
+            System.out.println("No rule!");
         execute(event, null);
     }
 

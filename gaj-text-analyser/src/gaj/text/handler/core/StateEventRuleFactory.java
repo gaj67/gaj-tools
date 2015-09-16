@@ -72,13 +72,13 @@ public abstract class StateEventRuleFactory {
             /*@Nullable*/ E event,
             /*@Nullable*/ StateTransition<S> stateTransition)
     {
-        return new StateEventRuleImpl<S, E>(stateGetter, event, stateTransition);
+        return new StateEventRuleImpl<>(stateGetter, event, stateTransition);
     }
 
     public static <S, T, V> StateEventRule<S, Event<T,V>> newRule(T eventType, Action action) {
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(action);
         Event<T, V> event = EventFactory.newEvent(eventType);
-        return new StateEventRuleImpl<S, Event<T,V>>(null, event, stateTransition);
+        return new StateEventRuleImpl<>(null, event, stateTransition);
     }
 
     public static <S, T, V> StateEventRule<S, Event<T,V>> newRule(
@@ -88,7 +88,7 @@ public abstract class StateEventRuleFactory {
         StateGetter<S> stateGetter = StatefulFactory.newStateGetter(state);
         Event<T,V> event = EventFactory.newEvent(eventType, eventLabel, eventAttrs);
         StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState);
-        return new StateEventRuleImpl<S, Event<T,V>>(stateGetter, event, stateTransition);
+        return new StateEventRuleImpl<>(stateGetter, event, stateTransition);
     }
 
 }

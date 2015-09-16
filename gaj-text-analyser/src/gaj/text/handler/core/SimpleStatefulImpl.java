@@ -29,6 +29,7 @@ import gaj.text.handler.Stateful;
     	prevState = toState(previousState);
     }
 
+    @SuppressWarnings("null")
     @Override
     public /*@Nullable*/ S nullState() {
         return null;

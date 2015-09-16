@@ -13,6 +13,8 @@ import java.util.Map;
 
 public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
 
+    private static final boolean IS_TRACE = Boolean.parseBoolean(System.getProperty("trace", "false"));
+
     private static final String SECTION_WORD_KEY = "word";
     private static final String SECTION_SEGMENTS_KEY = "segments";
     private static final String SEGMENT_WORDS_KEY = "words";
@@ -194,7 +196,8 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     protected void addItemExample() {
         String example = getTextBuffer();
         clearTextBuffer();
-        System.out.printf("example=%s%n", example);
+        if (IS_TRACE)
+            System.out.printf("example=%s%n", example);
         @SuppressWarnings("unchecked")
         List<String> examples = (List<String>) itemData.get(EXAMPLES_KEY);
         if (examples == null) {
@@ -213,7 +216,8 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     protected void addSubItemExample() {
     	String example = getTextBuffer();
     	clearTextBuffer();
-        System.out.printf("example=%s%n", example);
+        if (IS_TRACE)
+            System.out.printf("example=%s%n", example);
         @SuppressWarnings("unchecked")
         List<String> examples = (List<String>) subitemData.get(EXAMPLES_KEY);
         if (examples == null) {
@@ -224,7 +228,8 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     }
 
     protected void addSubItem() {
-        System.out.printf("subitemData=%s%n", subitemData);
+        if (IS_TRACE)
+            System.out.printf("subitemData=%s%n", subitemData);
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> subitems = (List<Map<String, Object>>) itemData.get(ITEM_SUBITEMS_KEY);
         if (subitems == null) {
@@ -236,7 +241,8 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     }
 
     protected void addItem() {
-        System.out.printf("itemData=%s%n", itemData);
+        if (IS_TRACE)
+            System.out.printf("itemData=%s%n", itemData);
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> items = (List<Map<String, Object>>) segmentData.get(SEGMENT_ITEMS_KEY);
         if (items == null) {
@@ -248,7 +254,8 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     }
 
     protected void addSegment() {
-        System.out.printf("segmentData=%s%n", segmentData);
+        if (IS_TRACE)
+            System.out.printf("segmentData=%s%n", segmentData);
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> segments = (List<Map<String, Object>>) sectionData.get(SECTION_SEGMENTS_KEY);
         if (segments == null) {
@@ -260,6 +267,7 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     }
 
     protected void addSection() {
+        // if (IS_TRACE)
         System.out.printf("sectionData=%s%n", sectionData);
         sectionData = null;
     }

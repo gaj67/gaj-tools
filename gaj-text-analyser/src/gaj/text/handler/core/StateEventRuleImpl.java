@@ -34,16 +34,6 @@ import gaj.text.handler.StateTransition;
         return ruleState == null || ruleState.equals(handlerState);
     }
 
-    private boolean matchesAncestralStates(StateGetter<S> stateGetter) {
-        final int numAncestors = this.stateGetter.numAncestralStates();
-        for (int i = 1; i <= numAncestors; i++) {
-            if (!matchesState(this.stateGetter.getAncestralState(i), stateGetter.getAncestralState(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     protected boolean matchesEvent(E event) {
         return this.event == null || this.event.matches(event);
     }
