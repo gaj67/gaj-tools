@@ -51,6 +51,12 @@ package gaj.text.freedictionary;
 	 * depending upon context.
 	 */
 	TAG(true),
+    /** 
+     * Indicates that a segment, item or sub-item POS tag feature is being obtained. 
+     * May transition to {@link #SEGMENT}, {@link #ITEM} or {@link #SUBITEM},
+     * depending upon context.
+     */
+    TAG_FEATURE(true),
 	/** 
 	 * Indicates that an item or sub-item example is being obtained. 
 	 * May transition to {@link #ITEM} or {@link #SUBITEM}, depending upon context.
@@ -63,7 +69,7 @@ package gaj.text.freedictionary;
     /**
      * Indicates some unexpected structural element that should be ignored.
      */
-    OTHER(null),
+    OTHER(null), 
 	;
 
 	private final boolean isTextual;

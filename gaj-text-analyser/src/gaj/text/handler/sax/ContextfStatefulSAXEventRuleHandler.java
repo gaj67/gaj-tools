@@ -95,6 +95,10 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
         }
     }
 
+    protected void appendTextBuffer(String text) {
+        buf.append(text);
+    }
+
     protected void clearTextBuffer() {
         buf.setLength(0);
     }

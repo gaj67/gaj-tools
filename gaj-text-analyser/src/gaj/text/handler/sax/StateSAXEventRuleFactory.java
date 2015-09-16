@@ -164,4 +164,16 @@ public abstract class StateSAXEventRuleFactory {
         return newRule(null, event, stateTransition);
     }
 
+    public static <S> StateEventRule<S, SAXEvent> newRule(S previousState, S state, SAXEvent event, S transitionState, Action postTransitionAction, Action preTransitionAction) {
+        StateGetter<S> stateGetter = StatefulFactory.newStateGetter(previousState, state);
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, preTransitionAction, postTransitionAction);
+        return newRule(stateGetter, event, stateTransition);
+    }
+
+    public static <S> StateEventRule<S, SAXEvent> newRule(S state, SAXEvent event, S transitionState, Action postTransitionAction, Action preTransitionAction) {
+        StateGetter<S> stateGetter = StatefulFactory.newStateGetter(state);
+        StateTransition<S> stateTransition = StatefulFactory.newStateTransition(transitionState, preTransitionAction, postTransitionAction);
+        return newRule(stateGetter, event, stateTransition);
+    }
+
 }

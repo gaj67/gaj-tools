@@ -1,5 +1,6 @@
 package gaj.text.freedictionary;
 
+import gaj.text.handler.Action;
 import gaj.text.handler.StateEventRule;
 import gaj.text.handler.sax.ContextfStatefulSAXEventRuleHandler;
 import gaj.text.handler.sax.SAXEvent;
@@ -67,15 +68,23 @@ public class HMHandler extends ContextfStatefulSAXEventRuleHandler<State> {
                     HMEvents.START_SEGMENT,
                     State.SEGMENT, this::initSegment));
             rules.add(StateSAXEventRuleFactory.newRule(
-                    State.SEGMENT,
+                    State.SECTION, State.SEGMENT,
                     HMEvents.START_SEGMENT_TAG,
                     State.TAG, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.newRule(
-                    State.TAG,
+                    State.SEGMENT, State.TAG,
                     HMEvents.END_SEGMENT_TAG,
                     State.REWIND, this::getSegmentTag));
             rules.add(StateSAXEventRuleFactory.newRule(
                     State.TAG, State.SEGMENT,
+                    HMEvents.START_SEGMENT_TAG,
+                    State.TAG_FEATURE, this::captureTextOn, (Action) () -> appendTextBuffer("[")));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    State.TAG_FEATURE,
+                    HMEvents.END_SEGMENT_TAG,
+                    State.REWIND, this::getSegmentTag, (Action) () -> appendTextBuffer("]")));
+            rules.add(StateSAXEventRuleFactory.newRule(
+                    State.SEGMENT,
                     HMEvents.START_SEGMENT_WORD,
                     State.WORD, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.newRule(
