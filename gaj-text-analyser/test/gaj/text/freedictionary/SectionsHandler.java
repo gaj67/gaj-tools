@@ -12,6 +12,9 @@ import gaj.text.handler.sax.SAXEvent;
         if (HMEvents.START_SECTION.matches(event)) {
             setHandler(new HMHandler());
             super.handle(event);
+        } else if (HCEvents.START_SECTION.matches(event)) {
+            setHandler(new HCHandler());
+            super.handle(event);
         } else if (HMEvents.END_SECTION.matches(event)) {
             super.handle(event);
             setHandler(null);

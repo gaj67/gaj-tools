@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStatefulSAXEventHandler<S> {
 
-    private static final boolean IS_TRACE = Boolean.parseBoolean(System.getProperty("trace", "false"));
+    private boolean IS_TRACE = Boolean.parseBoolean(System.getProperty("trace.handler", "false"));
 
     /**
      * Temporary place holder for the event that triggers a rule.
@@ -28,6 +28,10 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
     protected ContextfStatefulSAXEventRuleHandler() {}
 
     protected abstract Collection<StateEventRule<S, SAXEvent>> getRules();
+
+    protected void setTrace(boolean isTrace) {
+        IS_TRACE = isTrace;
+    }
 
     @Override
     public void handle(SAXEvent event) {
