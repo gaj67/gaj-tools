@@ -13,6 +13,7 @@ public interface ConsumerProducer<T> extends Consumer<T>, Producer<T> {
      * denoting the end of the sequence.
      * @return A value of true (or false) if the item has (or has not) been consumed.
      */
+    @Override
     boolean consume(/*@Nullable*/ T item);
 
     /**
@@ -21,6 +22,7 @@ public interface ConsumerProducer<T> extends Consumer<T>, Producer<T> {
      *
      * @return The item, or a value of null if the sequence has ended.
      */
+    @Override
     /*@Nullable*/ T produce();
 
 }
