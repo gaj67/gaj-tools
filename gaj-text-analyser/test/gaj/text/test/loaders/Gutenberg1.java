@@ -75,9 +75,11 @@ public class Gutenberg1 {
     private static List<String> getTags(String line) {
         List<String> tags = new ArrayList<>();
         int sidx = -1;
-        int lastIdx = line.indexOf("<wordforms>");
-        if (lastIdx < 0)
-            lastIdx = line.length();
+        int lastIdx = line.length();
+        int wfIdx = line.indexOf("<wordforms>");
+        if (wfIdx >= 0) lastIdx = wfIdx;
+        int etyIdx = line.indexOf("<ety>");
+        if (etyIdx >= 0) lastIdx = Math.min(lastIdx, etyIdx);
         if (line.contains("<mark>[Obs.]</mark>") || line.contains("<mark>[Archaic]</mark>"))
             lastIdx = -1;
         while (sidx < lastIdx) {
