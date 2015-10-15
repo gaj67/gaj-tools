@@ -113,8 +113,7 @@ public class Gutenberg {
         if (wfIdx >= 0) lastIdx = wfIdx;
         int etyIdx = line.indexOf("<ety>");
         if (etyIdx >= 0) lastIdx = Math.min(lastIdx, etyIdx);
-        if (line.contains("<mark>[Obs.]</mark>") || line.contains("<mark>[Archaic]</mark>"))
-            lastIdx = -1;
+        if (notInUse(line)) lastIdx = -1;
         while (sidx < lastIdx) {
             sidx = (sidx < 0) ? line.indexOf(START_OF_TAG) : line.indexOf(START_OF_TAG, sidx);
             if (sidx < 0 || sidx >= lastIdx) {
@@ -132,6 +131,10 @@ public class Gutenberg {
             tags.add(tag);
         }
         return tags;
+    }
+
+    private static boolean notInUse(String line) {
+        return line.contains("<mark>[Obs.]</mark>") || line.contains("<mark>[Archaic]</mark>") || line.contains("<mark>[Obs. or Scot.]</mark>");
     }
 
     private static void countTagTypes(Map<String,AtomicInteger> tagTypes, List<String> tags) {
