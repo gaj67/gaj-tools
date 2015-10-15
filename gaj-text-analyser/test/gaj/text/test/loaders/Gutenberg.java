@@ -4,13 +4,14 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Gutenberg1 {
+public class Gutenberg {
 
     private static final String START_OF_WORD = "<h1>";
     private static final String END_OF_WORD = "</h1>";
@@ -45,7 +46,7 @@ public class Gutenberg1 {
                 while (true) {
                     line = in.readLine();
                     if (line == null || line.contains("<h1>")) {
-                    	if (tags.size() == 1) {
+                        if (!tags.isEmpty()) {
                     		System.out.printf("%s -> %s%n", word, tags);
                     		countTagTypes(tagTypes, tags);
                     	}
@@ -80,10 +81,11 @@ public class Gutenberg1 {
             }
             values.add(value);
         }
-        for (Entry<String, List<String>> entry : subTypes.entrySet()) {
-            String key = entry.getKey();
-            List<String> values = entry.getValue();
-            System.out.printf("* %s[%d]:%n", key, values.size());
+        List<String> keys = new ArrayList<>(subTypes.keySet());
+        Collections.sort(keys);
+        for (String key : keys) {
+            List<String> values = subTypes.get(key);
+            System.out.printf("* %s: %d%n", key, values.size());
             for (String value : values) {
                 System.out.printf("  + %s%n", value);
             }
