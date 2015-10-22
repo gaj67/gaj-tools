@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Gutenberg {
@@ -28,6 +30,7 @@ public class Gutenberg {
 
     private static void read(String path) throws IOException {
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
+            Map<String, Set<String>> wordTags = new HashMap<>();
             Map<String,AtomicInteger> tagTypes = new HashMap<>();
             String line = null;
             wordloop: while (true) {
@@ -47,7 +50,7 @@ public class Gutenberg {
                     line = in.readLine();
                     if (line == null || line.contains("<h1>")) {
                         if (!tags.isEmpty()) {
-                    		System.out.printf("%s -> %s%n", word, tags);
+                            addWordTags(wordTags, word, tags);
                     		countTagTypes(tagTypes, tags);
                     	}
                         continue wordloop;
@@ -59,8 +62,28 @@ public class Gutenberg {
             }
             System.out.printf("#tag-types=%d%n", tagTypes.size());
             System.out.printf("tag-types=%n");
+            reportWordTags(wordTags);
             reportTagTypes(tagTypes);
         }
+    }
+
+    private static void addWordTags(Map<String, Set<String>> wordTags, String word, List<String> tags) {
+        Set<String> types = wordTags.get(word);
+        if (types == null) {
+            types = new HashSet<>();
+            wordTags.put(word, types);
+        }
+        types.addAll(tags);
+    }
+
+    private static void reportWordTags(Map<String, Set<String>> wordTags) {
+        List<String> words = new ArrayList<>(wordTags.keySet());
+        Collections.sort(words);
+        for (String word : words) {
+            Set<String> tags = wordTags.get(word);
+            System.out.printf("%s -> %s%n", word, tags);
+        }
+
     }
 
     private static void reportTagTypes(Map<String, AtomicInteger> tagTypes) {
@@ -134,7 +157,10 @@ public class Gutenberg {
     }
 
     private static boolean notInUse(String line) {
-        return line.contains("<mark>[Obs.]</mark>") || line.contains("<mark>[Archaic]</mark>") || line.contains("<mark>[Obs. or Scot.]</mark>");
+        return line.contains("<mark>[Obs.]</mark>")
+                || line.contains("<mark>Obs.</mark>")
+                || line.contains("<mark>[Archaic]</mark>")
+                || line.contains("<mark>[Obs. or Scot.]</mark>");
     }
 
     private static void countTagTypes(Map<String,AtomicInteger> tagTypes, List<String> tags) {
