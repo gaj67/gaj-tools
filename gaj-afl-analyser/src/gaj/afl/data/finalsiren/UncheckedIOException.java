@@ -7,14 +7,14 @@ import java.io.IOException;
  */
 public class UncheckedIOException extends IllegalStateException {
 
-	private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1L;
 
-	protected UncheckedIOException(String message, Throwable e) {
-		super(message, e);
-	}
+    protected UncheckedIOException(String message, Throwable e) {
+        super(message, e);
+    }
 
-	protected UncheckedIOException(IOException e) {
-		super(e.getMessage(), e);
-	}
+    protected UncheckedIOException(IOException e) {
+        super(e.getMessage(), e);
+    }
 
 }

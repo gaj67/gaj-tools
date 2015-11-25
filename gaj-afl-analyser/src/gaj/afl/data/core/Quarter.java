@@ -5,9 +5,9 @@ package gaj.afl.data.core;
  */
 public enum Quarter {
 
-	First, Second, Third, Fourth;
+    First, Second, Third, Fourth;
 
-	public String toString() {
-		return "Q" + (ordinal() + 1);
-	}
+    public String toString() {
+        return "Q" + (ordinal() + 1);
+    }
 }

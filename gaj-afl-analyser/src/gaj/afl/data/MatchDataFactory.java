@@ -7,13 +7,14 @@ import gaj.afl.data.store.MatchFetcher;
  */
 public abstract class MatchDataFactory {
 
-    private MatchDataFactory() {}
+    private MatchDataFactory() {
+    }
 
     /**
      * @return A manager for obtaining historical match data.
      */
     public static MatchFetcher getMatchFetcher() {
-	return gaj.afl.data.finalsiren.MatchDataFactory.newMatchFetcher();
+        return gaj.afl.data.finalsiren.MatchDataFactory.newMatchFetcher();
     }
 
 }

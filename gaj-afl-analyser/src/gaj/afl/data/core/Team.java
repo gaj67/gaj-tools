@@ -14,11 +14,11 @@ public enum Team {
     private final int identifier;
 
     private Team(int identifier) {
-	this.identifier = identifier;
+        this.identifier = identifier;
     }
 
     public int getIdentifier() {
-	return identifier;
+        return identifier;
     }
 
     /**
@@ -28,11 +28,11 @@ public enum Team {
      * @return The team type.
      */
     public static Team fromExternal(String value) {
-	Team team = valueOf(value.replace(' ', '_'));
-	if (team == null) {
-	    throw new IllegalArgumentException("Unknown team: " + value);
-	}
-	return team;
+        Team team = valueOf(value.replace(' ', '_'));
+        if (team == null) {
+            throw new IllegalArgumentException("Unknown team: " + value);
+        }
+        return team;
     }
 
     /**
@@ -41,6 +41,6 @@ public enum Team {
      * @return The string representation.
      */
     public String toExternal() {
-	return name().replace('_', ' ');
+        return name().replace('_', ' ');
     }
 };

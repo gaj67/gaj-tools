@@ -33,8 +33,8 @@ public enum Location {
 
     Gabba(9, -27.4859, 153.0381, "Brisbane Cricket Ground", "Brisbane", "QLD"),
 
-    Manuka_Oval(10, -35.318102,149.134598, "Manuka Oval", "Griffith", "ACT"),
-    StarTrack_Oval(10, -35.318102,149.134598, "Manuka Oval", "Griffith", "ACT"),
+    Manuka_Oval(10, -35.318102, 149.134598, "Manuka Oval", "Griffith", "ACT"),
+    StarTrack_Oval(10, -35.318102, 149.134598, "Manuka Oval", "Griffith", "ACT"),
 
     Marrara(11, -12.3992, 130.8872, "Marrara Stadium", "Darwin", "NT"),
     TIO_Stadium(11, -12.3992, 130.8872, "Marrara Stadium", "Darwin", "NT"),
@@ -97,8 +97,7 @@ public enum Location {
 
     Western_Oval(-1, 0, 0, "Western Oval", "Geelong North", "VIC"),
 
-    AFL_Park(-1, 0, 0, "?", "?", "?"),
-    ;
+    AFL_Park(-1, 0, 0, "?", "?", "?"), ;
 
     private final int identifier;
     private final double latitude;
@@ -108,12 +107,12 @@ public enum Location {
     private final String state;
 
     private Location(int identifier, double latitude, double longitude, String ground, String suburb, String state) {
-	this.identifier = identifier;
-	this.latitude = latitude;
-	this.longitude = longitude;
-	this.ground = ground;
-	this.suburb = suburb;
-	this.state = state;
+        this.identifier = identifier;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.ground = ground;
+        this.suburb = suburb;
+        this.state = state;
     }
 
     /**
@@ -123,11 +122,11 @@ public enum Location {
      * @return The match location.
      */
     public static Location fromExternal(String location) {
-	return Location.valueOf(toInternal(location));
+        return Location.valueOf(toInternal(location));
     }
 
     private static String toInternal(String location) {
-	return location.replace(' ', '_').replace("'", "__").replace(".", "___");
+        return location.replace(' ', '_').replace("'", "__").replace(".", "___");
     }
 
     /**
@@ -136,36 +135,36 @@ public enum Location {
      * @return The string representation.
      */
     public String toExternal() {
-	return name().replace("___", ".").replace("__", "'").replace('_', ' ');
+        return name().replace("___", ".").replace("__", "'").replace('_', ' ');
     }
 
     @Override
     public String toString() {
-	return toExternal();
+        return toExternal();
     }
 
     public double getLatitude() {
-	return latitude;
+        return latitude;
     }
 
     public double getLongitude() {
-	return longitude;
+        return longitude;
     }
 
     public String getGround() {
-	return ground;
+        return ground;
     }
 
     public String getSuburb() {
-	return suburb;
+        return suburb;
     }
 
     public String getState() {
-	return state;
+        return state;
     }
 
     public int getIdentifier() {
-	return identifier;
+        return identifier;
     }
 
 }

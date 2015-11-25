@@ -10,14 +10,13 @@ import gaj.impl.vector.VectorFactory;
 
 /**
  * Provides the basic methods for analysing one-step Markov sequences.
- * <p/>Note: It is assumed for the static methods that all sequences are full,
- * i.e. have a definite start and end.
- * For sequences with an unknown start, use P(s_t) in place of P(s_1|start).
- * For sequences with an unknown end, use a ones-vector in place of P(end|s_T).
+ * <p/>
+ * Note: It is assumed for the static methods that all sequences are full, i.e. have a definite start and end. For sequences with an unknown start, use P(s_t) in place of
+ * P(s_1|start). For sequences with an unknown end, use a ones-vector in place of P(end|s_T).
  */
 public class MarkovOneStepAnalyser {
 
-    //**********************************************************************
+    // **********************************************************************
     // Dynamic methods.
 
     /**
@@ -48,13 +47,13 @@ public class MarkovOneStepAnalyser {
      * @see {@link #newAnalyser}().
      */
     private MarkovOneStepAnalyser(DataVector initProbs, DataVector finalProbs,
-	    DataVector stateProbs, DataMatrix transProbs)
+            DataVector stateProbs, DataMatrix transProbs)
     {
-	this.initProbs = initProbs;
-	this.finalProbs = finalProbs;
-	this.stateProbs = stateProbs;
-	this.onesProbs = VectorFactory.newFixedVector(initProbs.size(), 1);
-	this.transProbs = transProbs;
+        this.initProbs = initProbs;
+        this.finalProbs = finalProbs;
+        this.stateProbs = stateProbs;
+        this.onesProbs = VectorFactory.newFixedVector(initProbs.size(), 1);
+        this.transProbs = transProbs;
     }
 
     /**
@@ -69,9 +68,9 @@ public class MarkovOneStepAnalyser {
      * @return The T x S matrix of posterior probabilities.
      */
     public DataMatrix posteriorProbabilities(DataMatrix obsProbs, SequenceType type) {
-	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
-	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
-	return MarkovOneStepLibrary.posteriorProbabilities(obsProbs, startProbs, endProbs, transProbs);
+        DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
+        DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
+        return MarkovOneStepLibrary.posteriorProbabilities(obsProbs, startProbs, endProbs, transProbs);
     }
 
     /**
@@ -84,9 +83,9 @@ public class MarkovOneStepAnalyser {
      * @return The prior state sequence probability.
      */
     public double priorProbability(IndexVector stateSequence, SequenceType type) {
-	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
-	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
-	return MarkovOneStepLibrary.priorProbability(startProbs, endProbs, transProbs, stateSequence);
+        DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
+        DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
+        return MarkovOneStepLibrary.priorProbability(startProbs, endProbs, transProbs, stateSequence);
     }
 
     /**
@@ -101,9 +100,9 @@ public class MarkovOneStepAnalyser {
      * @return The joint state--observation sequence probability.
      */
     public double jointProbability(IndexVector stateSequence, DataMatrix obsProbs, SequenceType type) {
-	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
-	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
-	return MarkovOneStepLibrary.jointProbability(startProbs, endProbs, transProbs, stateSequence, obsProbs);
+        DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
+        DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
+        return MarkovOneStepLibrary.jointProbability(startProbs, endProbs, transProbs, stateSequence, obsProbs);
     }
 
     /**
@@ -116,9 +115,9 @@ public class MarkovOneStepAnalyser {
      * @return The observation sequence probability.
      */
     public double dataProbability(DataMatrix obsProbs, SequenceType type) {
-	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
-	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
-	return MarkovOneStepLibrary.dataProbability(startProbs, endProbs, transProbs, obsProbs);
+        DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
+        DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
+        return MarkovOneStepLibrary.dataProbability(startProbs, endProbs, transProbs, obsProbs);
     }
 
     /**
@@ -133,16 +132,16 @@ public class MarkovOneStepAnalyser {
      * or a value of null if this is potentially ambiguous.
      */
     public IndexVector stateSequence(DataMatrix obsProbs, SequenceType type) {
-	DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
-	DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
-	IndexVector stateSeq = MarkovOneStepLibrary.getOptimalStateSequence(startProbs, endProbs, transProbs, obsProbs);
-	if (stateSeq == null) {
-	    throw new IllegalStateException("Could not uniquely determine the maximal state sequence");
-	}
-	return stateSeq;
+        DataVector startProbs = type.isInitiated() ? initProbs : stateProbs;
+        DataVector endProbs = type.isTerminated() ? finalProbs : onesProbs;
+        IndexVector stateSeq = MarkovOneStepLibrary.getOptimalStateSequence(startProbs, endProbs, transProbs, obsProbs);
+        if (stateSeq == null) {
+            throw new IllegalStateException("Could not uniquely determine the maximal state sequence");
+        }
+        return stateSeq;
     }
 
-    //**********************************************************************
+    // **********************************************************************
     // Static methods.
 
     /**
@@ -157,22 +156,22 @@ public class MarkovOneStepAnalyser {
      * @return An initialised Markov analsyer.
      */
     public static MarkovOneStepAnalyser newAnalyser(
-	    DataVector initCounts, DataVector finalCounts,
-	    DataMatrix transCounts)
+            DataVector initCounts, DataVector finalCounts,
+            DataMatrix transCounts)
     {
-	// Normalises C(s_1|start) to give P(s_1|start).
-	DataVector initProbs = VectorFactory.divide(initCounts, initCounts.sum());
-	// Computes C_{nonterm}(s_j) = sum_{s_{j+1}} C(s_j, s_{j+1}).
-	DataVector nonFinalCounts = MatrixFactory.sumColumns(transCounts);
-	// Computes C(s_j) = C_{nonterm}(s_j) + C_{term}(s_j).
-	DataVector stateCounts = VectorFactory.add(nonFinalCounts, finalCounts);
-	// Computes P(end|s_T) = C(end|s_T) / C(s_T).
-	DataVector finalProbs = VectorFactory.divide(finalCounts, stateCounts);
-	// Normalises C(s_j) to give P(s_j).
-	DataVector stateProbs = VectorFactory.divide(stateCounts, stateCounts.sum());
-	// Computes P(s_{j+1}|s_j) = C(s_j, s_{j+1}) / C_{nonterm}(s_j).
-	DataMatrix transProbs = MatrixFactory.divideRows(transCounts, nonFinalCounts);
-	return new MarkovOneStepAnalyser(initProbs, finalProbs, stateProbs, transProbs);
+        // Normalises C(s_1|start) to give P(s_1|start).
+        DataVector initProbs = VectorFactory.divide(initCounts, initCounts.sum());
+        // Computes C_{nonterm}(s_j) = sum_{s_{j+1}} C(s_j, s_{j+1}).
+        DataVector nonFinalCounts = MatrixFactory.sumColumns(transCounts);
+        // Computes C(s_j) = C_{nonterm}(s_j) + C_{term}(s_j).
+        DataVector stateCounts = VectorFactory.add(nonFinalCounts, finalCounts);
+        // Computes P(end|s_T) = C(end|s_T) / C(s_T).
+        DataVector finalProbs = VectorFactory.divide(finalCounts, stateCounts);
+        // Normalises C(s_j) to give P(s_j).
+        DataVector stateProbs = VectorFactory.divide(stateCounts, stateCounts.sum());
+        // Computes P(s_{j+1}|s_j) = C(s_j, s_{j+1}) / C_{nonterm}(s_j).
+        DataMatrix transProbs = MatrixFactory.divideRows(transCounts, nonFinalCounts);
+        return new MarkovOneStepAnalyser(initProbs, finalProbs, stateProbs, transProbs);
     }
 
     /**
@@ -185,8 +184,8 @@ public class MarkovOneStepAnalyser {
      * columns and s_t across the rows.
      */
     public static DataMatrix computeTransitions(DataMatrix jointProbs) {
-	WritableMatrix transProbs = MatrixFactory.newMatrix(jointProbs);
-	MatrixFactory.normaliseRowSums(transProbs);
-	return transProbs;
+        WritableMatrix transProbs = MatrixFactory.newMatrix(jointProbs);
+        MatrixFactory.normaliseRowSums(transProbs);
+        return transProbs;
     }
 }

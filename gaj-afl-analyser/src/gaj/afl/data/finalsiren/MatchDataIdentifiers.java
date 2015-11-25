@@ -6,11 +6,12 @@ import java.io.File;
 /**
  * Provides mappings between match data objects and identifiers, e.g. file names.
  */
-/*package-private*/ abstract class MatchDataIdentifiers {
+/* package-private */abstract class MatchDataIdentifiers {
 
     private static final File PATH_TO_DATA = new File("data/finalsiren/match/");
 
-    private MatchDataIdentifiers() {}
+    private MatchDataIdentifiers() {
+    }
 
     /**
      * Obtains a globally unique identifier for a team.
@@ -18,8 +19,8 @@ import java.io.File;
      * @param team - The team.
      * @return The team identifier.
      */
-    /*package-private*/ static int getTeamIdentifier(Team team) {
-	return team.getIdentifier();
+    /* package-private */static int getTeamIdentifier(Team team) {
+        return team.getIdentifier();
     }
 
     /**
@@ -28,8 +29,8 @@ import java.io.File;
      * @param team - The team.
      * @return The team identifier string.
      */
-    /*package-private*/ static String getTeamIdentifierString(Team team) {
-	return "Team" + getTeamIdentifier(team);
+    /* package-private */static String getTeamIdentifierString(Team team) {
+        return "Team" + getTeamIdentifier(team);
     }
 
     /**
@@ -38,17 +39,17 @@ import java.io.File;
      * @param teamId - The team identifier.
      * @return The team identifier string.
      */
-    /*package-private*/ static String getTeamIdentifierString(int teamId) {
-	return "Team" + teamId;
+    /* package-private */static String getTeamIdentifierString(int teamId) {
+        return "Team" + teamId;
     }
 
-    /*package-private*/ static Team getTeamFromIdentifier(int id) {
-	for (Team team : Team.values()) {
-	    if (team.getIdentifier() == id) {
-		return team;
-	    }
-	}
-	throw new IllegalArgumentException("No team found for identifier: " + id);
+    /* package-private */static Team getTeamFromIdentifier(int id) {
+        for (Team team : Team.values()) {
+            if (team.getIdentifier() == id) {
+                return team;
+            }
+        }
+        throw new IllegalArgumentException("No team found for identifier: " + id);
     }
 
     /**
@@ -58,8 +59,8 @@ import java.io.File;
      * @param year - The match year.
      * @return The team-year matches identifier.
      */
-    /*package-private*/ static String getTeamYearIdentifierString(Team team, int year) {
-	return "" + year + "-" + getTeamIdentifierString(team);
+    /* package-private */static String getTeamYearIdentifierString(Team team, int year) {
+        return "" + year + "-" + getTeamIdentifierString(team);
     }
 
     /**
@@ -69,16 +70,16 @@ import java.io.File;
      * @param year - The match year.
      * @return The team-year matches identifier.
      */
-    /*package-private*/ static String getTeamYearIdentifierString(int teamId, int year) {
-	return "" + year + "-" + getTeamIdentifierString(teamId);
+    /* package-private */static String getTeamYearIdentifierString(int teamId, int year) {
+        return "" + year + "-" + getTeamIdentifierString(teamId);
     }
 
-    /*package-private*/ static File getMatchDataPath() {
-	return PATH_TO_DATA;
+    /* package-private */static File getMatchDataPath() {
+        return PATH_TO_DATA;
     }
 
-    /*package-private*/ static File getMatchDataPath(int year) {
-	return new File(PATH_TO_DATA, "" + year);
+    /* package-private */static File getMatchDataPath(int year) {
+        return new File(PATH_TO_DATA, "" + year);
     }
 
     /**
@@ -88,8 +89,8 @@ import java.io.File;
      * @param year - The match year.
      * @return The team-year matches file path.
      */
-    /*package-private*/ static File getMatchDataPath(Team team, int year) {
-	return getMatchDataPath(getTeamIdentifier(team), year);
+    /* package-private */static File getMatchDataPath(Team team, int year) {
+        return getMatchDataPath(getTeamIdentifier(team), year);
     }
 
     /**
@@ -99,8 +100,8 @@ import java.io.File;
      * @param year - The match year.
      * @return The team-year matches file path.
      */
-    /*package-private*/ static File getMatchDataPath(int teamId, int year) {
-	return new File(getMatchDataPath(year), getTeamYearIdentifierString(teamId, year) + ".htm");
+    /* package-private */static File getMatchDataPath(int teamId, int year) {
+        return new File(getMatchDataPath(year), getTeamYearIdentifierString(teamId, year) + ".htm");
     }
 
 }

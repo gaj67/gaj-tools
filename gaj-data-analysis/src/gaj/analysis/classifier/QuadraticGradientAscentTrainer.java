@@ -14,32 +14,31 @@ import gaj.data.vector.DataVector;
  */
 public class QuadraticGradientAscentTrainer extends GradientAscentTrainer {
 
-	/**
-	 * Binds the training algorithm to the given classifier and scorers.
-	 * 
-	 * @param classifier - The classifier to be trained.
-	 * @param scorers - The data scorers to measure classifier performance.
-	 */
-	protected QuadraticGradientAscentTrainer(ParameterisedClassifier classifier,
-			DataScorer[] scorers) {
-		super(classifier, scorers);
-	}
+    /**
+     * Binds the training algorithm to the given classifier and scorers.
+     * 
+     * @param classifier - The classifier to be trained.
+     * @param scorers - The data scorers to measure classifier performance.
+     */
+    protected QuadraticGradientAscentTrainer(ParameterisedClassifier classifier, DataScorer[] scorers) {
+        super(classifier, scorers);
+    }
 
-	@Override
-	protected void recomputeStepSize(ClassifierScoreInfo newTrainingScore) {
-		final DataVector g0 = getTrainingScore().getGradient();
-		final DataVector g1 = newTrainingScore.getGradient();
-		double s = CurveFactory.quadraticOptimumScaling(g0, g1, direction);
-		stepSize *= (s > 0 && s < 1) ? s : 0.5;
-	}
+    @Override
+    protected void recomputeStepSize(ClassifierScoreInfo newTrainingScore) {
+        final DataVector g0 = getTrainingScore().getGradient();
+        final DataVector g1 = newTrainingScore.getGradient();
+        double s = CurveFactory.quadraticOptimumScaling(g0, g1, direction);
+        stepSize *= (s > 0 && s < 1) ? s : 0.5;
+    }
 
-	@Override
-	protected void recomputeStepSizeAndDirection() {
-		final DataVector g1 = getTrainingScore().getGradient();
-		final DataVector g0 = getPrevTrainingScore().getGradient();
-		double s = CurveFactory.quadraticOptimumScaling(g0, g1, direction);
-		stepSize *= Math.abs(s - 1);
-		direction = g1;
-	}
+    @Override
+    protected void recomputeStepSizeAndDirection() {
+        final DataVector g1 = getTrainingScore().getGradient();
+        final DataVector g0 = getPrevTrainingScore().getGradient();
+        double s = CurveFactory.quadraticOptimumScaling(g0, g1, direction);
+        stepSize *= Math.abs(s - 1);
+        direction = g1;
+    }
 
 }

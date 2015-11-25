@@ -10,55 +10,55 @@ import gaj.data.vector.DataVector;
  */
 public abstract class AbstractMatrix<T extends DataVector> implements DataMatrix {
 
-	protected final int numRows;
-	protected final int numColumns;
+    protected final int numRows;
+    protected final int numColumns;
 
-	protected AbstractMatrix(int numRows, int numColumns) {
-		this.numRows = numRows;
-		this.numColumns = numColumns;
-	}
+    protected AbstractMatrix(int numRows, int numColumns) {
+        this.numRows = numRows;
+        this.numColumns = numColumns;
+    }
 
-	final public int numRows() {
-		return numRows;
-	}
+    final public int numRows() {
+        return numRows;
+    }
 
-	final public int numColumns() {
-		return numColumns;
-	}
+    final public int numColumns() {
+        return numColumns;
+    }
 
-	final public int size() {
-		return numRows * numColumns;
-	}
+    final public int size() {
+        return numRows * numColumns;
+    }
 
-	public Iterable<T> getRows() {
-		return new MatrixIterative<T>(numRows) {
-			@Override
-			protected T get(int row) {
-				return getRow(row);
-			}
-		};
-	}
+    public Iterable<T> getRows() {
+        return new MatrixIterative<T>(numRows) {
+            @Override
+            protected T get(int row) {
+                return getRow(row);
+            }
+        };
+    }
 
-	public abstract T getRow(int row);
+    public abstract T getRow(int row);
 
-	public Iterable<T> getColumns() {
-		return new MatrixIterative<T>(numColumns) {
-			@Override
-			protected T get(int column) {
-				return getColumn(column);
-			}
-		};
-	}
+    public Iterable<T> getColumns() {
+        return new MatrixIterative<T>(numColumns) {
+            @Override
+            protected T get(int column) {
+                return getColumn(column);
+            }
+        };
+    }
 
-	public abstract T getColumn(int column);
+    public abstract T getColumn(int column);
 
-	/**
-	 * Adds the current matrix values to the given matrix.
-	 * 
-	 * @param matrix - A modifiable matrix.
-	 */
-	protected void addTo(WritableMatrix matrix) {
-		matrix.add(this);
-	}
+    /**
+     * Adds the current matrix values to the given matrix.
+     * 
+     * @param matrix - A modifiable matrix.
+     */
+    protected void addTo(WritableMatrix matrix) {
+        matrix.add(this);
+    }
 
 }

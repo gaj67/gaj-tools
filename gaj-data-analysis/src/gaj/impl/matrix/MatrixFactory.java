@@ -16,7 +16,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class MatrixFactory {
 
-    private MatrixFactory() {}
+    private MatrixFactory() {
+    }
 
     /**
      * Creates an immutable matrix of the required size, full of zeroes.
@@ -26,7 +27,7 @@ public class MatrixFactory {
      * @return The zero-data matrix.
      */
     public static DataMatrix newZeroMatrix(int numRows, int numColumns) {
-	return new ZeroMatrix(numRows, numColumns);
+        return new ZeroMatrix(numRows, numColumns);
     }
 
     /**
@@ -36,7 +37,7 @@ public class MatrixFactory {
      * @return The data matrix.
      */
     public static WritableMatrix newMatrix(double[][] data) {
-	return new WritableRowMatrix(data);
+        return new WritableRowMatrix(data);
     }
 
     /**
@@ -46,21 +47,21 @@ public class MatrixFactory {
      * @return The writable matrix copy.
      */
     public static WritableMatrix newMatrix(DataMatrix matrix) {
-	final int numRows = matrix.numRows();
-	final int numColumns = matrix.numColumns();
-	double[][] copyData = new double[numRows][];
-	if (matrix instanceof RowArrayMatrix) {
-	    int row = 0;
-	    for (double[] rowData : ((RowArrayMatrix) matrix).getArray()) {
-		copyData[row++] = Arrays.copyOf(rowData, numColumns);
-	    }
-	} else {
-	    int row = 0;
-	    for (DataVector rowVec : matrix.getRows()) {
-		copyData[row++] = VectorFactory.toArray(rowVec);
-	    }
-	}
-	return new WritableRowMatrix(copyData);
+        final int numRows = matrix.numRows();
+        final int numColumns = matrix.numColumns();
+        double[][] copyData = new double[numRows][];
+        if (matrix instanceof RowArrayMatrix) {
+            int row = 0;
+            for (double[] rowData : ((RowArrayMatrix) matrix).getArray()) {
+                copyData[row++] = Arrays.copyOf(rowData, numColumns);
+            }
+        } else {
+            int row = 0;
+            for (DataVector rowVec : matrix.getRows()) {
+                copyData[row++] = VectorFactory.toArray(rowVec);
+            }
+        }
+        return new WritableRowMatrix(copyData);
     }
 
     /**
@@ -71,20 +72,20 @@ public class MatrixFactory {
      * @return The data matrix.
      */
     public static WritableMatrix newMatrix(int numRows, int numColumns) {
-	return new WritableRowMatrix(numRows, numColumns);
+        return new WritableRowMatrix(numRows, numColumns);
     }
 
     public static DataMatrix scale(DataMatrix matrix, double multiplier) {
-	if (multiplier == 1) {
-	    return matrix;
-	}
-	if (matrix instanceof ZeroMatrix) {
-	    return matrix;
-	}
-	if (multiplier == 0) {
-	    return new ZeroMatrix(matrix.numRows(), matrix.numColumns());
-	}
-	return new ScaledMatrix(matrix, multiplier);
+        if (multiplier == 1) {
+            return matrix;
+        }
+        if (matrix instanceof ZeroMatrix) {
+            return matrix;
+        }
+        if (multiplier == 0) {
+            return new ZeroMatrix(matrix.numRows(), matrix.numColumns());
+        }
+        return new ScaledMatrix(matrix, multiplier);
     }
 
     /**
@@ -95,11 +96,11 @@ public class MatrixFactory {
      */
     @SuppressWarnings("unchecked")
     public static WritableMatrix add(DataMatrix... matrices) {
-	WritableMatrix summedMatrix = newMatrix(matrices[0].numRows(), matrices[0].numColumns());
-	for (DataMatrix matrix : matrices) {
-	    ((AbstractMatrix<DataVector>) matrix).addTo(summedMatrix);
-	}
-	return summedMatrix;
+        WritableMatrix summedMatrix = newMatrix(matrices[0].numRows(), matrices[0].numColumns());
+        for (DataMatrix matrix : matrices) {
+            ((AbstractMatrix<DataVector>) matrix).addTo(summedMatrix);
+        }
+        return summedMatrix;
     }
 
     /**
@@ -110,19 +111,19 @@ public class MatrixFactory {
      * @return A length-N vector, y = A*x.
      */
     public static DataVector multiply(DataMatrix matrix, DataVector vector) {
-	if (matrix instanceof RowArrayMatrix) {
-	    return multiply((RowArrayMatrix) matrix, vector);
-	}
-	throw new NotImplementedException();
+        if (matrix instanceof RowArrayMatrix) {
+            return multiply((RowArrayMatrix) matrix, vector);
+        }
+        throw new NotImplementedException();
     }
 
     private static DataVector multiply(RowArrayMatrix matrix, DataVector vector) {
-	final int numRows = matrix.numRows();
-	WritableVector result = VectorFactory.newVector(numRows);
-	for (int row = 0; row < numRows; row++) {
-	    result.set(row, VectorFactory.dot(matrix.getRow(row), vector));
-	}
-	return result;
+        final int numRows = matrix.numRows();
+        WritableVector result = VectorFactory.newVector(numRows);
+        for (int row = 0; row < numRows; row++) {
+            result.set(row, VectorFactory.dot(matrix.getRow(row), vector));
+        }
+        return result;
     }
 
     /**
@@ -133,25 +134,25 @@ public class MatrixFactory {
      * @return A length-M vector, y = x*A.
      */
     public static DataVector multiply(DataVector vector, DataMatrix matrix) {
-	if (matrix instanceof RowArrayMatrix) {
-	    return multiply(vector, (RowArrayMatrix) matrix);
-	}
-	throw new NotImplementedException();
+        if (matrix instanceof RowArrayMatrix) {
+            return multiply(vector, (RowArrayMatrix) matrix);
+        }
+        throw new NotImplementedException();
     }
 
     private static DataVector multiply(DataVector vector, RowArrayMatrix matrix) {
-	// TODO Better handle a sparse vector.
-	WritableVector result = VectorFactory.newVector(matrix.numColumns());
-	final int numRows = matrix.numRows();
-	for (int row = 0; row < numRows; row++) {
-	    double value = vector.get(row);
-	    if (value == 0) {
-		continue;
-	    }
-	    DataVector scaledVec = VectorFactory.scale(matrix.getRow(row), value);
-	    ((AbstractVector) scaledVec).addTo(result);
-	}
-	return result;
+        // TODO Better handle a sparse vector.
+        WritableVector result = VectorFactory.newVector(matrix.numColumns());
+        final int numRows = matrix.numRows();
+        for (int row = 0; row < numRows; row++) {
+            double value = vector.get(row);
+            if (value == 0) {
+                continue;
+            }
+            DataVector scaledVec = VectorFactory.scale(matrix.getRow(row), value);
+            ((AbstractVector) scaledVec).addTo(result);
+        }
+        return result;
     }
 
     /**
@@ -162,23 +163,23 @@ public class MatrixFactory {
      * @return The scalar product.
      */
     public static double dot(DataMatrix matrix1, DataMatrix matrix2) {
-	double sum = 0;
-	int row = 0;
-	for (DataVector vec1 : matrix1.getRows()) {
-	    DataVector vec2 = matrix2.getRow(row++);
-	    sum += VectorFactory.dot(vec1, vec2);
-	}
-	return sum;
+        double sum = 0;
+        int row = 0;
+        for (DataVector vec1 : matrix1.getRows()) {
+            DataVector vec2 = matrix2.getRow(row++);
+            sum += VectorFactory.dot(vec1, vec2);
+        }
+        return sum;
     }
 
     // TODO Similar methods for ColumnMatrix.
 
     public static void display(String prefix, DataMatrix matrix, String suffix) {
-	System.out.printf("%s [%n", prefix);
-	for (DataVector row : matrix.getRows()) {
-	    VectorFactory.display("", row, "\n");
-	}
-	System.out.printf("]%s", suffix);
+        System.out.printf("%s [%n", prefix);
+        for (DataVector row : matrix.getRows()) {
+            VectorFactory.display("", row, "\n");
+        }
+        System.out.printf("]%s", suffix);
     }
 
     /**
@@ -188,10 +189,10 @@ public class MatrixFactory {
      * @return A length-NM vector.
      */
     public static WritableVector asVector(WritableMatrix matrix) {
-	if (matrix instanceof FlatArrayMatrix) {
-	    return VectorFactory.newVector(((FlatArrayMatrix) matrix).getArray());
-	}
-	return new WritableVectorMatrix(matrix);
+        if (matrix instanceof FlatArrayMatrix) {
+            return VectorFactory.newVector(((FlatArrayMatrix) matrix).getArray());
+        }
+        return new WritableVectorMatrix(matrix);
     }
 
     /**
@@ -201,10 +202,10 @@ public class MatrixFactory {
      * @return A length-NM vector.
      */
     public static DataVector asVector(DataMatrix matrix) {
-	if (matrix instanceof FlatArrayMatrix) {
-	    return VectorFactory.newVector(((FlatArrayMatrix) matrix).getArray());
-	}
-	return new VectorMatrix(matrix);
+        if (matrix instanceof FlatArrayMatrix) {
+            return VectorFactory.newVector(((FlatArrayMatrix) matrix).getArray());
+        }
+        return new VectorMatrix(matrix);
     }
 
     /**
@@ -213,9 +214,9 @@ public class MatrixFactory {
      * @param matrix - The matrix to be normalised.
      */
     public static void normaliseRowSums(WritableMatrix matrix) {
-	for (WritableVector row : matrix.getRows()) {
-	    row.multiply(1.0 / row.sum());
-	}
+        for (WritableVector row : matrix.getRows()) {
+            row.multiply(1.0 / row.sum());
+        }
     }
 
     /**
@@ -229,19 +230,19 @@ public class MatrixFactory {
      * on dimensions and values.
      */
     public static boolean equals(DataMatrix m1, DataMatrix m2, double accuracy) {
-	final int numRows = m1.numRows();
-	if (m2.numRows() != numRows) {
-	    return false;
-	}
-	if (m2.numColumns() != m1.numColumns()) {
-	    return false;
-	}
-	for (int row = 0; row < numRows; row++) {
-	    if (!VectorFactory.equals(m1.getRow(row), m2.getRow(row), accuracy)) {
-		return false;
-	    }
-	}
-	return true;
+        final int numRows = m1.numRows();
+        if (m2.numRows() != numRows) {
+            return false;
+        }
+        if (m2.numColumns() != m1.numColumns()) {
+            return false;
+        }
+        for (int row = 0; row < numRows; row++) {
+            if (!VectorFactory.equals(m1.getRow(row), m2.getRow(row), accuracy)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -251,34 +252,35 @@ public class MatrixFactory {
      * @return The length-N column vector total.
      */
     public static WritableVector sumColumns(DataMatrix matrix) {
-	final int numStates = matrix.numRows();
-	WritableVector vec = VectorFactory.newVector(numStates);
-	for (int row = 0; row < numStates; row++) {
-	    vec.set(row, matrix.getRow(row).sum());
-	}
-	return vec;
+        final int numStates = matrix.numRows();
+        WritableVector vec = VectorFactory.newVector(numStates);
+        for (int row = 0; row < numStates; row++) {
+            vec.set(row, matrix.getRow(row).sum());
+        }
+        return vec;
     }
 
     /**
      * Divides each row of the matrix by the corresponding non-zero element of the divisor vector.
-     * <p/>Note: If a divisor is zero, then the corresponding row will be zero-valued.
+     * <p/>
+     * Note: If a divisor is zero, then the corresponding row will be zero-valued.
      *
      * @param matrix - The N x M matrix.
      * @param divisors - The length-N column vector of divisors.
      * @return The N x M scaled matrix.
      */
     public static WritableMatrix divideRows(DataMatrix matrix, DataVector divisors) {
-	WritableMatrix newMat = MatrixFactory.newMatrix(matrix);
-	final int numRows = matrix.numRows();
-	for (int row = 0; row < numRows; row++) {
-	    double divisor = divisors.get(row);
-	    if (divisor == 0.0) {
-		newMat.setRow(row, VectorFactory.newZeroVector(matrix.numColumns()));
-	    } else {
-		newMat.multiplyRow(row, 1.0 / divisor);
-	    }
-	}
-	return newMat;
+        WritableMatrix newMat = MatrixFactory.newMatrix(matrix);
+        final int numRows = matrix.numRows();
+        for (int row = 0; row < numRows; row++) {
+            double divisor = divisors.get(row);
+            if (divisor == 0.0) {
+                newMat.setRow(row, VectorFactory.newZeroVector(matrix.numColumns()));
+            } else {
+                newMat.multiplyRow(row, 1.0 / divisor);
+            }
+        }
+        return newMat;
     }
 
 }

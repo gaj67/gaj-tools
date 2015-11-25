@@ -5,26 +5,26 @@ import java.util.List;
 
 public class AddableClassVector implements ClassVector {
 
-   private final List<Integer> values = new ArrayList<Integer>();
+    private final List<Integer> values = new ArrayList<Integer>();
 
-   public void add(int value) {
-      values.add(value);
-   }
+    public void add(int value) {
+        values.add(value);
+    }
 
-   public int[] dense() {
-      int[] vector = new int[values.size()];
-      int i = 0;
-      for (Integer value : values)
-         vector[i++] = value;
-      return vector;
-   }
+    public int[] dense() {
+        int[] vector = new int[values.size()];
+        int i = 0;
+        for (Integer value : values)
+            vector[i++] = value;
+        return vector;
+    }
 
-   public int length() {
-      return values.size();
-   }
+    public int length() {
+        return values.size();
+    }
 
-   public int get(int index) {
-      return values.get(index);
-   }
+    public int get(int index) {
+        return values.get(index);
+    }
 
 }

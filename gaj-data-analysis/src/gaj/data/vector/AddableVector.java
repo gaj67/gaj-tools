@@ -26,8 +26,8 @@ public interface AddableVector extends DataVector {
 
     /**
      * Adds the given vector to the current vector.
-     * <p/>Note: This is not guaranteed to give the most
-     * efficient result - use the factory method.
+     * <p/>
+     * Note: This is not guaranteed to give the most efficient result - use the factory method.
      *
      * @param vector - A data vector.
      */

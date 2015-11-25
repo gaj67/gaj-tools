@@ -1,6 +1,5 @@
 package gaj.afl.data.store;
 
-
 import gaj.afl.data.core.Match;
 import java.util.Collection;
 

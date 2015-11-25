@@ -1,6 +1,5 @@
 package gaj.afl.data.store;
 
-
 import gaj.afl.data.core.Match;
 import gaj.afl.data.core.Round;
 import gaj.afl.data.core.Team;
@@ -41,6 +40,6 @@ public interface MatchFetcher {
      * @param round - The match round of the year.
      * @return The match, or a value of null if the match could not be found (e.g. the team had a bye).
      */
-    public /*@Nullable*/ Match getMatch(Team team, int year, Round round);
+    public/* @Nullable */Match getMatch(Team team, int year, Round round);
 
 }

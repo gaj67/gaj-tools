@@ -19,7 +19,7 @@ public enum SequenceType {
      * @return A value of true (or false) if the sequence has (or does not have) an implicit initial state.
      */
     public boolean isInitiated() {
-	return (this == Start || this == Complete);
+        return (this == Start || this == Complete);
     }
 
     /**
@@ -28,7 +28,7 @@ public enum SequenceType {
      * @return A value of true (or false) if the sequence has (or does not have) an implicit terminal state.
      */
     public boolean isTerminated() {
-	return (this == End || this == Complete);
+        return (this == End || this == Complete);
     }
 
 }

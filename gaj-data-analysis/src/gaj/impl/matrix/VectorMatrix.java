@@ -8,34 +8,34 @@ import gaj.impl.vector.AbstractVector;
  */
 public class VectorMatrix extends AbstractVector {
 
-	protected final DataMatrix matrix;
-	protected final int numColumns;
+    protected final DataMatrix matrix;
+    protected final int numColumns;
 
-	protected VectorMatrix(DataMatrix matrix) {
-		super(matrix.numRows() * matrix.numColumns());
-		this.matrix = matrix;
-		this.numColumns = matrix.numColumns();
-	}
+    protected VectorMatrix(DataMatrix matrix) {
+        super(matrix.numRows() * matrix.numColumns());
+        this.matrix = matrix;
+        this.numColumns = matrix.numColumns();
+    }
 
-	@Override
-	public double get(int pos) {
-		// Row-wise, pos = numColumns * row + column.
-		return matrix.get(pos / numColumns, pos % numColumns);
-	}
+    @Override
+    public double get(int pos) {
+        // Row-wise, pos = numColumns * row + column.
+        return matrix.get(pos / numColumns, pos % numColumns);
+    }
 
-	@Override
-	public boolean isDense() {
-		return false;
-	}
+    @Override
+    public boolean isDense() {
+        return false;
+    }
 
-	@Override
-	public boolean isSparse() {
-		return false;
-	}
+    @Override
+    public boolean isSparse() {
+        return false;
+    }
 
-	@Override
-	public boolean isCompound() {
-		return true;
-	}
+    @Override
+    public boolean isCompound() {
+        return true;
+    }
 
 }

@@ -1,7 +1,6 @@
 package gaj.impl.matrix;
 
 import gaj.data.vector.DataVector;
-
 import java.util.NoSuchElementException;
 
 /**
@@ -10,37 +9,37 @@ import java.util.NoSuchElementException;
  */
 public abstract class MatrixIterative<T extends DataVector> extends VectorIterator<T> {
 
-	private final int length;
-	private int pos = 0;
+    private final int length;
+    private int pos = 0;
 
-	/**
-	 * Specifies the number of vectors in the matrix.
-	 * 
-	 * @param length - The matrix 'length'.
-	 */
-	protected MatrixIterative(int length) {
-		this.length = length;
-	}
-	
-	@Override
-	public boolean hasNext() {
-		return (pos < length);
-	}
+    /**
+     * Specifies the number of vectors in the matrix.
+     * 
+     * @param length - The matrix 'length'.
+     */
+    protected MatrixIterative(int length) {
+        this.length = length;
+    }
 
-	@Override
-	public T next() {
-		if (pos >= length)
-			throw new NoSuchElementException("End of iteration");
-		return get(pos++);
-	}
+    @Override
+    public boolean hasNext() {
+        return (pos < length);
+    }
 
-	/**
-	 * Obtains the vector at the specified 'position' in the matrix.
-	 * 
-	 * @param pos - The index position of the vector. 
-	 * (starting from 0).
-	 * @return The vector.
-	 */
-	protected abstract T get(int pos);
+    @Override
+    public T next() {
+        if (pos >= length)
+            throw new NoSuchElementException("End of iteration");
+        return get(pos++);
+    }
+
+    /**
+     * Obtains the vector at the specified 'position' in the matrix.
+     * 
+     * @param pos - The index position of the vector.
+     * (starting from 0).
+     * @return The vector.
+     */
+    protected abstract T get(int pos);
 
 }

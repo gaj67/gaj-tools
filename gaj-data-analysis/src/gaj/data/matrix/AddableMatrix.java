@@ -44,8 +44,8 @@ public interface AddableMatrix extends DataMatrix {
 
     /**
      * Adds the given matrix to the current matrix.
-     * <p/>Note: This is not guaranteed to
-     * be efficient.
+     * <p/>
+     * Note: This is not guaranteed to be efficient.
      *
      * @param matrix - The matrix to add.
      */

@@ -1,7 +1,6 @@
 package gaj.impl.vector;
 
 import java.util.Iterator;
-
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -9,9 +8,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public abstract class DataIterator<T> implements Iterator<T> {
 
-	@Override
-	public void remove() {
-		throw new NotImplementedException();
-	}
+    @Override
+    public void remove() {
+        throw new NotImplementedException();
+    }
 
 }

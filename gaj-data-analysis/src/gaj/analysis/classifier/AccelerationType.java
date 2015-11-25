@@ -5,10 +5,10 @@ package gaj.analysis.classifier;
  */
 public enum AccelerationType {
 
-	/** No curve fitting. */
-	Linear,
-	/** Fit a quadratic curve. */
-	Quadratic,
-	/** Fit a cubic curve. */
-	Cubic;
+    /** No curve fitting. */
+    Linear,
+    /** Fit a quadratic curve. */
+    Quadratic,
+    /** Fit a cubic curve. */
+    Cubic;
 }

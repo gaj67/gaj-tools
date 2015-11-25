@@ -20,15 +20,15 @@ public enum Round {
     private final String externalValue;
 
     private Round() {
-	this.externalValue = "R" + (ordinal() + 1);
+        this.externalValue = "R" + (ordinal() + 1);
     }
 
     private Round(String value) {
-	this.externalValue = value;
+        this.externalValue = value;
     }
 
     public String toExternal() {
-	return externalValue;
+        return externalValue;
     }
 
     /**
@@ -36,9 +36,9 @@ public enum Round {
      *
      * @return The previous round, or a value of null if there is no previous round.
      */
-    public /*@Nullable*/ Round prevRound() {
-	int prev = ordinal() - 1;
-	return (prev < 0) ? null : values()[prev];
+    public/* @Nullable */Round prevRound() {
+        int prev = ordinal() - 1;
+        return (prev < 0) ? null : values()[prev];
     }
 
     /**
@@ -46,9 +46,9 @@ public enum Round {
      *
      * @return The next round, or a value of null if there is no next round.
      */
-    public /*@Nullable*/ Round nextRound() {
-	int next = ordinal() + 1;
-	return (next >= values().length) ? null : values()[next];
+    public/* @Nullable */Round nextRound() {
+        int next = ordinal() + 1;
+        return (next >= values().length) ? null : values()[next];
     }
 
     /**
@@ -58,11 +58,11 @@ public enum Round {
      * @return The match outcome.
      */
     public static Round fromExternal(String value) {
-	for (Round round : values()) {
-	    if (round.externalValue.equals(value)) {
-		return round;
-	    }
-	}
-	throw new IllegalArgumentException("Unknown match round: " + value);
+        for (Round round : values()) {
+            if (round.externalValue.equals(value)) {
+                return round;
+            }
+        }
+        throw new IllegalArgumentException("Unknown match round: " + value);
     }
 };

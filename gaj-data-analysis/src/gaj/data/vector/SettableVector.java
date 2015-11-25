@@ -8,21 +8,21 @@ package gaj.data.vector;
  */
 public interface SettableVector extends DataVector {
 
-	/**
-	 * Sets the value of a vector element.
-	 * 
-	 * @param pos - The index position of the element 
-	 * (counting from 0).
-	 * @param value - The new element value.
-	 */
-	void set(int pos, double value);
+    /**
+     * Sets the value of a vector element.
+     * 
+     * @param pos - The index position of the element
+     * (counting from 0).
+     * @param value - The new element value.
+     */
+    void set(int pos, double value);
 
-	/**
-	 * Copies the given vector values into the
-	 * current vector.
-	 * 
-	 * @param vector - A data vector.
-	 */
-	void set(DataVector vector);
+    /**
+     * Copies the given vector values into the
+     * current vector.
+     * 
+     * @param vector - A data vector.
+     */
+    void set(DataVector vector);
 
 }

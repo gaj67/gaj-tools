@@ -1,9 +1,7 @@
 package gaj.impl.matrix;
 
 import gaj.data.vector.DataVector;
-
 import java.util.Iterator;
-
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -11,14 +9,14 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public abstract class VectorIterator<T extends DataVector> implements Iterator<T>, Iterable<T> {
 
-	@Override
-	public Iterator<T> iterator() {
-		return this;
-	}
+    @Override
+    public Iterator<T> iterator() {
+        return this;
+    }
 
-	@Override
-	public void remove() {
-		throw new NotImplementedException();
-	}
+    @Override
+    public void remove() {
+        throw new NotImplementedException();
+    }
 
 }

@@ -7,19 +7,19 @@ package gaj.afl.data.core;
  */
 public interface Score {
 
-	/**
-	 * @return The number of goals scored.
-	 */
-	public int numGoals();
+    /**
+     * @return The number of goals scored.
+     */
+    public int numGoals();
 
-	/**
-	 * @return The number of behinds scored.
-	 */
-	public int numBehinds();
+    /**
+     * @return The number of behinds scored.
+     */
+    public int numBehinds();
 
-	/**
-	 * @return The number of points scored.
-	 */
-	public int numPoints();
+    /**
+     * @return The number of points scored.
+     */
+    public int numPoints();
 
 }

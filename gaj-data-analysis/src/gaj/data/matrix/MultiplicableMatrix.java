@@ -60,8 +60,8 @@ public interface MultiplicableMatrix extends DataMatrix {
 
     /**
      * Post-multiplies the current matrix by the current matrix.
-     * <p/>Note: This is not guaranteed to
-     * be efficient.
+     * <p/>
+     * Note: This is not guaranteed to be efficient.
      *
      * @param matrix - The matrix to add.
      */
