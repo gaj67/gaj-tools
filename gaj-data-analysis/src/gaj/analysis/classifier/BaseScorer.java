@@ -93,7 +93,7 @@ public abstract class BaseScorer implements DataScorer {
                     @Override
                     public DatumScore next() {
                         final GoldDatum datum = iter.next();
-                        final DataVector probs = classifier.classify(datum.getFeatures());
+                        final DataVector probs = classifier.posteriors(datum.getFeatures());
                         return getDatumScore(datum, probs);
                     }
                 };
@@ -108,7 +108,7 @@ public abstract class BaseScorer implements DataScorer {
         for (GoldDatum datum : data) {
             final double weight = datum.getWeight();
             sumWeights += weight;
-            DataVector probs = classifier.classify(datum.getFeatures());
+            DataVector probs = classifier.posteriors(datum.getFeatures());
             final double unweightedScore = getScore(probs, datum.getClassIndex());
             sumScores += weight * unweightedScore;
         }
@@ -126,7 +126,7 @@ public abstract class BaseScorer implements DataScorer {
             for (GoldDatum datum : data) {
                 final double weight = datum.getWeight();
                 sumWeights += weight;
-                DataVector probs = classifier.classify(datum.getFeatures());
+                DataVector probs = classifier.posteriors(datum.getFeatures());
                 DatumScore datumScore = getDatumScore(datum, probs);
                 sumScores += weight * datumScore.getScore();
                 DataVector gradient = VectorFactory.scale(classifier.getGradient(datumScore), weight);
@@ -139,7 +139,7 @@ public abstract class BaseScorer implements DataScorer {
         }
     }
 
-    private ClassifierScoreInfo getClassifierScore(final double score, final/* @Nullable */DataVector gradient) {
+    private ClassifierScoreInfo getClassifierScore(final double score, final /*@Nullable*/ DataVector gradient) {
         return new ClassifierScoreInfo() {
             @Override
             public boolean hasGradient() {
@@ -163,7 +163,7 @@ public abstract class BaseScorer implements DataScorer {
     private DatumScore getDatumScore(final GoldDatum datum, final DataVector probs) {
         final double score = getScore(probs, datum.getClassIndex());
         return new DatumScore() {
-            private/* @MonotonicNonNull */DataVector gradient = null;
+            private /*@MonotonicNonNull*/ DataVector gradient = null;
 
             @Override
             public double getScore() {

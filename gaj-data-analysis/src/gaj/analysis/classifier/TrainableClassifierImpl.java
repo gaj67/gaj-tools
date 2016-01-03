@@ -29,8 +29,8 @@ import gaj.data.vector.DataVector;
     }
 
     @Override
-    public DataVector classify(DataVector features) {
-        return classifier.classify(features);
+    public DataVector posteriors(DataVector features) {
+        return classifier.posteriors(features);
     }
 
     @Override

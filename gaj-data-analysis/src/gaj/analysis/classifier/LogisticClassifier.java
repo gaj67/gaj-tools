@@ -25,7 +25,7 @@ public class LogisticClassifier extends BaseClassifier {
     }
 
     @Override
-    public DataVector classify(DataVector features) {
+    public DataVector posteriors(DataVector features) {
         DataVector weights = MatrixFactory.multiply(matParams, features);
         double[] posteriors = new double[numClasses];
         posteriors[Cm1] = 1;
