@@ -5,12 +5,12 @@ import gaj.data.vector.DataVector;
 /**
  * Wraps a vector together with a deferred multiplier.
  */
-/* package-private */class ScaledVector extends AbstractVector {
+/*package-private*/ class ScaledVector extends AbstractVector {
 
     private final double multiplier;
     private final DataVector vector;
 
-    /* package-private */ScaledVector(DataVector vector, double multiplier) {
+    /*package-private*/ ScaledVector(DataVector vector, double multiplier) {
         super(vector.size());
         this.vector = vector;
         this.multiplier = multiplier;

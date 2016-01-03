@@ -1,8 +1,7 @@
 package gaj.common.encoding;
 
-import com.unboundid.util.Base64;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
+import java.util.Base64;
 
 /**
  * Encapsulates simple methods to aid in the use of HTTP Basic authentication.
@@ -12,6 +11,14 @@ public class BasicAuth {
 
     private static final String BASIC_SEPARATOR = ":";
 
+    private static String encode(String str) {
+        return Base64.getEncoder().encodeToString(str.getBytes());
+    }
+
+    private static byte[] decode(String str) {
+        return Base64.getDecoder().decode(str);
+    }
+
     /**
      * Converts the supplied user credentials into a basic authorisation.
      *
@@ -20,7 +27,7 @@ public class BasicAuth {
      * @return The basic authorisation.
      */
     public static String toBasic(String loginName, String password) {
-        return Base64.encode(loginName + BASIC_SEPARATOR + password);
+        return encode(loginName + BASIC_SEPARATOR + password);
     }
 
     /**
@@ -34,7 +41,7 @@ public class BasicAuth {
         StringBuilder buf = new StringBuilder(loginName);
         buf.append(BASIC_SEPARATOR);
         buf.append(password);
-        return Base64.encode(buf.toString());
+        return encode(buf.toString());
     }
 
     /**
@@ -46,11 +53,11 @@ public class BasicAuth {
      */
     public static String[] fromBasic(String auth) {
         try {
-            String[] parts = new String(Base64.decode(auth), "utf-8").split(BASIC_SEPARATOR, 2);
+            String[] parts = new String(decode(auth), "utf-8").split(BASIC_SEPARATOR, 2);
             if (parts.length == 2) {
                 return parts;
             } // else fall through...
-        } catch (UnsupportedEncodingException | ParseException e) {
+        } catch (UnsupportedEncodingException e) {
             // Fall through...
         }
         throw new IllegalArgumentException("Invalid authorisation");

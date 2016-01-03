@@ -21,8 +21,7 @@ public class TextInputter {
 
     public static char[] readHiddenInputDialog(final String prompt) {
         final JPasswordField jpf = new JPasswordField();
-        JOptionPane jop = new JOptionPane(jpf, JOptionPane.QUESTION_MESSAGE,
-                JOptionPane.OK_CANCEL_OPTION);
+        JOptionPane jop = new JOptionPane(jpf, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
         JDialog dialog = jop.createDialog(prompt);
         dialog.addComponentListener(new ComponentAdapter() {
             @Override
@@ -48,8 +47,7 @@ public class TextInputter {
 
     public static String readInputDialog(final String prompt) {
         final JTextField jf = new JTextField();
-        JOptionPane jop = new JOptionPane(jf, JOptionPane.QUESTION_MESSAGE,
-                JOptionPane.OK_CANCEL_OPTION);
+        JOptionPane jop = new JOptionPane(jf, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
         JDialog dialog = jop.createDialog(prompt);
         dialog.addComponentListener(new ComponentAdapter() {
             @Override

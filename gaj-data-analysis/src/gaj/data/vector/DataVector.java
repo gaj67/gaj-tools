@@ -14,6 +14,7 @@ public interface DataVector extends DataObject, Iterable<Double> {
     /**
      * @return The number of data elements in the vector.
      */
+    @Override
     int size();
 
     /**
@@ -43,6 +44,7 @@ public interface DataVector extends DataObject, Iterable<Double> {
      * 
      * @return An element iterator.
      */
+    @Override
     Iterator<Double> iterator();
 
     // ***************************************
