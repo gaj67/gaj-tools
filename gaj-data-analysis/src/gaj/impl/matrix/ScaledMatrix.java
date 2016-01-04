@@ -1,19 +1,21 @@
 package gaj.impl.matrix;
 
+import gaj.common.annotations.PackagePrivate;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
+import gaj.data.object.RepresentationType;
 import gaj.data.vector.DataVector;
 import gaj.impl.vector.VectorFactory;
 
 /**
  * Implements the scaling of an arbitrary data matrix.
  */
-/* package-private */class ScaledMatrix extends AbstractMatrix<DataVector> implements DataMatrix {
+@PackagePrivate class ScaledMatrix extends AbstractMatrix<DataVector> implements DataMatrix {
 
     private final DataMatrix matrix;
     private final double multiplier;
 
-    /* package-private */ScaledMatrix(DataMatrix matrix, double multiplier) {
+    @PackagePrivate ScaledMatrix(DataMatrix matrix, double multiplier) {
         super(matrix.numRows(), matrix.numColumns());
         this.matrix = matrix;
         this.multiplier = multiplier;
@@ -46,18 +48,8 @@ import gaj.impl.vector.VectorFactory;
     }
 
     @Override
-    public boolean isDense() {
-        return matrix.isDense();
-    }
-
-    @Override
-    public boolean isSparse() {
-        return matrix.isSparse();
-    }
-
-    @Override
-    public boolean isCompound() {
-        return matrix.isCompound();
+    public RepresentationType representationType() {
+        return matrix.representationType();
     }
 
 }

@@ -1,16 +1,18 @@
 package gaj.impl.vector;
 
+import gaj.common.annotations.PackagePrivate;
+import gaj.data.object.RepresentationType;
 import gaj.data.vector.DataVector;
 
 /**
  * Wraps a vector together with a deferred multiplier.
  */
-/*package-private*/ class ScaledVector extends AbstractVector {
+@PackagePrivate class ScaledVector extends AbstractVector {
 
     private final double multiplier;
     private final DataVector vector;
 
-    /*package-private*/ ScaledVector(DataVector vector, double multiplier) {
+    @PackagePrivate ScaledVector(DataVector vector, double multiplier) {
         super(vector.size());
         this.vector = vector;
         this.multiplier = multiplier;
@@ -38,18 +40,8 @@ import gaj.data.vector.DataVector;
     }
 
     @Override
-    public boolean isDense() {
-        return vector.isDense();
-    }
-
-    @Override
-    public boolean isSparse() {
-        return vector.isSparse();
-    }
-
-    @Override
-    public boolean isCompound() {
-        return vector.isCompound();
+    public RepresentationType representationType() {
+        return vector.representationType();
     }
 
 }

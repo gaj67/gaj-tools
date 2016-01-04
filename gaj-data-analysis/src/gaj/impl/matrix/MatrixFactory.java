@@ -205,7 +205,7 @@ public class MatrixFactory {
         if (matrix instanceof FlatArrayMatrix) {
             return VectorFactory.newVector(((FlatArrayMatrix) matrix).getArray());
         }
-        return new VectorMatrix(matrix);
+        return new RowMatrixVector(matrix);
     }
 
     /**

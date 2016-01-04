@@ -1,5 +1,7 @@
 package gaj.impl.vector;
 
+import gaj.data.object.RepresentationType;
+
 public abstract class SparseVector extends AbstractVector {
 
     protected SparseVector(int length) {
@@ -7,18 +9,8 @@ public abstract class SparseVector extends AbstractVector {
     }
 
     @Override
-    public boolean isDense() {
-        return false;
-    }
-
-    @Override
-    public boolean isSparse() {
-        return true;
-    }
-
-    @Override
-    public boolean isCompound() {
-        return false;
+    public RepresentationType representationType() {
+        return RepresentationType.SPARSE;
     }
 
 }

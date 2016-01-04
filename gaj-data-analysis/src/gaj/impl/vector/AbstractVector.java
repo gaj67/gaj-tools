@@ -1,5 +1,6 @@
 package gaj.impl.vector;
 
+import gaj.data.object.StructureType;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 import java.util.Iterator;
@@ -19,8 +20,18 @@ public abstract class AbstractVector implements DataVector {
     }
 
     @Override
-    public int size() {
+    final public int size() {
         return length;
+    }
+
+    @Override
+    final public StructureType structureType() {
+        return StructureType.VECTOR;
+    }
+
+    @Override
+    final public int numDimensions() {
+        return 1;
     }
 
     @Override

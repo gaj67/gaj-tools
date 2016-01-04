@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
  * Indicates that a type is restricted in visibility to its defining package.
  */
 @Documented
-@Target(ElementType.TYPE)
+@Target({ ElementType.TYPE, ElementType.CONSTRUCTOR })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PackagePrivate {}

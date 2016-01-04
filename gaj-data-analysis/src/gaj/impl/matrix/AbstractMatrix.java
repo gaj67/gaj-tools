@@ -2,6 +2,7 @@ package gaj.impl.matrix;
 
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.WritableMatrix;
+import gaj.data.object.StructureType;
 import gaj.data.vector.DataVector;
 
 /**
@@ -18,18 +19,32 @@ public abstract class AbstractMatrix<T extends DataVector> implements DataMatrix
         this.numColumns = numColumns;
     }
 
+    @Override
     final public int numRows() {
         return numRows;
     }
 
+    @Override
     final public int numColumns() {
         return numColumns;
     }
 
+    @Override
     final public int size() {
         return numRows * numColumns;
     }
 
+    @Override
+    final public int numDimensions() {
+        return 2;
+    }
+
+    @Override
+    final public StructureType structureType() {
+        return StructureType.MATRIX;
+    }
+
+    @Override
     public Iterable<T> getRows() {
         return new MatrixIterative<T>(numRows) {
             @Override
@@ -39,8 +54,10 @@ public abstract class AbstractMatrix<T extends DataVector> implements DataMatrix
         };
     }
 
+    @Override
     public abstract T getRow(int row);
 
+    @Override
     public Iterable<T> getColumns() {
         return new MatrixIterative<T>(numColumns) {
             @Override
@@ -50,6 +67,7 @@ public abstract class AbstractMatrix<T extends DataVector> implements DataMatrix
         };
     }
 
+    @Override
     public abstract T getColumn(int column);
 
     /**

@@ -7,7 +7,7 @@ import gaj.data.vector.WritableVector;
 /**
  * Presents a non-flat writable matrix as a flat writable vector.
  */
-public class WritableVectorMatrix extends VectorMatrix implements WritableVector {
+public class WritableVectorMatrix extends RowMatrixVector implements WritableVector {
 
     protected final int numRows;
 

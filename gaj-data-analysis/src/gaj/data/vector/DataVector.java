@@ -12,12 +12,6 @@ public interface DataVector extends DataObject, Iterable<Double> {
     // Intrinsic properties of the vector.
 
     /**
-     * @return The number of data elements in the vector.
-     */
-    @Override
-    int size();
-
-    /**
      * Calculates the Euclidean norm of the vector.
      * 
      * @return The vector norm.

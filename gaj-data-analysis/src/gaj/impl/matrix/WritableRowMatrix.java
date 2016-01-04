@@ -1,5 +1,6 @@
 package gaj.impl.matrix;
 
+import gaj.common.annotations.PackagePrivate;
 import gaj.data.matrix.DataMatrix;
 import gaj.data.matrix.RowArrayMatrix;
 import gaj.data.matrix.WritableMatrix;
@@ -9,16 +10,16 @@ import gaj.data.vector.WritableVector;
 import gaj.impl.vector.VectorFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-/*package-private*/class WritableRowMatrix extends DenseMatrix<WritableVector> implements WritableMatrix, RowArrayMatrix {
+@PackagePrivate class WritableRowMatrix extends DenseMatrix<WritableVector> implements WritableMatrix, RowArrayMatrix {
 
     private final double[][] data;
 
-    /* package-private */WritableRowMatrix(double[][] data) {
+    @PackagePrivate WritableRowMatrix(double[][] data) {
         super(data.length, data[0].length);
         this.data = data;
     }
 
-    /* package-private */WritableRowMatrix(int numRows, int numColumns) {
+    @PackagePrivate WritableRowMatrix(int numRows, int numColumns) {
         super(numRows, numColumns);
         this.data = new double[numRows][numColumns];
     }

@@ -7,6 +7,20 @@ package gaj.data.object;
 public interface DataObject {
 
     /**
+     * Indicates the type of data structure.
+     * 
+     * @return The structure type.
+     */
+    StructureType structureType();
+
+    /**
+     * Indicates the type of representation of the data structure.
+     * 
+     * @return The representation type.
+     */
+    RepresentationType representationType();
+
+    /**
      * Indicates the total number of elements in the data structure.
      * 
      * @return The size of the data.
@@ -14,25 +28,11 @@ public interface DataObject {
     int size();
 
     /**
-     * Indicates whether or not the data structure has an explicit representation of all elements.
+     * Indicates the number of dimensions of the data structure.
      * 
-     * @return A value of true (or false) if each element is (or is not) represented.
+     * @return The number of dimensions.
      */
-    boolean isDense();
-
-    /**
-     * Indicates whether or not the data structure has an explicit representation of only non-zero elements.
-     * 
-     * @return A value of true (or false) if only non-zero elements are (or are not) represented.
-     */
-    boolean isSparse();
-
-    /**
-     * Indicates whether or not the data structure has an unknown representation of elements.
-     * 
-     * @return A value of true (or false) if the data object is (or is not) composed of one or more sub-objects.
-     */
-    boolean isCompound();
+    int numDimensions();
 
     /**
      * Indicates the size of the data structure along each dimension.

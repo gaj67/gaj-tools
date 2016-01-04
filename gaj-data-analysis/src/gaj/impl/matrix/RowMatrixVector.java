@@ -1,17 +1,18 @@
 package gaj.impl.matrix;
 
 import gaj.data.matrix.DataMatrix;
+import gaj.data.object.RepresentationType;
 import gaj.impl.vector.AbstractVector;
 
 /**
- * Presents a matrix as a flat vector.
+ * Presents a matrix as a flat vector of concatenated rows.
  */
-public class VectorMatrix extends AbstractVector {
+public class RowMatrixVector extends AbstractVector {
 
     protected final DataMatrix matrix;
     protected final int numColumns;
 
-    protected VectorMatrix(DataMatrix matrix) {
+    protected RowMatrixVector(DataMatrix matrix) {
         super(matrix.numRows() * matrix.numColumns());
         this.matrix = matrix;
         this.numColumns = matrix.numColumns();
@@ -24,18 +25,8 @@ public class VectorMatrix extends AbstractVector {
     }
 
     @Override
-    public boolean isDense() {
-        return false;
-    }
-
-    @Override
-    public boolean isSparse() {
-        return false;
-    }
-
-    @Override
-    public boolean isCompound() {
-        return true;
+    final public RepresentationType representationType() {
+        return RepresentationType.COMPOUND;
     }
 
 }

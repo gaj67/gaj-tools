@@ -1,15 +1,16 @@
 package gaj.impl.matrix;
 
+import gaj.common.annotations.PackagePrivate;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
 import gaj.impl.vector.VectorFactory;
 
-/*package-private*/class ZeroMatrix extends SparseMatrix<DataVector> {
+@PackagePrivate class ZeroMatrix extends SparseMatrix<DataVector> {
 
     private final DataVector zeroRow;
     private final DataVector zeroColumn;
 
-    /* package-private */ZeroMatrix(int numRows, int numColumns) {
+    @PackagePrivate ZeroMatrix(int numRows, int numColumns) {
         super(numRows, numColumns);
         zeroRow = VectorFactory.newZeroVector(numColumns);
         zeroColumn = VectorFactory.newZeroVector(numRows);

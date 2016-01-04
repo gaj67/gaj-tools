@@ -1,5 +1,6 @@
 package gaj.impl.vector;
 
+import gaj.data.object.RepresentationType;
 import gaj.data.vector.ArrayVector;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.IndexVector;
@@ -191,31 +192,30 @@ public abstract class VectorFactory {
      * @return The dot product.
      */
     public static double dot(DataVector vec1, DataVector vec2) {
-        if (vec1.isSparse()) {
+        RepresentationType rep1 = vec1.representationType();
+        RepresentationType rep2 = vec2.representationType();
+
+        if (RepresentationType.SPARSE == rep1) {
             return vec1.dot(vec2);
-        }
-        if (vec2.isSparse()) {
+        } else if (RepresentationType.SPARSE == rep2) {
             return vec2.dot(vec1);
-        }
-        if (vec1.isCompound()) {
+        } else if (RepresentationType.COMPOUND == rep1) {
             return vec1.dot(vec2);
-        }
-        if (vec2.isCompound()) {
+        } else if (RepresentationType.COMPOUND == rep2) {
             return vec2.dot(vec1);
-        }
-        if (vec1.isDense()) {
+        } else if (RepresentationType.DENSE == rep1) {
             return vec1.dot(vec2);
-        }
-        if (vec2.isDense()) {
+        } else if (RepresentationType.DENSE == rep2) {
             return vec2.dot(vec1);
+        } else {
+            double sum = 0;
+            final Iterator<Double> iter1 = vec1.iterator();
+            final Iterator<Double> iter2 = vec2.iterator();
+            while (iter1.hasNext() && iter2.hasNext()) {
+                sum += iter1.next() * iter2.next();
+            }
+            return sum;
         }
-        double sum = 0;
-        final Iterator<Double> iter1 = vec1.iterator();
-        final Iterator<Double> iter2 = vec2.iterator();
-        while (iter1.hasNext() && iter2.hasNext()) {
-            sum += iter1.next() * iter2.next();
-        }
-        return sum;
     }
 
     /**

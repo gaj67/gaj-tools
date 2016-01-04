@@ -1,5 +1,6 @@
 package gaj.impl.matrix;
 
+import gaj.data.object.RepresentationType;
 import gaj.data.vector.DataVector;
 
 public abstract class DenseMatrix<T extends DataVector> extends AbstractMatrix<T> {
@@ -9,18 +10,8 @@ public abstract class DenseMatrix<T extends DataVector> extends AbstractMatrix<T
     }
 
     @Override
-    public boolean isDense() {
-        return true;
-    }
-
-    @Override
-    public boolean isSparse() {
-        return false;
-    }
-
-    @Override
-    public boolean isCompound() {
-        return false;
+    public RepresentationType representationType() {
+        return RepresentationType.DENSE;
     }
 
 }
