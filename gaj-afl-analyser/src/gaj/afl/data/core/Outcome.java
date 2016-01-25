@@ -1,11 +1,10 @@
 package gaj.afl.data.core;
 
 /**
- * Specifies the outcome of a match, relative to the ordering
- * of the two teams.
+ * Specifies the outcome of a match, relative to the home team.
  */
 public enum Outcome {
-    Win("defeated"), Loss("lost to"), Draw("drew with");
+    Win("defeated"), Loss("lost to"), Draw("drew with"), Bye("did not play");
 
     private final String externalValue;
 
@@ -32,20 +31,25 @@ public enum Outcome {
     }
 
     /**
-     * Indicates the match status from the other team's point of view.
+     * Indicates the match status from the away team's point of view.
      * 
-     * @return
+     * @return The reverse of the home team's outcome.
      */
     public Outcome reverse() {
         switch (this) {
-        case Draw:
-            return Draw;
-        case Loss:
-            return Win;
-        case Win:
-            return Loss;
-        default:
-            throw new IllegalStateException("Unknown match outcome " + this);
+            case Bye:
+                // There is no home or away team for a bye.
+                //throw new IllegalStateException("Cannot reverse match outcome " + this);
+                return Bye;
+            case Draw:
+                return Draw;
+            case Loss:
+                return Win;
+            case Win:
+                return Loss;
+            default:
+                throw new IllegalStateException("Unknown match outcome " + this);
         }
     }
-};
+
+}

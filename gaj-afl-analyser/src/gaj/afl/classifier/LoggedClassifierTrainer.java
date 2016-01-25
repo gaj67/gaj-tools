@@ -22,9 +22,9 @@ public class LoggedClassifierTrainer {
 
     private final TrainableClassifier classifier;
     private final GoldData trainingData;
-    private final GoldData testingData;
+    private final GoldData[] testingData;
 
-    public LoggedClassifierTrainer(TrainableClassifier classifier, GoldData trainingData, GoldData testingData) {
+    public LoggedClassifierTrainer(TrainableClassifier classifier, GoldData trainingData, GoldData... testingData) {
         this.classifier = classifier;
         this.trainingData = trainingData;
         this.testingData = testingData;
@@ -37,6 +37,12 @@ public class LoggedClassifierTrainer {
                 trainingData, testingData);
     }
 
+    public static LoggedClassifierTrainer getTrainer(GoldData trainingData, GoldData... testingData) {
+        return new LoggedClassifierTrainer(
+                ClassifierFactory.newTrainableClassifier(trainingData.numClasses(), trainingData.numFeatures(), AccelerationType.Quadratic),
+                trainingData, testingData);
+    }
+
     public void train(int traceIterations) {
         System.out.printf("Showing score trace: %s%n",
                 (traceIterations > 0) ? ("every " + traceIterations + " iterations") : "no");
@@ -45,12 +51,14 @@ public class LoggedClassifierTrainer {
     }
 
     protected DataScorer[] getScorers() {
-        DataScorer[] scorers = new DataScorer[] {
-                new LogProbScorer(trainingData),
-                new AccuracyScorer(trainingData, 1e-3),
-                new LogProbScorer(testingData),
-                new AccuracyScorer(testingData, 1e-3),
-        };
+        DataScorer[] scorers = new DataScorer[2 * (1 + testingData.length)];
+        int i = 0;
+        scorers[i++] = new LogProbScorer(trainingData);
+        scorers[i++] = new AccuracyScorer(trainingData, 1e-3);
+        for (GoldData testData : testingData) {
+            scorers[i++] = new LogProbScorer(testData);
+            scorers[i++] = new AccuracyScorer(testData, 1e-3);
+        }
         return scorers;
     }
 
@@ -113,4 +121,5 @@ public class LoggedClassifierTrainer {
             }
         };
     }
+
 }

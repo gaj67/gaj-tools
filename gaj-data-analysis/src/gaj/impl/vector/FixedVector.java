@@ -1,16 +1,17 @@
 package gaj.impl.vector;
 
+import gaj.common.annotations.PackagePrivate;
 import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 
 /**
  * Implements a fixed vector of the form [v, v, ..., v] for constant v.
  */
-/* package-private */class FixedVector extends SparseVector {
+@PackagePrivate class FixedVector extends SparseVector {
 
     private final double value;
 
-    /* package-private */FixedVector(int length, double value) {
+    @PackagePrivate FixedVector(int length, double value) {
         super(length);
         this.value = value;
     }
