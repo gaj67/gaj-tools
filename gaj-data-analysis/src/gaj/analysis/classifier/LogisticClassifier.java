@@ -1,5 +1,6 @@
 package gaj.analysis.classifier;
 
+import gaj.data.classifier.Classification;
 import gaj.data.classifier.DatumScore;
 import gaj.data.matrix.WritableMatrix;
 import gaj.data.vector.DataVector;
@@ -25,7 +26,7 @@ public class LogisticClassifier extends BaseClassifier {
     }
 
     @Override
-    public DataVector posteriors(DataVector features) {
+    public Classification classify(DataVector features) {
         DataVector weights = MatrixFactory.multiply(matParams, features);
         double[] posteriors = new double[numClasses];
         posteriors[Cm1] = 1;
@@ -38,7 +39,7 @@ public class LogisticClassifier extends BaseClassifier {
         norm = 1 / norm;
         for (int c = 0; c < numClasses; c++)
             posteriors[c] *= norm;
-        return VectorFactory.newVector(posteriors);
+        return new ClassificationImpl(features, VectorFactory.newVector(posteriors));
     }
 
     @Override

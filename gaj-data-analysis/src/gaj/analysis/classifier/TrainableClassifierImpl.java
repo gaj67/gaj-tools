@@ -1,5 +1,6 @@
 package gaj.analysis.classifier;
 
+import gaj.data.classifier.Classification;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.DatumScore;
 import gaj.data.classifier.ParameterisedClassifier;
@@ -29,8 +30,8 @@ import gaj.data.vector.DataVector;
     }
 
     @Override
-    public DataVector posteriors(DataVector features) {
-        return classifier.posteriors(features);
+    public Classification classify(DataVector features) {
+        return classifier.classify(features);
     }
 
     @Override

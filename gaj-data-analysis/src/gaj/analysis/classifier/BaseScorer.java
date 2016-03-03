@@ -1,6 +1,5 @@
 package gaj.analysis.classifier;
 
-import java.util.Iterator;
 import gaj.data.classifier.Classifier;
 import gaj.data.classifier.ClassifierScoreInfo;
 import gaj.data.classifier.DataScorer;
@@ -12,6 +11,7 @@ import gaj.data.vector.DataVector;
 import gaj.data.vector.WritableVector;
 import gaj.impl.vector.DataIterator;
 import gaj.impl.vector.VectorFactory;
+import java.util.Iterator;
 
 /**
  * Binds an arbitrary scorer to gold-standard data.
@@ -93,7 +93,7 @@ public abstract class BaseScorer implements DataScorer {
                     @Override
                     public DatumScore next() {
                         final GoldDatum datum = iter.next();
-                        final DataVector probs = classifier.posteriors(datum.getFeatures());
+                        final DataVector probs = classifier.classify(datum.getFeatures()).posteriors();
                         return getDatumScore(datum, probs);
                     }
                 };
@@ -108,7 +108,7 @@ public abstract class BaseScorer implements DataScorer {
         for (GoldDatum datum : data) {
             final double weight = datum.getWeight();
             sumWeights += weight;
-            DataVector probs = classifier.posteriors(datum.getFeatures());
+            DataVector probs = classifier.classify(datum.getFeatures()).posteriors();
             final double unweightedScore = getScore(probs, datum.getClassIndex());
             sumScores += weight * unweightedScore;
         }
@@ -126,7 +126,7 @@ public abstract class BaseScorer implements DataScorer {
             for (GoldDatum datum : data) {
                 final double weight = datum.getWeight();
                 sumWeights += weight;
-                DataVector probs = classifier.posteriors(datum.getFeatures());
+                DataVector probs = classifier.classify(datum.getFeatures()).posteriors();
                 DatumScore datumScore = getDatumScore(datum, probs);
                 sumScores += weight * datumScore.getScore();
                 DataVector gradient = VectorFactory.scale(classifier.getGradient(datumScore), weight);

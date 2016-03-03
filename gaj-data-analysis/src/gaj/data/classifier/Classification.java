@@ -3,9 +3,9 @@ package gaj.data.classifier;
 import gaj.data.vector.DataVector;
 
 /**
- * Specifies a probabilistic classifier of numerical data.
+ * Specifies the probabilistic classification of a given instance of numerical feature data.
  */
-public interface Classifier {
+public interface Classification {
 
     /**
      * Indicates the total number C of classes in the classification scheme.
@@ -23,11 +23,17 @@ public interface Classifier {
     int numFeatures();
 
     /**
-     * Computes the posterior distribution of a vector of features.
+     * Obtains the instance of features under classification.
      * 
-     * @param features - The length-F feature vector, x.
+     * @return The length-F feature vector.
+     */
+    DataVector features();
+
+    /**
+     * Obtains the posterior class distribution of the feature vector under classification.
+     * 
      * @return A length-C vector of posterior class probabilities, P(c|x).
      */
-    Classification classify(DataVector features);
+    DataVector posteriors();
 
 }
