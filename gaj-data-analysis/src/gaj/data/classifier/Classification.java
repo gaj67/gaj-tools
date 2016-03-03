@@ -3,7 +3,7 @@ package gaj.data.classifier;
 import gaj.data.vector.DataVector;
 
 /**
- * Specifies the probabilistic classification of a given instance of numerical feature data.
+ * Specifies the probabilistic, discriminative classification of a given instance of numerical feature data.
  */
 public interface Classification {
 

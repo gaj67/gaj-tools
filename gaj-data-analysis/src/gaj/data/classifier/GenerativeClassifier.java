@@ -15,11 +15,12 @@ public interface GenerativeClassifier extends JointClassifier {
     DataVector priors();
 
     /**
-     * Computes the conditional distribution of a vector of features.
+     * Computes the posterior, joint and likelihood distributions of a vector of features.
      * 
      * @param features - The length-F feature vector, x.
-     * @return A length-C vector of conditional probabilities, p(x|c).
+     * @return The classification object.
      */
-    DataVector likelihood(DataVector features);
+    @Override
+    InformativeClassification classify(DataVector features);
 
 }

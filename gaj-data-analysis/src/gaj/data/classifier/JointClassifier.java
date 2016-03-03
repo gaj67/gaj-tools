@@ -8,19 +8,12 @@ import gaj.data.vector.DataVector;
 public interface JointClassifier extends Classifier {
 
     /**
-     * Computes the joint distribution of a vector of features.
+     * Computes the posterior and joint distributions of a vector of features.
      * 
      * @param features - The length-F feature vector, x.
-     * @return A length-C vector of joint class/data probabilities, p(c,x).
+     * @return The classification object.
      */
-    DataVector joint(DataVector features);
-
-    /**
-     * Computes the marginal likelihood of a vector of features.
-     * 
-     * @param features - The length-F feature vector, x.
-     * @return The marginal likelihood, p(x).
-     */
-    double marginal(DataVector features);
+    @Override
+    JointClassification classify(DataVector features);
 
 }

@@ -26,7 +26,7 @@ public interface Classifier {
      * Computes the posterior distribution of a vector of features.
      * 
      * @param features - The length-F feature vector, x.
-     * @return A length-C vector of posterior class probabilities, P(c|x).
+     * @return The classification object.
      */
     Classification classify(DataVector features);
 
