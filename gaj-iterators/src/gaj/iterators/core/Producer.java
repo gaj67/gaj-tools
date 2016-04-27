@@ -1,15 +1,22 @@
 package gaj.iterators.core;
 
+import java.util.NoSuchElementException;
+import java.util.function.Supplier;
+
 /**
- * Specifies a producer of typed objects.
+ * Specifies a supplier of items that throws the  NoSuchElementException when the sequence of items has been exhausted.
  */
-public interface Producer<T> {
+public interface Producer<T> extends Supplier<T> {
 
     /**
-     * Produces the next item in a sequence.
-     *
-     * @return The item, or a value of null if the sequence has ended.
+     * @return An item.
+     * @throws NoSuchElementException if the sequence has finished.
      */
-    /*@Nullable*/ T produce();
+    @Override
+    public abstract T get();
+
+    default T halt(String message) {
+        throw new NoSuchElementException(message);
+    }
 
 }

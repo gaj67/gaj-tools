@@ -1,23 +1,23 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.iterators.utilities;
+package gaj.iterators.impl;
 
-import gaj.iterators.core.Producer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
 /**
  * Encapsulates various collection-type operations on sequences.
  */
-public abstract class Iterables {
+public abstract class Collections {
 
-    private Iterables() {}
+    private Collections() {}
 
     /**
      * Adds all of the iterator elements to the collection.
@@ -71,15 +71,15 @@ public abstract class Iterables {
      * Adds all of the producer items to the collection.
      *
      * @param collection - A collection of elements.
-     * @param producer - A producer of items.
+     * @param producer - A supplier of items that throws NoSuchElementException at the end of the sequence.
      */
-    public static <T> void addAll(Collection<? super T> collection, Producer<? extends T> producer) {
+    public static <T> void addAll(Collection<? super T> collection, Supplier<? extends T> producer) {
         while (true) {
-            T item = producer.produce();
-            if (item == null) {
-                break;
-            }
-            collection.add(item);
+        	try {
+        		collection.add(producer.get());
+        	} catch (NoSuchElementException e) {
+        		break;
+        	}
         }
     }
 
@@ -133,10 +133,10 @@ public abstract class Iterables {
     /**
      * Constructs a list of the elements, in order, provided by the given producer instance.
      *
-     * @param producer - A producer of items.
+     * @param producer - A supplier of items that throws NoSuchElementException at the end of the sequence.
      * @return A list of the iterated elements.
      */
-    public static <T> List<T> asList(Producer<? extends T> producer) {
+    public static <T> List<T> asList(Supplier<? extends T> producer) {
         List<T> list = new ArrayList<>();
         addAll(list, producer);
         return list;
@@ -151,7 +151,7 @@ public abstract class Iterables {
      */
     public <T> List<T> sort(Iterable<? extends T> iterable, Comparator<T> comparator) {
         List<T> list = asList(iterable);
-        Collections.sort(list, comparator);
+        java.util.Collections.sort(list, comparator);
         return list;
     }
 
@@ -163,7 +163,7 @@ public abstract class Iterables {
      */
     public <T extends Comparable<? super T>> List<T> sort(Iterable<? extends T> iterable) {
         List<T> list = asList(iterable);
-        Collections.sort(list);
+        java.util.Collections.sort(list);
         return list;
     }
 
