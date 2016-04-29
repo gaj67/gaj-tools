@@ -3,11 +3,11 @@
  */
 package gaj.classbinary.paths;
 
-import gaj.iterators.core.Filter;
-import gaj.iterators.utilities.IteratorFactory;
+import gaj.iterators.core.ResourceIterator;
+import gaj.iterators.impl.ResourceIterators;
 
-import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,14 +22,6 @@ import java.util.Map;
  */
 public abstract class ManagerFactory {
 
-    private static final Filter<ClassPath, Iterable<? extends InputStream>> INPUT_STREAM_FILTER = 
-            new Filter<ClassPath, Iterable<? extends InputStream>>() {
-        @Override
-        public Iterable<InputStream> filter(ClassPath classPath) {
-            return classPath.getClassStreams();
-        }
-    };
-
     private ManagerFactory() {}
 
     /**
@@ -39,21 +31,21 @@ public abstract class ManagerFactory {
      */
     public static ClassPathManager newClassPathManager() {
         return new ClassPathManager() {
-            private final Map<File, ClassPath> classPaths = new HashMap<>();
+            private final Map<Path, ClassPath> classPaths = new HashMap<>();
 
             @Override
-            public void addClassPath(File classPath) {
+            public void addClassPath(Path classPath) {
                 classPaths.put(classPath, new ClassPath(classPath)); // Ignore duplicates.
             }
 
             @Override
-            public Iterable<File> getClassPaths() {
+            public Iterable<Path> getClassPaths() {
                 return Collections.unmodifiableSet(classPaths.keySet());
             }
 
             @Override
-            public Iterable<InputStream> getClassStreams() {
-                return IteratorFactory.newMultiIterator(classPaths.values(), ManagerFactory.INPUT_STREAM_FILTER);
+            public ResourceIterator<InputStream> getClassStreams() {
+                return ResourceIterators.newIterator(classPaths.values().stream().flatMap(cp -> cp.getClassStreams().stream()), ResourceIterators.AUTO_CLOSE);
             }
         };
     }
@@ -63,9 +55,21 @@ public abstract class ManagerFactory {
      * 
      * @return An initialised class-path manager instance.
      */
-    public static ClassPathManager newClassPathManager(File... classPaths) {
+    public static ClassPathManager newClassPathManager(Path... classPaths) {
         ClassPathManager manager = newClassPathManager();
-        for (File classPath : classPaths) manager.addClassPath(classPath);
+        for (Path classPath : classPaths) manager.addClassPath(classPath);
         return manager;
     }
+
+    /**
+     * Creates a class-path manager bound to the given class-path(s).
+     * 
+     * @return An initialised class-path manager instance.
+     */
+    public static ClassPathManager newClassPathManager(Iterable<? extends Path> classPaths) {
+        ClassPathManager manager = newClassPathManager();
+        for (Path classPath : classPaths) manager.addClassPath(classPath);
+        return manager;
+    }
+
 }

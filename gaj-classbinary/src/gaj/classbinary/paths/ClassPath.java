@@ -3,61 +3,53 @@
  */
 package gaj.classbinary.paths;
 
-import gaj.iterators.io.ArchiveStreamIterator;
-import gaj.iterators.io.DirectoryMultiStreamIterator;
-import gaj.iterators.io.StreamIteratorFactory;
-import java.io.File;
+import gaj.iterators.core.ResourceIterator;
+import gaj.iterators.impl.ResourceIterators;
+
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 
 /**
  * Encapsulates a single path to one or more .class files. 
  */
 /*package-private*/ class ClassPath {
-    private final File classPath;
-    private final ClassPathType pathType;
 
-    /*package-private*/ ClassPath(File classPath) {
-        this.classPath = classPath;
-        pathType = ClassPathType.fromPath(classPath);
-        if (pathType == null) {
-            throw new IllegalArgumentException("Invalid class path: " + classPath);
-        }
-    }
+	private static final Predicate<Path> IS_ARCHIVE = path -> ClassPathType.Archive == ClassPathType.fromPath(path);
+	private static final Predicate<ZipEntry> IS_CLASSFILE_ENTRY = ze -> ClassPathType.ClassFile == ClassPathType.fromPathString(ze.getName());
+	private static final Predicate<Path> IS_CLASSFILE = path -> ClassPathType.ClassFile == ClassPathType.fromPath(path);
+	private static final Predicate<Path> IS_CLASSFILE_OR_ARCHIVE = IS_CLASSFILE.or(IS_ARCHIVE);
 
-    public Iterable<InputStream> getClassStreams() {
-        switch (pathType) {
-            case Archive:
-                return new ArchiveStreamIterator(classPath) {
-                    @Override
-                    protected boolean accept(ZipEntry entry) {
-                        // XXX: Currently can't handle nested archive files.
-                        return ClassPathType.ClassFile == ClassPathType.fromPathString(entry.getName());
-                    }
-                };
-            case ClassFile:
-                return StreamIteratorFactory.newFileStreamIterator(classPath);
-            case Directory:
-                return new DirectoryMultiStreamIterator(classPath) {
-                    @Override
-                    protected boolean acceptFile(File file) {
-                        return ClassPathType.ClassFile == ClassPathType.fromPath(file);
-                    }
+	private final Path classPath;
+	private final ClassPathType pathType;
 
-                    @Override
-                    protected boolean acceptArchive(File file) {
-                        return ClassPathType.Archive == ClassPathType.fromPath(file);
-                    }
+	/*package-private*/ ClassPath(Path classPath) {
+		this.classPath = classPath;
+		pathType = ClassPathType.fromPath(classPath);
+		if (ClassPathType.Unknown == pathType) {
+			throw new IllegalArgumentException("Invalid class path: " + classPath);
+		}
+	}
 
-                    @Override
-                    protected boolean acceptEntry(ZipEntry entry) {
-                        // XXX: Currently can't handle nested archive files.
-                        return ClassPathType.ClassFile == ClassPathType.fromPathString(entry.getName());
-                    }
-                };
-            default:
-                throw new IllegalStateException();
-        }
-    }
+	public ResourceIterator<InputStream> getClassStreams() {
+		switch (pathType) {
+			case Archive:
+				return ResourceIterators.newArchiveInputStreamIterator(classPath, IS_CLASSFILE_ENTRY);
+			case ClassFile:
+				return ResourceIterators.newFileInputStreamIterator(classPath);
+			case Directory:
+				try {
+					return ResourceIterators.newFileInputStreamIterator(Files.walk(classPath).filter(IS_CLASSFILE_OR_ARCHIVE), ResourceIterators.AUTO_CLOSE, IS_ARCHIVE, IS_CLASSFILE_ENTRY);
+				} catch (IOException e) {
+					throw new UncheckedIOException(e);
+				}
+			default:
+				throw new IllegalStateException();
+		}
+	}
 
 }

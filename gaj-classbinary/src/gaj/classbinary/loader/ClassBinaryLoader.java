@@ -4,7 +4,9 @@
 package gaj.classbinary.loader;
 
 import gaj.classbinary.descriptors.ClassDescriptor;
+
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Encapsulates the handling of one or more class-paths, including the ability to iterate over the
@@ -17,13 +19,13 @@ public interface ClassBinaryLoader {
      * 
      * @param classPath - The path to a .class file or archive, or a directory of .class files.
      */
-    public void addClassPath(File classPath);
+    public void addClassPath(Path classPath);
 
     /**
      * 
      * @return An iterable over the class-paths being managed.
      */
-    public Iterable<File> getClassPaths();
+    public Iterable<Path> getClassPaths();
 
     /**
      * 

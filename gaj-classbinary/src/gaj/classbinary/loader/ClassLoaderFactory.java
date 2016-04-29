@@ -7,14 +7,13 @@ import gaj.classbinary.descriptors.ClassDescriptor;
 import gaj.classbinary.parser.ClassParser;
 import gaj.classbinary.parser.ParseException;
 import gaj.classbinary.parser.ParserFactory;
-import gaj.classbinary.paths.ManagerFactory;
 import gaj.classbinary.paths.ClassPathManager;
-import gaj.iterators.core.Filter;
-import gaj.iterators.utilities.IteratorFactory;
+import gaj.classbinary.paths.ManagerFactory;
+import gaj.iterators.impl.Iteratives;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.function.Function;
 
 /**
  * Encapsulates the handling of class paths. A class path is essentially a path
@@ -27,18 +26,13 @@ import java.io.InputStream;
 public abstract class ClassLoaderFactory {
 
     private static final ClassParser parser = ParserFactory.newParser();
-    private static final Filter<InputStream, ClassDescriptor> INPUT_STREAM_PARSER = 
-        new Filter<InputStream, ClassDescriptor>() {
+    private static final Function<InputStream, ClassDescriptor> INPUT_STREAM_PARSER = 
+        new Function<InputStream, ClassDescriptor>() {
             @Override
-            public ClassDescriptor filter(InputStream stream) {
+            public ClassDescriptor apply(InputStream stream) {
                 try {
                     return parser.parse(stream);
                 } catch (ParseException e) {
-                    try {
-                        stream.close();
-                    } catch (IOException e1) {
-                        e.addSuppressed(e1);
-                    }
                     throw new UncheckedParseException(e.getMessage(), e);
                 }
             }
@@ -56,18 +50,18 @@ public abstract class ClassLoaderFactory {
             private final ClassPathManager manager = ManagerFactory.newClassPathManager();
 
             @Override
-            public void addClassPath(File classPath) {
+            public void addClassPath(Path classPath) {
                 manager.addClassPath(classPath);
             }
 
             @Override
-            public Iterable<File> getClassPaths() {
+            public Iterable<Path> getClassPaths() {
                 return manager.getClassPaths();
             }
 
             @Override
             public Iterable<ClassDescriptor> getClassDescriptors() {
-                return IteratorFactory.newIterator(manager.getClassStreams(), ClassLoaderFactory.INPUT_STREAM_PARSER);
+                return Iteratives.newIterative(manager.getClassStreams().stream().map(ClassLoaderFactory.INPUT_STREAM_PARSER));
             }
         };
     }
@@ -77,9 +71,9 @@ public abstract class ClassLoaderFactory {
      * 
      * @return An initialised class-path manager instance.
      */
-    public static ClassBinaryLoader newClassLoader(File... classPaths) {
+    public static ClassBinaryLoader newClassLoader(Path... classPaths) {
         ClassBinaryLoader loader = newClassLoader();
-        for (File classPath : classPaths) loader.addClassPath(classPath);
+        for (Path classPath : classPaths) loader.addClassPath(classPath);
         return loader;
     }
 }
