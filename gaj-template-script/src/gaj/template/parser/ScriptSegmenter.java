@@ -12,7 +12,7 @@ import static gaj.template.script.ScriptSymbol.CommentOpen;
 import static gaj.template.script.ScriptSymbol.VariableClose;
 import static gaj.template.script.ScriptSymbol.VariableOpen;
 import static gaj.template.script.ScriptSymbol.VariableSet;
-import gaj.iterators.core.IterableIterator;
+import gaj.iterators.impl.BaseIterator;
 import gaj.template.conditional.ConditionalFactory;
 import gaj.template.conditional.Evaluator;
 import gaj.template.data.KeyValue;
@@ -25,6 +25,7 @@ import gaj.template.segment.SegmentType;
 import gaj.template.segment.TextSegment;
 import gaj.template.text.DelimiterInfo;
 import gaj.template.text.TextSegmenter;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.Map;
 /**
  * Encapsulates a process for breaking an input script into a sequence of low-level segments.
  */
-/*package-private*/ class ScriptSegmenter extends IterableIterator<Segment> {
+/*package-private*/ class ScriptSegmenter implements BaseIterator<Segment> {
 
     //************************************************************************************
     // Segmenter functionality.

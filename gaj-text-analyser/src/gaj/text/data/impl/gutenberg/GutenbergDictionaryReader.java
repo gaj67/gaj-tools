@@ -1,9 +1,11 @@
 package gaj.text.data.impl.gutenberg;
 
-import gaj.iterators.core.ResourceIterator;
+import gaj.iterators.impl.BaseResourceIterator;
+import gaj.iterators.impl.Iterators;
 import gaj.text.data.Definition;
 import gaj.text.data.DefinitionProducer;
 import gaj.text.data.Tag;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,7 +13,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class GutenbergDictionaryReader extends ResourceIterator<Definition<Tag>> implements DefinitionProducer<Tag> {
+public class GutenbergDictionaryReader extends BaseResourceIterator<Definition<Tag>> implements DefinitionProducer<Tag> {
 
     private final File path;
     private BufferedReader reader;
@@ -21,26 +23,27 @@ public class GutenbergDictionaryReader extends ResourceIterator<Definition<Tag>>
     }
 
     @Override
-    public /*@Nullable*/ Definition<Tag> produce() {
+    public Definition<Tag> get() {
         if (!hasNext()) {
-            return null;
+            throw new NoSuchElementException("End of definitions");
         }
-        try {
-            return next();
-        } catch (NoSuchElementException e) {
-            return null;
-        }
+        return next();
     }
 
     @Override
-    protected Iterator<? extends Definition<Tag>> openResource() throws IOException {
+	public Iterator<? extends Definition<Tag>> openResource() throws IOException {
         reader = new BufferedReader(new FileReader(path));
-        return new GutenbergDefinitionIterator(reader);
+        return Iterators.newIterator(new GutenbergDefinitionProducer(reader));
     }
 
     @Override
-    protected void closeResource() throws IOException {
+	public void closeResource() throws IOException {
         reader.close();
+    }
+
+    @Override
+    public Definition<Tag> halt(String message) {
+    	return super.halt(message);
     }
 
 }

@@ -1,31 +1,34 @@
 package gaj.text.data.impl.gutenberg;
 
-import gaj.iterators.core.ProducerIterator;
+import gaj.iterators.core.Producer;
 import gaj.text.data.Definition;
 import gaj.text.data.Tag;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Parses the word tag definitions in The Project Gutenberg Etext of Webster's
  * Unabridged Dictionary, 1913 edition.
  */
-/*package-private*/ class GutenbergDefinitionIterator extends ProducerIterator<Definition<Tag>> {
+/*package-private*/ class GutenbergDefinitionProducer implements Producer<Definition<Tag>> {
 
     private final BufferedReader reader;
     private MultiDefinition<Tag> multiDef = null;
 
-    /*package-private*/ GutenbergDefinitionIterator(BufferedReader reader) {
+    /*package-private*/ GutenbergDefinitionProducer(BufferedReader reader) {
         this.reader = reader;
     }
 
     @Override
-    public /*@Nullable*/ Definition<Tag> produce() {
+    public Definition<Tag> get() {
         while (true) {
             if (multiDef == null) {
                 multiDef = getNextMultiDefinition();
-                if (multiDef == null) return null;
+                if (multiDef == null) throw new NoSuchElementException("End of definitions");
             }
             if (!multiDef.hasNextDefinition()) {
                 multiDef = null;
@@ -39,7 +42,7 @@ import java.util.List;
         try {
             return parseNextDefinition();
         } catch (IOException e) {
-            throw failure(e);
+            throw new UncheckedIOException(e);
         }
     }
 

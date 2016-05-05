@@ -3,7 +3,7 @@
  */
 package gaj.template.segment;
 
-import gaj.iterators.utilities.IteratorFactory;
+import gaj.iterators.impl.Iterators;
 import gaj.template.data.Embedder;
 import gaj.template.data.ScriptData;
 import gaj.template.data.ScriptDataFactory;
@@ -60,7 +60,7 @@ import java.util.Map.Entry;
             loopSize = ScriptDataFactory.toInt(loopData);
             if (loopSize == Integer.MIN_VALUE)
                 throw ScriptDataFactory.newException("Invalid loop property: " + loopName + " = " + loopData);
-            iter = IteratorFactory.newIterator(ScriptDataFactory.newData(), loopSize);
+            iter = Iterators.newIterator(ScriptDataFactory.newData(), loopSize);
         }
         // Execute loop.
         final String loopPrefix = loopName + loopSep;

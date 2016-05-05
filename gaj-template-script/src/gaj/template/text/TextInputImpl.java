@@ -3,12 +3,13 @@
  */
 package gaj.template.text;
 
-import gaj.iterators.core.IterableIterator;
-import gaj.iterators.core.ResourceIterator;
+import gaj.iterators.impl.BaseIterator;
+import gaj.iterators.impl.BaseResourceIterator;
+
 import java.io.IOException;
 import java.util.Iterator;
 
-/*package-private*/ class TextInputImpl extends ResourceIterator<Character> implements TextInput {
+/*package-private*/ class TextInputImpl extends BaseResourceIterator<Character> implements TextInput {
 
     private final TextReader reader;
     private int numRead = 0;
@@ -30,8 +31,8 @@ import java.util.Iterator;
     }
 
     @Override
-    protected Iterator<? extends Character> openResource() {
-        return new IterableIterator<Character>() {
+	public Iterator<Character> openResource() {
+        return new BaseIterator<Character>() {
             @Override
             public boolean hasNext() {
                 if (hasNext && next == null) {
@@ -68,7 +69,7 @@ import java.util.Iterator;
     }
 
     @Override
-    protected void closeResource() throws IOException {
+	public void closeResource() throws IOException {
         reader.close();
     }
 

@@ -3,14 +3,13 @@
  */
 package gaj.template.text;
 
-import java.io.Closeable;
-import java.util.Iterator;
+import gaj.iterators.core.ResourceIterator;
 
 /**
  * Encapsulates a consumable stream of text characters.
  * <p/>Note: An UncheckedIOException may occur if the next character in the stream cannot be read.
  */
-public interface TextInput extends Iterator<Character>, Iterable<Character>, Closeable {
+public interface TextInput extends ResourceIterator<Character> {
 
     /**
      * Specifies how many characters have been read from the stream.
