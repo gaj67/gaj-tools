@@ -11,17 +11,18 @@ import gaj.dependency.manager.components.ComponentFactory;
 import gaj.dependency.manager.dependencies.PackageDependency;
 import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.packages.ModifiablePackage;
-import java.io.File;
+
 import java.io.IOException;
+import java.nio.file.Paths;
 
 public class TestComponent {
 
     private TestComponent() {}
 
     public static void main(String[] args) throws IOException {
-        final String componentPath = "./bin";
-        System.out.printf("Testing component for path \"%s\"%n", componentPath);
-        ClassesComponent component = ComponentFactory.newComponent("test", new File(componentPath)).load();
+        final String componentDir = "./bin";
+        System.out.printf("Testing component for path \"%s\"%n", componentDir);
+        ClassesComponent component = ComponentFactory.newComponent("test", Paths.get(componentDir)).load();
         System.out.printf("component.getComponentName()==componentName is %s%n",
                 component.getComponentName() == "test");
         System.out.printf("component.numPackages()=%d%n", component.numPackages());

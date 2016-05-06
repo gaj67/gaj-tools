@@ -6,6 +6,8 @@ package gaj.dependency.manager.components;
 import gaj.dependency.manager.classes.ClassDescription;
 import gaj.dependency.manager.dependencies.ComponentDependency;
 import gaj.dependency.manager.packages.ClassPackage;
+import gaj.iterators.core.Iterative;
+
 import java.util.Collection;
 
 /**
@@ -34,7 +36,7 @@ public interface ClassesComponent {
     /**
      * @return An iterable over the set of all classes in the component.
      */
-    public Iterable<ClassDescription> getClasses();
+    public Iterative<ClassDescription> getClasses();
 
     /**
      * Tests whether the class is located in the component.
@@ -104,7 +106,7 @@ public interface ClassesComponent {
     /**
      * @return An iterable over the packages in the component.
      */
-    public Iterable<ClassPackage> getPackages();
+    public Iterative<ClassPackage> getPackages();
 
     /**
      * Tests whether the named package is located in the component.

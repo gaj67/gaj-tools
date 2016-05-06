@@ -5,6 +5,9 @@ package gaj.dependency.manager.groups;
 
 import gaj.dependency.manager.components.ClassesComponent;
 import gaj.dependency.manager.components.LoadableComponent;
+import gaj.iterators.core.Iterative;
+import gaj.iterators.impl.Iteratives;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -94,8 +97,8 @@ public abstract class GroupFactory {
         }
 
         @Override
-        public Iterable<ClassesComponent> getComponents() {
-            return components.values();
+        public Iterative<ClassesComponent> getComponents() {
+            return Iteratives.toIterative(components.values());
         }
 
         @Override

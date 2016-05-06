@@ -3,16 +3,19 @@
  */
 package gaj.dependency.manager.projects;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -34,15 +37,15 @@ import org.xml.sax.SAXException;
     private static final String ECLIPSE_CLASSPATH_OUTPUT_KIND = "output";
 
     @Override
-    public ProjectProperties getProperties(File projectPath) throws IOException {
-        File classpathFile = new File(projectPath, ELCIPSE_CLASSPATHS_FILE);
-        if (!classpathFile.exists()) {
+    public /*@Nullable*/ ProjectProperties getProperties(Path projectPath) throws IOException {
+    	Path classpathFile = projectPath.resolve(ELCIPSE_CLASSPATHS_FILE);
+        if (!Files.exists(classpathFile)) {
             return null;
         }
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            return new EclipseProperties(projectPath, builder.parse(classpathFile));
+            return new EclipseProperties(projectPath, builder.parse(classpathFile.toFile()));
         } catch (SAXException | ParserConfigurationException e) {
             throw new IOException("Bad class-path configuration for Eclipse project: " + projectPath, e);
         }
@@ -55,31 +58,30 @@ import org.xml.sax.SAXException;
 
     private class EclipseProperties implements ProjectProperties {
 
-        private final File projectPath;
-        private final List<File> srcPaths, prjPaths, libPaths;
+        private final Path projectPath;
+        private final List<Path> srcPaths = new LinkedList<>();
+        private final List<Path> prjPaths = new LinkedList<>();
+        private final List<Path> libPaths = new LinkedList<>();
 
         @Override
-        public List<File> getSourcePaths() {
+        public List<Path> getSourcePaths() {
             return Collections.unmodifiableList(srcPaths);
         }
 
         @Override
-        public List<File> getProjectPaths() {
+        public List<Path> getExternalProjectPaths() {
             return Collections.unmodifiableList(prjPaths);
         }
 
         @Override
-        public List<File> getLibraryPaths() {
+        public List<Path> getLibraryPaths() {
             return Collections.unmodifiableList(libPaths);
         }
 
-        private EclipseProperties(File projectPath, Document properties) throws IOException {
+        private EclipseProperties(Path projectPath, Document properties) throws IOException {
             this.projectPath = projectPath;
-            srcPaths = new LinkedList<>();
-            prjPaths = new LinkedList<>();
-            libPaths = new LinkedList<>();
-            Set<File> _srcPaths = new HashSet<>();
-            File defSrcPath = null;
+            Set<Path> _srcPaths = new HashSet<>();
+            Path defSrcPath = null;
             NodeList classpaths = properties.getElementsByTagName(ELCIPSE_CLASSPATH_TAG);
             final int len = classpaths.getLength();
             for (int i = 0; i < len; i++) {
@@ -94,7 +96,7 @@ import org.xml.sax.SAXException;
                         } else {
                             // Source path/class path reference.
                             String outAttr = getAttribute(attrs, ECLIPSE_CLASSPATH_OUTPUT_ATTR);
-                            File outPath = (outAttr == null) ? defSrcPath : resolvePath(outAttr);
+                            Path outPath = (outAttr == null) ? defSrcPath : resolvePath(outAttr);
                             if (_srcPaths.add(outPath)) {
                                 srcPaths.add(outPath);
                             }
@@ -104,7 +106,7 @@ import org.xml.sax.SAXException;
                         libPaths.add(resolvePath(getRequiredAttribute(attrs, ECLIPSE_CLASSPATH_PATH_ATTR)));
                         break;
                     case ECLIPSE_CLASSPATH_OUTPUT_KIND:
-                        File prevDefSrcPath = defSrcPath;
+                        Path prevDefSrcPath = defSrcPath;
                         defSrcPath = resolvePath(getRequiredAttribute(attrs, ECLIPSE_CLASSPATH_PATH_ATTR));
                         if (prevDefSrcPath == null && _srcPaths.contains(null)) {
                             // Correct any default source output reference.
@@ -121,9 +123,9 @@ import org.xml.sax.SAXException;
             }
         }
 
-        private File resolvePath(String localPath) {
+        private Path resolvePath(String localPath) {
             // XXX: Assume relative paths of the form "local-path" or "/project/local-path".
-            return new File(projectPath, localPath.startsWith("/") ? (".." + localPath) : localPath);
+            return projectPath.resolve(localPath.startsWith("/") ? (".." + localPath) : localPath);
         }
 
         private String getRequiredAttribute(NamedNodeMap attrs, String attrName) throws IOException {
@@ -133,6 +135,11 @@ import org.xml.sax.SAXException;
             }
             return attr;
         }
+
+		@Override
+		public Path getProjectPath() {
+			return projectPath;
+		}
 
     }
 

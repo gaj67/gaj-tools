@@ -3,8 +3,9 @@
  */
 package gaj.dependency.manager.projects;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,14 +19,15 @@ import java.util.List;
     private static final String[] PROJECT_LIBRARY_PATHS = new String[] { "lib", "dist/lib" };
 
     @Override
-    public ProjectProperties getProperties(File projectPath) throws IOException {
+    public ProjectProperties getProperties(Path projectPath) throws IOException {
         return new DefaultProperties(projectPath);
     }
 
     private static class DefaultProperties implements ProjectProperties {
 
-        private final File projectPath;
-        private final List<File> srcPaths, libPaths;
+        private final Path projectPath;
+        private final List<Path> srcPaths;
+        private final List<Path> libPaths;
 
         /**
          * Loads and interprets the properties of an Eclipse project.
@@ -35,12 +37,12 @@ import java.util.List;
          * project is not an Eclipse project.
          * @throws IOException If valid properties cannot be loaded.
          */
-        private DefaultProperties(File projectPath) throws IOException {
+        private DefaultProperties(Path projectPath) throws IOException {
             this.projectPath = projectPath;
             srcPaths = new LinkedList<>();
             for (String srcDir : PROJECT_SOURCE_PATHS) {
-                File spath = resolvePath(srcDir);
-                if (spath.isDirectory()) {
+                Path spath = projectPath.resolve(srcDir);
+                if (Files.isDirectory(spath)) {
                     srcPaths.add(spath);
                     break;
                 }
@@ -50,8 +52,8 @@ import java.util.List;
             }
             libPaths = new LinkedList<>();
             for (String libDir : PROJECT_LIBRARY_PATHS) {
-                File lpath = new File(projectPath, libDir);
-                if (lpath.isDirectory()) {
+                Path lpath = projectPath.resolve(libDir);
+                if (Files.isDirectory(lpath)) {
                     libPaths.add(lpath);
                     break;
                 }
@@ -59,23 +61,24 @@ import java.util.List;
         }
 
         @Override
-        public List<File> getSourcePaths() {
+        public List<Path> getSourcePaths() {
             return Collections.unmodifiableList(srcPaths);
         }
 
 		@Override
-		public List<File> getProjectPaths() {
+		public List<Path> getExternalProjectPaths() {
 			return Collections.emptyList();
 		}
 
         @Override
-        public List<File> getLibraryPaths() {
+        public List<Path> getLibraryPaths() {
             return Collections.unmodifiableList(libPaths);
         }
 
-        private File resolvePath(String localPath) {
-            return new File(projectPath, localPath);
-        }
+		@Override
+		public Path getProjectPath() {
+			return projectPath;
+		}
 
     }
 

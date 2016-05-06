@@ -11,8 +11,10 @@ import gaj.dependency.manager.groups.ComponentGroup;
 import gaj.dependency.manager.groups.GroupFactory;
 import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.packages.PackageFactory;
-import java.io.File;
+
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class TestGroup {
 
@@ -20,9 +22,9 @@ public class TestGroup {
 
     public static void main(String[] args) throws IOException {
         final String componentName = "pkg";
-        File root = new File("./bin/gaj/dependency/manager");
-        ClassesComponent component = ComponentFactory.newComponent(componentName, new File(root, "packages"));
-        ClassesComponent component2 = ComponentFactory.newComponent("cmp", new File(root, "components"));
+        Path root = Paths.get("./bin/gaj/dependency/manager");
+        ClassesComponent component = ComponentFactory.newComponent(componentName, root.resolve("packages"));
+        ClassesComponent component2 = ComponentFactory.newComponent("cmp", root.resolve("components"));
         ComponentGroup group = GroupFactory.newGroup(component, component2).load();
         System.out.printf("group.numComponents()=%d%n", group.numComponents());
         System.out.printf("group.numPackages()=%d%n", group.numPackages());

@@ -11,8 +11,11 @@ import gaj.dependency.manager.classes.ClassDescriptionFactory;
 import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.packages.ModifiablePackage;
 import gaj.dependency.manager.packages.PackageFactory;
-import java.io.File;
+import gaj.iterators.core.Iterative;
+import gaj.iterators.impl.Iteratives;
+
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,30 +67,30 @@ import java.util.Map;
     }
 
     @Override
-    public LoadableComponent addClassPath(File classPath) {
+    public LoadableComponent addClassPath(Path classPath) {
         loader.addClassPath(classPath);
         loaded = false;
         return this;
     }
 
     @Override
-    public LoadableComponent addClassPaths(File... classPaths) {
-        for (File path : classPaths) {
+    public LoadableComponent addClassPaths(Path... classPaths) {
+        for (Path path : classPaths) {
             addClassPath(path);
         }
         return this;
     }
 
     @Override
-    public LoadableComponent addClassPaths(Iterable<File> classPaths) {
-        for (File path : classPaths) {
+    public LoadableComponent addClassPaths(Iterable<Path> classPaths) {
+        for (Path path : classPaths) {
             addClassPath(path);
         }
         return this;
     }
 
     @Override
-    public Iterable<File> getClassPaths() {
+    public Iterable<Path> getClassPaths() {
         return loader.getClassPaths();
     }
 
@@ -125,8 +128,8 @@ import java.util.Map;
     }
 
     @Override
-    public Iterable<ClassPackage> getPackages() {
-        return Collections.unmodifiableCollection(packages.values());
+    public Iterative<ClassPackage> getPackages() {
+        return Iteratives.toIterative(Collections.unmodifiableCollection(packages.values()));
     }
 
     @Override

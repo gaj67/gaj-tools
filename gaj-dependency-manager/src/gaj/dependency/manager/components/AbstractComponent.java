@@ -9,14 +9,15 @@ import gaj.dependency.manager.classes.ClassDescriptionFactory;
 import gaj.dependency.manager.dependencies.ComponentDependency;
 import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.packages.PackageFactory;
-import gaj.iterators.core.Filter;
-import gaj.iterators.core.IterableIterator;
-import gaj.iterators.utilities.IteratorFactory;
+import gaj.iterators.core.Iterative;
+import gaj.iterators.impl.Iteratives;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /*package-private*/ abstract class AbstractComponent implements ClassesComponent {
     private final String componentName;
@@ -44,7 +45,7 @@ import java.util.LinkedList;
     public abstract int numPackages();
 
     @Override
-    public abstract Iterable<ClassPackage> getPackages();
+    public abstract Iterative<ClassPackage> getPackages();
 
     @Override
     public abstract boolean hasPackage(String packageName);
@@ -148,17 +149,12 @@ import java.util.LinkedList;
         return numClasses;
     }
 
-    protected static final Filter<ClassPackage,Iterable<? extends ClassDescription>>
-    PACKAGE_CLASSES_FILTER = new Filter<ClassPackage,Iterable<? extends ClassDescription>>() {
-        @Override
-        public Iterable<ClassDescription> filter(ClassPackage apackage) {
-            return apackage.getClasses();
-        }
-    };
+    protected static final Function<? super ClassPackage,Stream<? extends ClassDescription>> PACKAGE_CLASSES_FILTER = 
+    	apackage -> apackage.getClasses().stream();
 
     @Override
-    public IterableIterator<ClassDescription> getClasses() {
-        return IteratorFactory.newMultiIterator(getPackages(), PACKAGE_CLASSES_FILTER);
+    public Iterative<ClassDescription> getClasses() {
+        return Iteratives.newIterative(getPackages().stream().flatMap(PACKAGE_CLASSES_FILTER));
     }
 
     @Override

@@ -5,6 +5,8 @@ package gaj.dependency.manager.packages;
 
 import gaj.dependency.manager.classes.ClassDescription;
 import gaj.dependency.manager.dependencies.PackageDependency;
+import gaj.iterators.core.Iterative;
+
 import java.util.Collection;
 
 /**
@@ -41,7 +43,7 @@ public interface ClassPackage {
     /**
      * @return A non-null iterable over the set of all classes loaded into the package.
      */
-    public Iterable<ClassDescription> getClasses();
+    public Iterative<ClassDescription> getClasses();
 
     /**
      * Tests whether the class descriptor instance has been loaded into this package instance.

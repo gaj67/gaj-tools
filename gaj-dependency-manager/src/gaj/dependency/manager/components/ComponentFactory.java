@@ -4,7 +4,8 @@
 package gaj.dependency.manager.components;
 
 import gaj.dependency.manager.classes.ClassDescription;
-import java.io.File;
+
+import java.nio.file.Path;
 
 
 /**
@@ -62,9 +63,9 @@ public abstract class ComponentFactory {
      * 
      * @param name - The (possibly null) name of the component.
      */
-    public static LoadableComponent newComponent(String name, File... classPaths) {
+    public static LoadableComponent newComponent(String name, Path... classPaths) {
         LoadableComponent component = newComponent(name);
-        for (File path : classPaths) {
+        for (Path path : classPaths) {
             component.addClassPath(path);
         }
         return component;
@@ -76,9 +77,9 @@ public abstract class ComponentFactory {
      * 
      * @param name - The (possibly null) name of the component.
      */
-    public static LoadableComponent newComponent(String name, Iterable<File> classPaths) {
+    public static LoadableComponent newComponent(String name, Iterable<Path> classPaths) {
         LoadableComponent component = newComponent(name);
-        for (File path : classPaths) {
+        for (Path path : classPaths) {
             component.addClassPath(path);
         }
         return component;

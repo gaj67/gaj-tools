@@ -9,8 +9,10 @@ import gaj.dependency.manager.components.LoadableComponent;
 import gaj.dependency.manager.groups.ComponentGroup;
 import gaj.dependency.manager.groups.GroupFactory;
 import gaj.dependency.manager.groups.LoadableGroup;
-import java.io.File;
+
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,9 +36,9 @@ public abstract class ProjectFactory {
      */
     public static LoadableProject newProject(
             final String name,
-            Collection<File> sourcePaths,
-            Collection<File> projectPaths,
-            Collection<File> libraryPaths) {
+            Collection<Path> sourcePaths,
+            Collection<Path> projectPaths,
+            Collection<Path> libraryPaths) {
         final LoadableComponent srcComponent = ComponentFactory.newComponent(SOURCE_COMPONENT_NAME, sourcePaths);
         final LoadableComponent prjComponent = ComponentFactory.newComponent(PROJECTS_COMPONENT_NAME, projectPaths);
         final LoadableComponent libComponent = ComponentFactory.newComponent(LIBRARIES_COMPONENT_NAME, libraryPaths);
@@ -94,8 +96,8 @@ public abstract class ProjectFactory {
      * @return A loadable group project instance, or a value of null if the project type is unrecognised.
      * @throws IOException If any required project properties are missing or invalid.
      */
-    public static LoadableProject newProject(File projectPath, boolean fromBuild) throws IOException {
-        File path = projectPath.getCanonicalFile();
+    public static LoadableProject newProject(Path projectPath, boolean fromBuild) throws IOException {
+        Path path = projectPath.toRealPath();
         for (PropertiesFactory factory : PROJECT_FACTORIES) {
             ProjectProperties properties = factory.getProperties(path);
             if (properties == null) {
@@ -113,26 +115,26 @@ public abstract class ProjectFactory {
         return null;
     }
 
-    private static LoadableProject getProject(File projectPath, ProjectProperties properties) {
-        List<File> srcPaths = properties.getSourcePaths();
-		for (File path : srcPaths) {
-            if (!path.exists()) {
+    private static LoadableProject getProject(Path projectPath, ProjectProperties properties) {
+        List<Path> srcPaths = properties.getSourcePaths();
+		for (Path path : srcPaths) {
+            if (!Files.exists(path)) {
                 throw new MissingProjectDependencyException("Missing source: " + path.toString());
             }
         }
-		List<File> prjPaths = properties.getProjectPaths();
-        for (File path : prjPaths) {
-            if (!path.exists()) {
+		List<Path> prjPaths = properties.getExternalProjectPaths();
+        for (Path path : prjPaths) {
+            if (!Files.exists(path)) {
                 throw new MissingProjectDependencyException("Missing project: " + path.toString());
             }
         }
-        List<File> libPaths = properties.getLibraryPaths();
-		for (File path : libPaths) {
-            if (!path.exists()) {
+        List<Path> libPaths = properties.getLibraryPaths();
+		for (Path path : libPaths) {
+            if (!Files.exists(path)) {
                 throw new MissingProjectDependencyException("Missing library: " + path.toString());
             }
         }
-        return newProject(projectPath.getName(), srcPaths, prjPaths, libPaths);
+        return newProject(projectPath.toFile().getName(), srcPaths, prjPaths, libPaths);
     }
 
     @SuppressWarnings({ "serial" })

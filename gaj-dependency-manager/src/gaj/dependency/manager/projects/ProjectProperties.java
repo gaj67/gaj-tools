@@ -3,7 +3,7 @@
  */
 package gaj.dependency.manager.projects;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -11,22 +11,28 @@ import java.util.List;
  */
 public interface ProjectProperties {
 
+	/**
+	 * 
+	 * @return The path to the project to which these properties apply.
+	 */
+	public Path getProjectPath();
+
     /**
      * 
      * @return A list of paths to project source directories.
      */
-    public List<File> getSourcePaths();
+    public List<Path> getSourcePaths();
 
     /**
      * 
      * @return A list of paths to external project dependencies.
      */
-    public List<File> getProjectPaths();
+    public List<Path> getExternalProjectPaths();
 
     /**
      * 
      * @return A list of paths to external library dependencies.
      */
-    public List<File> getLibraryPaths();
+    public List<Path> getLibraryPaths();
 
 }

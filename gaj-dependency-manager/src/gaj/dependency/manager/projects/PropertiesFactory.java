@@ -3,8 +3,8 @@
  */
 package gaj.dependency.manager.projects;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public interface PropertiesFactory {
 
@@ -16,6 +16,6 @@ public interface PropertiesFactory {
      * @throws IOException If the project type is recognised by the factory but required properties
      * are missing or cannot be loaded.
      */
-    ProjectProperties getProperties(File projectPath) throws IOException;
+    /*@Nullable*/ ProjectProperties getProperties(Path projectPath) throws IOException;
 
 }

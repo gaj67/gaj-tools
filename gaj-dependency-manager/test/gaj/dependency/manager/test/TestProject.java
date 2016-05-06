@@ -12,8 +12,10 @@ import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.projects.GroupProject;
 import gaj.dependency.manager.projects.LoadableProject;
 import gaj.dependency.manager.projects.ProjectFactory;
-import java.io.File;
+
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -31,7 +33,7 @@ public class TestProject {
     public static void main(String[] args) throws IOException {
         DuplicateClassWarning duplicationWarning = ComponentFactory.getDuplicateClassWarning();
         ComponentFactory.setDuplicateClassWarning(DuplicateClassWarning.warn);
-        File projectPath = new File(".");
+        Path projectPath = Paths.get(".");
         GroupProject project = loadProject(projectPath, false);
         checkDanglingDependencies(project);
         ComponentFactory.setDuplicateClassWarning(duplicationWarning);
@@ -41,7 +43,7 @@ public class TestProject {
         return String.format("%d %s%s", count, prefix, (count == 1) ? singularSuffix : pluralSuffix);
     }
 
-    private static GroupProject loadProject(File projectPath, boolean fromBuild) throws IOException {
+    private static GroupProject loadProject(Path projectPath, boolean fromBuild) throws IOException {
         LoadableProject project = ProjectFactory.newProject(projectPath, fromBuild);
         System.out.printf("Loading project \"%s\"...%n", project.getName());
         project.load();

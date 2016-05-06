@@ -5,6 +5,9 @@ package gaj.dependency.manager.packages;
 
 import gaj.dependency.manager.classes.ClassDescription;
 import gaj.dependency.manager.dependencies.PackageDependency;
+import gaj.iterators.core.Iterative;
+import gaj.iterators.impl.Iteratives;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -82,8 +85,8 @@ public abstract class PackageFactory {
             }
 
             @Override
-            public Iterable<ClassDescription> getClasses() {
-                return Collections.emptyList();
+            public Iterative<ClassDescription> getClasses() {
+                return Iteratives.newIterative();
             }
 
             @Override
@@ -127,8 +130,7 @@ public abstract class PackageFactory {
             }
 
             @Override
-            public Collection<ClassDescription> getEfferents(ClassDescription afferent,
-                    PackageDependency filter) {
+            public Collection<ClassDescription> getEfferents(ClassDescription afferent, PackageDependency filter) {
                 return null;
             }
 

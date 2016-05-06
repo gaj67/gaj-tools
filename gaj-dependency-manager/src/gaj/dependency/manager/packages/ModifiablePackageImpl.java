@@ -7,6 +7,9 @@ import gaj.classbinary.descriptors.ClassNameSpace;
 import gaj.dependency.manager.classes.ClassDescription;
 import gaj.dependency.manager.classes.ClassDescriptionFactory;
 import gaj.dependency.manager.dependencies.PackageDependency;
+import gaj.iterators.core.Iterative;
+import gaj.iterators.impl.Iteratives;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -64,8 +67,8 @@ import java.util.Set;
     }
 
     @Override
-    public Iterable<ClassDescription> getClasses() {
-        return Collections.unmodifiableCollection(classes.values());
+    public Iterative<ClassDescription> getClasses() {
+        return Iteratives.toIterative(Collections.unmodifiableCollection(classes.values()));
     }
 
     @Override

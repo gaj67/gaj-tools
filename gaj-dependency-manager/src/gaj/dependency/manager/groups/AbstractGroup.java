@@ -11,8 +11,8 @@ import gaj.dependency.manager.dependencies.ComponentDependency;
 import gaj.dependency.manager.dependencies.GroupDependency;
 import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.packages.PackageFactory;
-import gaj.iterators.core.Filter;
-import gaj.iterators.utilities.IteratorFactory;
+import gaj.iterators.core.Iterative;
+import gaj.iterators.impl.Iteratives;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -29,7 +29,7 @@ import java.util.LinkedList;
     public abstract int numComponents();
 
     @Override
-    public abstract Iterable<ClassesComponent> getComponents();
+    public abstract Iterative<ClassesComponent> getComponents();
 
     @Override
     public abstract boolean hasComponent(String componentName);
@@ -62,17 +62,9 @@ import java.util.LinkedList;
         return numClasses;
     }
 
-    protected static final Filter<ClassesComponent,Iterable<? extends ClassDescription>>
-    COMPONENT_CLASSES_FILTER = new Filter<ClassesComponent,Iterable<? extends ClassDescription>>() {
-        @Override
-        public Iterable<ClassDescription> filter(ClassesComponent component) {
-            return component.getClasses();
-        }
-    };
-
     @Override
-    public Iterable<ClassDescription> getClasses() {
-        return IteratorFactory.newMultiIterator(getComponents(), COMPONENT_CLASSES_FILTER);
+    public Iterative<ClassDescription> getClasses() {
+        return Iteratives.newIterative(getComponents().stream().flatMap(component -> component.getClasses().stream()));
     }
 
     @Override
@@ -218,17 +210,9 @@ import java.util.LinkedList;
         return numPackages;
     }
 
-    protected static final Filter<ClassesComponent,Iterable<? extends ClassPackage>>
-    COMPONENT_PACKAGES_FILTER = new Filter<ClassesComponent,Iterable<? extends ClassPackage>>() {
-        @Override
-        public Iterable<ClassPackage> filter(ClassesComponent component) {
-            return component.getPackages();
-        }
-    };
-
     @Override
-    public Iterable<ClassPackage> getPackages() {
-        return IteratorFactory.newMultiIterator(getComponents(), COMPONENT_PACKAGES_FILTER);
+    public Iterative<ClassPackage> getPackages() {
+        return Iteratives.newIterative(getComponents().stream().flatMap(component -> component.getPackages().stream()));
     }
 
     @Override
@@ -247,15 +231,8 @@ import java.util.LinkedList;
     }
 
     @Override
-    public Iterable<ClassPackage> getPackages(final String packageName) {
-        return IteratorFactory.newIterator(
-                getComponents(),
-                new Filter<ClassesComponent,ClassPackage>() {
-                    @Override
-                    public ClassPackage filter(ClassesComponent component) {
-                        return component.getPackage(packageName);
-                    }
-                });
+    public Iterative<ClassPackage> getPackages(final String packageName) {
+        return Iteratives.newIterative(getComponents().stream().map(component -> component.getPackage(packageName)));
     }
 
     @Override

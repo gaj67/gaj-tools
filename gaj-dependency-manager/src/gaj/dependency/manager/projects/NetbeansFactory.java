@@ -3,10 +3,11 @@
  */
 package gaj.dependency.manager.projects;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,43 +25,43 @@ import java.util.Properties;
     private static final String NETBEANS_REFERENCE_PROPERTY = "${reference.";	     // Indicates external project?
 
     @Override
-    public ProjectProperties getProperties(File projectPath) throws IOException {
-        File propertiesFile = new File(projectPath, NETBEANS_PROPERTY_FILE);
-        if (!propertiesFile.exists()) {
+    public /*@Nullable*/ ProjectProperties getProperties(Path projectPath) throws IOException {
+        Path propertiesFile = projectPath.resolve(NETBEANS_PROPERTY_FILE);
+        if (!Files.exists(propertiesFile)) {
             return null;
         }
         Properties properties = new Properties();
-        try (InputStream is = new FileInputStream(propertiesFile)) {
+        try (InputStream is = new FileInputStream(propertiesFile.toFile())) {
             properties.load(is);
         }
         return new NetbeansProperties(projectPath, properties);
     }
 
     private static class NetbeansProperties implements ProjectProperties {
-		private final File projectPath;
-        private final List<File> srcPaths, prjPaths, libPaths;
+		private final Path projectPath;
+        private final List<Path> srcPaths = new LinkedList<>();
+        private final List<Path> prjPaths = new LinkedList<>();
+        private final List<Path> libPaths = new LinkedList<>();
         private final Properties properties;
 
         @Override
-        public List<File> getSourcePaths() {
+        public List<Path> getSourcePaths() {
             return Collections.unmodifiableList(srcPaths);
         }
 
         @Override
-        public List<File> getProjectPaths() {
+        public List<Path> getExternalProjectPaths() {
             return Collections.unmodifiableList(prjPaths);
         }
 
         @Override
-        public List<File> getLibraryPaths() {
+        public List<Path> getLibraryPaths() {
             return Collections.unmodifiableList(libPaths);
         }
 
-        private NetbeansProperties(File projectPath, Properties properties) throws IOException {
+        private NetbeansProperties(Path projectPath, Properties properties) throws IOException {
             this.projectPath = projectPath;
             this.properties = properties;
-            prjPaths = new LinkedList<>();
-            libPaths = new LinkedList<>();
             String classPaths = getRequiredProperty(NETBEANS_COMPILER_PATH_PROPERTY);
             for (String classPath : classPaths.split(":")) {
             	// XXX: Weak test for project dependencies.
@@ -69,7 +70,6 @@ import java.util.Properties;
             	else
             		libPaths.add(resolvePath(resolveReference(classPath)));
             }
-            srcPaths = new LinkedList<>();
             srcPaths.add(resolvePath(getRequiredProperty(NETBEANS_BUILD_PATH_PROPERTY)));
         }
 
@@ -101,9 +101,14 @@ import java.util.Properties;
             }
         }
 
-        private File resolvePath(String localPath) {
-            return new File(projectPath, localPath);
+        private Path resolvePath(String localPath) {
+            return projectPath.resolve(localPath);
         }
+
+		@Override
+		public Path getProjectPath() {
+			return projectPath;
+		}
 
     }
 
