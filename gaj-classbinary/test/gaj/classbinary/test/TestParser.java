@@ -28,6 +28,7 @@ public abstract class TestParser {
     }
 
     private static final String[] CLASSPATHS = new String[] {
+    	"paths/ClassPath.class",
         "parser/ParserFactory.class",
         "descriptors/ClassDescriptor.class",
         "descriptors/ModifiableClassDescriptor.class",

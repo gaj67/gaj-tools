@@ -22,6 +22,9 @@ import java.util.LinkedList;
     public static final int CONSTANT_METHOD = 10;
     public static final int CONSTANT_INTERFACEMETHOD = 11;
     public static final int CONSTANT_NAMEANDTYPE = 12;
+    public static final int CONSTANT_METHODHANDLE = 15;
+    public static final int CONSTANT_METHODTYPE = 16;
+    public static final int CONSTANT_INVOKEDYNAMIC = 18;
 
     public static ClassConstant newClassConstant(final byte tag, final int nameIndex, final int typeIndex) {
         return new ClassConstant() {
@@ -126,25 +129,33 @@ import java.util.LinkedList;
 
     private static ClassConstant parseConstant(DataInputStream in) throws IOException {
         byte tag = in.readByte();
-        switch (tag) {
-            case (CONSTANT_CLASS):
-            case (CONSTANT_STRING):
+		switch (tag) {
+            case CONSTANT_CLASS:
+            case CONSTANT_STRING:
+            case CONSTANT_METHODTYPE:
                 return newClassConstant(tag, in.readUnsignedShort(), -1);
-            case (CONSTANT_FIELD):
-            case (CONSTANT_METHOD):
-            case (CONSTANT_INTERFACEMETHOD):
-            case (CONSTANT_NAMEANDTYPE):
+            case CONSTANT_FIELD:
+            case CONSTANT_METHOD:
+            case CONSTANT_INTERFACEMETHOD:
+            case CONSTANT_NAMEANDTYPE:
                 return newClassConstant(tag, in.readUnsignedShort(), in.readUnsignedShort());
-            case (CONSTANT_INTEGER):
+            case CONSTANT_INTEGER:
                 return newClassConstant(tag, new Integer(in.readInt()));
-            case (CONSTANT_FLOAT):
+            case CONSTANT_FLOAT:
                 return newClassConstant(tag, new Float(in.readFloat()));
-            case (CONSTANT_LONG):
+            case CONSTANT_LONG:
                 return newClassConstant(tag, new Long(in.readLong()));
-            case (CONSTANT_DOUBLE):
+            case CONSTANT_DOUBLE:
                 return newClassConstant(tag, new Double(in.readDouble()));
-            case (CONSTANT_UTF8):
-                return newClassConstant(tag, in.readUTF());
+            case CONSTANT_UTF8:
+                return newClassConstant(tag, in.readUTF());            
+            case CONSTANT_METHODHANDLE: {
+            	@SuppressWarnings("unused")
+				byte kind = in.readByte(); // XXX This info is lost! Should really have variant ClassConstant sub-classes.
+                return newClassConstant(tag, in.readUnsignedShort(), -1);
+            }
+            case CONSTANT_INVOKEDYNAMIC:
+                return newClassConstant(tag, in.readUnsignedShort(), in.readUnsignedShort());
             default:
                 throw new IOException("Unknown constant: " + tag);
         }

@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public abstract class ManagerFactory {
 
-    private ManagerFactory() {}
+	private ManagerFactory() {}
 
     /**
      * Creates an empty class-path manager.
