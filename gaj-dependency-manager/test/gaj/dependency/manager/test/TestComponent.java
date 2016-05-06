@@ -20,7 +20,7 @@ public class TestComponent {
     private TestComponent() {}
 
     public static void main(String[] args) throws IOException {
-        final String componentDir = "./bin";
+        final String componentDir = "bin";
         System.out.printf("Testing component for path \"%s\"%n", componentDir);
         ClassesComponent component = ComponentFactory.newComponent("test", Paths.get(componentDir)).load();
         System.out.printf("component.getComponentName()==componentName is %s%n",

@@ -232,7 +232,7 @@ import java.util.LinkedList;
 
     @Override
     public Iterative<ClassPackage> getPackages(final String packageName) {
-        return Iteratives.newIterative(getComponents().stream().map(component -> component.getPackage(packageName)));
+        return Iteratives.newIterative(getComponents().stream().map(component -> component.getPackage(packageName)).filter(pkg -> pkg != null));
     }
 
     @Override
@@ -340,7 +340,7 @@ import java.util.LinkedList;
         return efferents;
     }
 
-    private ClassPackage _getPackage(String className) {
+    private /*@Nullable*/ ClassPackage _getPackage(String className) {
         for (ClassPackage apackage : getPackages(ClassNameSpace.getPackageName(className))) {
             if (apackage.hasClass(className)) {
                 return apackage;

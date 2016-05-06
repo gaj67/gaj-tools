@@ -134,7 +134,7 @@ public interface ClassesComponent {
      * @return A container for the named package,
      * or a value of null if the package is not located within the component.
      */
-    public ClassPackage getPackage(String packageName);
+    public /*@Nullable*/ ClassPackage getPackage(String packageName);
 
     /**
      * Obtains the package instance containing the given class.
@@ -143,7 +143,7 @@ public interface ClassesComponent {
      * @return The containing package instance,
      * or a value of null if the class is not located within the component.
      */
-    public ClassPackage getPackage(ClassDescription desc);
+    public /*@Nullable*/ ClassPackage getPackage(ClassDescription desc);
 
     /**
      * Determines the package afferents, which are the packages that depend upon the given package.

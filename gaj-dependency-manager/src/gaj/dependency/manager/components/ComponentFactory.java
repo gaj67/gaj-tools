@@ -79,8 +79,13 @@ public abstract class ComponentFactory {
      */
     public static LoadableComponent newComponent(String name, Iterable<Path> classPaths) {
         LoadableComponent component = newComponent(name);
-        for (Path path : classPaths) {
-            component.addClassPath(path);
+        if (classPaths instanceof Path) {
+        	// XXX Why ever did they make Path implement Iterable<Path>?
+        	component.addClassPath((Path) classPaths);
+        } else {
+        	for (Path path : classPaths) {
+        		component.addClassPath(path);
+        	}
         }
         return component;
     }

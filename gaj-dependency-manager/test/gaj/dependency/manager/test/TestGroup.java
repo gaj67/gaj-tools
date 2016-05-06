@@ -22,7 +22,7 @@ public class TestGroup {
 
     public static void main(String[] args) throws IOException {
         final String componentName = "pkg";
-        Path root = Paths.get("./bin/gaj/dependency/manager");
+        Path root = Paths.get("bin/gaj/dependency/manager");
         ClassesComponent component = ComponentFactory.newComponent(componentName, root.resolve("packages"));
         ClassesComponent component2 = ComponentFactory.newComponent("cmp", root.resolve("components"));
         ComponentGroup group = GroupFactory.newGroup(component, component2).load();
