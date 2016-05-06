@@ -5,7 +5,6 @@ package gaj.classbinary.loader;
 
 import gaj.classbinary.descriptors.ClassDescriptor;
 
-import java.io.File;
 import java.nio.file.Path;
 
 /**

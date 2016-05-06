@@ -5,8 +5,6 @@ package gaj.classbinary.paths;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.function.Predicate;
-import java.util.zip.ZipEntry;
 
 /**
  * Defines the basic types of class paths.
