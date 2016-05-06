@@ -7,7 +7,8 @@ import gaj.classbinary.descriptors.ClassNameSpace;
 import gaj.dependency.manager.classes.ClassDescription;
 import gaj.dependency.manager.classes.ClassDescriptionFactory;
 import gaj.dependency.manager.packages.ClassPackage;
-import gaj.iterators.utilities.Iterables;
+import gaj.iterators.impl.Collections;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -92,7 +93,7 @@ public abstract class PackageDependenciesFactory {
      */
     public static Collection<Cycle<ClassDescription>> getClassCycles(Cycle<ClassPackage> packageCycle) {
         Collection<ClassPackage> fullCycle = new LinkedList<>();
-        Iterables.addAll(fullCycle, packageCycle);
+        Collections.addAll(fullCycle, packageCycle);
         fullCycle.add(packageCycle.get(0)); // Add first package in cycle to make loop explicit.
         Dependencies<ClassDescription> dependencies = getInterPackageClassDependencies(fullCycle);
         return DependenciesFactory.getCycles(dependencies);

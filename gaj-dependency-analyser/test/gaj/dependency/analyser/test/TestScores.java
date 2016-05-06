@@ -15,8 +15,10 @@ import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.projects.GroupProject;
 import gaj.dependency.manager.projects.LoadableProject;
 import gaj.dependency.manager.projects.ProjectFactory;
-import java.io.File;
+
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class TestScores {
 
@@ -36,16 +38,16 @@ public class TestScores {
         MetricsFactory.setUseSAP(USE_SAP);
         MetricsFactory.setUseADP(USE_ADP);
         MetricsFactory.setUseDIP(USE_DIP);
-        analyseProject(new File("."), "gaj.dependency.analyser.metrics");
+        analyseProject(Paths.get("."), "gaj.dependency.analyser.metrics");
     }
 
-    private static void analyseProject(File projectPath, String packageName) throws IOException {
+    private static void analyseProject(Path projectPath, String packageName) throws IOException {
         GroupProject project = loadProject(projectPath, false);
         ProjectDependencies projDependencies = ProjectDependenciesFactory.newProjectDependencies(project);
         checkInterPackageMetrics(projDependencies, project.getSourceComponent().getPackage(packageName));
     }
 
-    private static GroupProject loadProject(File projectPath, boolean fromBuild) throws IOException {
+    private static GroupProject loadProject(Path projectPath, boolean fromBuild) throws IOException {
         LoadableProject project = ProjectFactory.newProject(projectPath, fromBuild);
         System.out.printf("Loading project \"%s\"...%n", project.getName());
         project.load();

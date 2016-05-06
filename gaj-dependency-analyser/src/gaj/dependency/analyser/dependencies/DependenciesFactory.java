@@ -156,9 +156,9 @@ public abstract class DependenciesFactory {
 
     /**
      * Performs a topological sorting of nodes using the given dependencies.
-     * <p/><b>Note:</b> If the sorting is performed on the out-set dependencies {X -> {Y}},
+     * <p/><b>Note:</b> If the sorting is performed on the out-set (efferent) dependencies {X -> {Y}},
      * then node Y will appear before node X in topological ordering.
-     * Conversely, if the sorting is performed on the in-set dependencies {Y <- {X}},
+     * Conversely, if the sorting is performed on the in-set (afferent) dependencies {Y <- {X}},
      * then node X will appear before node Y in topological ordering.
      * 
      * @param dependencies - A mapping between nodes, usually giving either the in-set or

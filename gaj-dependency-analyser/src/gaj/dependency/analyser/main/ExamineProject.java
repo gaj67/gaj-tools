@@ -14,10 +14,11 @@ import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.projects.GroupProject;
 import gaj.dependency.manager.projects.LoadableProject;
 import gaj.dependency.manager.projects.ProjectFactory;
-import gaj.iterators.utilities.Iterables;
-import java.io.File;
+import gaj.iterators.impl.Collections;
+
 import java.io.IOException;
-import java.util.Collections;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -33,13 +34,13 @@ public class ExamineProject {
     public static void main(String[] args) throws IOException {
         ComponentFactory.setDuplicateClassWarning(DuplicateClassWarning.ignore);
         if (args == null || args.length == 0) {
-            analyseProject(new File("."), false);
+            analyseProject(Paths.get("."), false);
         } else {
             for (String projectPath : args) {
                 if (projectPath.startsWith("#")) {
                     continue; // Ignore comments.
                 }
-                analyseProject(new File(projectPath), false);
+                analyseProject(Paths.get(projectPath), false);
             }
         }
     }
@@ -51,11 +52,11 @@ public class ExamineProject {
      */
     public void execute() throws IOException {
         ComponentFactory.setDuplicateClassWarning(DuplicateClassWarning.ignore);
-        analyseProject(new File("."), true);
+        analyseProject(Paths.get("."), true);
     }
 
-    private static void analyseProject(File projectPath, boolean fromBuild) throws IOException {
-        GroupProject project = loadProject(projectPath, fromBuild);
+    private static void analyseProject(Path path, boolean fromBuild) throws IOException {
+        GroupProject project = loadProject(path, fromBuild);
         summariseProject(project);
     }
 
@@ -63,8 +64,8 @@ public class ExamineProject {
         return String.format("%d %s%s", count, prefix, (count == 1) ? singularSuffix : pluralSuffix);
     }
 
-    private static GroupProject loadProject(File projectPath, boolean fromBuild) throws IOException {
-        LoadableProject project = ProjectFactory.newProject(projectPath, fromBuild);
+    private static GroupProject loadProject(Path path, boolean fromBuild) throws IOException {
+        LoadableProject project = ProjectFactory.newProject(path, fromBuild);
         System.out.printf("Loading project \"%s\"...%n", project.getName());
         project.load();
         final ComponentGroup group = project.getGroup();
@@ -103,7 +104,7 @@ public class ExamineProject {
     }
 
     private static void displayTypeCounts(Map<String,Integer> typeCounts) {
-        List<String> types = Iterables.asList(typeCounts.keySet());
+        List<String> types = Collections.asList(typeCounts.keySet());
         Collections.sort(types, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {

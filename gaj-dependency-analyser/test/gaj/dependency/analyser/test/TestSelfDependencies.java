@@ -13,8 +13,10 @@ import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.projects.GroupProject;
 import gaj.dependency.manager.projects.LoadableProject;
 import gaj.dependency.manager.projects.ProjectFactory;
-import java.io.File;
+
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +26,7 @@ public class TestSelfDependencies {
     private TestSelfDependencies() {}
 
     public static void main(String[] args) throws IOException {
-        GroupProject project = loadProject(new File("."));
+        GroupProject project = loadProject(Paths.get("."));
         final ComponentGroup group = project.getGroup();
         ModifiableDependencies<ClassPackage> efferentMap = DependenciesFactory.newDependencies();
         // Describe package dependencies.
@@ -55,7 +57,7 @@ public class TestSelfDependencies {
         }
     }
 
-    private static GroupProject loadProject(File projectPath) throws IOException {
+    private static GroupProject loadProject(Path projectPath) throws IOException {
         LoadableProject project = ProjectFactory.newProject(projectPath, false);
         System.out.printf("Loading project \"%s\"...%n", project.getName());
         project.load();

@@ -26,12 +26,13 @@ import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.projects.GroupProject;
 import gaj.dependency.manager.projects.LoadableProject;
 import gaj.dependency.manager.projects.ProjectFactory;
-import gaj.iterators.utilities.Iterables;
-import java.io.File;
+import gaj.iterators.impl.Collections;
+
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -63,13 +64,13 @@ public class ProjectAnalysis {
         MetricsFactory.setUseADP(CHECK_ADP);
         MetricsFactory.setUseDIP(CHECK_DIP);
         if (args == null || args.length == 0) {
-            analyseProject(new File("."), false);
+            analyseProject(Paths.get("."), false);
         } else {
             for (String projectPath : args) {
                 if (projectPath.startsWith("#")) {
                     continue; // Ignore comments.
                 }
-                analyseProject(new File(projectPath), false);
+                analyseProject(Paths.get(projectPath), false);
             }
         }
         //ComponentFactory.setDuplicateClassWarning(duplicationWarning);
@@ -87,11 +88,11 @@ public class ProjectAnalysis {
         MetricsFactory.setUseSAP(CHECK_SAP);
         MetricsFactory.setUseADP(CHECK_ADP);
         MetricsFactory.setUseDIP(CHECK_DIP);
-        analyseProject(new File("."), true);
+        analyseProject(Paths.get("."), true);
         //ComponentFactory.setDuplicateClassWarning(duplicationWarning);
     }
 
-    private static void analyseProject(File projectPath, boolean fromBuild) throws IOException {
+    private static void analyseProject(Path projectPath, boolean fromBuild) throws IOException {
         GroupProject project = loadProject(projectPath, fromBuild);
         ProjectDependencies projDependencies = ProjectDependenciesFactory.newProjectDependencies(project);
         checkDanglingDependencies(project);
@@ -105,13 +106,13 @@ public class ProjectAnalysis {
         return String.format("%d %s%s", count, prefix, (count == 1) ? singularSuffix : pluralSuffix);
     }
 
-    private static GroupProject loadProject(File projectPath, boolean fromBuild) throws IOException {
+    private static GroupProject loadProject(Path projectPath, boolean fromBuild) throws IOException {
         LoadableProject project = ProjectFactory.newProject(projectPath, fromBuild);
         System.out.printf("Loading project \"%s\"...%n", project.getName());
         project.load();
         final ComponentGroup group = project.getGroup();
         System.out.printf("Loaded %s:%n", pluralise(group.numComponents(), "component", "", "s"));
-        List<ClassesComponent> components = Iterables.asList(group.getComponents());
+        List<ClassesComponent> components = Collections.asList(group.getComponents());
         Collections.sort(
         		components,
         		new Comparator<ClassesComponent>() {
@@ -243,7 +244,7 @@ public class ProjectAnalysis {
         System.out.flush();
         System.out.print(" [A=abstraction, I=instability, D=distance, F=fragility, ");
         System.out.println("aC=afferent-coverage, eC=efferent-coverage]");
-        List<FamilyMetrics<ClassPackage>> packageMetrics = Iterables.asList(project.getInterPackageMetrics());
+        List<FamilyMetrics<ClassPackage>> packageMetrics = Collections.asList(project.getInterPackageMetrics());
         sortMetricsByScore(packageMetrics);
         int totDependencies = 0, totBadDependencies = 0;
         double totScore = 0;
@@ -322,10 +323,10 @@ public class ProjectAnalysis {
         System.out.flush();
         int totDependencies = 0, totBadDependencies = 0;
         double overallScore = 0;
-        List<ClassPackage> packages = Iterables.asList(project.getPackages());
+        List<ClassPackage> packages = Collections.asList(project.getPackages());
         sortPackagesByName(packages);
         for (ClassPackage apackage : packages) {
-            List<FamilyMetrics<ClassDescription>> packageMetrics = Iterables.asList(project.getIntraPackageMetrics(apackage));
+            List<FamilyMetrics<ClassDescription>> packageMetrics = Collections.asList(project.getIntraPackageMetrics(apackage));
             System.out.printf("* %s [%d]: ", apackage, packageMetrics.size());
             PackageSummary summary = SummaryFactory.summarisePackage(apackage);
             System.out.printf("E=%4.2f, vA=%4.2f, tA=%4.2f, sC=%4.2f, ", 

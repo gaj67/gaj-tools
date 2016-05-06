@@ -16,10 +16,13 @@ import gaj.dependency.manager.packages.ClassPackage;
 import gaj.dependency.manager.projects.GroupProject;
 import gaj.dependency.manager.projects.LoadableProject;
 import gaj.dependency.manager.projects.ProjectFactory;
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -41,13 +44,13 @@ public class GraphPackages {
     public static void main(String[] args) throws IOException {
         ComponentFactory.setDuplicateClassWarning(DuplicateClassWarning.ignore);
         if (args == null || args.length == 0) {
-            analyseProject(new File("."), false);
+            analyseProject(Paths.get("."), false);
         } else {
             for (String projectPath : args) {
                 if (projectPath.startsWith("#")) {
                     continue; // Ignore comments.
                 }
-                analyseProject(new File(projectPath), false);
+                analyseProject(Paths.get(projectPath), false);
             }
         }
     }
@@ -59,14 +62,14 @@ public class GraphPackages {
      */
     public void execute() throws IOException {
         ComponentFactory.setDuplicateClassWarning(DuplicateClassWarning.ignore);
-        analyseProject(new File("."), true);
+        analyseProject(Paths.get("."), true);
     }
 
-    private static void analyseProject(File projectPath, boolean fromBuild) throws IOException {
-        System.out.printf("Analysing dependencies for project: %s ...%n", projectPath.getCanonicalPath());
+    private static void analyseProject(Path projectPath, boolean fromBuild) throws IOException {
+        System.out.printf("Analysing dependencies for project: %s ...%n", projectPath.toRealPath());
         GroupProject project = loadProject(projectPath, fromBuild);
-        File reportPath = new File(projectPath, "logs/graphs");
-        if (reportPath.exists() || reportPath.mkdirs()) {
+        Path reportPath = Files.createDirectories(projectPath.resolve("logs/graphs"));
+        if (Files.exists(reportPath)) {
             ProjectDependencies projectDependencies = ProjectDependenciesFactory.newProjectDependencies(project);
             Dependencies<ClassPackage> packageDependencies = projectDependencies.getInterPackageEfferentDependencies();
             Dependencies<ClassPackage> cyclicDependencies = DependenciesFactory.getCyclicDependencies(packageDependencies);
@@ -91,16 +94,16 @@ public class GraphPackages {
         }
     }
 
-    private static GroupProject loadProject(File projectPath, boolean fromBuild) throws IOException {
+    private static GroupProject loadProject(Path projectPath, boolean fromBuild) throws IOException {
         LoadableProject project = ProjectFactory.newProject(projectPath, fromBuild);
         project.load();
         return project;
     }
 
-    private static void graphInterPackageDependencies(Iterable<ClassPackage> packages, Dependencies<ClassPackage> packageDependencies, Dependencies<ClassPackage> cyclicDependencies, File reportPath) throws FileNotFoundException {
-        File graphFile = new File(reportPath, "inter-pkg-dep-graph.dot");
+    private static void graphInterPackageDependencies(Iterable<ClassPackage> packages, Dependencies<ClassPackage> packageDependencies, Dependencies<ClassPackage> cyclicDependencies, Path reportPath) throws FileNotFoundException {
+        Path graphFile = reportPath.resolve("inter-pkg-dep-graph.dot");
         System.out.printf("Creating inter-package dependency graph: %s%n", graphFile);
-        try (PrintStream buf = new PrintStream(graphFile)) {
+        try (PrintStream buf = new PrintStream(graphFile.toFile())) {
             buf.append("digraph g {\n");
             Map<String,List<ClassPackage>> allGroupedPackages = new HashMap<>();
             for (ClassPackage apackage : packageDependencies.getNodes()) {
@@ -169,10 +172,10 @@ public class GraphPackages {
         return (idx < 0) ? packageName : packageName.substring(idx+1);
     }
 
-    private static void graphInterPackageCycles(Iterable<ClassPackage> packages, Dependencies<ClassPackage> dependencies, File reportPath) throws FileNotFoundException {
-        File graphFile = new File(reportPath, "inter-pkg-cyc-graph.dot");
+    private static void graphInterPackageCycles(Iterable<ClassPackage> packages, Dependencies<ClassPackage> dependencies, Path reportPath) throws FileNotFoundException {
+        Path graphFile = reportPath.resolve("inter-pkg-cyc-graph.dot");
         System.out.printf("Creating inter-package cyclic dependency graph: %s%n", graphFile);
-        try (PrintStream buf = new PrintStream(graphFile)) {
+        try (PrintStream buf = new PrintStream(graphFile.toFile())) {
             buf.append("digraph g {\n");
             //buf.append("node [shape=plaintext]\n");
             for (ClassPackage apackage : dependencies.getNodes()) {
@@ -201,14 +204,14 @@ public class GraphPackages {
         }
     }
 
-    private static void graphIntraPackageCycles(Iterable<ClassPackage> packages, ProjectDependencies projectDependencies, File reportPath) {
+    private static void graphIntraPackageCycles(Iterable<ClassPackage> packages, ProjectDependencies projectDependencies, Path reportPath) {
         for (ClassPackage apackage : packages) {
             Dependencies<ClassDescription> dependencies = DependenciesFactory.getCyclicDependencies(projectDependencies.getIntraPackageEfferentDependencies(apackage));
             if (dependencies.isEmpty()) continue;
             String simpleName = getNodeName(getSimpleName(apackage.getPackageName()));
-            File graphFile = new File(reportPath, simpleName + "-cyc-graph.dot");
+            Path graphFile = reportPath.resolve(simpleName + "-cyc-graph.dot");
             System.out.printf("Creating intra-package cyclic dependency graph: %s%n", graphFile);
-            try (PrintStream buf = new PrintStream(graphFile)) {
+            try (PrintStream buf = new PrintStream(graphFile.toFile())) {
                 graphIntraPackageCycles(dependencies, buf);
             } catch (FileNotFoundException e) {
                 System.err.printf("Failed to create report for package: %s%n", apackage.getPackageName());

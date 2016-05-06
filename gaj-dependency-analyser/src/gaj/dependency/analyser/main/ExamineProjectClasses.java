@@ -9,8 +9,10 @@ import gaj.dependency.manager.components.ComponentFactory.DuplicateClassWarning;
 import gaj.dependency.manager.projects.GroupProject;
 import gaj.dependency.manager.projects.LoadableProject;
 import gaj.dependency.manager.projects.ProjectFactory;
-import java.io.File;
+
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ExamineProjectClasses {
 
@@ -21,13 +23,13 @@ public class ExamineProjectClasses {
      */
     public static void main(String[] args) throws IOException {
         ComponentFactory.setDuplicateClassWarning(DuplicateClassWarning.ignore);
-        GroupProject project = loadProject(new File(args[0]), false);
+        GroupProject project = loadProject(Paths.get(args[0]), false);
         for (int i = 1; i < args.length; i++)
             summariseClass(project, args[i]);
     }
 
-    private static GroupProject loadProject(File projectPath, boolean fromBuild) throws IOException {
-        LoadableProject project = ProjectFactory.newProject(projectPath, fromBuild);
+    private static GroupProject loadProject(Path path, boolean fromBuild) throws IOException {
+        LoadableProject project = ProjectFactory.newProject(path, fromBuild);
         System.out.printf("Loading project \"%s\"...%n", project.getName());
         project.load();
         return project;

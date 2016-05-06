@@ -149,7 +149,7 @@ public abstract class Collections {
      * @param comparator - A comparator of element pairs.
      * @return A sorted list of the iterated elements.
      */
-    public <T> List<T> sort(Iterable<? extends T> iterable, Comparator<T> comparator) {
+    public static <T> List<T> sort(Iterable<? extends T> iterable, Comparator<T> comparator) {
         List<T> list = asList(iterable);
         java.util.Collections.sort(list, comparator);
         return list;
@@ -161,7 +161,7 @@ public abstract class Collections {
      * @param iterable - An iterable over elements.
      * @return A sorted list of the iterated elements.
      */
-    public <T extends Comparable<? super T>> List<T> sort(Iterable<? extends T> iterable) {
+    public static <T extends Comparable<? super T>> List<T> sort(Iterable<? extends T> iterable) {
         List<T> list = asList(iterable);
         java.util.Collections.sort(list);
         return list;

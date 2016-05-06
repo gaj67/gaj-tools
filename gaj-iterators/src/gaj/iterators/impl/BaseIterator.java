@@ -5,7 +5,6 @@ package gaj.iterators.impl;
 
 import gaj.iterators.core.StreamableIterator;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public interface BaseIterator<T> extends StreamableIterator<T> {
