@@ -35,16 +35,16 @@ public abstract class ResourceMultiIterator<T> extends MultiIterator<T> implemen
     }
 
 	private void closeIterator() {
-		if (iterator instanceof AutoCloseable) {
-			try {
-				((AutoCloseable) iterator).close();
-			} catch (Exception e) {
-				throw failure(e);
-			}
-		} else if (iterator instanceof Closeable) {
+		if (iterator instanceof Closeable) {
 			try {
 				((Closeable) iterator).close();
 			} catch (IOException e) {
+				throw failure(e);
+			}
+		} else if (iterator instanceof AutoCloseable) {
+			try {
+				((AutoCloseable) iterator).close();
+			} catch (Exception e) {
 				throw failure(e);
 			}
 		}

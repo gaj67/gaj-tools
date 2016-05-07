@@ -3,8 +3,12 @@
  */
 package gaj.classbinary.paths;
 
+import gaj.iterators.core.Iterative;
+import gaj.iterators.core.ResourceIterative;
 import gaj.iterators.core.ResourceIterator;
+import gaj.iterators.impl.Iteratives;
 import gaj.iterators.impl.ResourceIterators;
+import gaj.iterators.impl.ResourceSubIterative;
 
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -24,52 +28,57 @@ public abstract class ManagerFactory {
 
 	private ManagerFactory() {}
 
-    /**
-     * Creates an empty class-path manager.
-     * 
-     * @return An empty class-path manager instance.
-     */
-    public static ClassPathManager newClassPathManager() {
-        return new ClassPathManager() {
-            private final Map<Path, ClassPath> classPaths = new HashMap<>();
+	/**
+	 * Creates an empty class-path manager.
+	 * 
+	 * @return An empty class-path manager instance.
+	 */
+	public static ClassPathManager newClassPathManager() {
+		return new ClassPathManager() {
+			private final Map<Path, ClassPath> classPaths = new HashMap<>();
 
-            @Override
-            public void addClassPath(Path classPath) {
-                classPaths.put(classPath, new ClassPath(classPath)); // Ignore duplicates.
-            }
+			@Override
+			public void addClassPath(Path classPath) {
+				classPaths.put(classPath, new ClassPath(classPath)); // Ignore duplicates.
+			}
 
-            @Override
-            public Iterable<Path> getClassPaths() {
-                return Collections.unmodifiableSet(classPaths.keySet());
-            }
+			@Override
+			public Iterative<Path> getClassPaths() {
+				return Iteratives.toIterative(Collections.unmodifiableSet(classPaths.keySet()));
+			}
 
-            @Override
-            public ResourceIterator<InputStream> getClassStreams() {
-                return ResourceIterators.newIterator(classPaths.values().stream().flatMap(cp -> cp.getClassStreams().stream()), ResourceIterators.AUTO_CLOSE);
-            }
-        };
-    }
+			@Override
+			public ResourceIterative<InputStream> getClassStreams() {
+				return new ResourceSubIterative<InputStream>() {
+					@Override
+					protected ResourceIterator<InputStream> newIterator() {
+						return ResourceIterators.newIterator(classPaths.values().stream().flatMap(cp -> cp.getClassStreams().stream()));
+					}
+				};
+			}
+		};
+	}
 
-    /**
-     * Creates a class-path manager bound to the given class-path(s).
-     * 
-     * @return An initialised class-path manager instance.
-     */
-    public static ClassPathManager newClassPathManager(Path... classPaths) {
-        ClassPathManager manager = newClassPathManager();
-        for (Path classPath : classPaths) manager.addClassPath(classPath);
-        return manager;
-    }
+	/**
+	 * Creates a class-path manager bound to the given class-path(s).
+	 * 
+	 * @return An initialised class-path manager instance.
+	 */
+	public static ClassPathManager newClassPathManager(Path... classPaths) {
+		ClassPathManager manager = newClassPathManager();
+		for (Path classPath : classPaths) manager.addClassPath(classPath);
+		return manager;
+	}
 
-    /**
-     * Creates a class-path manager bound to the given class-path(s).
-     * 
-     * @return An initialised class-path manager instance.
-     */
-    public static ClassPathManager newClassPathManager(Iterable<? extends Path> classPaths) {
-        ClassPathManager manager = newClassPathManager();
-        for (Path classPath : classPaths) manager.addClassPath(classPath);
-        return manager;
-    }
+	/**
+	 * Creates a class-path manager bound to the given class-path(s).
+	 * 
+	 * @return An initialised class-path manager instance.
+	 */
+	public static ClassPathManager newClassPathManager(Iterable<? extends Path> classPaths) {
+		ClassPathManager manager = newClassPathManager();
+		for (Path classPath : classPaths) manager.addClassPath(classPath);
+		return manager;
+	}
 
 }

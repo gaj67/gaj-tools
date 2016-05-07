@@ -4,6 +4,7 @@
 package gaj.classbinary.loader;
 
 import gaj.classbinary.descriptors.ClassDescriptor;
+import gaj.iterators.core.Iterative;
 
 import java.nio.file.Path;
 
@@ -24,13 +25,13 @@ public interface ClassBinaryLoader {
      * 
      * @return An iterable over the class-paths being managed.
      */
-    public Iterable<Path> getClassPaths();
+    public Iterative<Path> getClassPaths();
 
     /**
      * 
      * @return A iterable over the class descriptors of all .class files in all of the class paths
      * being managed.
      */
-    public Iterable<ClassDescriptor> getClassDescriptors();
+    public Iterative<ClassDescriptor> getClassDescriptors();
 
 }

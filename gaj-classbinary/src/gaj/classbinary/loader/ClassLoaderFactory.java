@@ -9,11 +9,13 @@ import gaj.classbinary.parser.ParseException;
 import gaj.classbinary.parser.ParserFactory;
 import gaj.classbinary.paths.ClassPathManager;
 import gaj.classbinary.paths.ManagerFactory;
+import gaj.iterators.core.Iterative;
 import gaj.iterators.impl.Iteratives;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.util.function.Function;
 
 /**
  * Encapsulates the handling of class paths. A class path is essentially a path
@@ -25,55 +27,57 @@ import java.util.function.Function;
  */
 public abstract class ClassLoaderFactory {
 
-    private static final ClassParser parser = ParserFactory.newParser();
-    private static final Function<InputStream, ClassDescriptor> INPUT_STREAM_PARSER = 
-        new Function<InputStream, ClassDescriptor>() {
-            @Override
-            public ClassDescriptor apply(InputStream stream) {
-                try {
-                    return parser.parse(stream);
-                } catch (ParseException e) {
-                    throw new UncheckedParseException(e.getMessage(), e);
-                }
-            }
-        };
+	private static final ClassParser parser = ParserFactory.newParser();
 
-    private ClassLoaderFactory() {}
+	private ClassLoaderFactory() {}
 
-    /**
-     * Creates an empty class-path manager.
-     * 
-     * @return An empty class-path manager instance.
-     */
-    public static ClassBinaryLoader newClassLoader() {
-        return new ClassBinaryLoader() {
-            private final ClassPathManager manager = ManagerFactory.newClassPathManager();
+	/**
+	 * Creates an empty class-path manager.
+	 * 
+	 * @return An empty class-path manager instance.
+	 */
+	public static ClassBinaryLoader newClassLoader() {
+		return new ClassBinaryLoader() {
+			private final ClassPathManager manager = ManagerFactory.newClassPathManager();
 
-            @Override
-            public void addClassPath(Path classPath) {
-                manager.addClassPath(classPath);
-            }
+			@Override
+			public void addClassPath(Path classPath) {
+				manager.addClassPath(classPath);
+			}
 
-            @Override
-            public Iterable<Path> getClassPaths() {
-                return manager.getClassPaths();
-            }
+			@Override
+			public Iterative<Path> getClassPaths() {
+				return manager.getClassPaths();
+			}
 
-            @Override
-            public Iterable<ClassDescriptor> getClassDescriptors() {
-                return Iteratives.newIterative(manager.getClassStreams().stream().map(ClassLoaderFactory.INPUT_STREAM_PARSER));
-            }
-        };
-    }
+			@Override
+			public Iterative<ClassDescriptor> getClassDescriptors() {
+				return Iteratives.newIterative(manager.getClassStreams().stream().map(is -> parse(is)));
+			}
+		};
+	}
 
-    /**
-     * Creates a class-path manager bound to the given class-path(s).
-     * 
-     * @return An initialised class-path manager instance.
-     */
-    public static ClassBinaryLoader newClassLoader(Path... classPaths) {
-        ClassBinaryLoader loader = newClassLoader();
-        for (Path classPath : classPaths) loader.addClassPath(classPath);
-        return loader;
-    }
+	private static ClassDescriptor parse(InputStream stream) {
+		try {
+			return parser.parse(stream);
+		} catch (ParseException e) {
+			throw new UncheckedParseException(e.getMessage(), e);
+		} finally {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		}
+	}
+	/**
+	 * Creates a class-path manager bound to the given class-path(s).
+	 * 
+	 * @return An initialised class-path manager instance.
+	 */
+	public static ClassBinaryLoader newClassLoader(Path... classPaths) {
+		ClassBinaryLoader loader = newClassLoader();
+		for (Path classPath : classPaths) loader.addClassPath(classPath);
+		return loader;
+	}
 }

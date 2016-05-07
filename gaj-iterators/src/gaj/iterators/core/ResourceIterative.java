@@ -3,6 +3,16 @@
  */
 package gaj.iterators.core;
 
-public interface ResourceIterative<T> extends Iterative<T>, AutoCloseable {
+import java.io.Closeable;
+import java.io.UncheckedIOException;
 
+public interface ResourceIterative<T> extends Iterative<T>, Closeable {
+
+	/**
+	 *  Idempotently closes the underlying resource.
+	 *  @throws UncheckedIOException if the resource cannot be closed.
+	 */
+	@Override
+	public void close();
+	
 }

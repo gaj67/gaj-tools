@@ -21,14 +21,13 @@ public abstract class ResourceIterators {
 	public static final boolean AUTO_CLOSE = true;
 
 	/**
-     * Provides an iterator over a stream. The stream may optionally be closed when the iterator is closed.
+     * Provides an iterator over a stream. The stream will automatically be closed when the iterator is closed.
      *
 	 * @param stream - A stream of items.
-	 * @param autoClose - Specifies whether (true) or not (false) to automatically close the stream.
 	 * 
      * @return An iterator bound to the given stream.
      */
-    public static <T> ResourceIterator<T> newIterator(final Stream<? extends T> stream, boolean autoClose) {
+    public static <T> ResourceIterator<T> newIterator(final Stream<? extends T> stream) {
         return new ResourceIterator<T>() {
         	@SuppressWarnings("unchecked")
 			private Stream<T> _stream = (Stream<T>) stream;
@@ -69,7 +68,7 @@ public abstract class ResourceIterators {
 				}
 				_stream = null;
 				iter = null;
-				if (autoClose) stream.close();
+				stream.close();
 			}
         };
     }

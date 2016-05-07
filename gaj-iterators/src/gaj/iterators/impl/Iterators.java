@@ -190,6 +190,7 @@ public abstract class Iterators {
     
 	/**
      * Provides an iterator over a stream.
+     * <p/>The stream must be explicitly closed by the caller.
      *
 	 * @param stream - A stream of items.
      * @return An iterator bound to the given stream.

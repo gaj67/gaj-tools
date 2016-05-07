@@ -3,7 +3,8 @@
  */
 package gaj.classbinary.paths;
 
-import gaj.iterators.core.ResourceIterator;
+import gaj.iterators.core.Iterative;
+import gaj.iterators.core.ResourceIterative;
 
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -25,14 +26,14 @@ public interface ClassPathManager {
      * 
      * @return An iterable over the class-paths being managed.
      */
-    public Iterable<Path> getClassPaths();
+    public Iterative<Path> getClassPaths();
 
     /**
-     * Provides an iterator over the class file input streams. This iterator should be closed after use.
+     * Provides an iterable over the class file input streams. This iterable should be closed after use.
      * 
-     * @return A iterator over the input streams of all .class files in all of the class paths
+     * @return A iterable over the input streams of all .class files in all of the class paths
      * being managed.
      */
-    public ResourceIterator<InputStream> getClassStreams();
+    public ResourceIterative<InputStream> getClassStreams();
 
 }

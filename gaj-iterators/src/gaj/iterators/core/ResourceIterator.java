@@ -3,9 +3,10 @@
  */
 package gaj.iterators.core;
 
+import java.io.Closeable;
 import java.io.UncheckedIOException;
 
-public interface ResourceIterator<T> extends StreamableIterator<T>, AutoCloseable {
+public interface ResourceIterator<T> extends StreamableIterator<T>, Closeable {
 
 	/**
 	 *  Idempotently closes the underlying resource.
