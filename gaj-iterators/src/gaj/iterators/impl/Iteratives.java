@@ -285,7 +285,7 @@ public abstract class Iteratives {
 			@Override
 			protected ResourceIterator<T> newIterator() {
 				try {
-					return ResourceIterators.newIterator(callable.call());
+					return Iterators.newResourceIterator(callable.call());
 				} catch (Exception e) {
 					throw new UncheckedIOException(new IOException(e));
 				}

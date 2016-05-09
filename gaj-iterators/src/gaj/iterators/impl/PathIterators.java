@@ -4,7 +4,6 @@
 package gaj.iterators.impl;
 
 import gaj.iterators.core.ResourceIterator;
-import gaj.iterators.core.StreamableIterator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,66 +15,8 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public abstract class ResourceIterators {
+public abstract class PathIterators {
 
-	public static final boolean AUTO_CLOSE = true;
-
-	/**
-     * Provides an iterator over a stream. The stream will automatically be closed when the iterator is closed.
-     *
-	 * @param stream - A stream of items.
-	 * 
-     * @return An iterator bound to the given stream.
-     */
-    public static <T> ResourceIterator<T> newIterator(final Stream<? extends T> stream) {
-        return new ResourceIterator<T>() {
-        	@SuppressWarnings("unchecked")
-			private Stream<T> _stream = (Stream<T>) stream;
-        	private StreamableIterator<T> iter = null;
-
-			private StreamableIterator<T> iterator() {
-				if (iter != null) return iter;
-				if (_stream != null) {
-					iter = Iterators.toStreamableIterator(_stream.iterator());
-					// Stream instance is now terminal and cannot be re-used.
-					_stream = null;
-					return iter;
-				}
-				throw new IllegalStateException("Have neither Stream nor StreambleIterator");
-			}
-
-			@Override
-			public boolean hasNext() {
-				return iterator().hasNext();
-			}
-
-			@Override
-			public T next() {
-				return iterator().next();
-			}
-
-			@Override
-			public Stream<T> stream() {
-				if (_stream != null) return _stream;
-				_stream = iterator().stream();
-				return _stream;
-            }
-
-			@Override
-			public void close() {
-				if (_stream != null && _stream != stream) {
-					_stream.close();
-				}
-				_stream = null;
-				iter = null;
-				stream.close();
-			}
-        };
-    }
-
-	//=================================================================================================================================
-	// Path-based iterators.
-	
 	@SafeVarargs
 	public static ResourceIterator<InputStream> newArchiveInputStreamIterator(final Path archive, Predicate<? super ZipEntry>... filters) {
 		return new BaseResourceIterator<InputStream>() {
@@ -93,7 +34,7 @@ public abstract class ResourceIterators {
 
 			private InputStream getInputStream(ZipEntry ze) {
 				try {
-					return zipFile.getInputStream(ze);
+					return new NoCloseInputStream(zipFile.getInputStream(ze));
 				} catch (IOException e) {
 					throw failure(e);
 				}
@@ -160,7 +101,7 @@ public abstract class ResourceIterators {
 		};
 	}
 
-	public static ResourceIterator<InputStream> newFileInputStreamIterator(Stream<? extends Path> files, boolean autoClose, Predicate<? super Path> isArchive, Predicate<? super ZipEntry> useEntry) {
+	public static ResourceIterator<InputStream> newFileInputStreamIterator(Stream<? extends Path> files, Predicate<? super Path> isArchive, Predicate<? super ZipEntry> useEntry) {
 		return new ResourceMultiIterator<InputStream>() {
 			private Iterator<? extends Path> iterator = null;
 			private boolean isClosed = false;
@@ -182,7 +123,7 @@ public abstract class ResourceIterators {
 					super.close();
 					iterator = null;
 					isClosed = true;
-					if (autoClose) files.close();
+					files.close();
 				}
 			}
 		};

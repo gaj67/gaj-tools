@@ -4,6 +4,7 @@
 package gaj.iterators.impl;
 
 import gaj.iterators.core.Producer;
+import gaj.iterators.core.ResourceIterator;
 import gaj.iterators.core.StreamOp;
 import gaj.iterators.core.StreamableIterator;
 
@@ -428,4 +429,60 @@ public abstract class Iterators {
 		};
     }
     
+    //===================================================================================
+    // Iterators over a resource.
+
+    /**
+     * Provides an iterator over a stream. The stream will automatically be closed when the iterator is closed.
+     *
+	 * @param stream - A stream of items.
+	 * 
+     * @return An iterator bound to the given stream.
+     */
+    public static <T> ResourceIterator<T> newResourceIterator(final Stream<? extends T> stream) {
+        return new ResourceIterator<T>() {
+        	@SuppressWarnings("unchecked")
+			private Stream<T> _stream = (Stream<T>) stream;
+        	private StreamableIterator<T> iter = null;
+
+			private StreamableIterator<T> iterator() {
+				if (iter != null) return iter;
+				if (_stream != null) {
+					iter = Iterators.toStreamableIterator(_stream.iterator());
+					// Stream instance is now terminal and cannot be re-used.
+					_stream = null;
+					return iter;
+				}
+				throw new IllegalStateException("Have neither Stream nor StreambleIterator");
+			}
+
+			@Override
+			public boolean hasNext() {
+				return iterator().hasNext();
+			}
+
+			@Override
+			public T next() {
+				return iterator().next();
+			}
+
+			@Override
+			public Stream<T> stream() {
+				if (_stream != null) return _stream;
+				_stream = iterator().stream();
+				return _stream;
+            }
+
+			@Override
+			public void close() {
+				if (_stream != null && _stream != stream) {
+					_stream.close();
+				}
+				_stream = null;
+				iter = null;
+				stream.close();
+			}
+        };
+    }
+
 }

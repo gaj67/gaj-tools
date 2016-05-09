@@ -6,7 +6,7 @@ package gaj.classbinary.paths;
 import gaj.iterators.core.ResourceIterative;
 import gaj.iterators.core.ResourceIterator;
 import gaj.iterators.impl.Iteratives;
-import gaj.iterators.impl.ResourceIterators;
+import gaj.iterators.impl.PathIterators;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,12 +44,12 @@ import java.util.zip.ZipEntry;
 	private ResourceIterator<InputStream> _getClassStreams() {
 		switch (pathType) {
 			case Archive:
-				return ResourceIterators.newArchiveInputStreamIterator(classPath, IS_CLASSFILE_ENTRY);
+				return PathIterators.newArchiveInputStreamIterator(classPath, IS_CLASSFILE_ENTRY);
 			case ClassFile:
-				return ResourceIterators.newFileInputStreamIterator(classPath);
+				return PathIterators.newFileInputStreamIterator(classPath);
 			case Directory:
 				try {
-					return ResourceIterators.newFileInputStreamIterator(Files.walk(classPath).filter(IS_CLASSFILE_OR_ARCHIVE), ResourceIterators.AUTO_CLOSE, IS_ARCHIVE, IS_CLASSFILE_ENTRY);
+					return PathIterators.newFileInputStreamIterator(Files.walk(classPath).filter(IS_CLASSFILE_OR_ARCHIVE), IS_ARCHIVE, IS_CLASSFILE_ENTRY);
 				} catch (IOException e) {
 					throw new UncheckedIOException(e);
 				}
