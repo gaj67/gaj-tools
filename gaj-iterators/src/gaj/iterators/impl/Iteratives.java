@@ -5,13 +5,18 @@ package gaj.iterators.impl;
 
 import gaj.iterators.core.Iterative;
 import gaj.iterators.core.Producer;
+import gaj.iterators.core.ResourceIterative;
+import gaj.iterators.core.ResourceIterator;
 import gaj.iterators.core.SingleUseIterative;
 import gaj.iterators.core.StreamOp;
 import gaj.iterators.core.StreamableIterator;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
 /**
@@ -270,6 +275,36 @@ public abstract class Iteratives {
 				return Iterators.newMapValuesMultiIterator(maps);
 			}
     	};
+    }
+
+    //===================================================================================
+    // Iteratives over a resource.
+
+    public static <T> ResourceIterative<T> newStreamIterative(Callable<Stream<? extends T>> callable) {
+        return new ResourceSubIterative<T>() {
+			@Override
+			protected ResourceIterator<T> newIterator() {
+				try {
+					return ResourceIterators.newIterator(callable.call());
+				} catch (Exception e) {
+					throw new UncheckedIOException(new IOException(e));
+				}
+			}
+        };
+    }
+
+    public static <T> ResourceIterative<T> newResourceIterative(Callable<ResourceIterator<? extends T>> callable) {
+        return new ResourceSubIterative<T>() {
+			@SuppressWarnings("unchecked")
+			@Override
+			protected ResourceIterator<T> newIterator() {
+				try {
+					return (ResourceIterator<T>) callable.call();
+				} catch (Exception e) {
+					throw new UncheckedIOException(new IOException(e));
+				}
+			}
+        };
     }
 
 }

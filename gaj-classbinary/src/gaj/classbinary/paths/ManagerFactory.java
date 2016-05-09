@@ -5,16 +5,14 @@ package gaj.classbinary.paths;
 
 import gaj.iterators.core.Iterative;
 import gaj.iterators.core.ResourceIterative;
-import gaj.iterators.core.ResourceIterator;
 import gaj.iterators.impl.Iteratives;
-import gaj.iterators.impl.ResourceIterators;
-import gaj.iterators.impl.ResourceSubIterative;
 
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Encapsulates the handling of class paths. A class path is essentially a path
@@ -49,13 +47,12 @@ public abstract class ManagerFactory {
 
 			@Override
 			public ResourceIterative<InputStream> getClassStreams() {
-				return new ResourceSubIterative<InputStream>() {
-					@Override
-					protected ResourceIterator<InputStream> newIterator() {
-						return ResourceIterators.newIterator(classPaths.values().stream().flatMap(cp -> cp.getClassStreams().stream()));
-					}
-				};
+				return Iteratives.newStreamIterative(this::getInputStreams);
 			}
+
+			private Stream<InputStream> getInputStreams() {
+				return classPaths.values().stream().flatMap(cp -> cp.getClassStreams().stream());
+			}			
 		};
 	}
 

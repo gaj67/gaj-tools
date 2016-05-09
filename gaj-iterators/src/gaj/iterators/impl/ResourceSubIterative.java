@@ -3,7 +3,7 @@ package gaj.iterators.impl;
 import gaj.iterators.core.ResourceIterative;
 import gaj.iterators.core.ResourceIterator;
 
-public abstract class ResourceSubIterative<T> implements ResourceIterative<T> {
+/*package-private*/ abstract class ResourceSubIterative<T> implements ResourceIterative<T> {
 
 	private ResourceIterator<T> iterator = null;
 

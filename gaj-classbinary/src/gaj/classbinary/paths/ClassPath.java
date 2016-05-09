@@ -3,7 +3,9 @@
  */
 package gaj.classbinary.paths;
 
+import gaj.iterators.core.ResourceIterative;
 import gaj.iterators.core.ResourceIterator;
+import gaj.iterators.impl.Iteratives;
 import gaj.iterators.impl.ResourceIterators;
 
 import java.io.IOException;
@@ -35,7 +37,11 @@ import java.util.zip.ZipEntry;
 		}
 	}
 
-	public ResourceIterator<InputStream> getClassStreams() {
+	public ResourceIterative<InputStream> getClassStreams() {
+		return Iteratives.newResourceIterative(this::_getClassStreams);
+	}
+	
+	private ResourceIterator<InputStream> _getClassStreams() {
 		switch (pathType) {
 			case Archive:
 				return ResourceIterators.newArchiveInputStreamIterator(classPath, IS_CLASSFILE_ENTRY);
