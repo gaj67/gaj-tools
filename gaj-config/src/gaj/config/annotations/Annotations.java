@@ -3,7 +3,6 @@
  */
 package gaj.config.annotations;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -25,9 +24,8 @@ public class Annotations {
 	/**
 	 * Determines if the class should be instantiated as a singleton.
 	 * @param klass - The class to test.
-	 * @return A value of true (or false) if the class is configurable and
-	 * is (or is not) to be instantiated as a singleton,
-	 * or null if the class is not configurable.
+	 * @return A value of true (or false) if the class
+	 * is (or is not) to be instantiated as a singleton.
 	 */
 	public static boolean isSingleton(Class<?> klass) {
 		return klass.isAnnotationPresent(Singleton.class);
@@ -55,7 +53,7 @@ public class Annotations {
 		Property anno = field.getAnnotation(Property.class);
 		if (anno == null) return null;
 		String key = anno.value();
-		return (key == Property.DEFAULT_KEY) ? null : key;
+		return Property.DEFAULT_KEY.equals(key) ? null : key;
 	}
 
 	/**
@@ -132,15 +130,15 @@ public class Annotations {
 	 * or a null value if it is not specified or
 	 * if the method is not a property getter or setter.
 	 */
-	public static String getKeyName(Method method) {
-		Annotation anno = method.getAnnotation(Getter.class);
-		if (anno != null) {
-			String key = ((Getter)anno).value();
+	public static /*@Nullable*/ String getKeyName(Method method) {
+		Getter getter = method.getAnnotation(Getter.class);
+		if (getter != null) {
+			String key = getter.value();
 			return (Property.DEFAULT_KEY == key) ? null : key;
 		}
-		anno = method.getAnnotation(Setter.class);
-		if (anno == null) return null;
-		String key = ((Setter)anno).value();
+		Setter setter = method.getAnnotation(Setter.class);
+		if (setter == null) return null;
+		String key = setter.value();
 		return (Property.DEFAULT_KEY == key) ? null : key;
 	}
 
