@@ -1,6 +1,6 @@
 package gaj.config.properties;
 
-import gaj.config.serial.Serialiser;
+import gaj.config.serial.single.Serialiser;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -22,9 +22,9 @@ import gaj.config.annotations.Singleton;
 import gaj.config.core.DeclarationsManager;
 import gaj.config.core.MapDeclarationsManager;
 import gaj.config.keys.KeyTranslator;
-import gaj.config.serial.InvalidSerialisationException;
-import gaj.config.serial.MultiSerialiser;
-import gaj.config.serial.Serialiser;
+import gaj.config.serial.multi.MultiSerialiser;
+import gaj.config.serial.single.InvalidSerialisationException;
+import gaj.config.serial.single.Serialiser;
 
 /**
  * This module deals with the declaration of configurable properties for a class.

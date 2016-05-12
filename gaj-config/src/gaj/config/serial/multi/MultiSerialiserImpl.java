@@ -1,10 +1,21 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial;
+package gaj.config.serial.multi;
 
 
 import gaj.config.annotations.Annotations;
+import gaj.config.serial.single.BooleanSerialiser;
+import gaj.config.serial.single.ConfigurableSerialiser;
+import gaj.config.serial.single.DoubleSerialiser;
+import gaj.config.serial.single.FloatSerialiser;
+import gaj.config.serial.single.IntegerSerialiser;
+import gaj.config.serial.single.InvalidSerialisationException;
+import gaj.config.serial.single.LongSerialiser;
+import gaj.config.serial.single.Serialiser;
+import gaj.config.serial.single.SerialiserConfig;
+import gaj.config.serial.single.ShortSerialiser;
+import gaj.config.serial.single.StringSerialiser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +26,9 @@ import java.util.Map;
 /*package-private*/ class MultiSerialiserImpl extends ConfigurableSerialiser<Object> implements MultiSerialiser {
 
 	/** Maps serialiser identifier to serialiser instance or class. */
-	private Map<String,Object> deserialisers = new HashMap<String,Object>();
+	private Map<String,Object> deserialisers = new HashMap<>();
 	/** Maps object class to serialiser identifier. */
-	private Map<Class<?>,String> serialisers = new HashMap<Class<?>,String>();
+	private Map<Class<?>,String> serialisers = new HashMap<>();
 
 	/*package-private*/ MultiSerialiserImpl(SerialiserConfig config, boolean useBuiltins) {
 		super(config);
@@ -64,23 +75,16 @@ import java.util.Map;
 	}
 
 	@Override
-	public void addSerialiser(/*@Nullable*/ String type, Serialiser<?> serialiser, Class<?>... objects)
-			throws InvalidSerialisationException {
+	public void addSerialiser(/*@Nullable*/ String type, Serialiser<?> serialiser, Class<?>... objects) {
 		if (deserialisers.get(type) != null)
-			throw new InvalidSerialisationException(
-					"Cannot override existing serialiser otype: " + type
-					);
+			throw new InvalidSerialisationException("Cannot override existing serialiser otype: " + type);
 		_addSerialiser(type, serialiser, objects);
 	}
 
 	@Override
-	public void addSerialiser(String type,
-			Class<? extends Serialiser<?>> serialiser, Class<?>... objects)
-					throws InvalidSerialisationException {
+	public void addSerialiser(String type, Class<? extends Serialiser<?>> serialiser, Class<?>... objects) {
 		if (deserialisers.get(type) != null)
-			throw new InvalidSerialisationException(
-					"Cannot override existing serialiser otype: " + type
-					);
+			throw new InvalidSerialisationException("Cannot override existing serialiser otype: " + type);
 		_addSerialiser(type, serialiser, objects);
 	}
 

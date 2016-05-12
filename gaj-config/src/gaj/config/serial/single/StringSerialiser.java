@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial;
+package gaj.config.serial.single;
 
 import gaj.config.annotations.Singleton;
 
@@ -30,15 +30,14 @@ import gaj.config.annotations.Singleton;
 	}
 
 	@Override
-	public String serialise(String obj) throws InvalidSerialisationException {
+	public String serialise(/*@Nullable*/ String obj) {
 		return (obj == null) ? config.getNullMarker()
 				: (obj.equals(config.getNullMarker()) || obj.endsWith(LITERAL_NULL_MARKER))
-				? (obj + LITERAL_NULL_MARKER)
-						: obj;
+					? (obj + LITERAL_NULL_MARKER) : obj;
 	}
 
 	@Override
-	public String deserialise(String data) throws InvalidSerialisationException {
+	public /*@Nullable*/ String deserialise(/*@Nullable*/ String data) {
 		return isNull(data) ? null
 				: !data.endsWith(LITERAL_NULL_MARKER) ? data
 						: data.substring(0, data.length() - LITERAL_NULL_MARKER.length());

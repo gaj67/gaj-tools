@@ -1,12 +1,13 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial;
+package gaj.config.serial.single;
 
 /**
  * Specifies the type information markers used by all Serialiser implementations.
  */
 /*package-private*/ class SerialiserConfigImpl implements SerialiserConfig {
+
 	private String typePrefix = "<";
 	private String typeSuffix = ">";
 	private String nullMarker = "null";

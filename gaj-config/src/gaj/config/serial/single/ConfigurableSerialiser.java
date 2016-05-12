@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial;
+package gaj.config.serial.single;
 
 /**
  * Specifies the base class used to serialise a known object to a string,
@@ -10,7 +10,7 @@ package gaj.config.serial;
  * explicit instantiation, or indirectly by implicit instantiation
  * via a SerialiserManager.
  */
-public class ConfigurableSerialiser<T> implements Serialiser<T> {
+/*package-private*/ class ConfigurableSerialiser<T> implements Serialiser<T> {
 
 	/**
 	 * The immutable configuration.
@@ -44,9 +44,9 @@ public class ConfigurableSerialiser<T> implements Serialiser<T> {
 	 * serialisation.
 	 */
 	@Override
-	public String serialise(/*@Nullable*/ T obj) throws InvalidSerialisationException {
+	public String serialise(/*@Nullable*/ T obj) {
 		if (obj == null) return config.getNullMarker();
-		throw new InvalidSerialisationException("Unknown object: " + obj);
+		throw failure("Unknown object: " + obj);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class ConfigurableSerialiser<T> implements Serialiser<T> {
 	 * a serialisation of null.
 	 */
 	@Override
-	public boolean isNull(String data) {
+	public boolean isNull(/*@Nullable*/ String data) {
 		return (data == null || data.equals(config.getNullMarker()));
 	}
 
@@ -72,9 +72,9 @@ public class ConfigurableSerialiser<T> implements Serialiser<T> {
 	 * deserialisation.
 	 */
 	@Override
-	public /*@Nullable*/ T deserialise(String data) throws InvalidSerialisationException {
+	public /*@Nullable*/ T deserialise(/*@Nullable*/ String data) {
 		if (isNull(data)) return null;
-		throw new InvalidSerialisationException("Unknown serialisation: " + data);
+		throw failure("Unknown serialisation: " + data);
 	}
 
 	/**

@@ -1,7 +1,20 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial;
+package gaj.config.serial.multi;
+
+import gaj.config.serial.single.BooleanSerialiser;
+import gaj.config.serial.single.ConfigurableSerialiser;
+import gaj.config.serial.single.DoubleSerialiser;
+import gaj.config.serial.single.FloatSerialiser;
+import gaj.config.serial.single.IntegerSerialiser;
+import gaj.config.serial.single.InvalidSerialisationException;
+import gaj.config.serial.single.LongSerialiser;
+import gaj.config.serial.single.Serialiser;
+import gaj.config.serial.single.SerialiserConfig;
+import gaj.config.serial.single.SerialiserConfigImpl;
+import gaj.config.serial.single.ShortSerialiser;
+import gaj.config.serial.single.StringSerialiser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,16 +28,17 @@ import java.util.Map;
 public class SerialiserFactory {
 
 	@SuppressWarnings("serial")
-	private static final Map<Class<?>, Class<? extends Serialiser<?>>> SERIALISERS
-	= new HashMap<Class<?>, Class<? extends Serialiser<?>>>() {{
-		put(Boolean.class, BooleanSerialiser.class);
-		put(Double.class, DoubleSerialiser.class);
-		put(Float.class, FloatSerialiser.class);
-		put(Integer.class, IntegerSerialiser.class);
-		put(Long.class, LongSerialiser.class);
-		put(Short.class, ShortSerialiser.class);
-		put(String.class, StringSerialiser.class);
-	}};
+	private static final Map<Class<?>, Class<? extends Serialiser<?>>> SERIALISERS = 
+		new HashMap<Class<?>, Class<? extends Serialiser<?>>>() {{
+			put(Boolean.class, BooleanSerialiser.class);
+			put(Double.class, DoubleSerialiser.class);
+			put(Float.class, FloatSerialiser.class);
+			put(Integer.class, IntegerSerialiser.class);
+			put(Long.class, LongSerialiser.class);
+			put(Short.class, ShortSerialiser.class);
+			put(String.class, StringSerialiser.class);
+		}};
+
 	private final SerialiserConfigImpl config = new SerialiserConfigImpl();
 
 	private SerialiserFactory() {}

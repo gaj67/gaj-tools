@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial;
+package gaj.config.serial.single;
 
 /**
  * Specifies the interface used to serialise a known object type to a string,
@@ -18,7 +18,7 @@ public interface Serialiser<T> extends Cloneable {
 	 * @throws InvalidSerialisationException If an error occurs during
 	 * serialisation.
 	 */
-	public String serialise(/*@Nullable*/ T value) throws InvalidSerialisationException;
+	String serialise(/*@Nullable*/ T value);
 
 	/**
 	 * Indicates whether or not the supplied serialisation data
@@ -28,7 +28,7 @@ public interface Serialiser<T> extends Cloneable {
 	 * @return A value of true (or false) if the data is (or is not)
 	 * a serialisation of null.
 	 */
-	public boolean isNull(/*@Nullable*/ String data);
+	boolean isNull(/*@Nullable*/ String data);
 
 	/**
 	 * Deserialises object data, or throws an exception if an
@@ -39,13 +39,17 @@ public interface Serialiser<T> extends Cloneable {
 	 * @throws InvalidSerialisationException If an error occurs during
 	 * deserialisation.
 	 */
-	public /*@Nullable*/ T deserialise(/*@Nullable*/ String data) throws InvalidSerialisationException;
+	/*@Nullable*/ T deserialise(/*@Nullable*/ String data);
 
 	/**
 	 * Clones the current serialiser.
 	 *
 	 * @return A new instance of a Serialiser.
 	 */
-	public Serialiser<T> clone();
+	Serialiser<T> clone();
+
+	default InvalidSerialisationException failure(String message) {
+		return new InvalidSerialisationException(message);
+	}
 
 }

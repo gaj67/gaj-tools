@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial;
+package gaj.config.serial.single;
 
 import gaj.config.annotations.Singleton;
 
@@ -20,17 +20,17 @@ import gaj.config.annotations.Singleton;
 	}
 
 	@Override
-	public String serialise(Boolean obj) throws InvalidSerialisationException {
-		return (obj == null) ? super.serialise(obj) : obj.toString();
+	public String serialise(/*@Nullable*/ Boolean obj) {
+		return (obj == null) ? config.getNullMarker() : obj.toString();
 	}
 
 	@Override
-	public Boolean deserialise(String data) throws InvalidSerialisationException {
-		if (isNull(data)) return super.deserialise(data);
+	public /*@Nullable*/ Boolean deserialise(/*@Nullable*/ String data) {
+		if (isNull(data)) return null;
 		try {
 			return Boolean.valueOf(data);
 		} catch (RuntimeException e) {
-			throw new InvalidSerialisationException("Invalid Boolean data: " + data);
+			throw failure("Invalid Boolean data: " + data);
 		}
 	}
 

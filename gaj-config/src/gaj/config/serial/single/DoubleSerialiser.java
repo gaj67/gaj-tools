@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial;
+package gaj.config.serial.single;
 
 import gaj.config.annotations.Singleton;
 
@@ -20,17 +20,17 @@ import gaj.config.annotations.Singleton;
 	}
 
 	@Override
-	public String serialise(Double obj) throws InvalidSerialisationException {
-		return (obj == null) ? super.serialise(obj) : obj.toString();
+	public String serialise(/*@Nullable*/ Double obj) {
+		return (obj == null) ? config.getNullMarker() : obj.toString();
 	}
 
 	@Override
-	public Double deserialise(String data) throws InvalidSerialisationException {
-		if (isNull(data)) return super.deserialise(data);
+	public /*@Nullable*/ Double deserialise(/*@Nullable*/ String data) {
+		if (isNull(data)) return null;
 		try {
 			return Double.valueOf(data);
 		} catch (RuntimeException e) {
-			throw new InvalidSerialisationException("Invalid Double data: " + data);
+			throw failure("Invalid Double data: " + data);
 		}
 	}
 

@@ -1,7 +1,7 @@
 package gaj.config.core;
 
 import gaj.config.declaration.Declaration;
-import gaj.config.declaration.DeclarationFactory;
+import gaj.config.declaration.DeclarationManager;
 import gaj.config.declaration.InvalidDeclarationException;
 import gaj.config.keys.KeyTranslator;
 
@@ -38,9 +38,9 @@ public class MapDeclarationsManager implements DeclarationsManager {
 					getPropertyDeclarations(klass);
 			if (translator != null) {
 				for (Declaration declaration : _declarations)
-					DeclarationFactory.translatePropertyKey(declaration, translator);
+					DeclarationManager.translatePropertyKey(declaration, translator);
 			}
-			declarations = DeclarationFactory.mergeDeclarationsByKey(_declarations);
+			declarations = DeclarationManager.mergeDeclarationsByKey(_declarations);
 			if (serialiser != null) {
 				for (Declaration declaration : declarations.values())
 					deserialiseDefaultValue(declaration, serialiser);

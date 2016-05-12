@@ -1,7 +1,10 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial;
+package gaj.config.serial.multi;
+
+import gaj.config.serial.single.InvalidSerialisationException;
+import gaj.config.serial.single.Serialiser;
 
 /**
  * This interface provides for management of multiple serialisers,
@@ -43,9 +46,7 @@ public interface MultiSerialiser extends Serialiser<Object> {
 	 * @throws InvalidSerialisationException If a serialiser
 	 * is already defined for the given type.
 	 */
-	public void addSerialiser(String type, Class<? extends Serialiser<?>> serialiser,
-			Class<?>... dataClasses)
-					throws InvalidSerialisationException;
+	void addSerialiser(String type, Class<? extends Serialiser<?>> serialiser, Class<?>... dataClasses);
 
 	/**
 	 * Adds a new Serialiser instance to the manager, indexed
@@ -62,8 +63,7 @@ public interface MultiSerialiser extends Serialiser<Object> {
 	 * @throws InvalidSerialisationException If a serialiser
 	 * is already defined for the given type.
 	 */
-	public void addSerialiser(String type, Serialiser<?> serialiser, Class<?>... dataClasses)
-			throws InvalidSerialisationException;
+	void addSerialiser(String type, Serialiser<?> serialiser, Class<?>... dataClasses);
 
 	/**
 	 * Locates or creates a Serialiser instance for the given type.
@@ -72,7 +72,7 @@ public interface MultiSerialiser extends Serialiser<Object> {
 	 * @return An instance of the named serialiser, or a null value
 	 * if the serialiser is unknown.
 	 */
-	public Serialiser<?> getSerialiser(String type);
+	/*@Nullable*/ Serialiser<?> getSerialiser(String type);
 
 	/**
 	 * Locates or creates a Serialiser instance for the given type.
@@ -82,7 +82,7 @@ public interface MultiSerialiser extends Serialiser<Object> {
 	 * @return An instance of the appropriate serialiser, or a null value
 	 * if the serialiser is unknown.
 	 */
-	public Serialiser<?> getSerialiser(Class<?> type);
+	/*@Nullable*/ Serialiser<?> getSerialiser(Class<?> type);
 
 	/**
 	 * Determines the type of serialiser suitable
@@ -92,7 +92,7 @@ public interface MultiSerialiser extends Serialiser<Object> {
 	 * @return The unique string label of the appropriate serialiser,
 	 * or a null value if no such serialiser is known.
 	 */
-	public String getSerialiserType(Object obj);
+	/*@Nullable*/ String getSerialiserType(Object obj);
 
 	/**
 	 * Clones the current manager.
