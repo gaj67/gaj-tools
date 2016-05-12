@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
  * No checks for consistency or legality are made.
  */
 /*package-private*/ class BeanDeclaration implements Declaration {
+
 	protected Class<?> type = null;
 	protected String key = null;
 	protected boolean isRequired = false;
@@ -21,6 +22,8 @@ import java.lang.reflect.Method;
 	protected Field field = null;
 	protected Method getter = null;
 	protected Method setter = null;
+
+	protected BeanDeclaration() {}
 
 	@Override
 	public Class<?> getType() {
@@ -41,7 +44,7 @@ import java.lang.reflect.Method;
 	 * @param key - The key-name to set.
 	 */
 	protected void setKey(String key) {
-		this.key = (Property.DEFAULT_KEY == key) ? null : key;
+		this.key = Property.DEFAULT_KEY.equals(key) ? null : key;
 	}
 
 	@Override
@@ -158,7 +161,7 @@ import java.lang.reflect.Method;
 		buf.append("}");
 		return buf.toString();
 	}
-	
+
 	/**
 	 * Merges one or more property declarations
 	 * into the current declaration.
@@ -168,15 +171,15 @@ import java.lang.reflect.Method;
 	public void merge(Declaration... declarations) {
 		for (Declaration dec : declarations) {
 			setType(dec.getType());
-			/*@Nullable*/ String key = dec.getKey();
+			String key = dec.getKey();
 			if (key != null) setKey(key);
 			if (dec.hasDefault()) setDefault(dec.getValue());
 			if (dec.isRequired()) setRequired(true);
-			/*@Nullable*/ Field field = dec.getField();
+			Field field = dec.getField();
 			if (field != null) setField(field);
-			/*@Nullable*/ Method getter = dec.getGetter();
+			Method getter = dec.getGetter();
 			if (getter != null) setGetter(getter);
-			/*@Nullable*/ Method setter = dec.getSetter();
+			Method setter = dec.getSetter();
 			if (setter != null) setSetter(setter);
 		}
 	}

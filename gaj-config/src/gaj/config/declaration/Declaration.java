@@ -78,4 +78,14 @@ public interface Declaration {
 	 */
 	/*@Nullable*/ Method getGetter();
 
+	/**
+	 * Provides an {@link InvalidDeclarationException}.
+	 * 
+	 * @param message - The error message.
+	 * @return The exception.
+	 */
+	default InvalidDeclarationException failure(String message) {
+		return new InvalidDeclarationException(message);
+	}
+
 }

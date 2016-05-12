@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.declaration;
+package gaj.config.keys;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -16,7 +16,7 @@ public interface KeyTranslator {
 	 * Provides context to the key-name translator about
 	 * the source of the method provided.
 	 */
-	public static enum Context {
+	public static enum MethodContext {
 		/** Translate key-name from the name of a getter method. */
 		GETTER, 
 		/** Translate key-name from the name of a setter method. */
@@ -50,6 +50,16 @@ public interface KeyTranslator {
 	 * @param method - The method to translate.
 	 * @return A translated key-name.
 	 */
-	String getKey(Context context, Method method);
+	String getKey(MethodContext context, Method method);
+
+	/**
+	 * Provides an {@link KeyTranslationException}.
+	 * 
+	 * @param message - The error message.
+	 * @return The exception.
+	 */
+	default KeyTranslationException failure(String message) {
+		return new KeyTranslationException(message);
+	}
 
 }

@@ -8,7 +8,8 @@ import gaj.config.annotations.Getter;
 import gaj.config.annotations.Property;
 import gaj.config.annotations.Required;
 import gaj.config.annotations.Setter;
-import gaj.config.declaration.KeyTranslator.Context;
+import gaj.config.keys.KeyTranslator;
+import gaj.config.keys.KeyTranslator.MethodContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -241,9 +242,9 @@ public class DeclarationFactory {
 		else if (declaration.getField() != null)
 			name = translator.getKey(declaration.getField());
 		else if (declaration.getGetter() != null)
-			name = translator.getKey(Context.GETTER, declaration.getGetter());
+			name = translator.getKey(MethodContext.GETTER, declaration.getGetter());
 		else if (declaration.getSetter() != null)
-			name = translator.getKey(Context.SETTER, declaration.getSetter());
+			name = translator.getKey(MethodContext.SETTER, declaration.getSetter());
 		else
 			throw new InvalidDeclarationException("No annotatetd property specified");
 		// Use BeanDec instead of GuardedDec to bypass value checks.

@@ -1,13 +1,15 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.declaration;
+package gaj.config.keys;
 
 
 /**
  * This module deals with translators of the names of configurable properties.
  */
-public class KeyTranslatorFactory {
+public abstract class KeyTranslators {
+
+	private KeyTranslators() {}
 
 	/**
 	 * Creates a key-name translator that simply

@@ -31,4 +31,5 @@ public @interface Property {
 	 * DEFAULT_KEY value.
 	 */
 	String value() default DEFAULT_KEY;
+	
 }

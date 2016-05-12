@@ -12,9 +12,16 @@ import java.util.Map;
 import config.DeclarationFactory.KeyNameTranslator.NameContext;
 import config.PropertiesFactory.InvalidPropertiesException;
 import config.PropertiesFactory.Properties;
+import gaj.config.annotations.Configurable;
+import gaj.config.annotations.Default;
+import gaj.config.annotations.Getter;
+import gaj.config.annotations.Property;
+import gaj.config.annotations.Required;
+import gaj.config.annotations.Setter;
+import gaj.config.annotations.Singleton;
 import gaj.config.core.DeclarationsManager;
 import gaj.config.core.MapDeclarationsManager;
-import gaj.config.declaration.KeyTranslator;
+import gaj.config.keys.KeyTranslator;
 import gaj.config.serial.InvalidSerialisationException;
 import gaj.config.serial.MultiSerialiser;
 import gaj.config.serial.Serialiser;
@@ -67,7 +74,7 @@ public class DeclarationFactory {
 		Property anno = field.getAnnotation(Property.class);
 		if (anno == null) return null;
 		String key = anno.value();
-		return (key == Property.DEFAULT_KEY) ? null : key;
+		return Property.DEFAULT_KEY.equals(key) ? null : key;
 	}
 
 	/**
@@ -109,12 +116,12 @@ public class DeclarationFactory {
 		Annotation anno = method.getAnnotation(Getter.class);
 		if (anno != null) {
 			String key = ((Getter)anno).value();
-			return (Property.DEFAULT_KEY == key) ? null : key;
+			return Property.DEFAULT_KEY.equals(key) ? null : key;
 		}
 		anno = method.getAnnotation(Setter.class);
 		if (anno == null) return null;
 		String key = ((Setter)anno).value();
-		return (Property.DEFAULT_KEY == key) ? null : key;
+		return Property.DEFAULT_KEY.equals(key) ? null : key;
 	}
 
 	/**
@@ -201,13 +208,13 @@ public class DeclarationFactory {
 	 * @param field - The field to test.
 	 * @return A declaration instance summarising the property annotations
 	 * on the field, or the null value if there are no such annotations.
-	 * @throws InvalidDeclarationException If the property annotations are inconsistent.
+	 * @throws KeyTranslationException If the property annotations are inconsistent.
 	 */
 	public static /*@Nullable*/ Declaration getDeclaration(final Field field) {
 		Required requiredAnno = field.getAnnotation(Required.class);
 		Default defaultAnno = field.getAnnotation(Default.class);
 		if (requiredAnno != null && defaultAnno != null)
-			throw new InvalidDeclarationException("A property cannot be required and have a default value");
+			throw new KeyTranslationException("A property cannot be required and have a default value");
 		Property propertyAnno = field.getAnnotation(Property.class);
 		if (propertyAnno == null && requiredAnno == null && defaultAnno == null)
 			return null; // Not marked with any configuration annotations.
@@ -229,17 +236,17 @@ public class DeclarationFactory {
 	 * @param method - The method to test.
 	 * @return A declaration instance summarising the property annotations
 	 * on the method, or the null value if there are no such annotations.
-	 * @throws InvalidDeclarationException If the property annotations are inconsistent.
+	 * @throws KeyTranslationException If the property annotations are inconsistent.
 	 */
 	public static /*@Nullable*/ Declaration getDeclaration(Method method) {
 		Getter getterAnno = method.getAnnotation(Getter.class);
 		Setter setterAnno = method.getAnnotation(Setter.class);
 		if (getterAnno != null && setterAnno != null)
-			throw new InvalidDeclarationException("A single method cannot be both a getter and setter");
+			throw new KeyTranslationException("A single method cannot be both a getter and setter");
 		Required requiredAnno = method.getAnnotation(Required.class);
 		Default defaultAnno = method.getAnnotation(Default.class);
 		if (requiredAnno != null && defaultAnno != null)
-			throw new InvalidDeclarationException("A property cannot be required and have a default value");
+			throw new KeyTranslationException("A property cannot be required and have a default value");
 		if (getterAnno == null && setterAnno == null
 				&& requiredAnno == null && defaultAnno == null)
 			return null; // Not marked with any configuration annotations.
@@ -247,16 +254,16 @@ public class DeclarationFactory {
 		Class<?>[] args = method.getParameterTypes();
 		if (getterAnno != null) {
 			if (args == null || args.length != 0)
-				throw new InvalidDeclarationException("Not a simple getter method: "+method);
+				throw new KeyTranslationException("Not a simple getter method: "+method);
 			Class<?> retType = method.getReturnType();
 			if (retType == null || retType == void.class)
-				throw new InvalidDeclarationException("Not a getter method: "+method);
+				throw new KeyTranslationException("Not a getter method: "+method);
 			dec.setType(retType);
 			dec.setGetter(method);
 			dec.setKey(getterAnno.value());
 		} else if (setterAnno != null) {
 			if (args == null || args.length != 1)
-				throw new InvalidDeclarationException("Not a simple setter method: "+method);
+				throw new KeyTranslationException("Not a simple setter method: "+method);
 			dec.setType(args[0]);
 			dec.setSetter(method);
 			dec.setKey(setterAnno.value());
@@ -274,15 +281,15 @@ public class DeclarationFactory {
 	 * 
 	 * @param declarations - A number of property declarations.
 	 * @return The combined property declaration.
-	 * @throws InvalidDeclarationException If the given property
+	 * @throws KeyTranslationException If the given property
 	 * declarations have incompatible settings, or if no property
 	 * declarations are given.
 	 */
 	public static Declaration mergeDeclarations(Declaration... declarations)
-			throws InvalidDeclarationException
+			throws KeyTranslationException
 	{
 		if (declarations.length == 0)
-			throw new InvalidDeclarationException("No property declarations have been given");
+			throw new KeyTranslationException("No property declarations have been given");
 		GuardedDeclaration merged = new GuardedDeclaration();
 		merged.merge(declarations);
 		return merged;
@@ -297,12 +304,12 @@ public class DeclarationFactory {
 	 * @param klass - An allegedly configurable class,
 	 *  supposedly containing property declarations.
 	 * @return A collection of property declarations.
-	 * @throws InvalidDeclarationException If any property
+	 * @throws KeyTranslationException If any property
 	 * is marked with inconsistent settings.
 	 */
 	public static Collection<Declaration>
 	getDeclarations(Class<?> klass)
-			throws InvalidDeclarationException
+			throws KeyTranslationException
 	{
 		List<Declaration> declarations = new ArrayList<Declaration>();
 		for (Field field : klass.getFields()) {
@@ -324,19 +331,19 @@ public class DeclarationFactory {
 	 * 
 	 * @param declarations - A collection of property declarations.
 	 * @return A collections of merged property declarations.
-	 * @throws InvalidDeclarationException If any property
+	 * @throws KeyTranslationException If any property
 	 * does not have a key-name, or is otherwise marked with
 	 * inconsistent settings.
 	 */
 	public static Collection<Declaration> mergeDeclarationsByKey(
 			Collection<Declaration> declarations)
-					throws InvalidDeclarationException
+					throws KeyTranslationException
 	{
 		Map<String,Declaration> mergedDeclarations = new HashMap<String,Declaration>();
 		for (Declaration bareDeclaration : declarations) {
 			String key = bareDeclaration.getKey();
 			if (key == null)
-				throw new InvalidDeclarationException("Cannot merge property declarations with a null key-name");
+				throw new KeyTranslationException("Cannot merge property declarations with a null key-name");
 			Declaration namedDeclaration = mergedDeclarations.get(key);
 			if (namedDeclaration == null)
 				mergedDeclarations.put(key, bareDeclaration);
@@ -380,7 +387,7 @@ public class DeclarationFactory {
 		value  = deser.deserialise((String)value);
 		// Use BeanPD instead of GuardedPD to bypass value checks.
 		if (!(declaration instanceof BeanDeclaration))
-			throw new InvalidDeclarationException("Cannot deserialise declaration: "+declaration);
+			throw new KeyTranslationException("Cannot deserialise declaration: "+declaration);
 		((BeanDeclaration)declaration).setDefault(value);
 					}
 
@@ -409,7 +416,7 @@ public class DeclarationFactory {
 			context = NameContext.SETTER;
 			name = declaration.getSetter().getName();
 		} else {
-			throw new InvalidDeclarationException("No annotatetd property specified");
+			throw new KeyTranslationException("No annotatetd property specified");
 		}
 		name = translator.getKey(context, name);
 		// Use BeanPD instead of GuardedPD to bypass value checks.

@@ -1,14 +1,14 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.declaration;
+package gaj.config.keys;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SeparatedKeyTranslator implements KeyTranslator {
+/*package-private*/ class SeparatedKeyTranslator implements KeyTranslator {
 
 	private final String separator;
 
@@ -34,22 +34,20 @@ public class SeparatedKeyTranslator implements KeyTranslator {
 	}
 
 	@Override
-	public String getKey(Context context, Method method) {
+	public String getKey(MethodContext context, Method method) {
 		List<String> parts = decomposeCamelCase(method.getName());
 		String lead = parts.get(0);
 		switch (context) {
-		case GETTER:
-			if (lead.equalsIgnoreCase("get") ||
-					lead.equalsIgnoreCase("is") ||
-					lead.equalsIgnoreCase("has"))
-				parts.remove(0);
-			break;
-		case SETTER:
-			if (lead.equalsIgnoreCase("set"))
-				parts.remove(0);
-			break;
-		default:
-			throw new InvalidDeclarationException("Unhandled method context: " + context);
+			case GETTER:
+				if (lead.equalsIgnoreCase("get") ||	lead.equalsIgnoreCase("is") || lead.equalsIgnoreCase("has"))
+					parts.remove(0);
+				break;
+			case SETTER:
+				if (lead.equalsIgnoreCase("set"))
+					parts.remove(0);
+				break;
+			default:
+				throw failure("Unhandled method context: " + context);
 		}
 		return join(parts);
 	}
@@ -62,8 +60,7 @@ public class SeparatedKeyTranslator implements KeyTranslator {
 			// Handle lower case.
 			while (end < n && Character.isLowerCase(s.charAt(end))) end++;
 			if (end > start) {
-				// E.g. "var" in "var" or "varPath",
-				// or "Var" in "getVar" or "getVarPath".
+				// E.g. "var" in "var" or "varPath", or "Var" in "getVar" or "getVarPath".
 				list.add(s.substring(start, end));
 				if (end >= n) break;
 				start = end;

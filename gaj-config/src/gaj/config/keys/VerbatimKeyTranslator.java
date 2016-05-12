@@ -1,12 +1,14 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.declaration;
+package gaj.config.keys;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /*package-private*/ class VerbatimKeyTranslator implements KeyTranslator {
+
+	/*package-private*/ VerbatimKeyTranslator() {}
 
 	@Override
 	public String getKey(String name) {
@@ -19,7 +21,7 @@ import java.lang.reflect.Method;
 	}
 
 	@Override
-	public String getKey(Context context, Method method) {
+	public String getKey(MethodContext context, Method method) {
 		return method.getName();
 	}
 

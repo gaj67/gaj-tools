@@ -3,7 +3,7 @@ package gaj.config.core;
 import gaj.config.declaration.Declaration;
 import gaj.config.declaration.DeclarationFactory;
 import gaj.config.declaration.InvalidDeclarationException;
-import gaj.config.declaration.KeyTranslator;
+import gaj.config.keys.KeyTranslator;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

@@ -134,12 +134,12 @@ public class Annotations {
 		Getter getter = method.getAnnotation(Getter.class);
 		if (getter != null) {
 			String key = getter.value();
-			return (Property.DEFAULT_KEY == key) ? null : key;
+			return Property.DEFAULT_KEY.equals(key) ? null : key;
 		}
 		Setter setter = method.getAnnotation(Setter.class);
 		if (setter == null) return null;
 		String key = setter.value();
-		return (Property.DEFAULT_KEY == key) ? null : key;
+		return Property.DEFAULT_KEY.equals(key) ? null : key;
 	}
 
 	/**
