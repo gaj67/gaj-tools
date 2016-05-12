@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial.single;
+package gaj.config.serialisers;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -39,7 +39,7 @@ public abstract class Serialisers {
 	 * the object type is not handled.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> /*@Nullable*/ Class<? extends Serialiser<T>> getSerialiserClass(Class<T> dataClass) {
+	public static <T> /*@Nullable*/ Class<? extends Serialiser<T>> getSerialiserClass(Class<T> dataClass) {
 		return (Class<? extends Serialiser<T>>) SERIALISERS.get(dataClass);
 	}
 
@@ -54,12 +54,12 @@ public abstract class Serialisers {
 	 * the object type is not handled.
 	 * @throws IllegalStateException If the serialiser cannot be instantiated.
 	 */
-	public <T> /*@Nullable*/ Serialiser<T> newSerialiser(Class<T> dataClass, String nullMarker) {
+	public static <T> /*@Nullable*/ Serialiser<T> newSerialiser(Class<T> dataClass, String nullMarker) {
 		@SuppressWarnings("unchecked")
 		Class<? extends BaseSerialiser<T>> klass = (Class<? extends BaseSerialiser<T>>) SERIALISERS.get(dataClass);
 		if (klass == null) return null;
 		try {
-			Constructor<? extends BaseSerialiser<T>> serialiser = klass.getConstructor(String.class);
+			Constructor<? extends BaseSerialiser<T>> serialiser = klass.getDeclaredConstructor(String.class);
 			return serialiser.newInstance(nullMarker);
 		} catch (InstantiationException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new IllegalStateException(e);

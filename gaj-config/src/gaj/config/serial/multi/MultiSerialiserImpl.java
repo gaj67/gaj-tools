@@ -5,16 +5,16 @@ package gaj.config.serial.multi;
 
 
 import gaj.config.annotations.Annotations;
-import gaj.config.serial.single.BooleanSerialiser;
-import gaj.config.serial.single.BaseSerialiser;
-import gaj.config.serial.single.DoubleSerialiser;
-import gaj.config.serial.single.FloatSerialiser;
-import gaj.config.serial.single.IntegerSerialiser;
-import gaj.config.serial.single.InvalidSerialisationException;
-import gaj.config.serial.single.LongSerialiser;
-import gaj.config.serial.single.Serialiser;
-import gaj.config.serial.single.ShortSerialiser;
-import gaj.config.serial.single.StringSerialiser;
+import gaj.config.serialisers.BaseSerialiser;
+import gaj.config.serialisers.BooleanSerialiser;
+import gaj.config.serialisers.DoubleSerialiser;
+import gaj.config.serialisers.FloatSerialiser;
+import gaj.config.serialisers.IntegerSerialiser;
+import gaj.config.serialisers.InvalidSerialisationException;
+import gaj.config.serialisers.LongSerialiser;
+import gaj.config.serialisers.Serialiser;
+import gaj.config.serialisers.ShortSerialiser;
+import gaj.config.serialisers.StringSerialiser;
 
 import java.util.HashMap;
 import java.util.Map;

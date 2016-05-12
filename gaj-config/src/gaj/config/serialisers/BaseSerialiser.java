@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2016.
  */
-package gaj.config.serial.single;
+package gaj.config.serialisers;
 
 /**
  * Specifies the base class used to serialise a known object to a string,
@@ -14,7 +14,7 @@ package gaj.config.serial.single;
 
 	protected final String nullMarker;
 	
-	protected BaseSerialiser(String nullMarker) {
+	protected BaseSerialiser(/*@Nullable*/ String nullMarker) {
 		this.nullMarker = nullMarker;
 	}
 
@@ -28,9 +28,8 @@ package gaj.config.serial.single;
 	 * serialisation.
 	 */
 	@Override
-	public String serialise(/*@Nullable*/ T obj) {
-		if (obj == null) return nullMarker;
-		throw failure("Unknown object: " + obj);
+	public /*@Nullable*/ String serialise(/*@Nullable*/ T obj) {
+		return (obj == null) ? nullMarker : obj.toString();
 	}
 
 	/**

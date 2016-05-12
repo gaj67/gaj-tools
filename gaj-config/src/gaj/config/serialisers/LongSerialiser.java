@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial.single;
+package gaj.config.serialisers;
 
 import gaj.config.annotations.Singleton;
 
@@ -11,13 +11,8 @@ import gaj.config.annotations.Singleton;
 @Singleton
 /*package-private*/ class LongSerialiser extends BaseSerialiser<Long> {
 
-	/*package-private*/ LongSerialiser(String nullMarker) {
+	/*package-private*/ LongSerialiser(/*@Nullable*/ String nullMarker) {
 		super(nullMarker);
-	}
-
-	@Override
-	public String serialise(/*@Nullable*/ Long obj) {
-		return (obj == null) ? nullMarker : obj.toString();
 	}
 
 	@Override

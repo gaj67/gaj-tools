@@ -3,8 +3,8 @@
  */
 package gaj.config.serial.multi;
 
-import gaj.config.serial.single.InvalidSerialisationException;
-import gaj.config.serial.single.Serialiser;
+import gaj.config.serialisers.InvalidSerialisationException;
+import gaj.config.serialisers.Serialiser;
 
 /**
  * This interface provides for management of multiple serialisers,

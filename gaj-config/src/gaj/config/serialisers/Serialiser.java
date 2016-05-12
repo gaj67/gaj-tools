@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial.single;
+package gaj.config.serialisers;
 
 /**
  * Specifies the interface used to serialise a known object type to a string,
@@ -18,7 +18,7 @@ public interface Serialiser<T> extends Cloneable {
 	 * @throws InvalidSerialisationException If an error occurs during
 	 * serialisation.
 	 */
-	String serialise(/*@Nullable*/ T value);
+	/*@Nullable*/ String serialise(/*@Nullable*/ T value);
 
 	/**
 	 * Indicates whether or not the supplied serialisation data
