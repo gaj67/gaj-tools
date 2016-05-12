@@ -9,19 +9,15 @@ import gaj.config.annotations.Singleton;
  * Provides a Serialiser for Integer objects. Does not add type information.
  */
 @Singleton
-/*package-private*/ class IntegerSerialiser extends ConfigurableSerialiser<Integer> {
+/*package-private*/ class IntegerSerialiser extends BaseSerialiser<Integer> {
 
-	/*package-private*/ IntegerSerialiser() {
-		super();
-	}
-
-	/*package-private*/ IntegerSerialiser(SerialiserConfig config) {
-		super(config);
+	/*package-private*/ IntegerSerialiser(String nullMarker) {
+		super(nullMarker);
 	}
 
 	@Override
 	public String serialise(/*@Nullable*/ Integer obj) {
-		return (obj == null) ? config.getNullMarker() : obj.toString();
+		return (obj == null) ? nullMarker : obj.toString();
 	}
 
 	@Override

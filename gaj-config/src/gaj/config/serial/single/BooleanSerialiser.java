@@ -9,19 +9,15 @@ import gaj.config.annotations.Singleton;
  * Provides a Serialiser for Boolean objects. Does not add type information.
  */
 @Singleton
-/*package-private*/ class BooleanSerialiser extends ConfigurableSerialiser<Boolean> {
+/*package-private*/ class BooleanSerialiser extends BaseSerialiser<Boolean> {
 
-	/*package-private*/ BooleanSerialiser() {
-		super();
-	}
-
-	/*package-private*/ BooleanSerialiser(SerialiserConfig config) {
-		super(config);
+	/*package-private*/ BooleanSerialiser(String nullMarker) {
+		super(nullMarker);
 	}
 
 	@Override
 	public String serialise(/*@Nullable*/ Boolean obj) {
-		return (obj == null) ? config.getNullMarker() : obj.toString();
+		return (obj == null) ? nullMarker : obj.toString();
 	}
 
 	@Override

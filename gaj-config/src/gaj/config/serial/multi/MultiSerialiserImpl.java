@@ -6,14 +6,13 @@ package gaj.config.serial.multi;
 
 import gaj.config.annotations.Annotations;
 import gaj.config.serial.single.BooleanSerialiser;
-import gaj.config.serial.single.ConfigurableSerialiser;
+import gaj.config.serial.single.BaseSerialiser;
 import gaj.config.serial.single.DoubleSerialiser;
 import gaj.config.serial.single.FloatSerialiser;
 import gaj.config.serial.single.IntegerSerialiser;
 import gaj.config.serial.single.InvalidSerialisationException;
 import gaj.config.serial.single.LongSerialiser;
 import gaj.config.serial.single.Serialiser;
-import gaj.config.serial.single.SerialiserConfig;
 import gaj.config.serial.single.ShortSerialiser;
 import gaj.config.serial.single.StringSerialiser;
 

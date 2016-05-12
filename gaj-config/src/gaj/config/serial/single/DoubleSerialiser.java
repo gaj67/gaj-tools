@@ -9,19 +9,15 @@ import gaj.config.annotations.Singleton;
  * Provides a Serialiser for Double objects. Does not add type information.
  */
 @Singleton
-/*package-private*/ class DoubleSerialiser extends ConfigurableSerialiser<Double> {
+/*package-private*/ class DoubleSerialiser extends BaseSerialiser<Double> {
 
-	/*package-private*/ DoubleSerialiser() {
-		super();
-	}
-
-	/*package-private*/ DoubleSerialiser(SerialiserConfig config) {
-		super(config);
+	/*package-private*/ DoubleSerialiser(String nullMarker) {
+		super(nullMarker);
 	}
 
 	@Override
 	public String serialise(/*@Nullable*/ Double obj) {
-		return (obj == null) ? config.getNullMarker() : obj.toString();
+		return (obj == null) ? nullMarker : obj.toString();
 	}
 
 	@Override

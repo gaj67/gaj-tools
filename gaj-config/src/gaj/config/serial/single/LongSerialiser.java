@@ -9,19 +9,15 @@ import gaj.config.annotations.Singleton;
  * Provides a Serialiser for Long objects. Does not add type information.
  */
 @Singleton
-/*package-private*/ class LongSerialiser extends ConfigurableSerialiser<Long> {
+/*package-private*/ class LongSerialiser extends BaseSerialiser<Long> {
 
-	/*package-private*/ LongSerialiser() {
-		super();
-	}
-
-	/*package-private*/ LongSerialiser(SerialiserConfig config) {
-		super(config);
+	/*package-private*/ LongSerialiser(String nullMarker) {
+		super(nullMarker);
 	}
 
 	@Override
 	public String serialise(/*@Nullable*/ Long obj) {
-		return (obj == null) ? config.getNullMarker() : obj.toString();
+		return (obj == null) ? nullMarker : obj.toString();
 	}
 
 	@Override

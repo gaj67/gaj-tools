@@ -1,7 +1,8 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial.single;
+package gaj.config.serial.multi;
+
 
 /**
  * Specifies the type information markers used by all Serialiser implementations.

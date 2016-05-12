@@ -9,19 +9,15 @@ import gaj.config.annotations.Singleton;
  * Provides a Serialiser for Short objects. Does not add type information.
  */
 @Singleton
-/*package-private*/ class ShortSerialiser extends ConfigurableSerialiser<Short> {
+/*package-private*/ class ShortSerialiser extends BaseSerialiser<Short> {
 
-	/*package-private*/ ShortSerialiser() {
-		super();
-	}
-
-	/*package-private*/ ShortSerialiser(SerialiserConfig config) {
-		super(config);
+	/*package-private*/ ShortSerialiser(String nullMarker) {
+		super(nullMarker);
 	}
 
 	@Override
 	public String serialise(/*@Nullable*/ Short obj) {
-		return (obj == null) ? config.getNullMarker() : obj.toString();
+		return (obj == null) ? nullMarker : obj.toString();
 	}
 
 	@Override

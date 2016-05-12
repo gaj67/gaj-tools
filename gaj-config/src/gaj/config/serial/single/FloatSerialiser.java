@@ -9,19 +9,15 @@ import gaj.config.annotations.Singleton;
  * Provides a Serialiser for Float objects. Does not add type information.
  */
 @Singleton
-/*package-private*/ class FloatSerialiser extends ConfigurableSerialiser<Float> {
+/*package-private*/ class FloatSerialiser extends BaseSerialiser<Float> {
 
-	/*package-private*/ FloatSerialiser() {
-		super();
-	}
-
-	/*package-private*/ FloatSerialiser(SerialiserConfig config) {
-		super(config);
+	/*package-private*/ FloatSerialiser(String nullMarker) {
+		super(nullMarker);
 	}
 
 	@Override
 	public String serialise(/*@Nullable*/ Float obj) {
-		return (obj == null) ? config.getNullMarker() : obj.toString();
+		return (obj == null) ? nullMarker : obj.toString();
 	}
 
 	@Override

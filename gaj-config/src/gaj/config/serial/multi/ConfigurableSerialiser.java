@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial.single;
+package gaj.config.serial.multi;
 
 /**
  * Specifies the base class used to serialise a known object to a string,

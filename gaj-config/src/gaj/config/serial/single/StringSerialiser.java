@@ -11,28 +11,18 @@ import gaj.config.annotations.Singleton;
  * unserialised and serialised strings.
  */
 @Singleton
-/*package-private*/ class StringSerialiser extends ConfigurableSerialiser<String> {
+/*package-private*/ class StringSerialiser extends BaseSerialiser<String> {
 
 	private String LITERAL_NULL_MARKER;
 
-	/*package-private*/ StringSerialiser() {
-		super();
-	}
-
-	/*package-private*/ StringSerialiser(SerialiserConfig config) {
-		super(config);
-	}
-
-	@Override
-	/*package-private*/ void configure(SerialiserConfig config) {
-		super.configure(config);
-		LITERAL_NULL_MARKER = config.getTypePrefix() + "string" + config.getTypeSuffix();
+	/*package-private*/ StringSerialiser(String nullMarker) {
+		super(nullMarker);
 	}
 
 	@Override
 	public String serialise(/*@Nullable*/ String obj) {
-		return (obj == null) ? config.getNullMarker()
-				: (obj.equals(config.getNullMarker()) || obj.endsWith(LITERAL_NULL_MARKER))
+		return (obj == null) ? nullMarker
+				: (obj.equals(nullMarker) || obj.endsWith(LITERAL_NULL_MARKER))
 					? (obj + LITERAL_NULL_MARKER) : obj;
 	}
 
