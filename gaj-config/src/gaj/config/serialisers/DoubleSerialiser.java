@@ -11,6 +11,10 @@ import gaj.config.annotations.Singleton;
 @Singleton
 /*package-private*/ class DoubleSerialiser extends BaseSerialiser<Double> {
 
+	/*package-private*/ DoubleSerialiser() {
+		super();
+	}
+
 	/*package-private*/ DoubleSerialiser(/*@Nullable*/ String nullMarker) {
 		super(nullMarker);
 	}

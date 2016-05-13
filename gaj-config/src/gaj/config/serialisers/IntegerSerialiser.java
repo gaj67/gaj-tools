@@ -11,6 +11,10 @@ import gaj.config.annotations.Singleton;
 @Singleton
 /*package-private*/ class IntegerSerialiser extends BaseSerialiser<Integer> {
 
+	/*package-private*/ IntegerSerialiser() {
+		super();
+	}
+
 	/*package-private*/ IntegerSerialiser(/*@Nullable*/ String nullMarker) {
 		super(nullMarker);
 	}

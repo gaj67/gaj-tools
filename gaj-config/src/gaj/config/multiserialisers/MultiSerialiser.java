@@ -1,9 +1,8 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial.multi;
+package gaj.config.multiserialisers;
 
-import gaj.config.serialisers.InvalidSerialisationException;
 import gaj.config.serialisers.Serialiser;
 
 /**
@@ -35,70 +34,63 @@ public interface MultiSerialiser extends Serialiser<Object> {
 	 * serialiser will be created on first use and subsequently reused;
 	 * otherwise, a new instance will be created on each use.
 	 *
-	 * @param type - The unique string label of the serialiser.
+	 * @param typeName - The unique string label of the serialiser.
 	 * @param serialiser - The class of a serialiser for the given objects.
 	 * A new instance of the serialiser will be created for each use.
 	 * The class must have a no-argument constructor.
-	 * @param dataClasses - The optional classes of serialisable objects to
+	 * @param dataTypes - The optional classes of serialisable objects to
 	 * be bound to the given serialiser.
 	 * If this parameter is missing, then only instances of the
 	 * serialiser will be serialisable.
-	 * @throws InvalidSerialisationException If a serialiser
+	 * @throws InvalidArgumentException If a serialiser
 	 * is already defined for the given type.
 	 */
-	void addSerialiser(String type, Class<? extends Serialiser<?>> serialiser, Class<?>... dataClasses);
+	void addSerialiser(String typeName, Class<? extends Serialiser<?>> serialiser, Class<?>... dataTypes);
 
 	/**
 	 * Adds a new Serialiser instance to the manager, indexed
 	 * via the given unique type label.
 	 *
-	 * @param type - The unique string label of the serialiser.
+	 * @param typeName - The unique string label of the serialiser.
 	 * @param serialiser - An instance of a serialiser for the object.
 	 * The same instance will be used in each case, so it must be
 	 * stateless.
-	 * @param dataClasses - The optional classes of serialisable objects to
+	 * @param dataTypes - The optional classes of serialisable objects to
 	 * be bound to the given serialiser.
 	 * If this parameter is missing, then only instances of the
 	 * serialiser will be serialisable.
-	 * @throws InvalidSerialisationException If a serialiser
+	 * @throws InvalidArgumentException If a serialiser
 	 * is already defined for the given type.
 	 */
-	void addSerialiser(String type, Serialiser<?> serialiser, Class<?>... dataClasses);
+	void addSerialiser(String typeName, Serialiser<?> serialiser, Class<?>... dataTypes);
 
 	/**
 	 * Locates or creates a Serialiser instance for the given type.
 	 *
-	 * @param type - The unique string label of the serialiser.
+	 * @param typeName - The unique string label of the serialiser.
 	 * @return An instance of the named serialiser, or a null value
 	 * if the serialiser is unknown.
 	 */
-	/*@Nullable*/ Serialiser<?> getSerialiser(String type);
+	/*@Nullable*/ Serialiser<?> getSerialiser(String typeName);
 
 	/**
 	 * Locates or creates a Serialiser instance for the given type.
 	 *
-	 * @param type - The class of object to be serialised
+	 * @param dataType - The class of object to be serialised
 	 * or deserialised.
 	 * @return An instance of the appropriate serialiser, or a null value
 	 * if the serialiser is unknown.
 	 */
-	/*@Nullable*/ Serialiser<?> getSerialiser(Class<?> type);
+	/*@Nullable*/ Serialiser<?> getSerialiser(Class<?> dataType);
 
 	/**
 	 * Determines the type of serialiser suitable
 	 * for the given object.
 	 *
-	 * @param obj - An instance of a supposedly serialisable class.
+	 * @param data - An instance of supposedly serialisable data.
 	 * @return The unique string label of the appropriate serialiser,
 	 * or a null value if no such serialiser is known.
 	 */
-	/*@Nullable*/ String getSerialiserType(Object obj);
-
-	/**
-	 * Clones the current manager.
-	 * @return A new instance of a SerialisationManager, with
-	 * a copy of the current configuration.
-	 */
-	public MultiSerialiser clone();
+	/*@Nullable*/ String getSerialiserType(Object data);
 
 }

@@ -5,6 +5,7 @@ package gaj.config.serialisers;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,25 +46,51 @@ public abstract class Serialisers {
 
 	/**
 	 * Creates a new instance of a serialiser for the given data class.
-	 * If this serialiser is configurable, then it will be configured with
-	 * the given configuration.
 	 *
-	 * @param dataClass - The type of object to be serialised.
+	 * @param dataType - The type of object to be serialised.
 	 * @param nullMarker - The serialisation of a null value.
 	 * @return An appropriate serialiser instance, or a value of null if
-	 * the object type is not handled.
+	 * the data-type is not handled.
 	 * @throws IllegalStateException If the serialiser cannot be instantiated.
 	 */
-	public static <T> /*@Nullable*/ Serialiser<T> newSerialiser(Class<T> dataClass, String nullMarker) {
-		@SuppressWarnings("unchecked")
-		Class<? extends BaseSerialiser<T>> klass = (Class<? extends BaseSerialiser<T>>) SERIALISERS.get(dataClass);
+	@SuppressWarnings("unchecked")
+	public static <T> /*@Nullable*/ Serialiser<T> newSerialiser(Class<T> dataType, String nullMarker) {
+		Class<? extends BaseSerialiser<?>> klass = SERIALISERS.get(dataType);
 		if (klass == null) return null;
 		try {
-			Constructor<? extends BaseSerialiser<T>> serialiser = klass.getDeclaredConstructor(String.class);
-			return serialiser.newInstance(nullMarker);
-		} catch (InstantiationException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			Constructor<? extends BaseSerialiser<?>> serialiser = klass.getDeclaredConstructor(String.class);
+			return (Serialiser<T>) serialiser.newInstance(nullMarker);
+		} catch (ClassCastException | InstantiationException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new IllegalStateException(e);
 		}
+	}
+
+	/**
+	 * Creates a new instance of a serialiser for the given data class.
+	 *
+	 * @param dataType - The type of object to be serialised.
+	 * @return An appropriate serialiser instance, or a value of null if
+	 * the data-type is not handled.
+	 * @throws IllegalStateException If the serialiser cannot be instantiated.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> /*@Nullable*/ Serialiser<T> newSerialiser(Class<T> dataType) {
+		Class<? extends BaseSerialiser<?>> klass = SERIALISERS.get(dataType);
+		if (klass == null) return null;
+		try {
+			return (Serialiser<T>) klass.newInstance();
+		} catch (ClassCastException | InstantiationException | SecurityException | IllegalAccessException | IllegalArgumentException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	/**
+	 * Provides a mapping from built-in data types to their corresponding serialiser classes.
+	 * 
+	 * @return The type -> serialiser mapping.
+	 */
+	public static Map<Class<?>, Class<? extends Serialiser<?>>> getSerialiserClasses() {
+		return Collections.unmodifiableMap(SERIALISERS);
 	}
 
 }

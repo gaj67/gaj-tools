@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial.multi;
+package gaj.config.multiserialisers;
 
 import gaj.config.serialisers.BaseSerialiser;
 import gaj.config.serialisers.BooleanSerialiser;
@@ -37,7 +37,7 @@ public class SerialiserFactory {
 			put(String.class, StringSerialiser.class);
 		}};
 
-	private final SerialiserConfigImpl config = new SerialiserConfigImpl();
+	private final MultiSerialiserConfigImpl config = new MultiSerialiserConfigImpl();
 
 	private SerialiserFactory() {}
 
@@ -112,7 +112,7 @@ public class SerialiserFactory {
 	 *
 	 * @return An immutable configuration object.
 	 */
-	public SerialiserConfig getConfiguration() {
+	public MultiSerialiserConfig getConfiguration() {
 		return config;
 	}
 

@@ -12,8 +12,13 @@ package gaj.config.serialisers;
  */
 /*package-private*/ class BaseSerialiser<T> implements Serialiser<T> {
 
+	/** The serialised representation of a null object. */
 	protected final String nullMarker;
-	
+
+	protected BaseSerialiser() {
+		this(null);
+	}
+
 	protected BaseSerialiser(/*@Nullable*/ String nullMarker) {
 		this.nullMarker = nullMarker;
 	}
@@ -58,22 +63,6 @@ package gaj.config.serialisers;
 	public /*@Nullable*/ T deserialise(/*@Nullable*/ String data) {
 		if (isNull(data)) return null;
 		throw failure("Unknown serialisation: " + data);
-	}
-
-	/**
-	 * Clones the current serialiser.
-	 *
-	 * @return A new instance of a Serialiser, with
-	 * a copy of the current configuration.
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public Serialiser<T> clone() {
-		try {
-			return (Serialiser<T>) super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new InternalError(e.getMessage());
-		}
 	}
 
 }

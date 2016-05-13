@@ -11,6 +11,10 @@ import gaj.config.annotations.Singleton;
 @Singleton
 /*package-private*/ class FloatSerialiser extends BaseSerialiser<Float> {
 
+	/*package-private*/ FloatSerialiser() {
+		super();
+	}
+
 	/*package-private*/ FloatSerialiser(/*@Nullable*/ String nullMarker) {
 		super(nullMarker);
 	}

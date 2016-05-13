@@ -22,7 +22,7 @@ import gaj.config.annotations.Singleton;
 import gaj.config.core.DeclarationsManager;
 import gaj.config.core.MapDeclarationsManager;
 import gaj.config.keys.KeyTranslator;
-import gaj.config.serial.multi.MultiSerialiser;
+import gaj.config.multiserialisers.MultiSerialiser;
 import gaj.config.serialisers.InvalidSerialisationException;
 import gaj.config.serialisers.Serialiser;
 

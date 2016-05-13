@@ -1,12 +1,12 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.serial.multi;
+package gaj.config.multiserialisers;
 
 /**
  * Specifies the type information markers used by all ConfigurableSerialiser implementations.
  */
-public interface SerialiserConfig {
+public interface MultiSerialiserConfig {
 
 	/**
 	 * Specifies the prefix used to denote the start of the serialisation type.

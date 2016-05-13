@@ -11,6 +11,10 @@ import gaj.config.annotations.Singleton;
 @Singleton
 /*package-private*/ class BooleanSerialiser extends BaseSerialiser<Boolean> {
 
+	/*package-private*/ BooleanSerialiser() {
+		super();
+	}
+
 	/*package-private*/ BooleanSerialiser(/*@Nullable*/ String nullMarker) {
 		super(nullMarker);
 	}

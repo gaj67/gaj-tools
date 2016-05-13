@@ -11,6 +11,10 @@ import gaj.config.annotations.Singleton;
 @Singleton
 /*package-private*/ class ShortSerialiser extends BaseSerialiser<Short> {
 
+	/*package-private*/ ShortSerialiser() {
+		super();
+	}
+
 	/*package-private*/ ShortSerialiser(/*@Nullable*/ String nullMarker) {
 		super(nullMarker);
 	}

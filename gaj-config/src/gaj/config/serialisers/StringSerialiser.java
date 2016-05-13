@@ -13,6 +13,10 @@ import gaj.config.annotations.Singleton;
 @Singleton
 /*package-private*/ class StringSerialiser extends BaseSerialiser<String> {
 
+	/*package-private*/ StringSerialiser() {
+		super();
+	}
+
 	/*package-private*/ StringSerialiser(/*@Nullable*/ String nullMarker) {
 		super(nullMarker);
 	}

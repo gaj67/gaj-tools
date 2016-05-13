@@ -41,13 +41,6 @@ public interface Serialiser<T> extends Cloneable {
 	 */
 	/*@Nullable*/ T deserialise(/*@Nullable*/ String data);
 
-	/**
-	 * Clones the current serialiser.
-	 *
-	 * @return A new instance of a Serialiser.
-	 */
-	Serialiser<T> clone();
-
 	default InvalidSerialisationException failure(String message) {
 		return new InvalidSerialisationException(message);
 	}
