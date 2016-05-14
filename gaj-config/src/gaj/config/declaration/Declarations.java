@@ -206,12 +206,12 @@ public abstract class Declarations {
 	 * the same key-name string into a single declaration.
 	 * 
 	 * @param declarations - An iterable over property declarations.
-	 * @return A collection of merged property declarations.
+	 * @return A map from key-names to merged property declarations.
 	 * @throws InvalidDeclarationException If any property
 	 * does not have a key-name, or is otherwise marked with
 	 * inconsistent settings.
 	 */
-	public static Collection<Declaration> mergeDeclarationsByKey(Iterable<Declaration> declarations) {
+	public static Map<String/*key-name*/, Declaration> mergeDeclarationsByKey(Iterable<Declaration> declarations) {
 		Map<String,Declaration> mergedDeclarations = new HashMap<>();
 		for (Declaration bareDeclaration : declarations) {
 			String key = bareDeclaration.getKey();
@@ -223,7 +223,7 @@ public abstract class Declarations {
 					: mergePropertyDeclarations(namedDeclaration, bareDeclaration);
 			mergedDeclarations.put(key, namedDeclaration);
 		}
-		return mergedDeclarations.values();
+		return mergedDeclarations;
 	}
 
 }

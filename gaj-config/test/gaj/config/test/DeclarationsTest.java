@@ -95,11 +95,27 @@ public class DeclarationsTest {
 	}
 
 	@Test
-	public void testMergedDeclarations() throws NoSuchFieldException, SecurityException {
+	public void testTranslatedDeclarations() throws NoSuchFieldException, SecurityException, NoSuchMethodException {
 		DeclarationManager manager = DeclarationManager.newInstance(".");
 		Field intField = ConfigurableClass.class.getField("intField");
-		//Declaration intFieldDec = manager.getDeclaration(intField);
-		//assertEquals("int.field", intFieldDec.getKey());
+		Declaration intFieldDec = manager.getDeclaration(intField);
+		assertNotNull(intFieldDec);
+		assertEquals("int.field", intFieldDec.getKey());
+
+		Method setterMethod = ConfigurableClass.class.getMethod("setter", int.class);
+		Declaration setterMethodDec = manager.getDeclaration(setterMethod);
+		assertNotNull(setterMethodDec);
+		assertEquals("int.field", setterMethodDec.getKey());
+
+		Field stringField = ConfigurableClass.class.getField("stringField");
+		Declaration stringFieldDec = manager.getDeclaration(stringField);
+		assertNotNull(stringFieldDec);
+		assertEquals("abc.value", stringFieldDec.getKey());
+
+		Method getABCValueMethod = ConfigurableClass.class.getMethod("getABCValue");
+		Declaration getABCValueMethodDec = manager.getDeclaration(getABCValueMethod);
+		assertNotNull(getABCValueMethodDec);
+		assertEquals("abc.value", getABCValueMethodDec.getKey());
 	}
 
 }

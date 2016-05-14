@@ -111,7 +111,7 @@ public class DeclarationManager {
 	 * is marked with inconsistent settings.
 	 */
 	public Collection<Declaration> getMergedDeclarations(Class<?> klass) {
-		return Declarations.mergeDeclarationsByKey(getUnmergedDeclarations(klass));
+		return Declarations.mergeDeclarationsByKey(getUnmergedDeclarations(klass)).values();
 	}
 
 }
