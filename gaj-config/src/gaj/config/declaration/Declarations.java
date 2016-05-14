@@ -3,11 +3,14 @@
  */
 package gaj.config.declaration;
 
+import gaj.config.annotations.Annotations;
 import gaj.config.annotations.Default;
 import gaj.config.annotations.Getter;
 import gaj.config.annotations.Property;
 import gaj.config.annotations.Required;
 import gaj.config.annotations.Setter;
+import gaj.config.keys.KeyTranslator;
+import gaj.config.keys.KeyTranslator.MethodContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -25,7 +28,7 @@ public abstract class Declarations {
 	private Declarations() {}
 
 	/**
-	 * Extracts the property configuration declaration on a field.
+	 * Extracts the untranslated property configuration declaration on a field.
 	 * 
 	 * @param field - The field to test.
 	 * @return A declaration instance summarising the property annotations
@@ -33,6 +36,22 @@ public abstract class Declarations {
 	 * @throws InvalidDeclarationException If the property annotations are inconsistent.
 	 */
 	public static /*@Nullable*/ Declaration getDeclaration(final Field field) {
+		return getDeclaration(field, null);
+	}
+
+	/**
+	 * Extracts the translated property configuration declaration on a field.
+	 * 
+	 * @param field - The field to test.
+	 * @param keyTranslator - An optional translator for guessing the property key-name from
+	 * the field name, if necessary.
+	 * @return A declaration instance summarising the property annotations
+	 * on the field, or the null value if there are no such annotations.
+	 * @throws InvalidDeclarationException If the property annotations are inconsistent.
+	 */
+	public static /*@Nullable*/ Declaration getDeclaration(
+			Field field, /*@Nullable*/ KeyTranslator translator) 
+	{
 		Required requiredAnno = field.getAnnotation(Required.class);
 		Default defaultAnno = field.getAnnotation(Default.class);
 		if (requiredAnno != null && defaultAnno != null)
@@ -40,11 +59,13 @@ public abstract class Declarations {
 		Property propertyAnno = field.getAnnotation(Property.class);
 		if (propertyAnno == null && requiredAnno == null && defaultAnno == null)
 			return null; // Not marked with any configuration annotations.
-		GuardedDeclaration dec = new GuardedDeclaration();
+		BeanDeclaration dec = new BeanDeclaration();
 		dec.setField(field);
 		dec.setType(field.getType());
 		if (propertyAnno != null)
 			dec.setKey(propertyAnno.value());
+		if (dec.getKey() == null && translator != null)
+			dec.setKey(translator.getKey(field));
 		if (requiredAnno != null)
 			dec.setRequired(true);
 		if (defaultAnno != null)
@@ -57,7 +78,7 @@ public abstract class Declarations {
 	}
 
 	/**
-	 * Extracts the property configuration declaration on a method.
+	 * Extracts the untranslated property configuration declaration on a method.
 	 * 
 	 * @param method - The method to test.
 	 * @return A declaration instance summarising the property annotations
@@ -65,6 +86,22 @@ public abstract class Declarations {
 	 * @throws InvalidDeclarationException If the property annotations are inconsistent.
 	 */
 	public static /*@Nullable*/ Declaration getDeclaration(Method method) {
+		return getDeclaration(method, null);
+	}
+	
+	/**
+	 * Extracts the translated property configuration declaration on a method.
+	 * 
+	 * @param method - The method to test.
+	 * @param keyTranslator - An optional translator for guessing the property key-name from
+	 * the method name, if necessary.
+	 * @return A declaration instance summarising the property annotations
+	 * on the method, or the null value if there are no such annotations.
+	 * @throws InvalidDeclarationException If the property annotations are inconsistent.
+	 */
+	public static /*@Nullable*/ Declaration getDeclaration(
+			Method method, /*@Nullable*/ KeyTranslator translator) 
+	{
 		Getter getterAnno = method.getAnnotation(Getter.class);
 		Setter setterAnno = method.getAnnotation(Setter.class);
 		if (getterAnno != null && setterAnno != null)
@@ -75,7 +112,7 @@ public abstract class Declarations {
 			throw failure("Method " + method.getName() + " cannot both be required and have a default value");
 		if (getterAnno == null && setterAnno == null && requiredAnno == null && defaultAnno == null)
 			return null; // Not marked with any configuration annotations.
-		GuardedDeclaration dec = new GuardedDeclaration();
+		BeanDeclaration dec = new BeanDeclaration();
 		Class<?>[] args = method.getParameterTypes();
 		if (getterAnno != null) {
 			if (args == null || args.length != 0)
@@ -86,12 +123,16 @@ public abstract class Declarations {
 			dec.setType(retType);
 			dec.setGetter(method);
 			dec.setKey(getterAnno.value());
+			if (dec.getKey() == null && translator != null)
+				dec.setKey(translator.getKey(MethodContext.GETTER, method));
 		} else if (setterAnno != null) {
 			if (args == null || args.length != 1)
 				throw failure("Method " + method.getName() + " is not a simple setter");
 			dec.setType(args[0]);
 			dec.setSetter(method);
 			dec.setKey(setterAnno.value());
+			if (dec.getKey() == null && translator != null)
+				dec.setKey(translator.getKey(MethodContext.SETTER, method));
 		}
 		if (requiredAnno != null)
 			dec.setRequired(true);
@@ -119,28 +160,43 @@ public abstract class Declarations {
 	}
 
 	/**
-	 * Obtains a collection of unmerged 
-	 * property declarations from the
-	 * given class. The collection will be empty if the class
-	 * has no declared properties.
+	 * Obtains a collection of untranslated, unmerged property declarations from the given class. 
+	 * The collection will be empty if the class is not configurable or has no declared properties.
 	 * 
-	 * @param klass - An allegedly configurable class,
-	 *  supposedly containing property declarations.
+	 * @param klass - An allegedly configurable class, supposedly containing property declarations.
 	 * @return A collection of property declarations.
 	 * @throws InvalidDeclarationException If any property
 	 * is marked with inconsistent settings.
 	 */
-	public static Collection<Declaration> getUnmergedDeclarations(Class<?> klass) {
+	public static Collection<Declaration> getDeclarations(Class<?> klass) {
+		return getDeclarations(klass, null);
+	}
+	
+	/**
+	 * Obtains a collection of translated but unmerged property declarations from the given class. 
+	 * The collection will be empty if the class is not configurable or has no declared properties.
+	 * 
+	 * @param klass - An allegedly configurable class supposedly containing property declarations.
+	 * @param translator - An optional translator for guessing property key-names if necessary.
+	 * @return A collection of property declarations.
+	 * @throws InvalidDeclarationException If any property
+	 * is marked with inconsistent settings.
+	 */
+	public static Collection<Declaration> getDeclarations(
+			Class<?> klass, /*@Nullable*/ KeyTranslator translator) 
+	{
 		List<Declaration> declarations = new ArrayList<Declaration>();
-		for (Field field : klass.getFields()) {
-			Declaration dec = getDeclaration(field);
-			if (dec != null)
-				declarations.add(dec);
-		}
-		for (Method method : klass.getMethods()) {
-			Declaration dec = getDeclaration(method);
-			if (dec != null)
-				declarations.add(dec);
+		if (Annotations.isConfigurable(klass)) {
+			for (Field field : klass.getFields()) {
+				Declaration dec = getDeclaration(field, translator);
+				if (dec != null)
+					declarations.add(dec);
+			}
+			for (Method method : klass.getMethods()) {
+				Declaration dec = getDeclaration(method, translator);
+				if (dec != null)
+					declarations.add(dec);
+			}
 		}
 		return declarations;
 	}
@@ -164,7 +220,7 @@ public abstract class Declarations {
 			Declaration namedDeclaration = mergedDeclarations.get(key);
 			namedDeclaration = (namedDeclaration == null) 
 					? bareDeclaration
-							: mergePropertyDeclarations(namedDeclaration, bareDeclaration);
+					: mergePropertyDeclarations(namedDeclaration, bareDeclaration);
 			mergedDeclarations.put(key, namedDeclaration);
 		}
 		return mergedDeclarations.values();

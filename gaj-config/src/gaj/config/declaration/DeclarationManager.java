@@ -4,8 +4,10 @@
 package gaj.config.declaration;
 
 import gaj.config.keys.KeyTranslator;
-import gaj.config.keys.KeyTranslator.MethodContext;
+import gaj.config.keys.KeyTranslators;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 /**
@@ -25,22 +27,73 @@ public class DeclarationManager {
 	}
 
 	/**
-	 * Creates a manager instance without a key-name translator.
+	 * Creates a manager instance with a simple key-name translator.
 	 * 
 	 * @return An unconfigured manager instance.
 	 */
 	public static DeclarationManager newInstance() {
-		return new DeclarationManager(null);
+		return new DeclarationManager(KeyTranslators.newSimpleTranslator());
 	}
 
 	/**
 	 * Creates a manager instance bound to the given key-name translator.
 	 * 
-	 * @param translator - The key-name translator.
+	 * @param translator - The key-name translator, or a value of null to
+	 * prevent translation.
 	 * @return A configured manager instance.
 	 */
-	public static DeclarationManager newInstance(KeyTranslator translator) {
+	public static DeclarationManager newInstance(/*@Nullable*/ KeyTranslator translator) {
 		return new DeclarationManager(translator);
+	}
+
+	/**
+	 * Creates a manager instance bound to a separated key-name translator.
+	 * 
+	 * @param separator - The key separator symbol.
+	 * @return A configured manager instance.
+	 */
+	public static DeclarationManager newInstance(String separator) {
+		return new DeclarationManager(KeyTranslators.newSeparatorTranslator(separator));
+	}
+
+	/**
+	 * Extracts the translated property declaration on a field.
+	 * 
+	 * @param field - The field to test.
+	 * @return A declaration instance summarising the property annotations
+	 * on the field, or the null value if there are no such annotations.
+	 * @throws InvalidDeclarationException If the property annotations are inconsistent.
+	 */
+	public /*@Nullable*/ Declaration getDeclaration(final Field field) {
+		return Declarations.getDeclaration(field, translator);
+	}
+
+	/**
+	 * Extracts the translated property declaration on a method.
+	 * 
+	 * @param method - The method to test.
+	 * @return A declaration instance summarising the property annotations
+	 * on the method, or the null value if there are no such annotations.
+	 * @throws InvalidDeclarationException If the property annotations are inconsistent.
+	 */
+	public /*@Nullable*/ Declaration getDeclaration(final Method method) {
+		return Declarations.getDeclaration(method, translator);
+	}
+
+	/**
+	 * Obtains a collection of unmerged property declarations from the
+	 * given class, using key-name translation if necessary. 
+	 * The collection will be empty if the class
+	 * has no declared properties or is not configurable.
+	 * 
+	 * @param klass - An allegedly configurable class,
+	 *  supposedly containing property declarations.
+	 * @return A collection of unmerged property declarations.
+	 * @throws InvalidDeclarationException If any property
+	 * is marked with inconsistent settings.
+	 */
+	public Collection<Declaration> getUnmergedDeclarations(Class<?> klass) {
+		return Declarations.getDeclarations(klass, translator);
 	}
 
 	/**
@@ -49,37 +102,16 @@ public class DeclarationManager {
 	 * given class, using key-name translation if
 	 * necessary. 
 	 * The collection will be empty if the class
-	 * has no declared properties.
+	 * has no declared properties or is not configurable.
 	 * 
 	 * @param klass - An allegedly configurable class,
 	 *  supposedly containing property declarations.
-	 * @return A collection of property declarations.
+	 * @return A collection of merged property declarations.
 	 * @throws InvalidDeclarationException If any property
 	 * is marked with inconsistent settings.
 	 */
 	public Collection<Declaration> getMergedDeclarations(Class<?> klass) {
-		Collection<Declaration> declarations = Declarations.getUnmergedDeclarations(klass);
-		if (translator != null) {
-			for (Declaration declaration : declarations) {
-				translateKey(declaration);
-			}
-		}
-		return Declarations.mergeDeclarationsByKey(declarations);
+		return Declarations.mergeDeclarationsByKey(getUnmergedDeclarations(klass));
 	}
 
-	private void translateKey(Declaration declaration) {
-		String name = declaration.getKey();
-		if (name != null)
-			name = translator.getKey(name);
-		else if (declaration.getField() != null)
-			name = translator.getKey(declaration.getField());
-		else if (declaration.getGetter() != null)
-			name = translator.getKey(MethodContext.GETTER, declaration.getGetter());
-		else if (declaration.getSetter() != null)
-			name = translator.getKey(MethodContext.SETTER, declaration.getSetter());
-		else
-			throw new InvalidDeclarationException("No annotatetd property specified");
-		// Use BeanDec instead of GuardedDec to bypass value checks.
-		((BeanDeclaration)declaration).setKey(name);
-	}
 }

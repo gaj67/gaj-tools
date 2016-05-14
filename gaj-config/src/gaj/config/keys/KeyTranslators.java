@@ -17,8 +17,8 @@ public abstract class KeyTranslators {
 	 * 
 	 * @return The key translator.
 	 */
-	public static KeyTranslator newVerbatimTranslator() {
-		return new VerbatimKeyTranslator();
+	public static KeyTranslator newSimpleTranslator() {
+		return new SimpleKeyTranslator();
 	}
 
 	/**
