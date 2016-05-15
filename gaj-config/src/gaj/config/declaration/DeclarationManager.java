@@ -92,26 +92,25 @@ public class DeclarationManager {
 	 * @throws InvalidDeclarationException If any property
 	 * is marked with inconsistent settings.
 	 */
-	public Collection<Declaration> getUnmergedDeclarations(Class<?> klass) {
+	public Collection<Declaration> getDeclarations(Class<?> klass) {
 		return Declarations.getDeclarations(klass, translator);
 	}
 
 	/**
-	 * Obtains a collection of merged 
-	 * property declarations from the
+	 * Obtains the merged property declarations from the
 	 * given class, using key-name translation if
 	 * necessary. 
-	 * The collection will be empty if the class
+	 * The result will be empty if the class
 	 * has no declared properties or is not configurable.
 	 * 
 	 * @param klass - An allegedly configurable class,
 	 *  supposedly containing property declarations.
-	 * @return A collection of merged property declarations.
+	 * @return A map of merged property declarations.
 	 * @throws InvalidDeclarationException If any property
 	 * is marked with inconsistent settings.
 	 */
-	public Collection<Declaration> getMergedDeclarations(Class<?> klass) {
-		return Declarations.mergeDeclarationsByKey(getUnmergedDeclarations(klass)).values();
+	public DeclarationMap getDeclarationMap(Class<?> klass) {
+		return Declarations.mergeDeclarationsByKey(getDeclarations(klass));
 	}
 
 }

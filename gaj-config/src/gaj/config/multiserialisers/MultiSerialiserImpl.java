@@ -129,20 +129,19 @@ import java.util.Map.Entry;
 			String key = type.getSimpleName().toLowerCase();
 			_addSerialiser(key, entry.getValue(), type);
 		}			
-		Class<? extends Serialiser<?>> stringSerialiser = serialiserClasses.get("string");
+		Class<? extends Serialiser<String>> stringSerialiser = Serialisers.getStringSerialiserClass();
 		if (stringSerialiser != null) {
+			// Allow for untyped string values.
 			_addSerialiser(null, stringSerialiser);
 			// Now override string default to str.
 			_addSerialiser("str", stringSerialiser, String.class);
 		}
-		@SuppressWarnings("unchecked")
-		Class<? extends Serialiser<?>> intSerialiser = serialiserClasses.get("integer");
+		Class<? extends Serialiser<Integer>> intSerialiser = Serialisers.getIntegerSerialiserClass();
 		if (intSerialiser != null) {
 			// Now override integer default to int.
 			_addSerialiser("int", intSerialiser, int.class, Integer.class);
 		}
-		@SuppressWarnings("unchecked")
-		Class<? extends Serialiser<?>> boolSerialiser = serialiserClasses.get("boolean");
+		Class<? extends Serialiser<Boolean>> boolSerialiser = Serialisers.getBooleanSerialiserClass();
 		if (boolSerialiser != null) {
 			// Now override boolean default to bool.
 			_addSerialiser("bool", boolSerialiser, boolean.class, Boolean.class);

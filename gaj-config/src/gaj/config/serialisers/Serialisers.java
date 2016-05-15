@@ -20,17 +20,26 @@ public abstract class Serialisers {
 
 	@SuppressWarnings("serial")
 	private static final Map<Class<?>, Class<? extends BaseSerialiser<?>>> SERIALISERS = 
-		new HashMap<Class<?>, Class<? extends BaseSerialiser<?>>>() {{
-			put(Boolean.class, BooleanSerialiser.class);
-			put(Double.class, DoubleSerialiser.class);
-			put(Float.class, FloatSerialiser.class);
-			put(Integer.class, IntegerSerialiser.class);
-			put(Long.class, LongSerialiser.class);
-			put(Short.class, ShortSerialiser.class);
-			put(String.class, StringSerialiser.class);
-		}};
+	new HashMap<Class<?>, Class<? extends BaseSerialiser<?>>>() {{
+		put(Boolean.class, BooleanSerialiser.class);
+		put(Double.class, DoubleSerialiser.class);
+		put(Float.class, FloatSerialiser.class);
+		put(Integer.class, IntegerSerialiser.class);
+		put(Long.class, LongSerialiser.class);
+		put(Short.class, ShortSerialiser.class);
+		put(String.class, StringSerialiser.class);
+	}};
 
 	private Serialisers() {}
+
+	/**
+	 * Provides a mapping from built-in data types to their corresponding serialiser classes.
+	 * 
+	 * @return The type -> serialiser mapping.
+	 */
+	public static Map<Class<?>, Class<? extends Serialiser<?>>> getSerialiserClasses() {
+		return Collections.unmodifiableMap(SERIALISERS);
+	}
 
 	/**
 	 * Determines an appropriate serialiser class for the given data class.
@@ -42,6 +51,18 @@ public abstract class Serialisers {
 	@SuppressWarnings("unchecked")
 	public static <T> /*@Nullable*/ Class<? extends Serialiser<T>> getSerialiserClass(Class<T> dataClass) {
 		return (Class<? extends Serialiser<T>>) SERIALISERS.get(dataClass);
+	}
+
+	public static Class<? extends Serialiser<String>> getStringSerialiserClass() {
+		return StringSerialiser.class;
+	}
+
+	public static Class<? extends Serialiser<Integer>> getIntegerSerialiserClass() {
+		return IntegerSerialiser.class;
+	}
+
+	public static Class<? extends Serialiser<Boolean>> getBooleanSerialiserClass() {
+		return BooleanSerialiser.class;
 	}
 
 	/**
@@ -82,15 +103,6 @@ public abstract class Serialisers {
 		} catch (ClassCastException | InstantiationException | SecurityException | IllegalAccessException | IllegalArgumentException e) {
 			throw new IllegalStateException(e);
 		}
-	}
-
-	/**
-	 * Provides a mapping from built-in data types to their corresponding serialiser classes.
-	 * 
-	 * @return The type -> serialiser mapping.
-	 */
-	public static Map<Class<?>, Class<? extends Serialiser<?>>> getSerialiserClasses() {
-		return Collections.unmodifiableMap(SERIALISERS);
 	}
 
 }

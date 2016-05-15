@@ -13,6 +13,7 @@ import gaj.config.annotations.Required;
 import gaj.config.annotations.Setter;
 import gaj.config.declaration.Declaration;
 import gaj.config.declaration.DeclarationManager;
+import gaj.config.declaration.DeclarationMap;
 import gaj.config.declaration.Declarations;
 
 import org.junit.Test;
@@ -116,6 +117,16 @@ public class DeclarationsTest {
 		Declaration getABCValueMethodDec = manager.getDeclaration(getABCValueMethod);
 		assertNotNull(getABCValueMethodDec);
 		assertEquals("abc.value", getABCValueMethodDec.getKey());
+	}
+
+	@Test
+	public void testMergedDeclarations() {
+		DeclarationManager manager = DeclarationManager.newInstance(".");
+		DeclarationMap declarations = manager.getDeclarationMap(ConfigurableClass.class);
+		assertEquals(3, declarations.numKeys());
+		assertNotNull(declarations.getDeclaration("int.field"));
+		assertNotNull(declarations.getDeclaration("abc.value"));
+		assertNotNull(declarations.getDeclaration("obj.field"));
 	}
 
 }

@@ -91,7 +91,7 @@ public abstract class Declarations {
 	public static /*@Nullable*/ Declaration getDeclaration(Method method) {
 		return getDeclaration(method, null);
 	}
-	
+
 	/**
 	 * Extracts the translated property configuration declaration on a method.
 	 * 
@@ -182,7 +182,7 @@ public abstract class Declarations {
 	public static Collection<Declaration> getDeclarations(Class<?> klass) {
 		return getDeclarations(klass, null);
 	}
-	
+
 	/**
 	 * Obtains a collection of translated but unmerged property declarations from the given class. 
 	 * The collection will be empty if the class is not configurable or has no declared properties.
@@ -222,7 +222,7 @@ public abstract class Declarations {
 	 * does not have a key-name, or is otherwise marked with
 	 * inconsistent settings.
 	 */
-	public static Map<String/*key-name*/, Declaration> mergeDeclarationsByKey(Iterable<Declaration> declarations) {
+	public static DeclarationMap mergeDeclarationsByKey(Iterable<Declaration> declarations) {
 		Map<String,Declaration> mergedDeclarations = new HashMap<>();
 		for (Declaration bareDeclaration : declarations) {
 			String key = bareDeclaration.getKey();
@@ -234,7 +234,7 @@ public abstract class Declarations {
 					: mergePropertyDeclarations(namedDeclaration, bareDeclaration);
 			mergedDeclarations.put(key, namedDeclaration);
 		}
-		return mergedDeclarations;
+		return new DeclarationMapImpl(mergedDeclarations);
 	}
 
 }
