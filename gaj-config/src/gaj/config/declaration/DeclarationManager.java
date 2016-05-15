@@ -47,13 +47,13 @@ public class DeclarationManager {
 	}
 
 	/**
-	 * Creates a manager instance bound to a separated key-name translator.
+	 * Creates a manager instance bound to a camel-case key-name translator.
 	 * 
 	 * @param separator - The key separator symbol.
 	 * @return A configured manager instance.
 	 */
 	public static DeclarationManager newInstance(String separator) {
-		return new DeclarationManager(KeyTranslators.newSeparatorTranslator(separator));
+		return new DeclarationManager(KeyTranslators.newCamelCaseTranslator(separator));
 	}
 
 	/**

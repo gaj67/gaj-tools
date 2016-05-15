@@ -13,47 +13,43 @@ import java.lang.reflect.Method;
 public interface KeyTranslator {
 
 	/**
-	 * Provides context to the key-name translator about
-	 * the source of the method provided.
-	 */
-	public static enum MethodContext {
-		/** Translate key-name from the name of a getter method. */
-		GETTER, 
-		/** Translate key-name from the name of a setter method. */
-		SETTER  
-	}
-
-	/**
 	 * Determines a new key-name for a property based upon the
-	 * name provided via annotation.
+	 * name provided via annotation or guessed from a field or method.
 	 * 
 	 * @param name - The name to translate.
 	 * @return A translated key-name.
 	 */
-	String getKey(String name);
+	String translateKey(String name);
 
 	/**
-	 * Determines the key-name for a property based upon the
-	 * annotated field.
+	 * Deduces the key-name for a property based upon an
+	 * annotated field without an explicit key-name.
 	 * 
 	 * @param field - The field to translate.
 	 * @return A translated key-name.
 	 */
-	String getKey(Field field);
+	String guessPropertyKey(Field field);
 
 	/**
-	 * Determines the key-name for a property based upon the
-	 * annotated field.
+	 * Deduces the key-name for a property based upon an
+	 * annotated getter method without an explicit key-name.
 	 * 
-	 * @param context - An indicator of whether the
-	 * method is annotated as a getter or a setter.
-	 * @param method - The method to translate.
+	 * @param method - The getter method to translate.
 	 * @return A translated key-name.
 	 */
-	String getKey(MethodContext context, Method method);
+	String guessGetterKey(Method method);
 
 	/**
-	 * Provides an {@link KeyTranslationException}.
+	 * Deduces the key-name for a property based upon an
+	 * annotated setter method without an explicit key-name.
+	 * 
+	 * @param method - The setter method to translate.
+	 * @return A translated key-name.
+	 */
+	String guessSetterKey(Method method);
+
+	/**
+	 * Provides a {@link KeyTranslationException} when translation fails.
 	 * 
 	 * @param message - The error message.
 	 * @return The exception.

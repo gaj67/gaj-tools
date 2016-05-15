@@ -11,32 +11,30 @@ import java.lang.reflect.Method;
 	/*package-private*/ SimpleKeyTranslator() {}
 
 	@Override
-	public String getKey(String name) {
+	public String translateKey(String name) {
 		return name;
 	}
 
 	@Override
-	public String getKey(Field field) {
+	public String guessPropertyKey(Field field) {
 		return field.getName();
 	}
 
 	@Override
-	public String getKey(MethodContext context, Method method) {
+	public String guessGetterKey(Method method) {
 		String name = method.getName();
-		switch (context) {
-			case GETTER:
-				if (name.startsWith("get") || name.startsWith("has"))
-					name = name.substring(3);
-				else if (name.startsWith("is"))
-					name = name.substring(2);
-				break;
-			case SETTER:
-				if (name.startsWith("set"))
-					name = name.substring(3);
-				break;
-			default:
-				throw failure("Unhandled method context: " + context);
-		}
+		if (name.startsWith("get") || name.startsWith("has"))
+			name = name.substring(3);
+		else if (name.startsWith("is"))
+			name = name.substring(2);
+		return name;
+	}
+
+	@Override
+	public String guessSetterKey(Method method) {
+		String name = method.getName();
+		if (name.startsWith("set"))
+			name = name.substring(3);
 		return name;
 	}
 

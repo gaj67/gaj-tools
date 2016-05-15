@@ -29,8 +29,8 @@ public abstract class KeyTranslators {
 	 * 
 	 * @return The key translator.
 	 */
-	public static KeyTranslator newDotSeparatorTranslator() {
-		return new SeparatedKeyTranslator(".");
+	public static KeyTranslator newCamelCaseTranslator() {
+		return new CamelCaseKeyTranslator(".");
 	}
 
 	/**
@@ -42,8 +42,8 @@ public abstract class KeyTranslators {
 	 * @param separator - The separator string.
 	 * @return The key translator.
 	 */
-	public static KeyTranslator newSeparatorTranslator(String separator) {
-		return new SeparatedKeyTranslator(separator);
+	public static KeyTranslator newCamelCaseTranslator(String separator) {
+		return new CamelCaseKeyTranslator(separator);
 	}
 
 }

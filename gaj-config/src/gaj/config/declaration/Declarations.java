@@ -10,7 +10,6 @@ import gaj.config.annotations.Property;
 import gaj.config.annotations.Required;
 import gaj.config.annotations.Setter;
 import gaj.config.keys.KeyTranslator;
-import gaj.config.keys.KeyTranslator.MethodContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -64,8 +63,12 @@ public abstract class Declarations {
 		dec.setType(field.getType());
 		if (propertyAnno != null)
 			dec.setKey(propertyAnno.value());
-		if (dec.getKey() == null && translator != null)
-			dec.setKey(translator.getKey(field));
+		if (translator != null) {
+			String key = dec.getKey();
+			if (key == null)
+				key = translator.guessPropertyKey(field);
+			dec.setKey(translator.translateKey(key));
+		}
 		if (requiredAnno != null)
 			dec.setRequired(true);
 		if (defaultAnno != null)
@@ -123,16 +126,24 @@ public abstract class Declarations {
 			dec.setType(retType);
 			dec.setGetter(method);
 			dec.setKey(getterAnno.value());
-			if (dec.getKey() == null && translator != null)
-				dec.setKey(translator.getKey(MethodContext.GETTER, method));
+			if (translator != null) {
+				String key = dec.getKey();
+				if (key == null)
+					key = translator.guessGetterKey(method);
+				dec.setKey(translator.translateKey(key));
+			}
 		} else if (setterAnno != null) {
 			if (args == null || args.length != 1)
 				throw failure("Method " + method.getName() + " is not a simple setter");
 			dec.setType(args[0]);
 			dec.setSetter(method);
 			dec.setKey(setterAnno.value());
-			if (dec.getKey() == null && translator != null)
-				dec.setKey(translator.getKey(MethodContext.SETTER, method));
+			if (translator != null) {
+				String key = dec.getKey();
+				if (key == null)
+					key = translator.guessSetterKey(method);
+				dec.setKey(translator.translateKey(key));
+			}
 		}
 		if (requiredAnno != null)
 			dec.setRequired(true);

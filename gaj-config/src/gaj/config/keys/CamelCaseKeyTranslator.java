@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 
-/*package-private*/ class SeparatedKeyTranslator implements KeyTranslator {
+/*package-private*/ class CamelCaseKeyTranslator implements KeyTranslator {
 
 	private final String separator;
 
@@ -19,36 +19,35 @@ import java.util.List;
 	 * 
 	 * @param sep - The separator string.
 	 */
-	/*package-private*/ SeparatedKeyTranslator(String sep) {
+	CamelCaseKeyTranslator(String sep) {
 		this.separator = sep;
 	}
 
 	@Override
-	public String getKey(String name) {
+	public String translateKey(String name) {
 		return name;
 	}
 
 	@Override
-	public String getKey(Field field) {
+	public String guessPropertyKey(Field field) {
 		return join(decomposeCamelCase(field.getName()));
 	}
 
 	@Override
-	public String getKey(MethodContext context, Method method) {
+	public String guessGetterKey(Method method) {
 		List<String> parts = decomposeCamelCase(method.getName());
 		String lead = parts.get(0);
-		switch (context) {
-			case GETTER:
-				if (lead.equalsIgnoreCase("get") ||	lead.equalsIgnoreCase("is") || lead.equalsIgnoreCase("has"))
-					parts.remove(0);
-				break;
-			case SETTER:
-				if (lead.equalsIgnoreCase("set"))
-					parts.remove(0);
-				break;
-			default:
-				throw failure("Unhandled method context: " + context);
-		}
+		if (lead.equalsIgnoreCase("get") ||	lead.equalsIgnoreCase("is") || lead.equalsIgnoreCase("has"))
+			parts.remove(0);
+		return join(parts);
+	}
+
+	@Override
+	public String guessSetterKey(Method method) {
+		List<String> parts = decomposeCamelCase(method.getName());
+		String lead = parts.get(0);
+		if (lead.equalsIgnoreCase("set"))
+			parts.remove(0);
 		return join(parts);
 	}
 
