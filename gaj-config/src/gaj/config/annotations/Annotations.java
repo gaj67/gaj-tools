@@ -38,7 +38,9 @@ public class Annotations {
 	 * marked as being a property.
 	 */
 	public static boolean isProperty(Field field) {
-		return field.isAnnotationPresent(Property.class);
+		return field.isAnnotationPresent(Property.class)
+				|| field.isAnnotationPresent(Default.class)
+				|| field.isAnnotationPresent(Required.class);
 	}
 
 	/**
@@ -105,7 +107,7 @@ public class Annotations {
 	 */
 	public static boolean isGetter(Method method) {
 		return method.isAnnotationPresent(Getter.class)
-				&& method.getReturnType() != Void.class 
+				&& method.getReturnType() != void.class 
 				&& method.getParameterTypes().length == 0;
 	}
 
@@ -117,7 +119,9 @@ public class Annotations {
 	 * marked as being a property setter, and has exactly one argument.
 	 */
 	public static boolean isSetter(Method method) {
-		return method.isAnnotationPresent(Setter.class)
+		return (method.isAnnotationPresent(Setter.class)
+				|| method.isAnnotationPresent(Default.class)
+				|| method.isAnnotationPresent(Required.class))
 				&& method.getParameterTypes().length == 1;
 	}
 
@@ -137,9 +141,11 @@ public class Annotations {
 			return Property.DEFAULT_KEY.equals(key) ? null : key;
 		}
 		Setter setter = method.getAnnotation(Setter.class);
-		if (setter == null) return null;
-		String key = setter.value();
-		return Property.DEFAULT_KEY.equals(key) ? null : key;
+		if (setter != null) { 
+			String key = setter.value();
+			return Property.DEFAULT_KEY.equals(key) ? null : key;
+		}
+		return null;
 	}
 
 	/**

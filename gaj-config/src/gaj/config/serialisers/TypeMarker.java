@@ -1,4 +1,4 @@
-package gaj.config.multiserialisers;
+package gaj.config.serialisers;
 
 /**
  * Specifies the special serialisation markers used to denote type information.

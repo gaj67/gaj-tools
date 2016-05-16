@@ -1,7 +1,8 @@
 /*
  * (c) Geoff Jarrad, 2016.
  */
-package gaj.config.multiserialisers;
+package gaj.config.serialisers;
+
 
 /**
  * This factory handles interfaces and managers for serialising objects
@@ -33,8 +34,23 @@ public abstract class MultiSerialisers {
 	 * the multi-serialiser with the built-in serialisers. 
 	 * @return A multi-serialiser.
 	 */
-	public MultiSerialiser newMultiSerialiser(MultiSerialiserConfig config, boolean preConfigure) {
+	public static MultiSerialiser newMultiSerialiser(MultiSerialiserConfig config, boolean preConfigure) {
 		return new MultiSerialiserImpl(config, preConfigure);
+	}
+
+	/**
+	 * Creates a multi-serialiser that uses standard data-type markers, 
+	 * optionally pre-configured 
+	 * with standard serialisers for the String, 
+	 * Boolean and various numerical classes.
+	 *
+	 * @param preConfigure - A flag indicating whether
+	 * (true) or not (false) to pre-configure 
+	 * the multi-serialiser with the built-in serialisers. 
+	 * @return A multi-serialiser.
+	 */
+	public static Serialiser<Object> newMultiSerialiser(boolean preConfigure) {
+		return new MultiSerialiserImpl(newConfig(), preConfigure);
 	}
 
 }

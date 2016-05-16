@@ -1,54 +1,20 @@
 package gaj.config.test;
 
-import static org.junit.Assert.*;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
-import gaj.config.annotations.Configurable;
-import gaj.config.annotations.Default;
-import gaj.config.annotations.Getter;
-import gaj.config.annotations.Property;
-import gaj.config.annotations.Required;
-import gaj.config.annotations.Setter;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import gaj.config.declaration.Declaration;
 import gaj.config.declaration.DeclarationManager;
 import gaj.config.declaration.DeclarationMap;
 import gaj.config.declaration.Declarations;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import org.junit.Test;
 
 public class DeclarationsTest {
 
-	@Configurable
-	private static class ConfigurableClass {
-
-		public double nonPropertyField = 0;
-
-		@Required
-		public int intField = (int) nonPropertyField;
-
-		@Property("abc.value")
-		public String stringField;
-
-		@Default("null")
-		public Object objField;
-
-		public int getInt() {
-			return 0;
-		}
-
-		@Getter
-		public String getABCValue() {
-			return "";
-		}
-
-		@Setter("int.field")
-		public void setter(int value) {
-			value += getInt();
-		}
-
-	}
 
 	@Test
 	public void testFieldDeclarations() throws NoSuchFieldException, SecurityException {

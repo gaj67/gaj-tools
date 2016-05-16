@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2016.
  */
-package gaj.config.multiserialisers;
+package gaj.config.serialisers;
 
 
 

@@ -1,12 +1,10 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.multiserialisers;
+package gaj.config.serialisers;
 
 
 import gaj.config.annotations.Annotations;
-import gaj.config.serialisers.Serialiser;
-import gaj.config.serialisers.Serialisers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -129,30 +127,21 @@ import java.util.Map.Entry;
 			String key = type.getSimpleName().toLowerCase();
 			_addSerialiser(key, entry.getValue(), type);
 		}			
-		Class<? extends Serialiser<String>> stringSerialiser = Serialisers.getStringSerialiserClass();
-		if (stringSerialiser != null) {
-			// Allow for untyped string values.
-			_addSerialiser(null, stringSerialiser);
-			// Now override string default to str.
-			_addSerialiser("str", stringSerialiser, String.class);
-		}
-		Class<? extends Serialiser<Integer>> intSerialiser = Serialisers.getIntegerSerialiserClass();
-		if (intSerialiser != null) {
-			// Now override integer default to int.
-			_addSerialiser("int", intSerialiser, int.class, Integer.class);
-		}
-		Class<? extends Serialiser<Boolean>> boolSerialiser = Serialisers.getBooleanSerialiserClass();
-		if (boolSerialiser != null) {
-			// Now override boolean default to bool.
-			_addSerialiser("bool", boolSerialiser, boolean.class, Boolean.class);
-		}
+		// Allow for untyped string values.
+		_addSerialiser(null, StringSerialiser.class, (Class<?>) null);
+		// Now override string default to str.
+		_addSerialiser("str", StringSerialiser.class, String.class);
+		// Now override integer default to int.
+		_addSerialiser("int", IntegerSerialiser.class, int.class, Integer.class);
+		// Now override boolean default to bool.
+		_addSerialiser("bool", BooleanSerialiser.class, boolean.class, Boolean.class);
 	}
 
 	private void _addSerialiser(String typeName, Class<? extends Serialiser<?>> serialiser, Class<?>... dataTypes) {
 		serialiserClasses.put(typeName, serialiser);
 		if (dataTypes.length != 0) {
-			for (Class<?> object : dataTypes)
-				serialiserTypes.put(object, typeName);
+			for (Class<?> dataType : dataTypes)
+				serialiserTypes.put(dataType, typeName);
 		}
 	}
 

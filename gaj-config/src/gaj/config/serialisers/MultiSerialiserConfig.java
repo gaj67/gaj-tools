@@ -1,7 +1,7 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.multiserialisers;
+package gaj.config.serialisers;
 
 /**
  * Specifies the type information markers used by all ConfigurableSerialiser implementations.

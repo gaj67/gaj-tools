@@ -1,9 +1,8 @@
 /*
  * (c) Geoff Jarrad, 2013.
  */
-package gaj.config.multiserialisers;
+package gaj.config.serialisers;
 
-import gaj.config.serialisers.Serialiser;
 
 /**
  * This interface provides for management of multiple serialisers,

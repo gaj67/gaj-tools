@@ -1,6 +1,6 @@
 package gaj.config.configurators;
 
-import gaj.config.multiserialisers.MultiSerialiser;
+import gaj.config.serialisers.MultiSerialiser;
 import gaj.config.serialisers.Serialiser;
 
 
