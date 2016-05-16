@@ -12,7 +12,7 @@ import java.util.Map;
 	}
 	
 	@Override
-	public int numKeys() {
+	public int numProperties() {
 		return map.size();
 	}
 
@@ -24,6 +24,11 @@ import java.util.Map;
 	@Override
 	public /*@Nullable*/ Declaration getDeclaration(String key) {
 		return map.get(key);
+	}
+
+	@Override
+	public Iterable<Declaration> getDeclarations() {
+		return Collections.unmodifiableCollection(map.values());
 	}
 
 }

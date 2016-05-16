@@ -377,13 +377,13 @@ public class DeclarationFactory {
 			SerialisationManager serialiser)
 					throws InvalidSerialisationException
 					{
-		if (!declaration.hasDefault() || declaration.getType() == String.class)
+		if (!declaration.hasDefault() || declaration.getDataType() == String.class)
 			return;
 		Object value = declaration.getValue();
 		if (!(value instanceof String)) return; // Already deserialised?
-		Serialiser deser = serialiser.getSerialiser(declaration.getType());
+		Serialiser deser = serialiser.getSerialiser(declaration.getDataType());
 		if (deser == null)
-			throw new InvalidSerialisationException("No deserialiser found for type: "+declaration.getType());
+			throw new InvalidSerialisationException("No deserialiser found for type: "+declaration.getDataType());
 		value  = deser.deserialise((String)value);
 		// Use BeanPD instead of GuardedPD to bypass value checks.
 		if (!(declaration instanceof BeanDeclaration))

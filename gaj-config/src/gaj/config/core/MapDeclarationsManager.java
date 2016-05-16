@@ -66,7 +66,7 @@ public class MapDeclarationsManager implements DeclarationsManager {
 				if (declaration.hasDefault())
 					setProperty(instance, declaration, declaration.getValue());
 				else if (declaration.isRequired())
-					throw new InvalidPropertiesException("Missing value for required property: " + declaration);
+					throw new InvalidConfigurationException("Missing value for required property: " + declaration);
 			}
 			return instance;
 		} catch (InstantiationException e) {
@@ -88,7 +88,7 @@ public class MapDeclarationsManager implements DeclarationsManager {
 				field.set(instance, value);
 			}
 		} catch (IllegalArgumentException e) {
-			throw new InvalidPropertiesException(e.getMessage());
+			throw new InvalidConfigurationException(e.getMessage());
 		} catch (IllegalAccessException e) {
 			throw new InvalidDeclarationException(e.getMessage());
 		} catch (InvocationTargetException e) {

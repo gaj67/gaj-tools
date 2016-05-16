@@ -85,14 +85,14 @@ public class DeclarationsTest {
 		assertNotNull(getABCValueMethodDec);
 		assertNull(getABCValueMethodDec.getKey());
 		assertEquals(getABCValueMethod, getABCValueMethodDec.getGetter());
-		assertEquals(String.class, getABCValueMethodDec.getType());
+		assertEquals(String.class, getABCValueMethodDec.getDataType());
 
 		Method setterMethod = ConfigurableClass.class.getMethod("setter", int.class);
 		Declaration setterMethodDec = Declarations.getDeclaration(setterMethod);
 		assertNotNull(setterMethodDec);
 		assertEquals("int.field", setterMethodDec.getKey());
 		assertEquals(setterMethod, setterMethodDec.getSetter());
-		assertEquals(int.class, setterMethodDec.getType());
+		assertEquals(int.class, setterMethodDec.getDataType());
 	}
 
 	@Test
@@ -123,7 +123,7 @@ public class DeclarationsTest {
 	public void testMergedDeclarations() {
 		DeclarationManager manager = DeclarationManager.newInstance(".");
 		DeclarationMap declarations = manager.getDeclarationMap(ConfigurableClass.class);
-		assertEquals(3, declarations.numKeys());
+		assertEquals(3, declarations.numProperties());
 		assertNotNull(declarations.getDeclaration("int.field"));
 		assertNotNull(declarations.getDeclaration("abc.value"));
 		assertNotNull(declarations.getDeclaration("obj.field"));

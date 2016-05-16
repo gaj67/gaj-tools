@@ -48,9 +48,7 @@ public abstract class Declarations {
 	 * on the field, or the null value if there are no such annotations.
 	 * @throws InvalidDeclarationException If the property annotations are inconsistent.
 	 */
-	public static /*@Nullable*/ Declaration getDeclaration(
-			Field field, /*@Nullable*/ KeyTranslator translator) 
-	{
+	public static /*@Nullable*/ Declaration getDeclaration(Field field, /*@Nullable*/ KeyTranslator translator)	{
 		Required requiredAnno = field.getAnnotation(Required.class);
 		Default defaultAnno = field.getAnnotation(Default.class);
 		if (requiredAnno != null && defaultAnno != null)
@@ -102,53 +100,76 @@ public abstract class Declarations {
 	 * on the method, or the null value if there are no such annotations.
 	 * @throws InvalidDeclarationException If the property annotations are inconsistent.
 	 */
-	public static /*@Nullable*/ Declaration getDeclaration(
-			Method method, /*@Nullable*/ KeyTranslator translator) 
-	{
+	public static /*@Nullable*/ Declaration getDeclaration(Method method, /*@Nullable*/ KeyTranslator translator) {
 		Getter getterAnno = method.getAnnotation(Getter.class);
 		Setter setterAnno = method.getAnnotation(Setter.class);
 		if (getterAnno != null && setterAnno != null)
 			throw failure("Method " + method.getName() + "cannot be both a getter and setter");
 		Required requiredAnno = method.getAnnotation(Required.class);
 		Default defaultAnno = method.getAnnotation(Default.class);
-		if (requiredAnno != null && defaultAnno != null)
-			throw failure("Method " + method.getName() + " cannot both be required and have a default value");
 		if (getterAnno == null && setterAnno == null && requiredAnno == null && defaultAnno == null)
 			return null; // Not marked with any configuration annotations.
-		BeanDeclaration dec = new BeanDeclaration();
 		Class<?>[] args = method.getParameterTypes();
+		Class<?> retType = method.getReturnType();
 		if (getterAnno != null) {
-			if (args == null || args.length != 0)
-				throw failure("Method " + method.getName() + " is not a simple getter");
-			Class<?> retType = method.getReturnType();
-			if (retType == null || retType == void.class)
-				throw failure("Method " + method.getName() + " is not a getter");
-			dec.setType(retType);
-			dec.setGetter(method);
-			dec.setKey(getterAnno.value());
-			if (translator != null) {
-				String key = dec.getKey();
-				if (key == null)
-					key = translator.guessGetterKey(method);
-				dec.setKey(translator.translateKey(key));
-			}
+			if (args.length != 0)
+				throw failure("Getter method " + method.getName() + " must not have arguments");
+			if (retType == void.class)
+				throw failure("Getter method " + method.getName() + " must have a non-void return type");
+			return processGetter(method, retType, translator, getterAnno, requiredAnno,	defaultAnno);
 		} else if (setterAnno != null) {
-			if (args == null || args.length != 1)
-				throw failure("Method " + method.getName() + " is not a simple setter");
-			dec.setType(args[0]);
-			dec.setSetter(method);
-			dec.setKey(setterAnno.value());
-			if (translator != null) {
-				String key = dec.getKey();
-				if (key == null)
-					key = translator.guessSetterKey(method);
-				dec.setKey(translator.translateKey(key));
-			}
+			if (args.length != 1)
+				throw failure("Setter method " + method.getName() + " must have one argument");
+			return processSetter(method, args[0], translator, setterAnno, requiredAnno,	defaultAnno);
+		} else {
+			// Guess getter or setter.
+			if (args.length == 0 && retType != void.class)
+				return processGetter(method, retType, translator, null, requiredAnno, defaultAnno);
+			else if (args.length == 1)
+				return processSetter(method, args[0], translator, null, requiredAnno, defaultAnno);
+			else
+				throw failure("Method " + method.getName() + " is not a getter or a setter");
 		}
+	}
+
+	private static Declaration processSetter(Method method, Class<?> dataType, /*@Nullable*/ KeyTranslator translator, 
+			/*@Nullable*/ Setter setterAnno,  /*@Nullable*/ Required requiredAnno, /*@Nullable*/ Default defaultAnno) 
+	{
+		if (requiredAnno != null && defaultAnno != null)
+			throw failure("Setter method " + method.getName() + " cannot both be required and have a default value");
+		BeanDeclaration dec = new BeanDeclaration();
 		if (requiredAnno != null)
 			dec.setRequired(true);
 		else if (defaultAnno != null)
 			dec.setDefault(defaultAnno.value());
+		dec.setType(dataType);
+		dec.setSetter(method);
+		if (setterAnno != null)	dec.setKey(setterAnno.value());
+		if (translator != null) {
+			String key = dec.getKey();
+			if (key == null) key = translator.guessSetterKey(method);
+			dec.setKey(translator.translateKey(key));
+		}
+		return dec;
+	}
+
+	private static Declaration processGetter(Method method, Class<?> dataType, /*@Nullable*/ KeyTranslator translator,
+			/*@Nullable*/ Getter getterAnno, /*@Nullable*/ Required requiredAnno, /*@Nullable*/ Default defaultAnno) 
+	{
+		if (requiredAnno != null)
+			throw failure("Getter method " + method.getName() + " cannot be required");
+		if (defaultAnno != null)
+			throw failure("Getter method " + method.getName() + " cannot have a default value");
+		BeanDeclaration dec = new BeanDeclaration();
+		dec.setType(dataType);
+		dec.setGetter(method);
+		if (getterAnno != null) dec.setKey(getterAnno.value());
+		if (translator != null) {
+			String key = dec.getKey();
+			if (key == null)
+				key = translator.guessGetterKey(method);
+			dec.setKey(translator.translateKey(key));
+		}
 		return dec;
 	}
 
@@ -193,9 +214,7 @@ public abstract class Declarations {
 	 * @throws InvalidDeclarationException If any property
 	 * is marked with inconsistent settings.
 	 */
-	public static Collection<Declaration> getDeclarations(
-			Class<?> klass, /*@Nullable*/ KeyTranslator translator) 
-	{
+	public static Collection<Declaration> getDeclarations(Class<?> klass, /*@Nullable*/ KeyTranslator translator) {
 		List<Declaration> declarations = new ArrayList<Declaration>();
 		if (Annotations.isConfigurable(klass)) {
 			for (Field field : klass.getFields()) {

@@ -22,7 +22,7 @@ public interface DeclarationsManager {
 	 * if the instance cannot be constructed.
 	 * @throws InvalidDeclarationException If a declared
 	 *  property has a value but cannot be set.
-	 *  @throws InvalidPropertiesException If a required property
+	 *  @throws InvalidConfigurationException If a required property
 	 *  does not have a value.
 	 */
 	<T> T newInstance(Class<T> klass, Properties config);

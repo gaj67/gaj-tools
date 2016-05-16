@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 	protected BeanDeclaration() {}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getDataType() {
 		return type;
 	}
 
@@ -88,6 +88,16 @@ import java.lang.reflect.Method;
 	protected void removeDefault() {
 		hasDefault = false;
 		value = null;
+	}
+
+	@Override
+	public boolean isSettable() {
+		return setter != null || field != null;
+	}
+
+	@Override
+	public boolean isGettable() {
+		return getter != null || field != null;
 	}
 
 	@Override
@@ -170,7 +180,7 @@ import java.lang.reflect.Method;
 	 */
 	public void merge(Declaration... declarations) {
 		for (Declaration dec : declarations) {
-			setType(dec.getType());
+			setType(dec.getDataType());
 			String key = dec.getKey();
 			if (key != null) setKey(key);
 			if (dec.hasDefault()) setDefault(dec.getValue());
@@ -183,4 +193,5 @@ import java.lang.reflect.Method;
 			if (setter != null) setSetter(setter);
 		}
 	}
+
 }

@@ -8,18 +8,25 @@ package gaj.config.declaration;
 public interface DeclarationMap {
 
 	/**
-	 * Obtains the number of merged property keys.
+	 * Obtains the number of distinct properties.
 	 * 
-	 * @return The number of merged declarations.
+	 * @return The number of properties.
 	 */
-	int numKeys();
+	int numProperties();
 
 	/**
 	 * Obtains the key-names of all merged declarations.
 	 * 
-	 * @return An iterable key-names.
+	 * @return An iterable over the key-names.
 	 */
 	Iterable<String> getKeys();
+
+	/**
+	 * Obtains the merged declarations.
+	 * 
+	 * @return An iterable over the declarations.
+	 */
+	Iterable<Declaration> getDeclarations();
 
 	/**
 	 * Obtains the declaration with the given key-name.

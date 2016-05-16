@@ -18,7 +18,7 @@ public interface Declaration {
 	 * 
 	 * @return The class of the underlying property.
 	 */
-	Class<?> getType();
+	Class<?> getDataType();
 
 	/**
 	 * Obtains the optional configuration key-name string associated with the property.
@@ -44,6 +44,20 @@ public interface Declaration {
 	 * have a supplied default value.
 	 */
 	boolean hasDefault();
+
+	/**
+	 * Indicates whether the property value is able to be set on the class.
+	 * 
+	 * @return A value of true (or false) if the property is (or is not) settable.
+	 */
+	boolean isSettable();
+
+	/**
+	 * Indicates whether the property value is able to be obtained from the class.
+	 * 
+	 * @return A value of true (or false) if the property is (or is not) gettable.
+	 */
+	boolean isGettable();
 
 	/**
 	 * Obtains the default value for the property,
