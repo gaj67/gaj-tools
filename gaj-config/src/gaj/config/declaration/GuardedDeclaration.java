@@ -79,4 +79,14 @@ import java.lang.reflect.Method;
 		getter = method;
 	}
 
+	/**
+	 * Provides an {@link InvalidDeclarationException}.
+	 * 
+	 * @param message - The error message.
+	 * @return The exception.
+	 */
+	protected InvalidDeclarationException failure(String message) {
+		return new InvalidDeclarationException(message);
+	}
+
 }

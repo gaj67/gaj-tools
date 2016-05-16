@@ -9,7 +9,7 @@ import gaj.config.serialisers.Serialiser;
  * <p/>It is assumed that these values remain in serialised string form, and will be deserialised as 
  * necessary by an external {@link Serialiser} or {@link MultiSerialiser}.
  */
-public interface PropertyMap {
+public interface Configuration {
 
 	/**
 	 * Obtains the number of properties values in the configuration.

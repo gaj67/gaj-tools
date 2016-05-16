@@ -7,7 +7,7 @@ package gaj.config.serialisers;
  * Specifies the interface used to serialise a known object type to a string,
  * and to deserialise such a string back to an object.
  */
-public interface Serialiser<T> extends Cloneable {
+public interface Serialiser<T> {
 
 	/**
 	 * Serialises object data, or throws an exception if the object
