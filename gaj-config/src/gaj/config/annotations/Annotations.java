@@ -22,6 +22,20 @@ public class Annotations {
 	}
 
 	/**
+	 * Obtains the optional, user-specified global key-name of the class.
+	 * 
+	 * @param  - The class to test.
+	 * @return The string key-name of the global name-space if it is specified,
+	 * or else a value of null.
+	 */
+	public static /*@Nullable*/ String getKeyName(Class<?> klass) {
+		Configurable anno = klass.getAnnotation(Configurable.class);
+		if (anno == null) return null;
+		String key = anno.value();
+		return Configurable.DEFAULT_KEY.equals(key) ? null : key;
+	}
+
+	/**
 	 * Determines if the class should be instantiated as a singleton.
 	 * @param klass - The class to test.
 	 * @return A value of true (or false) if the class

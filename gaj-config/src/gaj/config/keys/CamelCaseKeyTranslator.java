@@ -93,4 +93,15 @@ import java.util.List;
 		return buf.toString();
 	}
 
+	@Override
+	public String translateGlobalKey(String name) {
+		return name + separator;
+	}
+
+	@Override
+	public /*@Nullable*/ String guessGlobalKey(Class<?> klass) {
+		String name = klass.getCanonicalName();
+		return (name != null && !".".equals(separator)) ? name.replace(".", separator) : name; 
+	}
+
 }

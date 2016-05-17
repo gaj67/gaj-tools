@@ -3,12 +3,14 @@
  */
 package gaj.config.declaration;
 
+import gaj.config.annotations.Annotations;
 import gaj.config.keys.KeyTranslator;
 import gaj.config.keys.KeyTranslators;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * This module deals with the declaration of configurable properties for a class.
@@ -105,12 +107,26 @@ public class DeclarationManager {
 	 * 
 	 * @param klass - An allegedly configurable class,
 	 *  supposedly containing property declarations.
+	 * @param useGlobalNamespace - Indicates whether (true) or not (false) to prepend 
+	 * the local property key-names with the global key-name. 
+	 * 
 	 * @return A map of merged property declarations.
 	 * @throws InvalidDeclarationException If any property
 	 * is marked with inconsistent settings.
 	 */
-	public DeclarationMap getDeclarationMap(Class<?> klass) {
-		return Declarations.mergeDeclarationsByKey(getDeclarations(klass));
+	public DeclarationMap getDeclarationMap(Class<?> klass, boolean useGlobalNamespace) {
+		Map<String, Declaration> declarations = Declarations.mergeDeclarationsByKey(getDeclarations(klass));
+		if (useGlobalNamespace) {
+			String globalKey = Annotations.getKeyName(klass);
+			if (translator != null) {
+				if (globalKey == null) globalKey = translator.guessGlobalKey(klass);
+				if (globalKey != null) globalKey = translator.translateGlobalKey(globalKey);
+			}
+			if (globalKey != null) {
+				Declarations.globaliseKeys(declarations, globalKey);
+			}
+		}
+		return new DeclarationMapImpl(declarations);
 	}
 
 }

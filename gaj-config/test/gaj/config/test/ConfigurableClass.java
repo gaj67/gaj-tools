@@ -9,7 +9,7 @@ import gaj.config.annotations.Setter;
 import gaj.config.annotations.Singleton;
 
 @Singleton
-@Configurable
+@Configurable("fred")
 public class ConfigurableClass {
 
 	public double nonPropertyField = 0;

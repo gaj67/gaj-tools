@@ -241,7 +241,7 @@ public abstract class Declarations {
 	 * does not have a key-name, or is otherwise marked with
 	 * inconsistent settings.
 	 */
-	public static DeclarationMap mergeDeclarationsByKey(Iterable<Declaration> declarations) {
+	public static Map<String, Declaration> mergeDeclarationsByKey(Iterable<Declaration> declarations) {
 		Map<String,Declaration> mergedDeclarations = new HashMap<>();
 		for (Declaration bareDeclaration : declarations) {
 			String key = bareDeclaration.getKey();
@@ -253,7 +253,25 @@ public abstract class Declarations {
 					: mergePropertyDeclarations(namedDeclaration, bareDeclaration);
 			mergedDeclarations.put(key, namedDeclaration);
 		}
-		return new DeclarationMapImpl(mergedDeclarations);
+		return mergedDeclarations;
+	}
+
+	/**
+	 * Transforms a map of declarations from having local keys to having global keys (both in the map keys and the declaration keys).
+	 * 
+	 * @param declarations - The map of local key-names to local declarations.
+	 * @param nameSpace - The name-space prefix to be prepended to each local key-name to form the global key-name.
+	 */
+	public static void globaliseKeys(Map<String, Declaration> declarations,	String nameSpace) {
+		Collection<String> localKeys = new ArrayList<>(declarations.keySet());
+		for (String localKey : localKeys) {
+			Declaration localDeclaration = declarations.remove(localKey);
+			BeanDeclaration globalDeclaration = new BeanDeclaration();
+			globalDeclaration.merge(localDeclaration);
+			String globalKey = nameSpace + localKey;
+			globalDeclaration.setKey(globalKey);
+			declarations.put(globalKey, globalDeclaration);
+		}
 	}
 
 }

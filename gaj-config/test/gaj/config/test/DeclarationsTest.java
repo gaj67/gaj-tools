@@ -88,7 +88,7 @@ public class DeclarationsTest {
 	@Test
 	public void testMergedDeclarations() {
 		DeclarationManager manager = DeclarationManager.newInstance(".");
-		DeclarationMap declarations = manager.getDeclarationMap(ConfigurableClass.class);
+		DeclarationMap declarations = manager.getDeclarationMap(ConfigurableClass.class, false);
 		assertEquals(3, declarations.numProperties());
 		assertNotNull(declarations.getDeclaration("int.field"));
 		assertNotNull(declarations.getDeclaration("abc.value"));

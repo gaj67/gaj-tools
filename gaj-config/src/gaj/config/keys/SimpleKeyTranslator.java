@@ -38,4 +38,14 @@ import java.lang.reflect.Method;
 		return name;
 	}
 
+	@Override
+	public String translateGlobalKey(String name) {
+		return name + ".";
+	}
+
+	@Override
+	public /*@Nullable*/ String guessGlobalKey(Class<?> klass) {
+		return klass.getCanonicalName();
+	}
+
 }

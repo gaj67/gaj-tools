@@ -13,4 +13,18 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Configurable {}
+public @interface Configurable {
+
+	/**
+	 * Indicates that an explicit global key-name
+	 * has not been specified by the user.
+	 */
+	public static String DEFAULT_KEY = "--NO-NAME-SPECIFIED--";
+
+	/**
+	 * @return The configuration key-name string corresponding to the global name-space of the class,
+	 * or the DEFAULT_KEY if no such value is specified.
+	 */
+	String value() default DEFAULT_KEY;
+
+}

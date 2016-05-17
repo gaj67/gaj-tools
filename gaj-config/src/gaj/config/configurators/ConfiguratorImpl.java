@@ -22,9 +22,9 @@ import gaj.config.serialisers.Serialiser;
 	}
 
 	@Override
-	public <T> void configure(T instance, Configuration properties) {
+	public <T> void configure(T instance, Configuration properties, boolean useGlobalNamespace) {
 		try {
-			DeclarationMap declarations = manager.getDeclarationMap(instance.getClass());
+			DeclarationMap declarations = manager.getDeclarationMap(instance.getClass(), useGlobalNamespace);
 			configure(instance, declarations, properties);
 		} catch (InvalidDeclarationException | InvalidSerialisationException e) {
 			throw failure(e);
@@ -32,10 +32,10 @@ import gaj.config.serialisers.Serialiser;
 	}
 
 	@Override
-	public <T> T configure(Class<T> klass, Configuration properties) {
+	public <T> T configure(Class<T> klass, Configuration properties, boolean useGlobalNamespace) {
 		try {
 			T instance = klass.newInstance();
-			configure(instance, properties);
+			configure(instance, properties, useGlobalNamespace);
 			return instance;
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw failure(e);
