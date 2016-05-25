@@ -79,7 +79,7 @@ a random indicator variable $\iota_{t-1}$, which takes on the value 1 if some ob
 true sequence, or the value 0 if it is not. Similarly, the random indicator variable $\tau_{t+1}$
 takes on the value 1 if $r_{t}$ is definitely the last stage in the true sequence, or the value 0 if it is not.
 Notionally, the indicators $\iota_0$ and $\tau_{n+1}$ can be thought to correspond to pseudo-stages 0 and $n+1$, such that
-the generated sequence is initiated at stage 0 and terminated at stage $N+1$.
+an arbitrary sequence is initiated at stage 0 and terminated at some random stage $N+1$.
 This augmented random process is depicted in Figure~\ref{fig:random-process}. 
 \begin{figure}[hbt]
 \centering
@@ -151,7 +151,7 @@ p(\underline{\iota},\vec{r},\underline{\tau})
 \end{eqnarray}
 where the observed sequence-start indicator $\underline{\iota}\in\{0,1,*\}$ corresponds to the delimiters
 $\downarrow$ ,$\langle$, and $[$, respectively, and the observed sequence-end indicator
-$\bar{\tau}\in\{0,1,*\}$ corresponds to the delimiters $\uparrow$, $\rangle$, and $]$, respectively.
+$\underline{\tau}\in\{0,1,*\}$ corresponds to the delimiters $\uparrow$, $\rangle$, and $]$, respectively.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Markov Sequence Processes}
@@ -216,9 +216,9 @@ p(\iota_0\!=\!\underline{\iota})
 \nonumber\\&&
 {}\times p(R_2\!=\!r_2\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0,R_1\!=\!r_1,\tau_2\!=\!0)
 \cdots
-p(R_n\!=\!r_n\,|\,\iota_0\!=\!1,\ldots,\tau_{n}\!=\!0)
+p(R_n\!=\!r_n\,|\,\iota_0\!=\!\underline{\iota},\ldots,\tau_{n}\!=\!0)
 \nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!1\:|\;\iota_0\!=\!1,\ldots,R_n\!=\!r_n)
+{}\times p(\tau_{n+1}\!=\!\underline{\tau}\:|\;\iota_0\!=\!\underline{\iota},\ldots,R_n\!=\!r_n)
 \,.
 \label{eq:temporal-model-full}
 \end{eqnarray}
@@ -231,11 +231,11 @@ Hence, we obtain
 p(\underline{\iota},\vec{r},\underline{\tau}) & = &
 p(\iota_0\!=\!\underline{\iota})
 %\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
-\prod_{t=1}^{n}\left\{p(\tau_t\!=\!0\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_{t-1}\!=\!\vec{0}_{t-1},
+\prod_{t=1}^{n}\left\{p(\tau_t\!=\!0\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_{t-1}\!=\!\vec{0},
 \vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right.
 \nonumber\\&&
 \hspace*{20mm}{}\times \left.
-p(R_t\!=\!r_t\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_t\!=\!\vec{0}_t,\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
+p(R_t\!=\!r_t\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
 \nonumber\\&&
 {}\times p(\tau_{n+1}\!=\!\bar{\tau}\:|\;\iota_0\!=\!\underline{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
 \,.
@@ -370,7 +370,7 @@ p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}) & = &
 p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
 \,p(S_1\!=\!s_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
 \nonumber\\&&{}\times
-\,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1,\iota\!=\!\underline{\iota},\tau_1\!=\!0)
+\,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
 \nonumber\\&&
 {}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
 \nonumber\\&&\hspace*{10mm}{}\times\left.
@@ -378,7 +378,7 @@ p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iot
 \nonumber\\&&\hspace*{10mm}{}\times\left.
 \,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right\}
 \nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!\bar{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
+{}\times p(\tau_{n+1}\!=\!\underline{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
 \,.
 \end{eqnarray}
 Conditioning the state $S_t$ on both the previous state $S_{t-1}$ and its value $X_{t-1}$
@@ -615,7 +615,7 @@ The forward step $\alpha_{t,i}$ is defined as
 \begin{eqnarray}
    \alpha_{t,i} & = & p(\underline{\iota},\vec{s}_{t-1}\circ\sigma_{i},\vec{x}_t\,|\,\theta) 
 \nonumber\\& = &
-   p(\underline{\iota},\vec{s}_{t-1}\circ\sigma_{i},\vec{x}_{t-1}\,|\,\theta) \,p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_{i'_t},\theta)
+   p(\underline{\iota},\vec{s}_{t-1}\circ\sigma_{i},\vec{x}_{t-1}\,|\,\theta) \,p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_{i_t},\theta)
 \nonumber\\& = &
    \bar{\alpha}_{t,i}\,o_{t,i}(x_t)\,,
 \label{eq:alpha}
@@ -713,7 +713,7 @@ For instance, from equation~\eqref{eq:forward-backward}, the posterior probabili
 \end{eqnarray}
 Observe that $\gamma_{t,i}$ reduces to $\delta(i=i_t)$ in the special case where $s_t=\sigma_{i_t}$ is known.
 
-Similarly, we may predict the next state $S_{n+1}$ in a given (complete or partially observed) sequence of length $n=|\vec{x}|$ via
+Similarly, we may predict the next state $S_{n+1}$ in a given observed sequence of length $n=|\vec{x}|$ via
 \begin{eqnarray}
   p(\dn\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta)  
 & = &
@@ -778,10 +778,10 @@ Observe that
    \gamma_{t,i} & = & p(S_t\!=\!\sigma_i\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta)
 \nonumber\\& = &
 \sum_{j=1}^{S}p(S_t\!=\!\sigma_i,S_{t+1}\!=\!\sigma_j\,|\,\underline{\iota},\vec{s},\vec{x},\underline{\tau},\theta)
-~=~\sum_{j=1}^{S}\gamma_{t,i,j}\,,
+~=~\sum_{j=1}^{S}\xi_{t,i,j}\,,
 \label{eq:xi_to_gamma}
 \end{eqnarray}
-from equation~\eqref{eq:gamma_t_i}.
+from equations~\eqref{eq:gamma_t_i} and \eqref{eq:xi_t_i_j}.
 
 Finally, the modified forward--backward algorithm also allows us to predict the start and/or end of partially observed sequences.
 For instance, at the start of a sequence we can predict
