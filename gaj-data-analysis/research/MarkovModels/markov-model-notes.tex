@@ -4,6 +4,8 @@
 \usepackage{amsmath,amsfonts}
 \usepackage{qtree}
 \usepackage{tikz}
+\usepackage{varwidth}
+
 \title{Notes on Sequence Modelling}
 \author{G.A. Jarrad}
 \usepackage{accents}
@@ -23,7 +25,7 @@
 \section{Random Sequence Processes}
 \label{sec:random-processes}
 Consider a random process $R$ that generates arbitrary-length sequences
-of the form $\vec{R}=(R_1,R_2,\ldots,R_N)$, where $N=|\vec{R}|$ is a random variable governing
+of the form $\vec{R}_N=(R_1,R_2,\ldots,R_N)$, where $N$ is a random variable governing
 the length of a sequence, and $R_t$ is a random variable governing the value at {\em stage} $t$
 of the sequence. This sequence process is graphically depicted in Figure~\ref{fig:R-process}.
 \begin{figure}[hbt]
@@ -46,7 +48,7 @@ We assume that each $R_t$ randomly takes some discrete or continuous value $r_t\
 and hence the probability (or probability density) of observing a particular
 sequence $\vec{r}$ of length $n=|\vec{r}|$ is given by
 \begin{eqnarray}
-   p(\vec{R}\!=\!\vec{r}) & = & p(N=n)\,p(R_1\!=\!r_1,\ldots,R_n\!=\!r_n)\,.
+   p(\vec{R}_N\!=\!\vec{r}) & = & p(N=n)\,p(R_1\!=\!r_1,\ldots,R_n\!=\!r_n\,|\,N=n)\,.
 \end{eqnarray}
 In practice, this definition presupposes that we know we have observed a {\em complete} sequence that started
 at stage 1 and ended at stage $n$.
@@ -58,7 +60,7 @@ part of a longer, unobserved sequence of values?
 We assume that the random process $R$ only ever produces complete sequences,
 independently of the observation process, which might provide partial or complete sequences of values.
 Furthermore, if the random process does not signal the start and end of generated sequences,
-then an observed sequence might actually comprise a subsequence of multiple, contiguously generated sequences.
+then an observed sequence might actually comprise multiple, contiguously generated subsequences.
 
 In order to handle such difficulties, we consider any arbitrary sequence $\vec{r}$ to be {\em incomplete},
 and explicitly denote the corresponding, complete sequence by $\langle\vec{r}\rangle$.
@@ -67,19 +69,16 @@ let  $\langle\vec{r}$ be a {\em start sequence} that has a definite start but an
 and let $\vec{r}\rangle$ be an {\em end sequence} that has a definite end but an indefinite start.
 Furthermore, if we know that all of the values of $\vec{r}$ are contiguous values of the same sequence,
 then we can denote this by introducing additional, paired delimiters.
-Thus, we use the symbol $\uparrow$ to indicate that the true sequence definitely does not end at the observed
-value $r_n$, e.g.\ $\langle\vec{r}\up$, and the symbol $]$ to indicate that we are uncertain as to whether or not the
-sequence ends at $r_n$, but definitely does not end at an earlier stage, e.g.\ $\langle\vec{r}]$.
-Similarly, let $\downarrow$ indicate that the true sequence starts at an earlier stage than $r_1$, e.g.\ $\dn\vec{r}\rangle$,
-and let $[$ indicate that the sequence might start at $r_1$ or at an earlier stage, e.g.\ $[\vec{r}\rangle$. Clearly, we may also
-specify the remaining partial, contiguous sequences $[\vec{r}]$, $\dn\vec{r}]$, $[\vec{r}\up$ and $\dn\vec{r}\up$.
+Thus, we use the symbol `$]$' to indicate that the true sequence definitely does not end at the observed
+value $r_n$, e.g.\ $\langle\vec{r}]$, and the symbol `$]$' to indicate that the true sequence starts at an earlier stage than $r_1$, e.g.\ $[\vec{r}\rangle$.
+Clearly, we may also specify the remaining partial, contiguous sequences $[\vec{r}]$, $\vec{r}]$ and $[\vec{r}$.
 
 Under this augmented notation, knowledge about the start of a sequence can be encapsulated in 
 a random indicator variable $\iota_{t-1}$, which takes on the value 1 if some observed $r_{t}$ is definitely the first stage in the
-true sequence, or the value 0 if it is not. Similarly, the random indicator variable $\tau_{t+1}$
-takes on the value 1 if $r_{t}$ is definitely the last stage in the true sequence, or the value 0 if it is not.
+generated sequence, or the value 0 if it is not. Similarly, the random indicator variable $\tau_{t+1}$
+takes on the value 1 if $r_{t}$ is definitely the last stage in the generated sequence, or the value 0 if it is not.
 Notionally, the indicators $\iota_0$ and $\tau_{n+1}$ can be thought to correspond to pseudo-stages 0 and $n+1$, such that
-an arbitrary sequence is initiated at stage 0 and terminated at some random stage $N+1$.
+an arbitrary generated sequence is initiated at stage 0 and terminated at some random stage $N+1$.
 This augmented random process is depicted in Figure~\ref{fig:random-process}. 
 \begin{figure}[hbt]
 \centering
@@ -114,6 +113,7 @@ The probability of a given complete sequence $\langle\vec{r}\rangle$ is now defi
 \begin{eqnarray}
    p(\langle\vec{r}\rangle)
 & = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1=r_1,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!1)
+\label{eq:p_r_complete}
 \,,
 \end{eqnarray}
 such that 
@@ -121,37 +121,54 @@ such that
    p(N\!=\!n) & = &  p(\iota_0\!=\!1,\tau_1\!=\!0,\ldots,\tau_n\!=\!0,\tau_{n+1}\!=\!1)\,.
 \end{eqnarray}
 This has the form of a generalised Bernoulli sequence.
-Conversely, the probability of the start sequence $\langle\vec{r}\up$ is
+
+Note that when the context is clear, we may for convenience drop explicit mention of the random variable $R_t$.
+Similarly, we may denote $\iota_t=1$ simply by $\iota_t$, on the understanding that $\bar{\iota}_t$ denotes the negation $\iota_t=0$.
+Likewise, we may denote $\tau_t=1$ by just $\tau_t$ and $\tau_t=0$ by $\bar{\tau}_t$.
+Hence, it is plausible to simplify equation~\eqref{eq:p_r_complete} as
 \begin{eqnarray}
-p(\langle\vec{r}\up) 
-& = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!0)\,,
+p(\langle\vec{r}\rangle) 
+& = & p(\iota_0,\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n,\tau_{n+1})\,.
 \end{eqnarray}
-and the probability of the end sequence $\dn\vec{r}\rangle$ is
-\begin{eqnarray}
-p(\dn\vec{r}\rangle)
-& = & p(\iota_0\!=\!0,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!1)\,.
-\end{eqnarray}
-We may also write the probability of the ambiguous start sequence $\langle\vec{r}]$ as
-\begin{eqnarray}
-p(\langle\vec{r}]) 
-& = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!*)\,,
-\end{eqnarray}
-where $\tau_{n+1}=*$ is just a shorthand to indicate that we are uncertain of the true value of $\tau_{n+1}$;
-probabilistically, the term has no effect and may be dropped.
-Likewise, the probability of the end sequence $[\vec{r}\rangle$ is
-\begin{eqnarray}
-p([\vec{r}\rangle)
-& = & p(\iota_0\!=\!*,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!1)\,.
-\end{eqnarray}
-The likelihood of the other types of partial sequences can similarly be defined.
-Generically, we can write the likelihood of any complete or partially complete sequence as
+In general, we may handle both complete and partial sequences by letting $\underline{\iota}$ denote the observed start-of-sequence symbol, and
+letting $\underline{\tau}$ denote the observed end-of-sequence symbol; hence
 \begin{eqnarray}
 p(\underline{\iota},\vec{r},\underline{\tau})
-& = & p(\iota_0\!=\!\underline{\iota},\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!\underline{\tau})\,,
+& = & p(\iota_0\!=\!\underline{\iota},\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!\underline{\tau})
+\nonumber\\
+& = & p(\underline{\iota},\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n,\underline{\tau})\,.
 \end{eqnarray}
-where the observed sequence-start indicator $\underline{\iota}\in\{0,1,*\}$ corresponds to the delimiters
-$\downarrow$ ,$\langle$, and $[$, respectively, and the observed sequence-end indicator
-$\underline{\tau}\in\{0,1,*\}$ corresponds to the delimiters $\uparrow$, $\rangle$, and $]$, respectively.
+For convenience, we let $\underline{\iota}=*$ if we do not know whether or not $r_1$ is the start of the sequence,
+and similarly let $\underline{\tau}=*$ if we do not kow whether or not $r_n$ is the end of the sequence.
+The `*' symbol is just a convenience -- its presence has no effect on the computed probabilities, and merely indicates that the true value
+of $\iota_0$ and/or $\tau_{n+1}$ should be marginalised out. Thus, for example:
+\begin{eqnarray}
+p(\vec{r}) 
+& = & p(*,\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n,*)~=~p(\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n)\,.
+\end{eqnarray}
+Finally, we may utilise this notation of convenience to simplify the explicitly terminated process of Figure~\ref{fig:random-process} 
+to more resemble the implicitly terminatedl process of Figure~\ref{fig:R-process}; the result is shown in Figure~\ref{fig:simple-random-process}.
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0}{}$};
+    \node[onode] (0) at (0,0) {};
+    \node[cnode] (1) at (2,0) {$R_1$};
+    \node[cnode] (2) at (4, 0)  {$R_2$};
+    \node (t) at (6, 0) {$\cdots$};
+    \node[cnode] (3) at (8, 0)  {$R_N$};
+    \node[onode] (tt) at (10, 0) {};
+
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_3}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_N}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau_{N+1}}{}$} (tt) ;
+\end{tikzpicture}
+\caption{\em A simplified represenation of a random process for generating complete sequences of arbitrary length,
+with explicit stages for sequence initiation and termination, and explicit labelling of non-terminating transitions.}
+\label{fig:simple-random-process}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Markov Sequence Processes}
@@ -160,47 +177,45 @@ In Section~\ref{sec:random-processes} we defined a random process $R$ and the se
 We now assume that the process is also {\em causal}, meaning that each stage of a sequence,
 including the termination stage, depends only on the preceding stages.
 This causal process, depicted in Figure~\ref{fig:causal-process}, is simply the random process from
-Figure~\ref{fig:random-process} with additional, explicit dependencies (in the form of dashed arrows).
+Figure~\ref{fig:simple-random-process} with additional, explicit dependencies (in the form of dashed arrows).
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (0i) at (-1,0) [right] {$\stackrel{\iota_0=1}{}$};
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0}{}$};
     \node[onode] (0) at (0,0) {};
     \node[cnode] (1) at (2,0) {$R_1$};
-    \node[onode] (1t) at (2,-2.5) {};
     \node[cnode] (2) at (4, 0)  {$R_2$};
-    \node[onode] (2t) at (4,-2.5) {};
     \node[cnode] (3) at (6, 0)  {$R_3$};
-    \node[onode] (3t) at (6,-2.5) {};
     \node (t) at (8, 0) {$\cdots$};
-    \node[onode] (tt) at (8, -2.5) {};
+    \node[cnode] (N) at (10, 0)  {$R_N$};
+    \node[onode] (tt) at (12, 0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau_1=0}{}$}  (1) ;
-    \draw[->] (0) edge node [pos=1, below left] {$\stackrel{\tau_1=1}{}$} (1t) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau_2=0}{}$}  (2) ;
-    \draw[->] (1) edge node [pos=1, below left] {$\stackrel{\tau_2=1}{}$} (2t) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau_3=0}{}$}  (3) ;
-    \draw[->] (2) edge node [pos=1, below left] {$\stackrel{\tau_3=1}{}$} (3t) ;
-    \draw[->] (3) edge node [pos=0.5, above] {}  (t) ;
-    \draw[->] (3) edge node [pos=0.5, below left] {} (tt) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_N}{}$}  (N) ;
+    \draw[->] (N) edge node [pos=0.5, above] {$\stackrel{\tau_{N+1}}{}$} (tt) ;
 
    \begin{scope}[dashed]
-    \draw[->] (0) to (2t) ;
     \draw[->] (0) to[out=40,in=140] (2) ;
     \draw[->] (0) to[out=45,in=135] (3) ;
     \draw[->] (0) to[out=50,in=130] (t) ;
-    \draw[->] (0) to (3t) ;
-    \draw[->] (0) to (tt) ;
-    \draw[->] (1) to (tt) ;
-    \draw[->] (1) to (3t) ;
-    \draw[->] (2) to (tt) ;
+    \draw[->] (0) to[out=55,in=125] (N) ;
+    \draw[->] (0) to[out=60,in=120] (tt) ;
     \draw[->] (1) to[out=40,in=140] (3) ;
     \draw[->] (1) to[out=45,in=135] (t) ;
+    \draw[->] (1) to[out=50,in=130] (N) ;
+    \draw[->] (1) to[out=55,in=125] (tt) ;
     \draw[->] (2) to[out=40,in=140] (t) ;
+    \draw[->] (2) to[out=45,in=135] (N) ;
+    \draw[->] (2) to[out=50,in=130] (tt) ;
+    \draw[->] (3) to[out=40,in=140] (N) ;
+    \draw[->] (3) to[out=45,in=135] (tt) ;
    \end{scope}
 \end{tikzpicture}
 \caption{\em A fully-dependent, causal process for generating complete sequences of arbitrary length.
-Solid arrows indicate possible stage transitions. 
+Solid arrows indicate stage transitions. 
 Both dashed arrows and solid arrows indicate parent--child dependencies, such that the child node is conditionally dependent on the parent and all other ancestral nodes.}
 \label{fig:causal-process}
 \end{figure}
@@ -219,6 +234,18 @@ p(\iota_0\!=\!\underline{\iota})
 p(R_n\!=\!r_n\,|\,\iota_0\!=\!\underline{\iota},\ldots,\tau_{n}\!=\!0)
 \nonumber\\&&
 {}\times p(\tau_{n+1}\!=\!\underline{\tau}\:|\;\iota_0\!=\!\underline{\iota},\ldots,R_n\!=\!r_n)
+\nonumber\\
+& = &
+p(\underline{\iota})
+\,p(\bar{\tau}_1\,|\,\underline{\iota})
+\,p(r_1\,|\,\underline{\iota},\bar{\tau}_1)
+\,p(\bar{\tau}_2\,|\,\underline{\iota},\bar{\tau}_1,r_1)
+\, p(r_2\,|\,\underline{\iota},\bar{\tau}_1,r_1,\bar{\tau}_2)
+\nonumber\\
+&&
+\cdots
+p(r_n\,|\,\underline{\iota},\ldots,\bar{\tau}_{n})
+\, p(\underline{\tau}\:|\;\underline{\iota},\ldots,r_n)
 \,.
 \label{eq:temporal-model-full}
 \end{eqnarray}
@@ -237,7 +264,13 @@ p(\iota_0\!=\!\underline{\iota})
 \hspace*{20mm}{}\times \left.
 p(R_t\!=\!r_t\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
 \nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!\bar{\tau}\:|\;\iota_0\!=\!\underline{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
+{}\times p(\tau_{n+1}\!=\!\underline{\tau}\:|\;\iota_0\!=\!\underline{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
+\nonumber\\
+& = &
+p(\underline{\iota})
+\prod_{t=1}^{n}\left\{p(\bar{\tau}_t\,|\,\underline{\iota},\vec{\bar{\tau}}_{t-1},\vec{r}_{t-1})
+\,p(r_t\,|\,\underline{\iota},\vec{\bar{\tau}}_t,\vec{r}_{t-1})\right\}
+ p(\underline{\tau}\:|\;\underline{\iota},\vec{\bar{\tau}}_n,\vec{r}_n)
 \,.
 \label{eq:temporal-model}
 \end{eqnarray}
@@ -254,33 +287,34 @@ The second-order Markov sequence process is depicted in Figure~\ref{fig:causal-p
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (0i) at (-1,0) [right] {$\stackrel{\iota_0=1}{}$};
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0}{}$};
     \node[onode] (0) at (0,0) {};
     \node[cnode] (1) at (2,0) {$R_1$};
-    \node[onode] (1t) at (2,-2) {};
     \node[cnode] (2) at (4, 0)  {$R_2$};
-    \node[onode] (2t) at (4,-2) {};
     \node[cnode] (3) at (6, 0)  {$R_3$};
-    \node[onode] (3t) at (6,-2) {};
+    \node (td) at (7.8,0.9) {};
     \node (t) at (8, 0) {$\cdots$};
-    \node[onode] (tt) at (8, -2) {};
+    \node (Nm1d) at (8.2,0.9) {};
+    \node[cnode] (Nm1) at (10, 0)  {\begin{varwidth}{1.5em}$\!\!\!R_{N-1}$\end{varwidth}};
+    \node[cnode] (N) at (12, 0)  {$R_N$};
+    \node[onode] (tt) at (14, 0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau_1=0}{}$}  (1) ;
-    \draw[->] (0) edge node [pos=1, below left] {$\stackrel{\tau_1=1}{}$} (1t) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau_2=0}{}$}  (2) ;
-    \draw[->] (1) edge node [pos=1, below left] {$\stackrel{\tau_2=1}{}$} (2t) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau_3=0}{}$}  (3) ;
-    \draw[->] (2) edge node [pos=1, below left] {$\stackrel{\tau_3=1}{}$} (3t) ;
-    \draw[->] (3) edge node [pos=0.5, above] {}  (t) ;
-    \draw[->] (3) edge node [pos=0.5, below left] {} (tt) ;
+    \draw[->] (0) edge node [pos=0.6, above] {$\stackrel{\bar{\tau}_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_{N-1}}{}$}  (Nm1) ;
+    \draw[->] (Nm1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_N}{}$}  (N) ;
+    \draw[->] (N) edge node [pos=0.4, above] {$\stackrel{\tau_{N+1}}{}$}  (tt) ;
 
    \begin{scope}[dashed]
-    \draw[->] (0) to (2t) ;
     \draw[->] (0) to[out=40,in=140] (2) ;
-    \draw[->] (1) to (3t) ;
-    \draw[->] (2) to (tt) ;
     \draw[->] (1) to[out=40,in=140] (3) ;
     \draw[->] (2) to[out=40,in=140] (t) ;
+    \draw[->] (3) to[out=40,in=180] (td) ;
+    \draw[->] (t) to[out=40,in=140] (N) ;
+    \draw[->] (Nm1d) to[in=140,out=0] (Nm1) ;
+    \draw[->] (Nm1) to[out=40,in=140] (tt) ;
    \end{scope}
 \end{tikzpicture}
 \caption{\em A second-order Markov process for generating complete sequences of arbitrary length.}
@@ -291,23 +325,29 @@ In the special case of $m=1$, the first-order Markov model takes on the restrict
 \begin{eqnarray}
 p(\underline{\iota},\vec{r},\underline{\tau}) & = &
 p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
-p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
 \nonumber\\&&
 {}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,R_{t-1}\!=\!r_{t-1})
 \,p(R_t\!=\!r_t\,|\,\tau_t\!=\!0,R_{t-1}\!=\!r_{t-1})\right\}
 \nonumber\\&&
 {}\times p(\tau_{n+1}\!=\!\underline{\tau}\:|\;R_n\!=\!r_n)
+\nonumber\\
+& = &
+p(\underline{\iota})\,p(\bar{\tau}_1\,|\,\underline{\iota})
+\,p(r_1\,|\,\underline{\iota},\bar{\tau}_1)
+\prod_{t=2}^{n}\left\{p(\bar{\tau}_t\,|\,r_{t-1})
+\,p(r_t\,|\,\bar{\tau}_t,r_{t-1})\right\}
+\,p(\underline{\tau}\:|\;r_n)
 \,.
 \end{eqnarray}
-This is just a Markov interpretation of the random process depicted in Figure~\ref{fig:random-process},
+This is just a Markov interpretation of the random process depicted in Figure~\ref{fig:simple-random-process},
 where each stage directly depends only on the previous stage {\em and} on the transition path between the two adjacent stages.
 
 \section{Stateful Markov Sequence Processes}
-Consider the first-order Markov process $R$ depicted in Figure~\ref{fig:random-process}.
+Consider the first-order Markov process $R$ depicted in Figure~\ref{fig:simple-random-process}.
 Suppose now that the random variable $R_t$ at stage $t$ can be decomposed into the tuple
-$R_t=(S_t,X_t)$, where $S_t$ is a random variable taking values $s_t\in{\cal S}$, and $X_t$
-is a random variable taking values $x_t\in{\cal X}$.
-We may call $S_t$ the {\em state} of the process at stage $t$, and $X_t$ its {\em value}.
+$R_t=(S_t,X_t)$, where $S_t$ is a random {\em state} variable taking values $s_t\in{\cal S}$, and $X_t$
+is a random {\em value} variable taking values $x_t\in{\cal X}$.
 As is usual, we presuppose that the stage transitions in the sequence generating process are primarily between states, e.g.\ from $S_{t-1}$ to $S_t$.
 It follows that the value is generated after the state has been determined, i.e.\ $X_t$ depends upon $S_t$.
 Keeping to the first-order Markov interpretation of stage-to-stage dependencies leads to
@@ -316,29 +356,26 @@ $(S_{t+1},X_{t+1})$.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (0i) at (-1,0) [right] {$\stackrel{\iota_0=1}{}$};
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0}{}$};
     \node[onode] (0) at (0,0) {};
     \node[cnode] (1) at (2,0) {$S_1$};
     \node[cnode] (1x) at (2,-2) {$X_1$};
-    \node[onode] (1t) at (2,2) {};
     \node[cnode] (2) at (4, 0)  {$S_2$};
     \node[cnode] (2x) at (4, -2)  {$X_2$};
-    \node[onode] (2t) at (4,2) {};
     \node[cnode] (3) at (6, 0)  {$S_3$};
     \node[cnode] (3x) at (6, -2)  {$X_3$};
-    \node[onode] (3t) at (6,2) {};
     \node (t) at (8, 0) {$\cdots$};
-    \node (tx) at (8, -2)  {};
-    \node (tt) at (8,2) {};
+    \node (tx) at (8, -2)  {$\cdots$};
+    \node[cnode] (N) at (10, 0)  {$S_N$};
+    \node[cnode] (Nx) at (10, -2)  {$X_N$};
+    \node[onode] (tt) at (12,0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau_1=0}{}$}  (1) ;
-    \draw[->] (0) edge node [pos=0.5, above left] {$\stackrel{\tau_1=1}{}$} (1t) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau_2=0}{}$}  (2) ;
-    \draw[->] (1) edge node [pos=0.4, above left] {$\stackrel{\tau_2=1}{}$} (2t) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau_3=0}{}$}  (3) ;
-    \draw[->] (2) edge node [pos=0.4, above left] {$\stackrel{\tau_3=1}{}$} (3t) ;
-    \draw[->] (3) edge (t) ;
-    \draw[->] (3) edge (tt) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.7, above left] {$\stackrel{\bar{\tau}_N}{}$} (N) ;
+    \draw[->] (N) edge node [pos=0.75, above left] {$\stackrel{\tau_{N+1}}{}$} (tt) ;
 
    \begin{scope}[dashed]
     \draw[->] (0) to (1x) ;
@@ -346,25 +383,28 @@ $(S_{t+1},X_{t+1})$.
     \draw[->] (1) to (2x) ;
     \draw[->] (1x) to (2) ;
     \draw[->] (1x) to (2x) ;
-    \draw[->] (1x) to (2t) ;
     \draw[->] (2) to (2x) ;
     \draw[->] (2) to (3x) ;
     \draw[->] (2x) to (3) ;
     \draw[->] (2x) to (3x) ;
-    \draw[->] (2x) to (3t) ;
     \draw[->] (3) to (3x) ;
     \draw[->] (3) to (tx) ;
     \draw[->] (3x) to (tx) ;
     \draw[->] (3x) to (t) ;
-    \draw[->] (3x) to (tt) ;
+    \draw[->] (t) to (Nx) ;
+    \draw[->] (t) to (tx) ;
+    \draw[->] (N) to (Nx) ;
+    \draw[->] (tx) to (N) ;
+    \draw[->] (tx) to (Nx) ;
+    \draw[->] (Nx) to (tt) ;
    \end{scope}
 \end{tikzpicture}
-\caption{\em A random process for generating complete, stateful  sequences of arbitrary length,
+\caption{\em A random process for generating complete state--value sequences of arbitrary length,
 with explicit cross-dependencies between adjacent stages.}
 \label{fig:stateful-process}
 \end{figure}
 
-Hence, the fully-structured stateful model is now given by
+Hence, the fully-structured state--valuel model is now given by
 \begin{eqnarray}
 p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}) & = & 
 p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
@@ -374,11 +414,22 @@ p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iot
 \nonumber\\&&
 {}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
 \nonumber\\&&\hspace*{10mm}{}\times\left.
-\,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
+\,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
 \nonumber\\&&\hspace*{10mm}{}\times\left.
 \,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right\}
 \nonumber\\&&
 {}\times p(\tau_{n+1}\!=\!\underline{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
+\nonumber\\
+&=&
+p(\underline{\iota})\,p(\bar{\tau}_1\,|\,\underline{\iota})
+\,p(s_1\,|\,\underline{\iota},\bar{\tau}_1)
+\,p(x_1\,|\,s_1,\underline{\iota},\bar{\tau}_1)
+\nonumber\\&&
+{}\times\prod_{t=2}^{n}\left\{p(\bar{\tau}_t\,|\,s_{t-1},x_{t-1})
+\,p(s_t\,|\,\bar{\tau}_t,s_{t-1},x_{t-1})
+\,p(x_t\,|\,s_t,s_{t-1},x_{t-1})\right\}
+\nonumber\\&&
+{}\times p(\underline{\tau}\,|\,s_n,x_n)
 \,.
 \end{eqnarray}
 Conditioning the state $S_t$ on both the previous state $S_{t-1}$ and its value $X_{t-1}$
@@ -391,37 +442,34 @@ This restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (0i) at (-1,0) [right] {$\stackrel{\iota_0=1}{}$};
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0}{}$};
     \node[onode] (0) at (0,0) {};
     \node[cnode] (1) at (2,0) {$S_1$};
     \node[cnode] (1x) at (2,-2) {$X_1$};
-    \node[onode] (1t) at (2,2) {};
     \node[cnode] (2) at (4, 0)  {$S_2$};
     \node[cnode] (2x) at (4, -2)  {$X_2$};
-    \node[onode] (2t) at (4,2) {};
     \node[cnode] (3) at (6, 0)  {$S_3$};
     \node[cnode] (3x) at (6, -2)  {$X_3$};
-    \node[onode] (3t) at (6,2) {};
     \node (t) at (8, 0) {$\cdots$};
-    \node (tx) at (8, -2)  {};
-    \node (tt) at (8,2) {};
+    \node[cnode] (N) at (10, 0)  {$S_N$};
+    \node[cnode] (Nx) at (10, -2)  {$X_N$};
+    \node[onode] (tt) at (12,0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau_1=0}{}$}  (1) ;
-    \draw[->] (0) edge node [pos=0.5, above left] {$\stackrel{\tau_1=1}{}$} (1t) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau_2=0}{}$}  (2) ;
-    \draw[->] (1) edge node [pos=0.4, above left] {$\stackrel{\tau_2=1}{}$} (2t) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau_3=0}{}$}  (3) ;
-    \draw[->] (2) edge node [pos=0.4, above left] {$\stackrel{\tau_3=1}{}$} (3t) ;
-    \draw[->] (3) edge (t) ;
-    \draw[->] (3) edge (tt) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_N}{}$}  (N) ;
+    \draw[->] (N) edge node [pos=0.5, above] {$\stackrel{\tau_{N+1}}{}$}  (tt) ;
 
    \begin{scope}[dashed]
     \draw[->] (1) to (1x) ;
     \draw[->] (2) to (2x) ;
     \draw[->] (3) to (3x) ;
+    \draw[->] (N) to (Nx) ;
    \end{scope}
 \end{tikzpicture}
-\caption{\em A first-order Markov process for generating complete, stateful  sequences of arbitrary length.}
+\caption{\em A first-order Markov process for generating complete state--value  sequences of arbitrary length.}
 \label{fig:stateful-1-process}
 \end{figure}
 
@@ -433,10 +481,19 @@ p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iot
 \,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1)
 \nonumber\\&&
 {}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1})
-\,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,,S_{t-1}\!=\!s_{t-1})\right.
+\,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,S_{t-1}\!=\!s_{t-1})\right.
 \nonumber\\&&\hspace*{10mm}{}\times\left.
 \,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t)\right\}
-\;p(\tau_{n+1}\!=\!\bar{\tau}\,|\,S_n\!=\!s_n)
+\;p(\tau_{n+1}\!=\!\underline{\tau}\,|\,S_n\!=\!s_n)
+\nonumber\\
+&=&
+p(\underline{\iota})\,p(\bar{\tau}_1\,|\,\underline{\iota})
+\,p(s_1\,|\,\underline{\iota},\bar{\tau}_1)
+\,p(x_1\,|\,s_1)
+\nonumber\\&&
+{}\times\prod_{t=2}^{n}\left\{p(\bar{\tau}_t\,|\,s_{t-1})
+\,p(s_t\,|\,\bar{\tau}_t,s_{t-1})\,p(x_t\,|\,s_t)\right\}
+\,p(\underline{\tau}\,|\,s_n)
 \,.
 \label{eq:stateful-1-model}
 \end{eqnarray}
