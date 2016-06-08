@@ -123,12 +123,12 @@ such that
 This has the form of a generalised Bernoulli sequence.
 
 Note that when the context is clear, we may for convenience drop explicit mention of the random variable $R_t$.
-Similarly, we may denote $\iota_t=1$ simply by $\iota_t$, on the understanding that $\bar{\iota}_t$ denotes the negation $\iota_t=0$.
-Likewise, we may denote $\tau_t=1$ by just $\tau_t$ and $\tau_t=0$ by $\bar{\tau}_t$.
+Similarly, we may denote $\iota_t=1$ by $\iota^+_t$, on the understanding that $\iota^-_t$ denotes the negation $\iota_t=0$.
+Likewise, we may denote $\tau_t=1$ by $\tau^+_t$ and $\tau_t=0$ by $\tau^-_t$.
 Hence, it is plausible to simplify equation~\eqref{eq:p_r_complete} as
 \begin{eqnarray}
 p(\langle\vec{r}\rangle) 
-& = & p(\iota_0,\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n,\tau_{n+1})\,.
+& = & p(\iota_0,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\tau^+_{n+1})\,.
 \end{eqnarray}
 In general, we may handle both complete and partial sequences by letting ${\iota}$ denote the observed start-of-sequence symbol, and
 letting ${\tau}$ denote the observed end-of-sequence symbol; hence
@@ -136,7 +136,7 @@ letting ${\tau}$ denote the observed end-of-sequence symbol; hence
 p({\iota},\vec{r},{\tau})
 & = & p(\iota_0\!=\!{\iota},\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!{\tau})
 \nonumber\\
-& = & p({\iota},\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n,{\tau})\,.
+& = & p({\iota},\tau^-_1,r_1,\ldots,\tau^-_n,r_n,{\tau})\,.
 \end{eqnarray}
 For convenience, we let ${\iota}=*$ if we do not know whether or not $r_1$ is the start of the sequence,
 and similarly let ${\tau}=*$ if we do not kow whether or not $r_n$ is the end of the sequence.
@@ -144,7 +144,7 @@ The `*' symbol is just a representational device -- its presence has no effect o
 of the variables $\iota_0$ and/or $\tau_{n+1}$ should be marginalised out. Thus, for example:
 \begin{eqnarray}
 p(\vec{r}) 
-& = & p(*,\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n,*)~=~p(\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n)\,.
+& = & p(*,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,*)~=~p(\tau^-_1,r_1,\ldots,\tau^-_n,r_n)\,.
 \end{eqnarray}
 We shall deal with the problem of marginalisation again in Section~\ref{sec:hidden-state}; for now, we simply assume that both ${\iota}$ and
 ${\tau}$ are known but unspecified.
@@ -162,11 +162,11 @@ to more resemble the implicitly terminatel process of Figure~\ref{fig:R-process}
     \node[cnode] (3) at (8, 0)  {$R_N$};
     \node[onode] (tt) at (10, 0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_3}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_N}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau_{N+1}}{}$} (tt) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tau^-_N}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^+_{N+1}}{}$} (tt) ;
 \end{tikzpicture}
 \caption{\em A simplified represenation of a random process for generating complete sequences of arbitrary length,
 with explicit stages for sequence initiation and termination, and explicit labelling of non-terminating transitions.}
@@ -193,12 +193,12 @@ Figure~\ref{fig:simple-random-process} with additional, explicit dependencies (i
     \node[cnode] (N) at (10, 0)  {$R_N$};
     \node[onode] (tt) at (12, 0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_3}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_4}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_N}{}$}  (N) ;
-    \draw[->] (N) edge node [pos=0.5, above] {$\stackrel{\tau_{N+1}}{}$} (tt) ;
+    \draw[->] (0) edge node [pos=0.55, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^-_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tau^-_N}{}$}  (N) ;
+    \draw[->] (N) edge node [pos=0.45, above] {$\stackrel{\tau^+_{N+1}}{}$} (tt) ;
 
    \begin{scope}[dashed]
     \draw[->] (0) to[out=40,in=140] (2) ;
@@ -240,14 +240,14 @@ p(R_n\!=\!r_n\,|\,\iota_0\!=\!{\iota},\ldots,\tau_{n}\!=\!0)
 \nonumber\\
 & = &
 p({\iota})
-\,p(\bar{\tau}_1\,|\,{\iota})
-\,p(r_1\,|\,{\iota},\bar{\tau}_1)
-\,p(\bar{\tau}_2\,|\,{\iota},\bar{\tau}_1,r_1)
-\, p(r_2\,|\,{\iota},\bar{\tau}_1,r_1,\bar{\tau}_2)
+\,p(\tau^-_1\,|\,{\iota})
+\,p(r_1\,|\,{\iota},\tau^-_1)
+\,p(\tau^-_2\,|\,{\iota},\tau^-_1,r_1)
+\, p(r_2\,|\,{\iota},\tau^-_1,r_1,\tau^-_2)
 \nonumber\\
 &&
 \cdots
-p(r_n\,|\,{\iota},\ldots,\bar{\tau}_{n})
+p(r_n\,|\,{\iota},\ldots,\tau^-_{n})
 \, p({\tau}\:|\;{\iota},\ldots,r_n)
 \,.
 \label{eq:temporal-model-full}
@@ -264,16 +264,16 @@ p(\iota_0\!=\!{\iota})
 \left\{\prod_{t=1}^{n}p(\tau_t\!=\!0\,|\,\iota_0\!=\!{\iota},\vec{\tau}_{t-1}\!=\!\vec{0},
 \vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right.
 \nonumber\\&&
-\hspace*{20mm}{}\times \left.\strut
+\hspace*{20mm}{}\times \left.\rule{0pt}{6mm}
 p(R_t\!=\!r_t\,|\,\iota_0\!=\!{\iota},\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
 \nonumber\\&&
 {}\times p(\tau_{n+1}\!=\!{\tau}\:|\;\iota_0\!=\!{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
 \nonumber\\
 & = &
 p({\iota})
-\left\{\prod_{t=1}^{n}p(\bar{\tau}_t\,|\,{\iota},\vec{\bar{\tau}}_{t-1},\vec{r}_{t-1})
-\,p(r_t\,|\,{\iota},\vec{\bar{\tau}}_t,\vec{r}_{t-1})\right\}
- p({\tau}\:|\;{\iota},\vec{\bar{\tau}}_n,\vec{r}_n)
+\left\{\prod_{t=1}^{n}p(\tau^-_t\,|\,{\iota},\vec{\tau^-}_{t-1},\vec{r}_{t-1})
+\,p(r_t\,|\,{\iota},\vec{\tau^-}_t,\vec{r}_{t-1})\right\}
+ p({\tau}\:|\;{\iota},\vec{\tau^-}_n,\vec{r}_n)
 \,.
 \label{eq:temporal-model}
 \end{eqnarray}
@@ -302,13 +302,13 @@ The second-order Markov sequence process is depicted in Figure~\ref{fig:causal-p
     \node[cnode] (N) at (12, 0)  {$R_N$};
     \node[onode] (tt) at (14, 0) {};
 
-    \draw[->] (0) edge node [pos=0.6, above] {$\stackrel{\bar{\tau}_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_3}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_4}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_{N-1}}{}$}  (Nm1) ;
-    \draw[->] (Nm1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_N}{}$}  (N) ;
-    \draw[->] (N) edge node [pos=0.4, above] {$\stackrel{\tau_{N+1}}{}$}  (tt) ;
+    \draw[->] (0) edge node [pos=0.6, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^-_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.55, above] {$\stackrel{\tau^-_{N-1}}{}$}  (Nm1) ;
+    \draw[->] (Nm1) edge node [pos=0.5, above] {$\stackrel{\tau^-_N}{}$}  (N) ;
+    \draw[->] (N) edge node [pos=0.4, above] {$\stackrel{\tau^+_{N+1}}{}$}  (tt) ;
 
    \begin{scope}[dashed]
     \draw[->] (0) to[out=40,in=140] (2) ;
@@ -336,10 +336,10 @@ p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
 {}\times p(\tau_{n+1}\!=\!{\tau}\:|\;R_n\!=\!r_n)
 \nonumber\\
 & = &
-p({\iota})\,p(\bar{\tau}_1\,|\,{\iota})
-\,p(r_1\,|\,{\iota},\bar{\tau}_1)
-\left\{\prod_{t=2}^{n}p(\bar{\tau}_t\,|\,r_{t-1})
-\,p(r_t\,|\,\bar{\tau}_t,r_{t-1})\right\}
+p({\iota})\,p(\tau^-_1\,|\,{\iota})
+\,p(r_1\,|\,{\iota},\tau^-_1)
+\left\{\prod_{t=2}^{n}p(\tau^-_t\,|\,r_{t-1})
+\,p(r_t\,|\,\tau^-_t,r_{t-1})\right\}
 \,p({\tau}\:|\;r_n)
 \,.
 \end{eqnarray}
@@ -373,12 +373,12 @@ $(S_{t+1},X_{t+1})$.
     \node[cnode] (Nx) at (10, -2)  {$X_N$};
     \node[onode] (tt) at (12,0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_3}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_4}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.7, above left] {$\stackrel{\bar{\tau}_N}{}$} (N) ;
-    \draw[->] (N) edge node [pos=0.75, above left] {$\stackrel{\tau_{N+1}}{}$} (tt) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^-_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.7, above left] {$\stackrel{\tau^-_N}{}$} (N) ;
+    \draw[->] (N) edge node [pos=0.75, above left] {$\stackrel{\tau^+_{N+1}}{}$} (tt) ;
 
    \begin{scope}[dashed]
     \draw[->] (0) to (1x) ;
@@ -418,18 +418,18 @@ p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
 {}\times\left\{\prod_{t=2}^{n}p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
 \nonumber\\&&\hspace*{10mm}{}\times\left.
 \,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
-\nonumber\\&&\hspace*{10mm}{}\times\left.\strut
+\nonumber\\&&\hspace*{10mm}{}\times\left.\rule{0pt}{6mm}
 \,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right\}
 \nonumber\\&&
 {}\times p(\tau_{n+1}\!=\!{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
 \nonumber\\
 &=&
-p({\iota})\,p(\bar{\tau}_1\,|\,{\iota})
-\,p(s_1\,|\,{\iota},\bar{\tau}_1)
-\,p(x_1\,|\,s_1,{\iota},\bar{\tau}_1)
+p({\iota})\,p(\tau^-_1\,|\,{\iota})
+\,p(s_1\,|\,{\iota},\tau^-_1)
+\,p(x_1\,|\,s_1,{\iota},\tau^-_1)
 \nonumber\\&&
-{}\times\left\{\prod_{t=2}^{n}p(\bar{\tau}_t\,|\,s_{t-1},x_{t-1})
-\,p(s_t\,|\,\bar{\tau}_t,s_{t-1},x_{t-1})
+{}\times\left\{\prod_{t=2}^{n}p(\tau^-_t\,|\,s_{t-1},x_{t-1})
+\,p(s_t\,|\,\tau^-_t,s_{t-1},x_{t-1})
 \,p(x_t\,|\,s_t,s_{t-1},x_{t-1})\right\}
 \nonumber\\&&
 {}\times p({\tau}\,|\,s_n,x_n)
@@ -458,12 +458,12 @@ This restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
     \node[cnode] (Nx) at (10, -2)  {$X_N$};
     \node[onode] (tt) at (12,0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_3}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_4}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\bar{\tau}_N}{}$}  (N) ;
-    \draw[->] (N) edge node [pos=0.5, above] {$\stackrel{\tau_{N+1}}{}$}  (tt) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^-_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tau^-_N}{}$}  (N) ;
+    \draw[->] (N) edge node [pos=0.5, above] {$\stackrel{\tau^+_{N+1}}{}$}  (tt) ;
 
    \begin{scope}[dashed]
     \draw[->] (1) to (1x) ;
@@ -485,17 +485,17 @@ p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
 \nonumber\\&&
 {}\times\left\{\prod_{t=2}^{n}p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1})
 \,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,S_{t-1}\!=\!s_{t-1})\right.
-\nonumber\\&&\hspace*{10mm}{}\times\left.\strut
+\nonumber\\&&\hspace*{10mm}{}\times\left.\rule{0pt}{6mm}
 \,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t)\right\}
 \;p(\tau_{n+1}\!=\!{\tau}\,|\,S_n\!=\!s_n)
 \nonumber\\
 &=&
-p({\iota})\,p(\bar{\tau}_1\,|\,{\iota})
-\,p(s_1\,|\,{\iota},\bar{\tau}_1)
+p({\iota})\,p(\tau^-_1\,|\,{\iota})
+\,p(s_1\,|\,{\iota},\tau^-_1)
 \,p(x_1\,|\,s_1)
 \nonumber\\&&
-{}\times\left\{\prod_{t=2}^{n}p(\bar{\tau}_t\,|\,s_{t-1})
-\,p(s_t\,|\,\bar{\tau}_t,s_{t-1})\,p(x_t\,|\,s_t)\right\}
+{}\times\left\{\prod_{t=2}^{n}p(\tau^-_t\,|\,s_{t-1})
+\,p(s_t\,|\,\tau^-_t,s_{t-1})\,p(x_t\,|\,s_t)\right\}
 \,p({\tau}\,|\,s_n)
 \,.
 \label{eq:stateful-1-model}
@@ -528,22 +528,22 @@ $p(\tau_{n+1}=*\,|\,S_n)=1$ and hence $p(\underline{\tau}\,|\,s_n)$ is well defi
 However, if the initiation marker $\iota_0$ is unobserved, i.e.\ $\underline{\iota}=*$ from above, then the marginalisation is more difficult
 because $\iota_0$ also conditions $S_1$ via $p(S_1\,|\,\iota_0,\tau_1)$. To allow for this, we note that
 \begin{eqnarray}
- p(\iota,\bar{\tau}_1,s_1) & = & p(\iota_0=\iota)\,p(\tau_1=0\,|\,\iota_0=\iota)\,p(S_1=s_1\,|\,\iota_0=\iota,\tau_1=0)\,,
+ p(\iota,\tau^-_1,s_1) & = & p(\iota_0=\iota)\,p(\tau_1=0\,|\,\iota_0=\iota)\,p(S_1=s_1\,|\,\iota_0=\iota,\tau_1=0)\,,
 \end{eqnarray}
 and so define
 \begin{eqnarray}
- p(\underline{\iota},\bar{\tau}_1,s_1) & = & \sum_{\iota=0}^{1}\delta(\iota=\underline{\iota}) \, p(\iota,\bar{\tau}_1,s_1)\,,
+ p(\underline{\iota},\tau^-_1,s_1) & = & \sum_{\iota=0}^{1}\delta(\iota\!=\!\underline{\iota}) \, p(\iota,\tau^-_1,s_1)\,,
 \end{eqnarray}
 where $\delta(\cdot)=1$ (or else $0$) if its argument is true (or else false);
  by definition, we take $\delta(a=*)=1$.
 Hence, we may write
 \begin{eqnarray}
 p(\underline{\iota},\vec{s},\underline{\vec{x}},\underline{\tau}) & = & 
-p(\underline{\iota},\bar{\tau}_1,s_1)
+p(\underline{\iota},\tau^-_1,s_1)
 \,p(\underline{x}_1\,|\,s_1)
 %\nonumber\\&&{}\times
-\left\{\prod_{t=2}^{n}p(\bar{\tau}_t\,|\,s_{t-1})
-\,p(s_t\,|\,\bar{\tau}_t,s_{t-1})\,p(\underline{x}_t\,|\,s_t)\right\}
+\left\{\prod_{t=2}^{n}p(\tau^-_t\,|\,s_{t-1})
+\,p(s_t\,|\,\tau^-_t,s_{t-1})\,p(\underline{x}_t\,|\,s_t)\right\}
 \,p(\underline{\tau}\,|\,s_n)
 \,.
 \label{eq:stateful-1-model:hidden-markers}
@@ -556,19 +556,104 @@ Once again, this marginalisation is made difficult because $S_t$ is involved in 
 The possibility that multiple states might be unobserved complicates this marginalisation even further.
 Note that a process in which the observed state sequence $\underline{\vec{s}}$ is entirely unknown is called a {\em hidden Markov model} (or HMM).
 In order to deal with hidden states, it is convenient to assume that states take discrete\footnote{For states with continuous values, we would need to replace 
-the state summations by integrations, and the use of the Kronecker $\delta(a=b)$ by the Dirac $\delta(a-b)$.} 
+the state summations by integrations, and the use of the Kronecker $\delta(a\!=\!b)$ by the Dirac $\delta(a-b)$.} 
 values, such that ${\cal S}=\left\{\sigma_1,\sigma_2,\ldots,\sigma_S\right\}$.
 Thus, let $\vec{s}$ represent some {\em completion} of $\underline{\vec{s}}$, i.e.\ an arbitrary sequence $\vec{s}=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$ that is consistent with all observed states in $\underline{\vec{s}}$.
 Then we may define
 \begin{eqnarray}
 p(\underline{\iota},\underline{\vec{s}},\underline{\vec{x}},\underline{\tau}) & = &
-\sum_{s_1\in{\cal S}}\delta(s_1=\underline{s}_1)
+\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)
 \cdots
-\sum_{s_n\in{\cal S}}\delta(s_n=\underline{s}_n)
+\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)
 %\nonumber\\&& 
 \,p(\underline{\iota},\vec{s},\underline{\vec{x}},\underline{\tau})\,.
+\label{eq:state-marg}
+\end{eqnarray}
+This is just the marginalisation over every plausible completion $\vec{s}$ of the observed sequence $\underline{\vec{s}}$.
+Note that if $S_t$ is a hidden state, then $\underline{s}_t=*$ and $\delta(s_t\!=\!*)=1$ for all $s_t\in{\cal S}$; otherwise, the summation over $s_t$ collapses to the observed value $\underline{s}_t$.
+
+
+\subsection{Modified Forward--Backward Algorithm}\label{sec:forward-backward}
+
+The observed sequence model~\eqref{eq:state-marg} can be efficiently evaluated by marginalising over the state of each stage
+in turn, using a modification of the {\em forward--backward algorithm} to include knowledge of
+sequence initiation and termination.
+ The forward pass involves first summing over all terms containing $s_1$, then over all remaining terms containing $s_2$,
+and so on up to $s_n$. This is equivalent to evaluating the reordered model
+\begin{eqnarray}
+   p(\underline{\iota},\underline{\vec{s}},\underline{\vec{x}},\underline{\tau}) 
+& = & 
+   \left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)
+\cdots
+\right\{\sum_{s_2\in{\cal S}}\delta(s_2\!=\!\underline{s}_2)
+\nonumber\\&&
+\hspace*{10mm}{}
+\left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
+p(\underline{\iota},\tau^-_1,s_1)\,p(\underline{x}_1\,|\,s_1)\,p(\tau^-_2\,|\,s_1)\,p(s_2\,|\,\tau^-_2,s_1)\right\}
+\nonumber\\&&
+\left.\rule{0pt}{6mm}
+p(\underline{x}_{2}\,|\,s_2)\,p(\tau^-_3\,|\,s_2)\,p(s_3\,|\,\tau^-_3,s_2)\right\}
+\cdots
+\left.\rule{0pt}{6mm}\,p(\underline{x}_{n}\,|\,s_n)
+\,p(\underline{\tau}\,|\,s_n)\right\}
+\,.
+\label{eq:forward}
+\end{eqnarray}
+ The forward pass commences with the first step
+\begin{eqnarray}
+  \alpha_1(s_1) & = & p(\underline{\iota},\tau^-_1,s_1)\,p(\underline{x}_1\,|\,s_1)
+\nonumber\\&=&
+p(\underline{\iota},\tau^-_1,s_1,\underline{x}_1)~=~p(\underline{\iota},\vec{s}_1,\underline{\vec{x}}_1)\,,
+\label{eq:alpha_1}
+\end{eqnarray}
+follows up with the second step
+\begin{eqnarray}
+  \alpha_2(s_2) & = & 
+\left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
+\alpha_1(s_1)\,p(\tau^-_2\,|\,s_1)\,p(s_2\,|\,\tau^-_2,s_1)\right\}
+\,p(\underline{x}_2\,|\,s_2)
+\nonumber\\&=&
+p(\underline{\iota},\tau^-_1,\underline{s}_1,\underline{x}_1,\tau^-_2,s_2)\,p(\underline{x}_2\,|\,s_2)
+\nonumber\\&=&
+p(\underline{\iota},\tau^-_1,\underline{s}_1,\underline{x}_1,\tau^-_2,s_2,\underline{x}_2)
+~=~p(\underline{\iota},\underline{\vec{s}}_1\circ s_2,\underline{\vec{x}}_2)
+\,,
+\label{eq:alpha_2}
+\end{eqnarray}
+and finishes with the last step
+\begin{eqnarray}
+  \alpha_n(s_n) & = & 
+\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
+\alpha_{n-1}(s_{n-1})\,p(\tau^-_n\,|\,s_{n-1})\,p(s_n\,|\,\tau^-_n,s_{n-1})\right\}
+\,p(\underline{x}_n\,|\,s_n)
+\nonumber\\&=&
+p(\underline{\iota},\underline{\vec{s}}_{n-1}\circ s_n,\underline{\vec{x}}_{n-1})\,p(\underline{x}_n\,|\,s_n)
+~=~p(\underline{\iota},\underline{\vec{s}}_{n-1}\circ s_n,\underline{\vec{x}}_n)
+\,.
+\label{eq:alpha_n}
 \end{eqnarray}
 
+Conversely, the backaward pass involves first summing over all terms containing $s_n$,
+then over all remaining terms containing $s_{n-1}$, and so on down $s_1$.
+This is equivalent to evaluating the reordered model
+\begin{eqnarray}
+   p(\underline{\iota},\underline{\vec{s}},\underline{\vec{x}},\underline{\tau}) 
+& = & 
+   \left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
+p(\underline{\iota},\tau^-_1,s_1)\,p(\underline{x}_1\,|\,s_1)\,p(\tau^-_2\,|\,s_1)\,
+\cdots\right.
+\nonumber\\&&
+\;\;\;\left\{\sum_{s_{n-1}\in{\cal S}}\delta(s_{n-1}\!=\!\underline{s}_{n-1})\,
+p(s_{n-1}\,|\,\tau^-_{n-1},s_{n-2})\,p(\underline{x}_{n-1}\,|\,s_{n-1})\,p(\tau^-_n\,|\,s_{n-1})\right.
+\nonumber\\&&
+\hspace*{4mm}
+\left.\rule{0pt}{7mm}\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
+p(s_n\,|\,\tau^-_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
+\,p(\underline{\tau}\,|\,s_n)\right\}\right\}
+\cdots\left.\rule{0pt}{7mm}\right\}
+\,.
+\label{eq:backward}
+\end{eqnarray}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discrete-state Sequence Models}\label{sec:discrete-state}
