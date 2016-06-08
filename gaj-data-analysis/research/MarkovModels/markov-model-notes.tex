@@ -603,7 +603,7 @@ p(\underline{x}_{2}\,|\,s_2)\,p(\tau^-_3\,|\,s_2)\,p(s_3\,|\,\tau^-_3,s_2)\right
 \begin{eqnarray}
   \alpha_1(s_1) & = & p(\underline{\iota},\tau^-_1,s_1)\,p(\underline{x}_1\,|\,s_1)
 \nonumber\\&=&
-p(\underline{\iota},\tau^-_1,s_1,\underline{x}_1)~=~p(\underline{\iota},\vec{s}_1,\underline{\vec{x}}_1)\,,
+p(\underline{\iota},\tau^-_1,s_1,\underline{x}_1)~=~p(\underline{\iota},\underline{\vec{s}}_0\circ s_1,\underline{\vec{x}}_1)\,,
 \label{eq:alpha_1}
 \end{eqnarray}
 follows up with the second step
@@ -623,7 +623,7 @@ p(\underline{\iota},\tau^-_1,\underline{s}_1,\underline{x}_1,\tau^-_2,s_2,\under
 and finishes with the last step
 \begin{eqnarray}
   \alpha_n(s_n) & = & 
-\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
+\left\{\sum_{s_{n-1}\in{\cal S}}\delta(s_{n-1}\!=\!\underline{s}_{n-1})\,
 \alpha_{n-1}(s_{n-1})\,p(\tau^-_n\,|\,s_{n-1})\,p(s_n\,|\,\tau^-_n,s_{n-1})\right\}
 \,p(\underline{x}_n\,|\,s_n)
 \nonumber\\&=&
@@ -631,6 +631,12 @@ p(\underline{\iota},\underline{\vec{s}}_{n-1}\circ s_n,\underline{\vec{x}}_{n-1}
 ~=~p(\underline{\iota},\underline{\vec{s}}_{n-1}\circ s_n,\underline{\vec{x}}_n)
 \,.
 \label{eq:alpha_n}
+\end{eqnarray}
+The remaining terms give
+\begin{eqnarray}
+   p(\underline{\iota},\underline{\vec{s}},\underline{\vec{x}},\underline{\tau}) 
+& = & 
+   \sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,\alpha_n(s_n)\,p(\underline{\tau}\,|\,s_n)\,.
 \end{eqnarray}
 
 Conversely, the backaward pass involves first summing over all terms containing $s_n$,
@@ -654,6 +660,55 @@ p(s_n\,|\,\tau^-_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
 \,.
 \label{eq:backward}
 \end{eqnarray}
+The backward pass commences with the first step
+\begin{eqnarray}
+  \beta_n(s_n) & = & p(\underline{\tau}\,|\,s_n)\,,
+\end{eqnarray}
+followed by the second step
+\begin{eqnarray}
+  \beta_{n-1}(s_{n-1}) & = &
+p(\tau^-_n\,|\,s_{n-1})\,\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
+p(s_n\,|\,\tau^-_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
+\,\beta_n(s_n)
+\nonumber\\&=&
+p(\tau^-_n\,|\,s_{n-1})\,p(\underline{s}_n,\underline{x}_n,\underline{\tau}\,|\,\tau^-_n,s_{n-1})
+\nonumber\\&=&
+p(\tau^-_n,\underline{s}_n,\underline{x}_n,\underline{\tau}\,|\,s_{n-1})
+~=~p([\underline{\rvec{s}}_n,\underline{\rvec{x}}_n,\underline{\tau}\,|\,s_{n-1})\,,
+\end{eqnarray}
+and culminates in the last step
+\begin{eqnarray}
+  \beta_{1}(s_{1}) & = &
+p(\tau^-_2\,|\,s_{1})\,\sum_{s_2\in{\cal S}}\delta(s_2\!=\!\underline{s}_2)\,
+p(s_2\,|\,\tau^-_2,s_{1})\,p(\underline{x}_{2}\,|\,s_2)
+\,\beta_2(s_2)
+\nonumber\\&=&
+p(\tau^-_2\,|\,s_{1})\,
+p(\underline{s}_2,\underline{x}_2,\tau^-_3,\ldots,\underline{s}_n,\underline{x}_n,\underline{\tau}\,|\,\tau^-_2,s_{1})
+\nonumber\\&=&
+p([\underline{\rvec{s}}_2,\underline{\rvec{x}}_2,\underline{\tau}\,|\,s_{1})\,.
+\end{eqnarray}
+The remaining terms give
+\begin{eqnarray}
+   p(\underline{\iota},\underline{\vec{s}},\underline{\vec{x}},\underline{\tau}) 
+& = & 
+   \sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,p(\underline{\iota},\tau^-_1,s_1)\,\beta_1(s_1)\,.
+\end{eqnarray}
+In general, we obtain
+\begin{eqnarray}
+   p(\underline{\iota},\underline{\vec{s}},\underline{\vec{x}},\underline{\tau}) 
+& = & 
+   \sum_{s_t\in{\cal S}}\delta(s_t\!=\!\underline{s}_t)\,
+   p(\underline{\iota},\underline{\vec{s}}_{t-1}\circ s_t\circ\underline{\rvec{s}}_{t+1},
+\underline{\vec{x}}_t\circ\underline{\rvec{x}}_{t+1},\underline{\tau}) 
+\nonumber\\&=&
+   \sum_{s_t\in{\cal S}}\delta(s_t\!=\!\underline{s}_t)\,
+p(\underline{\iota},\underline{\vec{s}}_{t-1}\circ s_t,\underline{\vec{x}}_t)
+\,p([\underline{\rvec{s}}_{t+1},\underline{\rvec{x}}_{t+1},\underline{\tau}\,|\,s_{t})
+\nonumber\\&=&
+   \sum_{s_t\in{\cal S}}\delta(s_t\!=\!\underline{s}_t)\,\alpha_t(s_t)\,\beta_t(s_t)\,,
+\end{eqnarray}
+for all $t=1,2,\ldots,n$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discrete-state Sequence Models}\label{sec:discrete-state}
