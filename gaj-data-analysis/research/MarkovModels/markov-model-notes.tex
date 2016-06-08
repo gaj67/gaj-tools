@@ -130,24 +130,27 @@ Hence, it is plausible to simplify equation~\eqref{eq:p_r_complete} as
 p(\langle\vec{r}\rangle) 
 & = & p(\iota_0,\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n,\tau_{n+1})\,.
 \end{eqnarray}
-In general, we may handle both complete and partial sequences by letting $\underline{\iota}$ denote the observed start-of-sequence symbol, and
-letting $\underline{\tau}$ denote the observed end-of-sequence symbol; hence
+In general, we may handle both complete and partial sequences by letting ${\iota}$ denote the observed start-of-sequence symbol, and
+letting ${\tau}$ denote the observed end-of-sequence symbol; hence
 \begin{eqnarray}
-p(\underline{\iota},\vec{r},\underline{\tau})
-& = & p(\iota_0\!=\!\underline{\iota},\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!\underline{\tau})
+p({\iota},\vec{r},{\tau})
+& = & p(\iota_0\!=\!{\iota},\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!{\tau})
 \nonumber\\
-& = & p(\underline{\iota},\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n,\underline{\tau})\,.
+& = & p({\iota},\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n,{\tau})\,.
 \end{eqnarray}
-For convenience, we let $\underline{\iota}=*$ if we do not know whether or not $r_1$ is the start of the sequence,
-and similarly let $\underline{\tau}=*$ if we do not kow whether or not $r_n$ is the end of the sequence.
-The `*' symbol is just a convenience -- its presence has no effect on the computed probabilities, and merely indicates that the true value
-of $\iota_0$ and/or $\tau_{n+1}$ should be marginalised out. Thus, for example:
+For convenience, we let ${\iota}=*$ if we do not know whether or not $r_1$ is the start of the sequence,
+and similarly let ${\tau}=*$ if we do not kow whether or not $r_n$ is the end of the sequence.
+The `*' symbol is just a representational device -- its presence has no effect on the computed probabilities, other than to indicate that the true values
+of the variables $\iota_0$ and/or $\tau_{n+1}$ should be marginalised out. Thus, for example:
 \begin{eqnarray}
 p(\vec{r}) 
 & = & p(*,\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n,*)~=~p(\bar{\tau}_1,r_1,\ldots,\bar{\tau}_n,r_n)\,.
 \end{eqnarray}
-Finally, we may utilise this notation of convenience to simplify the explicitly terminated process of Figure~\ref{fig:random-process} 
-to more resemble the implicitly terminatedl process of Figure~\ref{fig:R-process}; the result is shown in Figure~\ref{fig:simple-random-process}.
+We shall deal with the problem of marginalisation again in Section~\ref{sec:hidden-state}; for now, we simply assume that both ${\iota}$ and
+${\tau}$ are known but unspecified.
+
+Finally, we may utilise our notation of convenience to simplify the explicitly terminated process of Figure~\ref{fig:random-process} 
+to more resemble the implicitly terminatel process of Figure~\ref{fig:R-process}; the result is shown in Figure~\ref{fig:simple-random-process}.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
@@ -223,29 +226,29 @@ Both dashed arrows and solid arrows indicate parent--child dependencies, such th
 Hence, under the Markov assumption of conditional independence,
 the causal sequence process leads to the full-dependency conditional model
 \begin{eqnarray}
-p(\underline{\iota},\vec{r},\underline{\tau}) & = &
-p(\iota_0\!=\!\underline{\iota})
-\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
-\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
-\,p(\tau_2\!=\!0\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0,R_1\!=\!r_1)
+p({\iota},\vec{r},{\tau}) & = &
+p(\iota_0\!=\!{\iota})
+\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
+\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
+\,p(\tau_2\!=\!0\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0,R_1\!=\!r_1)
 \nonumber\\&&
-{}\times p(R_2\!=\!r_2\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0,R_1\!=\!r_1,\tau_2\!=\!0)
+{}\times p(R_2\!=\!r_2\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0,R_1\!=\!r_1,\tau_2\!=\!0)
 \cdots
-p(R_n\!=\!r_n\,|\,\iota_0\!=\!\underline{\iota},\ldots,\tau_{n}\!=\!0)
+p(R_n\!=\!r_n\,|\,\iota_0\!=\!{\iota},\ldots,\tau_{n}\!=\!0)
 \nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!\underline{\tau}\:|\;\iota_0\!=\!\underline{\iota},\ldots,R_n\!=\!r_n)
+{}\times p(\tau_{n+1}\!=\!{\tau}\:|\;\iota_0\!=\!{\iota},\ldots,R_n\!=\!r_n)
 \nonumber\\
 & = &
-p(\underline{\iota})
-\,p(\bar{\tau}_1\,|\,\underline{\iota})
-\,p(r_1\,|\,\underline{\iota},\bar{\tau}_1)
-\,p(\bar{\tau}_2\,|\,\underline{\iota},\bar{\tau}_1,r_1)
-\, p(r_2\,|\,\underline{\iota},\bar{\tau}_1,r_1,\bar{\tau}_2)
+p({\iota})
+\,p(\bar{\tau}_1\,|\,{\iota})
+\,p(r_1\,|\,{\iota},\bar{\tau}_1)
+\,p(\bar{\tau}_2\,|\,{\iota},\bar{\tau}_1,r_1)
+\, p(r_2\,|\,{\iota},\bar{\tau}_1,r_1,\bar{\tau}_2)
 \nonumber\\
 &&
 \cdots
-p(r_n\,|\,\underline{\iota},\ldots,\bar{\tau}_{n})
-\, p(\underline{\tau}\:|\;\underline{\iota},\ldots,r_n)
+p(r_n\,|\,{\iota},\ldots,\bar{\tau}_{n})
+\, p({\tau}\:|\;{\iota},\ldots,r_n)
 \,.
 \label{eq:temporal-model-full}
 \end{eqnarray}
@@ -255,22 +258,22 @@ for $t=1,2,\ldots,n$, where $\vec{r}_0$ is taken to be the empty sub-sequence by
 for $t=n,n-1,\ldots,1$; likewise, $\rvec{r}_{n+1}$ is an empty sub-sequence.
 Hence, we obtain
 \begin{eqnarray}
-p(\underline{\iota},\vec{r},\underline{\tau}) & = &
-p(\iota_0\!=\!\underline{\iota})
-%\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
-\prod_{t=1}^{n}\left\{p(\tau_t\!=\!0\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_{t-1}\!=\!\vec{0},
+p({\iota},\vec{r},{\tau}) & = &
+p(\iota_0\!=\!{\iota})
+%\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
+\left\{\prod_{t=1}^{n}p(\tau_t\!=\!0\,|\,\iota_0\!=\!{\iota},\vec{\tau}_{t-1}\!=\!\vec{0},
 \vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right.
 \nonumber\\&&
-\hspace*{20mm}{}\times \left.
-p(R_t\!=\!r_t\,|\,\iota_0\!=\!\underline{\iota},\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
+\hspace*{20mm}{}\times \left.\strut
+p(R_t\!=\!r_t\,|\,\iota_0\!=\!{\iota},\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
 \nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!\underline{\tau}\:|\;\iota_0\!=\!\underline{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
+{}\times p(\tau_{n+1}\!=\!{\tau}\:|\;\iota_0\!=\!{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
 \nonumber\\
 & = &
-p(\underline{\iota})
-\prod_{t=1}^{n}\left\{p(\bar{\tau}_t\,|\,\underline{\iota},\vec{\bar{\tau}}_{t-1},\vec{r}_{t-1})
-\,p(r_t\,|\,\underline{\iota},\vec{\bar{\tau}}_t,\vec{r}_{t-1})\right\}
- p(\underline{\tau}\:|\;\underline{\iota},\vec{\bar{\tau}}_n,\vec{r}_n)
+p({\iota})
+\left\{\prod_{t=1}^{n}p(\bar{\tau}_t\,|\,{\iota},\vec{\bar{\tau}}_{t-1},\vec{r}_{t-1})
+\,p(r_t\,|\,{\iota},\vec{\bar{\tau}}_t,\vec{r}_{t-1})\right\}
+ p({\tau}\:|\;{\iota},\vec{\bar{\tau}}_n,\vec{r}_n)
 \,.
 \label{eq:temporal-model}
 \end{eqnarray}
@@ -323,21 +326,21 @@ The second-order Markov sequence process is depicted in Figure~\ref{fig:causal-p
 
 In the special case of $m=1$, the first-order Markov model takes on the restricted conditional form
 \begin{eqnarray}
-p(\underline{\iota},\vec{r},\underline{\tau}) & = &
-p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
-\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+p({\iota},\vec{r},{\tau}) & = &
+p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
+\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
 \nonumber\\&&
-{}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,R_{t-1}\!=\!r_{t-1})
+{}\times\left\{\prod_{t=2}^{n}p(\tau_t\!=\!0\,|\,R_{t-1}\!=\!r_{t-1})
 \,p(R_t\!=\!r_t\,|\,\tau_t\!=\!0,R_{t-1}\!=\!r_{t-1})\right\}
 \nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!\underline{\tau}\:|\;R_n\!=\!r_n)
+{}\times p(\tau_{n+1}\!=\!{\tau}\:|\;R_n\!=\!r_n)
 \nonumber\\
 & = &
-p(\underline{\iota})\,p(\bar{\tau}_1\,|\,\underline{\iota})
-\,p(r_1\,|\,\underline{\iota},\bar{\tau}_1)
-\prod_{t=2}^{n}\left\{p(\bar{\tau}_t\,|\,r_{t-1})
+p({\iota})\,p(\bar{\tau}_1\,|\,{\iota})
+\,p(r_1\,|\,{\iota},\bar{\tau}_1)
+\left\{\prod_{t=2}^{n}p(\bar{\tau}_t\,|\,r_{t-1})
 \,p(r_t\,|\,\bar{\tau}_t,r_{t-1})\right\}
-\,p(\underline{\tau}\:|\;r_n)
+\,p({\tau}\:|\;r_n)
 \,.
 \end{eqnarray}
 This is just a Markov interpretation of the random process depicted in Figure~\ref{fig:simple-random-process},
@@ -406,30 +409,30 @@ with explicit cross-dependencies between adjacent stages.}
 
 Hence, the fully-structured state--valuel model is now given by
 \begin{eqnarray}
-p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}) & = & 
-p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
-\,p(S_1\!=\!s_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+p({\iota},\vec{s},\vec{x},{\tau}) & = & 
+p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
+\,p(S_1\!=\!s_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
 \nonumber\\&&{}\times
-\,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+\,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1,\iota_0\!=\!{\iota},\tau_1\!=\!0)
 \nonumber\\&&
-{}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
+{}\times\left\{\prod_{t=2}^{n}p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
 \nonumber\\&&\hspace*{10mm}{}\times\left.
 \,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
-\nonumber\\&&\hspace*{10mm}{}\times\left.
+\nonumber\\&&\hspace*{10mm}{}\times\left.\strut
 \,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right\}
 \nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!\underline{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
+{}\times p(\tau_{n+1}\!=\!{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
 \nonumber\\
 &=&
-p(\underline{\iota})\,p(\bar{\tau}_1\,|\,\underline{\iota})
-\,p(s_1\,|\,\underline{\iota},\bar{\tau}_1)
-\,p(x_1\,|\,s_1,\underline{\iota},\bar{\tau}_1)
+p({\iota})\,p(\bar{\tau}_1\,|\,{\iota})
+\,p(s_1\,|\,{\iota},\bar{\tau}_1)
+\,p(x_1\,|\,s_1,{\iota},\bar{\tau}_1)
 \nonumber\\&&
-{}\times\prod_{t=2}^{n}\left\{p(\bar{\tau}_t\,|\,s_{t-1},x_{t-1})
+{}\times\left\{\prod_{t=2}^{n}p(\bar{\tau}_t\,|\,s_{t-1},x_{t-1})
 \,p(s_t\,|\,\bar{\tau}_t,s_{t-1},x_{t-1})
 \,p(x_t\,|\,s_t,s_{t-1},x_{t-1})\right\}
 \nonumber\\&&
-{}\times p(\underline{\tau}\,|\,s_n,x_n)
+{}\times p({\tau}\,|\,s_n,x_n)
 \,.
 \end{eqnarray}
 Conditioning the state $S_t$ on both the previous state $S_{t-1}$ and its value $X_{t-1}$
@@ -475,34 +478,99 @@ This restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
 
 The corresponding sequence model is now given by
 \begin{eqnarray}
-p(\underline{\iota},\vec{s},\vec{x},\underline{\tau}) & = & 
-p(\iota_0\!=\!\underline{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\underline{\iota})
-\,p(S_1\!=\!s_1\,|\,\iota_0\!=\!\underline{\iota},\tau_1\!=\!0)
+p({\iota},\vec{s},\vec{x},{\tau}) & = & 
+p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
+\,p(S_1\!=\!s_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
 \,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1)
 \nonumber\\&&
-{}\times\prod_{t=2}^{n}\left\{p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1})
+{}\times\left\{\prod_{t=2}^{n}p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1})
 \,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,S_{t-1}\!=\!s_{t-1})\right.
-\nonumber\\&&\hspace*{10mm}{}\times\left.
+\nonumber\\&&\hspace*{10mm}{}\times\left.\strut
 \,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t)\right\}
-\;p(\tau_{n+1}\!=\!\underline{\tau}\,|\,S_n\!=\!s_n)
+\;p(\tau_{n+1}\!=\!{\tau}\,|\,S_n\!=\!s_n)
 \nonumber\\
 &=&
-p(\underline{\iota})\,p(\bar{\tau}_1\,|\,\underline{\iota})
-\,p(s_1\,|\,\underline{\iota},\bar{\tau}_1)
+p({\iota})\,p(\bar{\tau}_1\,|\,{\iota})
+\,p(s_1\,|\,{\iota},\bar{\tau}_1)
 \,p(x_1\,|\,s_1)
 \nonumber\\&&
-{}\times\prod_{t=2}^{n}\left\{p(\bar{\tau}_t\,|\,s_{t-1})
+{}\times\left\{\prod_{t=2}^{n}p(\bar{\tau}_t\,|\,s_{t-1})
 \,p(s_t\,|\,\bar{\tau}_t,s_{t-1})\,p(x_t\,|\,s_t)\right\}
-\,p(\underline{\tau}\,|\,s_n)
+\,p({\tau}\,|\,s_n)
 \,.
 \label{eq:stateful-1-model}
 \end{eqnarray}
 %Observe that the $\tau_1$ dependency can additionally be dropped in practice,
 %since zero-length sequences convey little information, and are in fact undetectable if the
 %generating process does not explicitly indicate the start and end of sequences.
-So far, we have made no assumption as to whether the states take continuous values or discrete values.
-In the next section, we consider the important sub-class of models where the states are discrete-valued.
+%So far, we have made no assumption as to whether the states take continuous values or discrete values.
+%In the next section, we consider the important sub-class of models where the states are discrete-valued.
 
+\subsection{Hidden State Sequences}\label{sec:hidden-state}
+
+In the previous section, we considered the joint probability $p({\iota},\vec{s},\vec{x},{\tau})$ of a stateful, first-order Markov process (Figure~\ref{fig:stateful-1-process}) under the assumption that the initiation and termination markers of the sequence were known in advance and that
+both the sequence $\vec{s}$ of states and the sequence $\vec{x}$ of values were fully observed.
+Let us now consider the implications of having unobserved (or {\em hidden} or {\em missing}) markers, states and/or values.
+Firstly, let us use an underline symbol, e.g.\ $\underline{\iota}$, to denote a variable with an observed value that might be either known or missing, and let the bare variable, e.g.\
+$\iota$, denote a known (but possibly arbitrary) value. As noted in Section~\ref{sec:random-processes}, we use the `*' symbol to denote a missing value, e.g.\ $\underline{\iota}=*$,
+on the understanding that its use in a probability expression implies the marginalisation of the expression over all possible values of the affected variable.
+
+Thus, if the value of $X_{t}$ of some stage $t$ is unobserved, then we write
+$\underline{x}_{t}=*$ to denote marginalisation over all possible values of $x_{t}\in{\cal X}$. 
+Since $X_t$ depends only upon $S_t$, we may then define $p(X_t=*\,|\,S_t)=1$ for all $t=1,2,\ldots,n$, and so $p(\underline{x}_t\,|\,s_t)$ is likewise well defined.
+%Hence, having some $\underline{x}_{t'}=*$ is equivalent to simply dropping the specific term $p(x_{t'}\,|\,s_{t'})$ from 
+%equation~\eqref{eq:stateful-1-model}. Consequently, 
+%We henceforth assume with no loss of generality that all values in $\vec{x}$ are observed.
+
+Similarly, if the termination marker $\tau_{n+1}$ is unobserved, then we write $\underline{\tau}=*$ to indicate maginalisation over
+$\tau_{n+1}\in\{0,1\}$,  with the consequence that
+$p(\tau_{n+1}=*\,|\,S_n)=1$ and hence $p(\underline{\tau}\,|\,s_n)$ is well defined.
+However, if the initiation marker $\iota_0$ is unobserved, i.e.\ $\underline{\iota}=*$ from above, then the marginalisation is more difficult
+because $\iota_0$ also conditions $S_1$ via $p(S_1\,|\,\iota_0,\tau_1)$. To allow for this, we note that
+\begin{eqnarray}
+ p(\iota,\bar{\tau}_1,s_1) & = & p(\iota_0=\iota)\,p(\tau_1=0\,|\,\iota_0=\iota)\,p(S_1=s_1\,|\,\iota_0=\iota,\tau_1=0)\,,
+\end{eqnarray}
+and so define
+\begin{eqnarray}
+ p(\underline{\iota},\bar{\tau}_1,s_1) & = & \sum_{\iota=0}^{1}\delta(\iota=\underline{\iota}) \, p(\iota,\bar{\tau}_1,s_1)\,,
+\end{eqnarray}
+where $\delta(\cdot)=1$ (or else $0$) if its argument is true (or else false);
+ by definition, we take $\delta(a=*)=1$.
+Hence, we may write
+\begin{eqnarray}
+p(\underline{\iota},\vec{s},\underline{\vec{x}},\underline{\tau}) & = & 
+p(\underline{\iota},\bar{\tau}_1,s_1)
+\,p(\underline{x}_1\,|\,s_1)
+%\nonumber\\&&{}\times
+\left\{\prod_{t=2}^{n}p(\bar{\tau}_t\,|\,s_{t-1})
+\,p(s_t\,|\,\bar{\tau}_t,s_{t-1})\,p(\underline{x}_t\,|\,s_t)\right\}
+\,p(\underline{\tau}\,|\,s_n)
+\,.
+\label{eq:stateful-1-model:hidden-markers}
+\end{eqnarray}
+
+
+Finally, if state $S_{t}$ is unobserved, then $\underline{s}_{t}=*$  denotes marginalisation over all $s_{t}\in{\cal S}$. 
+Once again, this marginalisation is made difficult because $S_t$ is involved in multiple dependencies, conditioning $X_t$, $\tau_{t+1}$ and possibly $S_{t+1}$.
+%Hence, state marginalisation is more involved than just dropping a single term from equation~\eqref{eq:stateful-1-model}.
+The possibility that multiple states might be unobserved complicates this marginalisation even further.
+Note that a process in which the observed state sequence $\underline{\vec{s}}$ is entirely unknown is called a {\em hidden Markov model} (or HMM).
+In order to deal with hidden states, it is convenient to assume that states take discrete\footnote{For states with continuous values, we would need to replace 
+the state summations by integrations, and the use of the Kronecker $\delta(a=b)$ by the Dirac $\delta(a-b)$.} 
+values, such that ${\cal S}=\left\{\sigma_1,\sigma_2,\ldots,\sigma_S\right\}$.
+Thus, let $\vec{s}$ represent some {\em completion} of $\underline{\vec{s}}$, i.e.\ an arbitrary sequence $\vec{s}=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$ that is consistent with all observed states in $\underline{\vec{s}}$.
+Then we may define
+\begin{eqnarray}
+p(\underline{\iota},\underline{\vec{s}},\underline{\vec{x}},\underline{\tau}) & = &
+\sum_{s_1\in{\cal S}}\delta(s_1=\underline{s}_1)
+\cdots
+\sum_{s_n\in{\cal S}}\delta(s_n=\underline{s}_n)
+%\nonumber\\&& 
+\,p(\underline{\iota},\vec{s},\underline{\vec{x}},\underline{\tau})\,.
+\end{eqnarray}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discrete-state Sequence Models}\label{sec:discrete-state}
 
 Consider the stateful, first-order Markov process depicted by Figure~\ref{fig:stateful-1-process}.
