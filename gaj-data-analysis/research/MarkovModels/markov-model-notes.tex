@@ -599,44 +599,56 @@ p(\underline{x}_{2}\,|\,s_2)\,p(\tau^-_3\,|\,s_2)\,p(s_3\,|\,\tau^-_3,s_2)\right
 \,.
 \label{eq:forward}
 \end{eqnarray}
- The forward pass commences with the first step
+ The forward pass commences with the first stage of the sequence, and includes the inner terms that are dependent on state $s_1$, namely
 \begin{eqnarray}
   \alpha_1(s_1) & = & p(\underline{\iota},\tau^-_1,s_1)\,p(\underline{x}_1\,|\,s_1)
 \nonumber\\&=&
-p(\underline{\iota},\tau^-_1,s_1,\underline{x}_1)~=~p(\underline{\iota},\underline{\vec{s}}_0\circ s_1,\underline{\vec{x}}_1)\,,
+p(\underline{\iota},\tau^-_1,s_1,\underline{x}_1)~\equiv~p(\underline{\iota},\underline{\vec{s}}_0\circ s_1,\underline{\vec{x}}_1)\,,
 \label{eq:alpha_1}
 \end{eqnarray}
-follows up with the second step
+where the operator `$\circ$' indicates the concatenation of either two elements, two sequences or an element and a sequence, to form a longer sequence.
+Recall that $\underline{\vec{s}}_0$ is an empty sequence.
+
+The next step of the forward pass now moves on to the second stage and includes terms dependent on state $s_2$ at that stage:
 \begin{eqnarray}
   \alpha_2(s_2) & = & 
 \left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
 \alpha_1(s_1)\,p(\tau^-_2\,|\,s_1)\,p(s_2\,|\,\tau^-_2,s_1)\right\}
 \,p(\underline{x}_2\,|\,s_2)
 \nonumber\\&=&
+\left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
+p(\underline{\iota},\tau^-_1,s_1,\underline{x}_1)\,p(\tau^-_2\,|\,s_1)\,p(s_2\,|\,\tau^-_2,s_1)\right\}
+\,p(\underline{x}_2\,|\,s_2)
+\nonumber\\&=&
+\left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
+p(\underline{\iota},\tau^-_1,s_1,\underline{x}_1,\tau^-_2,s_2)\right\}
+\,p(\underline{x}_2\,|\,s_2)
+\nonumber\\&=&
 p(\underline{\iota},\tau^-_1,\underline{s}_1,\underline{x}_1,\tau^-_2,s_2)\,p(\underline{x}_2\,|\,s_2)
 \nonumber\\&=&
 p(\underline{\iota},\tau^-_1,\underline{s}_1,\underline{x}_1,\tau^-_2,s_2,\underline{x}_2)
-~=~p(\underline{\iota},\underline{\vec{s}}_1\circ s_2,\underline{\vec{x}}_2)
-\,,
+~\equiv~p(\underline{\iota},\underline{\vec{s}}_1\circ s_2,\underline{\vec{x}}_2)
+\,.
 \label{eq:alpha_2}
 \end{eqnarray}
-and finishes with the last step
+Recursively, the last step of the forward pass stops at the $n$-th stage, giving
 \begin{eqnarray}
   \alpha_n(s_n) & = & 
 \left\{\sum_{s_{n-1}\in{\cal S}}\delta(s_{n-1}\!=\!\underline{s}_{n-1})\,
 \alpha_{n-1}(s_{n-1})\,p(\tau^-_n\,|\,s_{n-1})\,p(s_n\,|\,\tau^-_n,s_{n-1})\right\}
 \,p(\underline{x}_n\,|\,s_n)
-\nonumber\\&=&
+\nonumber\\&\equiv&
 p(\underline{\iota},\underline{\vec{s}}_{n-1}\circ s_n,\underline{\vec{x}}_{n-1})\,p(\underline{x}_n\,|\,s_n)
 ~=~p(\underline{\iota},\underline{\vec{s}}_{n-1}\circ s_n,\underline{\vec{x}}_n)
 \,.
 \label{eq:alpha_n}
 \end{eqnarray}
-The remaining terms give
+The remaining terms then give the observed joint likelihood
 \begin{eqnarray}
    p(\underline{\iota},\underline{\vec{s}},\underline{\vec{x}},\underline{\tau}) 
 & = & 
    \sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,\alpha_n(s_n)\,p(\underline{\tau}\,|\,s_n)\,.
+\label{eq:alpha_n_beta_n}
 \end{eqnarray}
 
 Conversely, the backaward pass involves first summing over all terms containing $s_n$,
@@ -660,23 +672,35 @@ p(s_n\,|\,\tau^-_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
 \,.
 \label{eq:backward}
 \end{eqnarray}
-The backward pass commences with the first step
+The backward pass commences at the end of the sequence with the termination term that depends on state $s_n$, namely 
 \begin{eqnarray}
-  \beta_n(s_n) & = & p(\underline{\tau}\,|\,s_n)\,,
+  \beta_n(s_n) & = & p(\underline{\tau}\,|\,s_n)\,.
+\label{eq:_beta_n}
 \end{eqnarray}
-followed by the second step
+The next step in the backward pass then moves backward to the $n$-th stage and incorporates the terms that depend on state $s_{n-1}$, including the
+non-terminating transition from $s_{n-1}$ to $s_n$
 \begin{eqnarray}
   \beta_{n-1}(s_{n-1}) & = &
-p(\tau^-_n\,|\,s_{n-1})\,\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
+p(\tau^-_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
 p(s_n\,|\,\tau^-_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
-\,\beta_n(s_n)
+\,\beta_n(s_n)\right\}
+\nonumber\\&=&
+p(\tau^-_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
+p(s_n\,|\,\tau^-_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
+\,p(\underline{\tau}\,|\,s_n)\right\}
+\nonumber\\&=&
+p(\tau^-_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
+p(s_n,\underline{x}_{n},\underline{\tau}\,|\,\tau^-_n,s_{n-1})\right\}
 \nonumber\\&=&
 p(\tau^-_n\,|\,s_{n-1})\,p(\underline{s}_n,\underline{x}_n,\underline{\tau}\,|\,\tau^-_n,s_{n-1})
 \nonumber\\&=&
 p(\tau^-_n,\underline{s}_n,\underline{x}_n,\underline{\tau}\,|\,s_{n-1})
-~=~p([\underline{\rvec{s}}_n,\underline{\rvec{x}}_n,\underline{\tau}\,|\,s_{n-1})\,,
+~\equiv~p(\circ\underline{\rvec{s}}_n,\underline{\rvec{x}}_n,\underline{\tau}\,|\,s_{n-1})\,.
 \end{eqnarray}
-and culminates in the last step
+Observe that we have explicitly included the concatenation operator to indicate the presence of $\tau^-_{n}$. 
+Symbolically, we may write $p(\vec{r})=p(\vec{r}_t\circ\rvec{r}_{t+1})=p(\vec{r}_t\circ)p(\rvec{r}_{t+1})=p(\vec{r}_t)p(\circ\rvec{r}_{t+1})$.
+
+Recursively, the last step of the backward pass reaches the first stage, giving
 \begin{eqnarray}
   \beta_{1}(s_{1}) & = &
 p(\tau^-_2\,|\,s_{1})\,\sum_{s_2\in{\cal S}}\delta(s_2\!=\!\underline{s}_2)\,
@@ -685,10 +709,10 @@ p(s_2\,|\,\tau^-_2,s_{1})\,p(\underline{x}_{2}\,|\,s_2)
 \nonumber\\&=&
 p(\tau^-_2\,|\,s_{1})\,
 p(\underline{s}_2,\underline{x}_2,\tau^-_3,\ldots,\underline{s}_n,\underline{x}_n,\underline{\tau}\,|\,\tau^-_2,s_{1})
-\nonumber\\&=&
-p([\underline{\rvec{s}}_2,\underline{\rvec{x}}_2,\underline{\tau}\,|\,s_{1})\,.
+\nonumber\\&\equiv&
+p(\circ\underline{\rvec{s}}_2,\underline{\rvec{x}}_2,\underline{\tau}\,|\,s_{1})\,.
 \end{eqnarray}
-The remaining terms give
+The remaining terms then give the observed likelihood
 \begin{eqnarray}
    p(\underline{\iota},\underline{\vec{s}},\underline{\vec{x}},\underline{\tau}) 
 & = & 
@@ -704,11 +728,11 @@ In general, we obtain
 \nonumber\\&=&
    \sum_{s_t\in{\cal S}}\delta(s_t\!=\!\underline{s}_t)\,
 p(\underline{\iota},\underline{\vec{s}}_{t-1}\circ s_t,\underline{\vec{x}}_t)
-\,p([\underline{\rvec{s}}_{t+1},\underline{\rvec{x}}_{t+1},\underline{\tau}\,|\,s_{t})
+\,p(\circ\underline{\rvec{s}}_{t+1},\underline{\rvec{x}}_{t+1},\underline{\tau}\,|\,s_{t})
 \nonumber\\&=&
    \sum_{s_t\in{\cal S}}\delta(s_t\!=\!\underline{s}_t)\,\alpha_t(s_t)\,\beta_t(s_t)\,,
 \end{eqnarray}
-for all $t=1,2,\ldots,n$.
+for all $t=1,2,\ldots,n$. The case for $t=n$ comes from equations~\eqref{eq:alpha_n_beta_n} and \eqref{eq:_beta_n}; alternatively, recall that $\rvec{r}_{n+1}$ is an empty sequence.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discrete-state Sequence Models}\label{sec:discrete-state}
