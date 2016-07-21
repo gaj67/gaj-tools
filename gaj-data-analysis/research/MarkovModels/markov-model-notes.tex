@@ -234,7 +234,7 @@ The precise details of these calculations depend upon the chosen factorisation o
 the explicit dependencies between various stages in the sequence. Such dependency modelling is dealt with further in Section~\ref{sec:markov-processes}.
 
 Despite not knowing these dependencies in advance, however, the basic form of the forward--backward algorithm can still be formulated.
-The only requirement is to assume that the sequence process is also {\em causal}, meaning that each stage of a sequence
+The only requirement is to that the sequence process be {\em causal}, meaning that each stage of a sequence
 (including the termination stage but excluding the initiation stage) depends only on the preceding stages, and never on future stages.
 This causality allows us to split a generated sequence into two parts at some arbitrary {\em pivot} stage $t$, as shown in Figure~\ref{fig:forwar-backard}.
 \begin{figure}[hbt]
@@ -274,11 +274,13 @@ the predicted likelihood of the observed left-hand side of the sequence for each
 Thus, the forward pass is defined as
 \begin{eqnarray}
 \alpha_t(r_t') & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,r_t')\,.
+\label{eq:fwd-pass}
 \end{eqnarray}
 On the other side of the pivot stage, the right-hand side of the sequence is conditionally dependent upon the left-hand side.
 Hence, the backward pass is defined as
 \begin{eqnarray}
 \beta_t(r_t') & = & p(\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_N,\ur_N,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,r_t')\,.
+\label{eq:bwd-pass}
 \end{eqnarray}
 Consequently, the joint likelihood of the entire, observed sequence is given by
 \begin{eqnarray}
@@ -287,6 +289,23 @@ p(\ui,\underline{\vec{r}},\ut) & = & \sum_{r_t'\in{\cal R}}\delta(\ur_t\!=\!r_t'
 & = & \sum_{r_t'\in{\cal R}}\delta(\ur_t\!=\!r_t')\,p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,r_t',\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_N,\ur_N,\ut)
 \nonumber\\
 & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,\ur_t,\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_N,\ur_N,\ut)\,.
+\end{eqnarray}
+Recursive formulae can now be developed by moving the pivot stage either to the right or to the left.
+Upon moving right to stage $t+1$, the forward pass~\eqref{eq:fwd-pass} now gives
+\begin{eqnarray}
+\alpha_{t+1}(r_{t+1}') & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},\ur_{t},\tau^-_{t+1},r_{t+1}')
+\nonumber\\
+& = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},\ur_{t})\,p(\tau^-_{t+1},r_{t+1}'\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},\ur_{t})
+\nonumber\\
+& = & \sum_{r_t'\in{\cal R}}\delta(\ur_t\!=\!r_t')\,p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},r_{t}')\,p(\tau^-_{t+1},r_{t+1}'\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},r_{t}')
+\nonumber\\
+& = & \sum_{r_t'\in{\cal R}}\delta(\ur_t\!=\!r_t')\,\alpha_t(r_{t}')\,p(\tau^-_{t+1},r_{t+1}'\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},r_{t}')\,.
+\label{eq:fwd-recursive}
+\end{eqnarray}
+Alternatively, upon moving left to stage $t-1$, the backward pass~\eqref{eq:bwd-pass} leads to
+\begin{eqnarray}
+\beta_{t-1}(r_{t-1}') & = & p(\tau^-_{t},\ur_{t},\tau^-_{t+1},\ur_{t1},\ldots,\tau^-_N,\ur_N,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-2},\ur_{t-2},\tau^-_{t-1},r_{t-1}')\,.
+\label{eq:bwd-recursive}
 \end{eqnarray}
 
 *************************
