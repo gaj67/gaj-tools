@@ -228,7 +228,7 @@ or semi-continuous domain, we may, without loss of generality, henceforth simply
 \subsection{Forward--Backward Algorithm}
 
 The likelihood~\eqref{eq:pr:discrete} of an observed sequence $\underline{\vec{r}}$ has been written in a computationally inefficient form,
-but can in practice be efficiently evaluated by rearranging the order of evaluation, using a modification of the {\em forward--backward algorithm} to include knowledge of
+but can in practice be efficiently evaluated by nesting the summations, using a modification of the {\em forward--backward algorithm} to include knowledge of
 sequence initiation and termination.
 The precise details of these calculations depend upon the chosen factorisation of the probability model, which is itself a function of
 the explicit dependencies between various stages in the sequence. Such dependency modelling is dealt with further in Section~\ref{sec:markov-processes}.
@@ -236,31 +236,58 @@ the explicit dependencies between various stages in the sequence. Such dependenc
 Despite not knowing these dependencies in advance, however, the basic form of the forward--backward algorithm can still be formulated.
 The only requirement is to assume that the sequence process is also {\em causal}, meaning that each stage of a sequence
 (including the termination stage but excluding the initiation stage) depends only on the preceding stages, and never on future stages.
-
+This causality allows us to split a generated sequence into two parts at some arbitrary {\em pivot} stage $t$, as shown in Figure~\ref{fig:forwar-backard}.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (0ia) at (-0.7, 0.1) [above] {};
-    \node (0i) at (-0.7, 0) [right] {$\stackrel{\iota_0^+}{}$};
+    \node (iota) at (-0.7, 0) [right] {$\stackrel{\iota_0^+}{}$};
+    \node (0up) at (0, 0.9) {};
     \node[onode] (0) at (0, 0) {};
     \node[cnode] (1) at (2, 0) {$R_1$};
-    \node[cnode] (2) at (4, 0)  {$R_2$};
-    \node (ldots) at (6, 0) {$\cdots$};
-    \node[cnode] (t) at (8, 0)  {$R_t$};
-    \node[cnode] (tp1) at (10, 0)  {$R_{t+1}$};
-    \node (rdots) at (12, 0) {$\cdots$};
-    \node[cnode] (3) at (14, 0)  {$R_N$};
-    \node[onode] (tt) at (16, 0) {};
+    \node (ldots) at (4, 0) {$\cdots$};
+    \node (tup) at (6.55, 0.9) {};
+    \node (tup2) at (6.55, 1.3) {};
+    \node (tdown) at (6.55, -0.7) {};
+    \node[cnode] (t) at (6, 0)  {$R_t$};
+    \node (rdots) at (8, 0) {$\cdots$};
+    \node[cnode] (N) at (10, 0)  {$R_N$};
+    \node (Np1up) at (12, 0.9) {};
+    \node[onode] (Np1) at (12, 0) {};
 
     \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (ldots) ;
-    \draw[->] (ldots) edge node [pos=0.5, above] {$\stackrel{\tau^-_N}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^+_{N+1}}{}$} (tt) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (ldots) ;
+    \draw[->] (ldots) edge node [pos=0.5, above] {$\stackrel{\tau^-_t}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tau^-_{t+1}}{}$}  (rdots) ;
+    \draw[->] (rdots) edge node [pos=0.5, above] {$\stackrel{\tau^-_{N}}{}$} (N) ;
+    \draw[->] (N) edge node [pos=0.5, above] {$\stackrel{\tau^+_{N+1}}{}$} (Np1) ;
+
+    \draw[->] (0up) edge node [pos=0.5, above] {forward, $\alpha_t$} (tup) ;
+    \draw[->] (Np1up) edge node [pos=0.5, above] {backward, $\beta_t$} (tup) ;
+    \draw[-] (tup2) edge node {} (tdown) ;
+
 \end{tikzpicture}
 \caption{\em Causal forward--backward}
-\label{fig:causal-random-process}
+\label{fig:forwar-backard}
 \end{figure}
+It is assumed for the purposes of the forward--backward calculations that the value of the pivot stage is initially unknown, and hence we compute 
+the predicted likelihood of the observed left-hand side of the sequence for each arbitrary value $R_t=r_t'\in{\cal R}$.
+Thus, the forward pass is defined as
+\begin{eqnarray}
+\alpha_t(r_t') & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,r_t')\,.
+\end{eqnarray}
+On the other side of the pivot stage, the right-hand side of the sequence is conditionally dependent upon the left-hand side.
+Hence, the backward pass is defined as
+\begin{eqnarray}
+\beta_t(r_t') & = & p(\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_N,\ur_N,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,r_t')\,.
+\end{eqnarray}
+Consequently, the joint likelihood of the entire, observed sequence is given by
+\begin{eqnarray}
+p(\ui,\underline{\vec{r}},\ut) & = & \sum_{r_t'\in{\cal R}}\delta(\ur_t\!=\!r_t')\,\alpha_t(r_t')\beta_t(r_t')
+\nonumber\\
+& = & \sum_{r_t'\in{\cal R}}\delta(\ur_t\!=\!r_t')\,p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,r_t',\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_N,\ur_N,\ut)
+\nonumber\\
+& = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,\ur_t,\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_N,\ur_N,\ut)\,.
+\end{eqnarray}
 
 *************************
 
