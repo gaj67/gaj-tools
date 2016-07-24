@@ -19,6 +19,8 @@
 \newcommand{\ui}{\underline{\iota}}
 \newcommand{\ut}{\underline{\tau}}
 \newcommand{\ur}{\underline{r}}
+\newcommand{\vr}{\vec{r}}
+\newcommand{\uvr}{\underline{\vr}}
 
 \begin{document}
 \maketitle
@@ -49,13 +51,13 @@ of the sequence. This sequence process is graphically depicted in Figure~\ref{fi
 
 We assume that each $R_t$ randomly takes some discrete or continuous value $r_t\in{\cal R}$,
 and hence the probability (or probability density) of observing a particular
-sequence $\vec{r}$ of length $n=|\vec{r}|$ is given by
+sequence $\vr$ of length $n=|\vr|$ is given by
 \begin{eqnarray}
-   p(\vec{R}_N\!=\!\vec{r}) & = & p(N=n)\,p(R_1\!=\!r_1,\ldots,R_n\!=\!r_n\,|\,N=n)\,.
+   p(\vec{R}_N\!=\!\vr) & = & p(N=n)\,p(R_1\!=\!r_1,\ldots,R_n\!=\!r_n\,|\,N=n)\,.
 \end{eqnarray}
 In practice, this definition presupposes that we know we have observed a {\em complete} sequence that started
 at stage 1 and ended at stage $n$.
-Suppose instead that the sequence $\vec{r}$ was observed one stage at a time. How do we know if the
+Suppose instead that the sequence $\vr$ was observed one stage at a time. How do we know if the
 underlying process has actually terminated, or will instead
 continue to generate another observed value $r_{n+1}$? 
 Similarly, how do we know that the first observed value $r_1$ was not in fact
@@ -65,15 +67,15 @@ independently of the observation process, which might provide partial or complet
 Furthermore, if the random process does not signal the start and end of generated sequences,
 then an observed sequence might actually comprise multiple, contiguously generated subsequences.
 
-In order to handle such difficulties, we consider any arbitrary sequence $\vec{r}$ by default to be {\em incomplete},
-and explicitly denote the corresponding, complete sequence by $\langle\vec{r}\,\rangle$.
+In order to handle such difficulties, we consider any arbitrary sequence $\vr$ by default to be {\em incomplete},
+and explicitly denote the corresponding, complete sequence by $\langle\vr\,\rangle$.
 We can now introduce the notion of {\em partially complete} sequences. Thus, a {\em start sequence} is a generated sequence with an observed (or definite) start (at stage 1) 
-but an unobserved (or indefinite) end, i.e.\ it might or might not terminate at stage $n$. This is denoted by $\langle\vec{r}$ if we are truly uncertain as to the termination,
-or by  $\langle\vec{r}\,]$ if we actually know that the generated sequence does not terminate at stage $n$.
+but an unobserved (or indefinite) end, i.e.\ it might or might not terminate at stage $n$. This is denoted by $\langle\vr$ if we are truly uncertain as to the termination,
+or by  $\langle\vr\,]$ if we actually know that the generated sequence does not terminate at stage $n$.
 Similarly, an {\em end sequence} is a generated sequence with an observed end (at stage $n$) but an unobserved start, i.e.\ it might or might not have initiated at 
-the observed stage 1. This is denoted by $\vec{r}\,\rangle$ if we are truly uncertain as to sequence initiation,
-or by  $[\vec{r}\,\rangle$ if we actually know that the generated sequence was not initiated at stage $1$.
-Clearly, we may also specify the remaining incomplete sequences, namely $[\vec{r}\,]$, $\vec{r}\,]$ and $[\vec{r}$.
+the observed stage 1. This is denoted by $\vr\,\rangle$ if we are truly uncertain as to sequence initiation,
+or by  $[\vr\,\rangle$ if we actually know that the generated sequence was not initiated at stage $1$.
+Clearly, we may also specify the remaining incomplete sequences, namely $[\vr\,]$, $\vr\,]$ and $[\vr$.
 
 Under this augmented notation, knowledge about the start of a sequence can be encapsulated in 
 a random indicator variable $\iota_{t-1}$, which takes on the value 1 if some observed $r_{t}$ is definitely the first stage in the
@@ -113,9 +115,9 @@ different possible (mutually exclusive) stage transition pathways.}
 \label{fig:random-process}
 \end{figure}
 
-The probability of a given complete sequence $\langle\vec{r}\,\rangle$ is now defined as
+The probability of a given complete sequence $\langle\vr\,\rangle$ is now defined as
 \begin{eqnarray}
-   p(\langle\vec{r}\,\rangle)
+   p(\langle\vr\,\rangle)
 & = & p(\iota_0\!=\!1,\tau_1\!=\!0,R_1=r_1,\tau_2\!=\!0,\ldots,\tau_n\!=\!0,R_n=r_n,\tau_{n+1}\!=\!1)
 \label{eq:p_r_complete}
 \,,
@@ -131,7 +133,7 @@ Similarly, we may denote $\iota_t=1$ by $\iota^+_t$, on the understanding that $
 Likewise, we may denote $\tau_t=1$ by $\tau^+_t$ and $\tau_t=0$ by $\tau^-_t$.
 Hence, it is plausible to simplify equation~\eqref{eq:p_r_complete} as
 \begin{eqnarray}
-p(\langle\vec{r}\,\rangle) 
+p(\langle\vr\,\rangle) 
 & = & p(\iota_0^+,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\tau^+_{n+1})\,.
 \end{eqnarray}
 Consequently, we may simplify the explicitly terminated process of Figure~\ref{fig:random-process} 
@@ -161,7 +163,7 @@ with explicit stages for sequence initiation and termination, and explicit label
 In general, we may handle both complete and partial sequences by letting $\ui$ denote the observed start-of-sequence symbol, and
 letting $\ut$ denote the observed end-of-sequence symbol; hence
 \begin{eqnarray}
-p(\ui,\vec{r},\ut)
+p(\ui,\vr,\ut)
 & = & p(\iota_0\!=\!\ui,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!\ut)
 \nonumber\\
 & = & p(\ui,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\ut)\,.
@@ -170,8 +172,8 @@ p(\ui,\vec{r},\ut)
 
 \subsection{Missing Values}
 
-The main difference between a complete, generated sequence $\vec{r}=(r_1,\ldots,r_n)$
-and the observed sequence of values, say $\underline{\vec{r}}=(\ur_1,\ldots,\ur_n)$, 
+The main difference between a complete, generated sequence $\vr=(r_1,\ldots,r_n)$
+and the observed sequence of values, say $\uvr=(\ur_1,\ldots,\ur_n)$, 
 is the possibility that some values were unobserved\footnote{We are ignoring the very real problem
 of aligning the observed values with the generated stages. This difficulty can be partially alleviated under the assumption of stationary distributions, such that each stage behaves
 like the previous one.}, i.e.\ {\em missing} or systematically {\em hidden}.
@@ -181,14 +183,14 @@ and let $\ut=*$ if we do not kow whether or not we observed the end of the gener
 The `*' symbol is just a representational device -- its presence has no effect on the computed probabilities, other than to indicate that the true values
 of the variables $\iota_0$ and/or $\tau_{n+1}$ should be marginalised out. Thus, for example:
 \begin{eqnarray}
-p(\vec{r}) 
+p(\vr) 
 & = & p(*,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,*)~=~p(\tau^-_1,r_1,\ldots,\tau^-_n,r_n)\,.
 \end{eqnarray}
 In practice, we allow for both observed values and missing values by introducing an indicator function $\delta(\cdot)$,
 where $\delta(x\!=\!y)=1$ if $x=y$ and $\delta(x\!=\!y)=0$ if $x\ne y$;  by definition, we take $\delta(x\!=\!*)=1$.
 Hence, we obtain
 \begin{eqnarray}
-p(\ui,\vec{r},\ut) 
+p(\ui,\vr,\ut) 
 & = & 
 \sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)
 \,\sum_{\tau_{n+1}=0}^{1}\delta(\tau_{n+1}\!=\!\ut)\;
@@ -196,7 +198,7 @@ p(\iota_0,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\tau_{n+1})\,.
 \end{eqnarray}
 In general, if the domain ${\cal R}$  is discrete, then the likelihood of an observed sequence is given by
 \begin{eqnarray}
-p(\ui,\underline{\vec{r}},\ut) 
+p(\ui,\uvr,\ut) 
 & = & 
 \sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)
 \,\sum_{\tau_{n+1}=0}^{1}\delta(\tau_{n+1}\!=\!\ut)
@@ -209,7 +211,7 @@ p(\iota_0,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\tau_{n+1})\,.
 \end{eqnarray}
 Alternatively, if ${\cal R}$ is continuous, then the likelihood becomes
 \begin{eqnarray}
-p(\ui,\underline{\vec{r}},\ut) 
+p(\ui,\uvr,\ut) 
 & = & 
 \sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)
 \,\sum_{\tau_{n+1}=0}^{1}\delta(\tau_{n+1}\!=\!\ut)
@@ -221,108 +223,107 @@ p(\iota_0,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\tau_{n+1})
 \;dr_1\,dr_2\cdots dr_n
 \,,
 \end{eqnarray}
-where $\delta(\cdot)$ is now the Dirac function, and where, by extension, we define $\delta(x\!-\!*)=1$.
+where $\delta(\cdot)$ is now the Dirac delta function, and where, by extension, we define $\delta(x-*)=1$.
 On the understanding that $\sum$ and $\delta(x\!=\!y)$ must be swapped respectively for $\int$ and $\delta(x\!-\!y)$ as needed for a continuous 
 or semi-continuous domain, we may, without loss of generality, henceforth simply utilise the discrete form~\eqref{eq:pr:discrete}.
 
 \subsection{Forward--Backward Algorithm}
 
-The likelihood~\eqref{eq:pr:discrete} of an observed sequence $\underline{\vec{r}}$ has been written in a computationally inefficient form,
+The likelihood~\eqref{eq:pr:discrete} of an observed sequence $\uvr$ has been written in a computationally inefficient form,
 but can in practice be efficiently evaluated by nesting the summations, using a modification of the {\em forward--backward algorithm} to include knowledge of
 sequence initiation and termination.
 The precise details of these calculations depend upon the chosen factorisation of the probability model, which is itself a function of
 the explicit dependencies between various stages in the sequence. Such dependency modelling is dealt with further in Section~\ref{sec:markov-processes}.
 
 Despite not knowing these dependencies in advance, however, the basic form of the forward--backward algorithm can still be formulated.
-The only requirement is to that the sequence process be {\em causal}, meaning that each stage of a sequence
+The first requirement is that the sequence process be {\em causal}, meaning that each stage of a sequence
 (including the termination stage but excluding the initiation stage) depends only on the preceding stages, and never on future stages.
-This causality allows us to split a generated sequence into two parts at some arbitrary {\em pivot} stage $t$, as shown in Figure~\ref{fig:forwar-backard}.
+This causality allows us to split a generated sequence into two parts at some arbitrary {\em pivot} stage $t$, as shown in Figure~\ref{fig:forwar-backard}. The second requirement is that the dependence on past stages can be limited
+in scope to some arbitray {\em historical} stage $s$, as also shown.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (iota) at (-0.7, 0) [right] {$\stackrel{\iota_0^+}{}$};
-    \node (0up) at (0, 0.9) {};
-    \node[onode] (0) at (0, 0) {};
-    \node[cnode] (1) at (2, 0) {$R_1$};
-    \node (ldots) at (4, 0) {$\cdots$};
-    \node (tup) at (6.55, 0.9) {};
-    \node (tup2) at (6.55, 1.3) {};
-    \node (tdown) at (6.55, -0.7) {};
-    \node[cnode] (t) at (6, 0)  {$R_t$};
-    \node (rdots) at (8, 0) {$\cdots$};
-    \node[cnode] (N) at (10, 0)  {$R_N$};
-    \node (Np1up) at (12, 0.9) {};
-    \node[onode] (Np1) at (12, 0) {};
+    \node (iota) at (-0.3, 0) [right] {$\stackrel{\iota_0^+}{}$};
+    \node (0up) at (0.4, 0.9) {};
+    \node[onode] (0) at (0.4, 0) {};
+    \node (dots1) at (2, 0) {$\cdots$};
+    \node (sup2) at (2.3, 1.3) {};
+    \node (sdown) at (2.3, -0.7) {};
+    \node[cnode] (s) at (4, 0) {$R_s$};
+    \node (dots2) at (6, 0) {$\cdots$};
+    \node (tup) at (8.55, 0.9) {};
+    \node (tup2) at (8.55, 1.3) {};
+    \node (tdown) at (8.55, -0.7) {};
+    \node[cnode] (t) at (8, 0)  {$R_t$};
+    \node (dots3) at (10, 0) {$\cdots$};
+    \node[cnode] (N) at (12, 0)  {$R_N$};
+    \node (Np1up) at (14, 0.9) {};
+    \node[onode] (Np1) at (14, 0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (ldots) ;
-    \draw[->] (ldots) edge node [pos=0.5, above] {$\stackrel{\tau^-_t}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tau^-_{t+1}}{}$}  (rdots) ;
-    \draw[->] (rdots) edge node [pos=0.5, above] {$\stackrel{\tau^-_{N}}{}$} (N) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau^-_1}{}$}  (dots1) ;
+    \draw[->] (dots1) edge node [pos=0.5, above] {$\stackrel{\tau^-_s}{}$}  (s) ;
+    \draw[->] (s) edge node [pos=0.5, above] {$\stackrel{\tau^-_{s+1}}{}$}  (dots2) ;
+    \draw[->] (dots2) edge node [pos=0.5, above] {$\stackrel{\tau^-_t}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tau^-_{t+1}}{}$}  (dots3) ;
+    \draw[->] (dots3) edge node [pos=0.5, above] {$\stackrel{\tau^-_{N}}{}$} (N) ;
     \draw[->] (N) edge node [pos=0.5, above] {$\stackrel{\tau^+_{N+1}}{}$} (Np1) ;
 
+    \draw[dashed] (sup2) edge node {} (sdown) ;
     \draw[->] (0up) edge node [pos=0.5, above] {forward, $\alpha_t$} (tup) ;
     \draw[->] (Np1up) edge node [pos=0.5, above] {backward, $\beta_t$} (tup) ;
     \draw[-] (tup2) edge node {} (tdown) ;
 
 \end{tikzpicture}
-\caption{\em Causal forward--backward}
+\caption{\em Causality allows the sequence to be partitioned at some pivot stage $t$. Further
+limitation of past dependencies to some historical stage $s$ defines the active region for
+one step of the forward--backward algorithm.}
 \label{fig:forwar-backard}
 \end{figure}
-It is assumed for the purposes of the forward--backward calculations that the value of the pivot stage is initially unknown, and hence we compute 
-the predicted likelihood of the observed left-hand side of the sequence for each arbitrary value $R_t=r_t'\in{\cal R}$.
-Thus, the forward pass is defined as
+
+Let us now define the sub-sequence $\vr_{s,t}=(r_s,r_{s+1},\ldots,r_t)$; by definition,
+$\vr_{s,t}=(\,)$ if $s>t$.
+Then observe that
 \begin{eqnarray}
-\alpha_t(r_t') & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,r_t')\,.
+p(\ui,\uvr,\ut) 
+& = &
+p(\ui,\uvr_{1,s-1},\uvr_{s,t},\uvr_{t+1,n},\ut)
+\nonumber\\
+& = &
+\sum_{r_s\in{\cal R}} \delta(r_s\!=\!\ur_s)
+\cdots\sum_{r_t\in{\cal R}} \delta(r_t\!=\!\ur_t)
+\,p(\ui,\uvr_{1,s-1},\vr_{s,t},\uvr_{t+1,n},\ut)
+\nonumber\\
+& = &
+\sum_{r_s\in{\cal R}} \delta(r_s\!=\!\ur_s)
+\cdots\sum_{r_t\in{\cal R}} \delta(r_t\!=\!\ur_t)
+\,p(\ui,\uvr_{1,s-1},\vr_{s,t})
+\,p(\uvr_{t+1,n},\ut\,|\,\ui,\uvr_{1,s-1},\vr_{s,t})
+\nonumber\\
+& = &
+\sum_{r_s\in{\cal R}} \delta(r_s\!=\!\ur_s)
+\cdots\sum_{r_t\in{\cal R}} \delta(r_t\!=\!\ur_t)
+\,\alpha_t(\vr_{s,t})\,\beta_t(\vr_{s,t})\,,
+\end{eqnarray}
+where
+\begin{eqnarray}
+\alpha_t(\vr_{s,t}) & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{s-1},\ur_{s-1},
+\tau^-_s,r_s,\ldots,\tau^-_t,r_t)
 \label{eq:fwd-pass}
 \end{eqnarray}
-On the other side of the pivot stage, the right-hand side of the sequence is conditionally dependent upon the left-hand side.
-Hence, the backward pass is defined as
+is the foward factor
+and
 \begin{eqnarray}
-\beta_t(r_t') & = & p(\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_N,\ur_N,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,r_t')\,.
+\beta_t(\vr_{s,t}) & = & 
+p(\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_n,\ur_n,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{s-1},\ur_{s-1},
+\tau^-_s,r_s,\ldots,\tau^-_t,r_t)\
 \label{eq:bwd-pass}
 \end{eqnarray}
-Consequently, the joint likelihood of the entire, observed sequence is given by
-\begin{eqnarray}
-p(\ui,\underline{\vec{r}},\ut) & = & \sum_{r_t'\in{\cal R}}\delta(\ur_t\!=\!r_t')\,\alpha_t(r_t')\beta_t(r_t')
-\nonumber\\
-& = & \sum_{r_t'\in{\cal R}}\delta(\ur_t\!=\!r_t')\,p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,r_t',\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_N,\ur_N,\ut)
-\nonumber\\
-& = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-1},\ur_{t-1},\tau^-_t,\ur_t,\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_N,\ur_N,\ut)\,.
-\end{eqnarray}
-Recursive formulae can now be developed by moving the pivot stage either to the right or to the left.
-Upon moving right to stage $t+1$, the forward pass~\eqref{eq:fwd-pass} now gives
-\begin{eqnarray}
-\alpha_{t+1}(r_{t+1}') & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},\ur_{t},\tau^-_{t+1},r_{t+1}')
-\nonumber\\
-& = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},\ur_{t})\,p(\tau^-_{t+1},r_{t+1}'\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},\ur_{t})
-\nonumber\\
-& = & \sum_{r_t'\in{\cal R}}\delta(\ur_t\!=\!r_t')\,p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},r_{t}')\,p(\tau^-_{t+1},r_{t+1}'\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},r_{t}')
-\nonumber\\
-& = & \sum_{r_t'\in{\cal R}}\delta(\ur_t\!=\!r_t')\,\alpha_t(r_{t}')\,p(\tau^-_{t+1},r_{t+1}'\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t},r_{t}')\,.
-\label{eq:fwd-recursive}
-\end{eqnarray}
-Alternatively, upon moving left to stage $t-1$, the backward pass~\eqref{eq:bwd-pass} leads to
-\begin{eqnarray}
-\beta_{t-1}(r_{t-1}') & = & p(\tau^-_{t},\ur_{t},\tau^-_{t+1},\ur_{t1},\ldots,\tau^-_N,\ur_N,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{t-2},\ur_{t-2},\tau^-_{t-1},r_{t-1}')\,.
-\label{eq:bwd-recursive}
-\end{eqnarray}
-
-*************************
-
-;
-We shall deal with the problem of marginalisation again in Section~\ref{sec:hidden-state}; for now, we simply assume that both $\ui$ and
-$\ut$ are known but unspecified.
-
-Finally, since we are now assuming the observation of a single, contiguous sequence, note that we may consider any vector $\vec{r}$ 
-to be comprised of the concatenation of its elements, namely $\vec{r}=r_1\circ r_2\circ\cdots\circ r_n$. Here the concatenation operator `$\circ$' also serves to
-denote a non-terminating transition from one stage to the next, so that equation~\eqref{eq:pr:gen} may alternatively be written as
-\begin{eqnarray}
-p(\ui,\vec{r},\ut)
-& = & p(\ui\circ r_1\circ r_2\circ\cdots\circ r_n,\ut)\,,
-\end{eqnarray}
-where the empty sequence just has probaility $p(\ui,\ut)$.
-This notation will become convenient in the next section, when we consider possible factorisations of the joint probability model.
+is the backward factor.
+The entire forward pass of the forward--backward algorithm starts at the initiation `stage' with $\ui$ and
+recursively computes $\alpha_t$ for each $t=1,2,\ldots,n$. Likewise,
+the backward pass starts at termination `stage' with $\ut$, and recursively computes $\beta_t$
+for each $t=n,n-1,\ldots,1$. The precise details of these recursive calculations rely upon
+the nature of the fine-grained dependencies, as disdcussed in the next section.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Markov Sequence Processes}
@@ -377,7 +378,7 @@ Both dashed arrows and solid arrows indicate parent--child dependencies, such th
 Hence, under the Markov assumption of conditional independence,
 the causal sequence process leads to the full-dependency conditional model
 \begin{eqnarray}
-p(\ui,\vec{r},\ut) & = &
+p(\ui,\vr,\ut) & = &
 p(\iota_0\!=\!\ui)
 \,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\ui)
 \,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\ui,\tau_1\!=\!0)
@@ -403,28 +404,28 @@ p(r_n\,|\,\ui,\ldots,\tau^-_{n})
 \,.
 \label{eq:temporal-model-full}
 \end{eqnarray}
-We can generalise this model by first defining a forward observation sub-sequence $\vec{r}_t=(r_1,r_2,\ldots,r_t)$,
-for $t=1,2,\ldots,n$, where $\vec{r}_0$ is taken to be the empty sub-sequence by definition.
+We can generalise this model by first defining a forward observation sub-sequence $\vr_t=(r_1,r_2,\ldots,r_t)$,
+for $t=1,2,\ldots,n$, where $\vr_0$ is taken to be the empty sub-sequence by definition.
  For later convenience, we also define the backward observation sub-sequence $\rvec{r}_t=(r_t,r_{t+1},\ldots,r_n)$,
 for $t=n,n-1,\ldots,1$; likewise, $\rvec{r}_{n+1}$ is an empty sub-sequence.
 Hence, we obtain
 \begin{eqnarray}
-p({\iota},\vec{r},{\tau}) & = &
+p({\iota},\vr,{\tau}) & = &
 p(\iota_0\!=\!{\iota})
 %\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
 \left\{\prod_{t=1}^{n}p(\tau_t\!=\!0\,|\,\iota_0\!=\!{\iota},\vec{\tau}_{t-1}\!=\!\vec{0},
-\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right.
+\vec{R}_{t-1}\!=\!\vr_{t-1})\right.
 \nonumber\\&&
 \hspace*{20mm}{}\times \left.\rule{0pt}{6mm}
-p(R_t\!=\!r_t\,|\,\iota_0\!=\!{\iota},\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vec{r}_{t-1})\right\}
+p(R_t\!=\!r_t\,|\,\iota_0\!=\!{\iota},\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vr_{t-1})\right\}
 \nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!{\tau}\:|\;\iota_0\!=\!{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vec{r}_n)
+{}\times p(\tau_{n+1}\!=\!{\tau}\:|\;\iota_0\!=\!{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vr_n)
 \nonumber\\
 & = &
 p({\iota})
-\left\{\prod_{t=1}^{n}p(\tau^-_t\,|\,{\iota},\vec{\tau^-}_{t-1},\vec{r}_{t-1})
-\,p(r_t\,|\,{\iota},\vec{\tau^-}_t,\vec{r}_{t-1})\right\}
- p({\tau}\:|\;{\iota},\vec{\tau^-}_n,\vec{r}_n)
+\left\{\prod_{t=1}^{n}p(\tau^-_t\,|\,{\iota},\vec{\tau^-}_{t-1},\vr_{t-1})
+\,p(r_t\,|\,{\iota},\vec{\tau^-}_t,\vr_{t-1})\right\}
+ p({\tau}\:|\;{\iota},\vec{\tau^-}_n,\vr_n)
 \,.
 \label{eq:temporal-model}
 \end{eqnarray}
@@ -477,7 +478,7 @@ The second-order Markov sequence process is depicted in Figure~\ref{fig:causal-p
 
 In the special case of $m=1$, the first-order Markov model takes on the restricted conditional form
 \begin{eqnarray}
-p({\iota},\vec{r},{\tau}) & = &
+p({\iota},\vr,{\tau}) & = &
 p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
 \,p(R_1\!=\!r_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
 \nonumber\\&&
@@ -849,7 +850,7 @@ p(\tau^-_n,\underline{s}_n,\underline{x}_n,\ut\,|\,s_{n-1})
 ~\equiv~p(\circ\underline{\rvec{s}}_n,\underline{\rvec{x}}_n,\ut\,|\,s_{n-1})\,.
 \end{eqnarray}
 Observe that we have explicitly included the concatenation operator to indicate the presence of $\tau^-_{n}$. 
-Symbolically, we may write $p(\vec{r})=p(\vec{r}_t\circ\rvec{r}_{t+1})=p(\vec{r}_t\circ)p(\rvec{r}_{t+1})=p(\vec{r}_t)p(\circ\rvec{r}_{t+1})$.
+Symbolically, we may write $p(\vr)=p(\vr_t\circ\rvec{r}_{t+1})=p(\vr_t\circ)p(\rvec{r}_{t+1})=p(\vr_t)p(\circ\rvec{r}_{t+1})$.
 
 Recursively, the last step of the backward pass reaches the first stage, giving
 \begin{eqnarray}
