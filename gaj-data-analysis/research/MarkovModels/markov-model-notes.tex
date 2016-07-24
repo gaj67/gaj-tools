@@ -229,6 +229,7 @@ On the understanding that $\sum$ and $\delta(x\!=\!y)$ must be swapped respectiv
 or semi-continuous domain, we may, without loss of generality, henceforth simply utilise the discrete form~\eqref{eq:pr:discrete}.
 
 \subsection{Forward--Backward Algorithm}
+\label{sec:forward-backward-basic}
 
 The likelihood~\eqref{eq:pr:discrete} of an observed sequence $\uvr$ has been written in a computationally inefficient form,
 but can in practice be efficiently evaluated by nesting the summations, using a modification of the {\em forward--backward algorithm} to include knowledge of
@@ -309,7 +310,7 @@ where
 \begin{eqnarray}
 \alpha_t(\vr_{s,t}) & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tm_{s-1},\ur_{s-1},
 \tm_s,r_s,\ldots,\tm_t,r_t)
-\label{eq:fwd-pass}
+\label{eq:fwd-pass-basic}
 \end{eqnarray}
 is the foward factor
 and
@@ -317,7 +318,7 @@ and
 \beta_t(\vr_{s,t}) & = & 
 p(\tm_{t+1},\ur_{t+1},\ldots,\tm_n,\ur_n,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tm_{s-1},\ur_{s-1},
 \tm_s,r_s,\ldots,\tm_t,r_t)\
-\label{eq:bwd-pass}
+\label{eq:bwd-pass-basic}
 \end{eqnarray}
 is the backward factor.
 The entire forward pass of the forward--backward algorithm starts at the initiation `stage' with $\ui$ and
@@ -477,6 +478,63 @@ The second-order Markov sequence process, for example, is depicted in Figure~\re
 \label{fig:causal-process-2}
 \end{figure}
 
+\subsection{Markov Forward--Backward Algorithm}
+\label{sec:forward-backward-markov}
+
+The basic description of the forward--backward algorithm in Section~\ref{sec:forward-backward-basic}
+can now be refined under the restriction of the general, causal sequence process to an $m$-th order Markov process.
+Specifically, we take the limiting historical stage to be $s=\max(1, t-m+1)$ for $t>0$ (i.e.\ non-empty sequences).
+Then, for the initial stages $t<m$, the forward factor~\eqref{eq:fwd-pass-basic} becomes
+\begin{eqnarray}
+\alpha_t(\vr_{1,t}) & = & p(\iota_0,\tm_1,r_1,\ldots,\tm_t,r_t)
+\nonumber\\& = &
+%\sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)\,
+p(\iota_0)\,\prod_{i=1}^{t}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr_{1,i-1})\,,
+\label{eq:fwd-pass-m-init}
+\end{eqnarray}
+whereas for later stages $t\ge m$, we obtain
+\begin{eqnarray}
+\!\!\!
+\alpha_t(\vr_{t-m+1,t}) & = & p(\ui,\tm_1,\ur_1,\ldots,\tm_{t-m},\ur_{t-m},\tm_{t-m+1},r_{t-m+1},\ldots,\tm_t,r_t)
+\nonumber\\& = &
+\sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)\,
+\sum_{r_1\in{\cal R}} \delta(r_1\!=\!\ur_1)\,
+\cdots
+\sum_{r_{t-m}\in{\cal R}} \delta(r_{t-m}\!=\!\ur_{t-m})
+\nonumber\\&&
+p(\iota_0)\left\{\prod_{i=1}^{m}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr_{1,i-1})\right\}
+\left\{\prod_{i=m+1}^{t}p(\tm_i,r_i\,|\,\vec{\tau}^-_{i-m,i-1},\vr_{i-m,i-1})\right\}
+\label{eq:fwd-pass-m}
+\end{eqnarray}
+from equation~\eqref{eq:m-th-order}. Moving to the next stage $t+1$ then provides the recursive result that
+\begin{eqnarray}
+\!\!\!\!\!
+\alpha_{t+1}(\vr_{t-m+2,t+1}) & = & 
+p(\ui,\tm_1,\ur_1,\ldots,\tm_{t-m+1},\ur_{t-m+1},\tm_{t-m+2},r_{t-m+2},\ldots,\tm_{t+1},r_{t+1})
+\nonumber\\& = &
+\sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)\,
+\sum_{r_1\in{\cal R}} \delta(r_1\!=\!\ur_1)\,
+\cdots
+\sum_{r_{t-m+1}\in{\cal R}} \delta(r_{t-m+1}\!=\!\ur_{t-m+1})
+\nonumber\\&&
+p(\iota_0)\left\{\prod_{i=1}^{m}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr_{1,i-1})\right\}
+\left\{\prod_{i=m+1}^{t+1}p(\tm_i,r_i\,|\,\vec{\tau}^-_{i-m,i-1},\vr_{i-m,i-1})\right\}
+\nonumber\\& = &\!\!\!
+\sum_{r_{t-m+1}\in{\cal R}} \delta(r_{t-m+1}\!=\!\ur_{t-m+1})\,\alpha_t(\vr_{t-m+1,t})
+\,p(\tm_{t+1},r_{t+1}\,|\,\vec{\tau}^-_{t-m+1,t},\vr_{t-m+1,t})\,.
+\label{eq:fwd-pass-m-recursive}
+\end{eqnarray}
+For the special case of $m=1$, the forward pass reduces to
+\begin{eqnarray}
+\alpha_1(r_1)~=~ p(\ui)\,p(\tm_1,r_1\,|\,\ui)\,, &&
+\alpha_{t+1}(r_{t+1})~=~
+\sum_{r_{t}\in{\cal R}} \delta(r_{t}\!=\!\ur_{t})\,\alpha_t(r_{t})
+\,p(\tm_{t+1},r_{t+1}\,|\,\tm_{t},r_{t})\,.
+\end{eqnarray}
+
+**backward pass**
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Stateful Markov Sequence Processes}
 Consider the first-order Markov process $R$ depicted in Figure~\ref{fig:simple-random-process}.
 Suppose now that the random variable $R_t$ at stage $t$ can be decomposed into the tuple
