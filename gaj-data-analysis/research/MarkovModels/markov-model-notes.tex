@@ -21,6 +21,7 @@
 \newcommand{\ur}{\underline{r}}
 \newcommand{\vr}{\vec{r}}
 \newcommand{\uvr}{\underline{\vr}}
+\newcommand{\tm}{\tau^{-}}
 
 \begin{document}
 \maketitle
@@ -130,11 +131,11 @@ This has the form of a generalised Bernoulli sequence.
 
 Note that when the context is clear, we may for convenience drop explicit mention of the random variable $R_t$.
 Similarly, we may denote $\iota_t=1$ by $\iota^+_t$, on the understanding that $\iota^-_t$ denotes the negation $\iota_t=0$.
-Likewise, we may denote $\tau_t=1$ by $\tau^+_t$ and $\tau_t=0$ by $\tau^-_t$.
+Likewise, we may denote $\tau_t=1$ by $\tau^+_t$ and $\tau_t=0$ by $\tm_t$.
 Hence, it is plausible to simplify equation~\eqref{eq:p_r_complete} as
 \begin{eqnarray}
 p(\langle\vr\,\rangle) 
-& = & p(\iota_0^+,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\tau^+_{n+1})\,.
+& = & p(\iota_0^+,\tm_1,r_1,\ldots,\tm_n,r_n,\tau^+_{n+1})\,.
 \end{eqnarray}
 Consequently, we may simplify the explicitly terminated process of Figure~\ref{fig:random-process} 
 to more resemble the implicitly terminatel process of Figure~\ref{fig:R-process}; the result is shown in Figure~\ref{fig:simple-random-process}.
@@ -149,13 +150,13 @@ to more resemble the implicitly terminatel process of Figure~\ref{fig:R-process}
     \node[cnode] (3) at (8, 0)  {$R_N$};
     \node[onode] (tt) at (10, 0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tau^-_N}{}$}  (3) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tm_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tm_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tm_3}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tm_N}{}$}  (3) ;
     \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^+_{N+1}}{}$} (tt) ;
 \end{tikzpicture}
-\caption{\em A simplified represenation of a random process for generating complete sequences of arbitrary length,
+\caption{\em A simplified represenation of a random process for generating complete sequences of random length $N$,
 with explicit stages for sequence initiation and termination, and explicit labelling of non-terminating transitions.}
 \label{fig:simple-random-process}
 \end{figure}
@@ -166,7 +167,7 @@ letting $\ut$ denote the observed end-of-sequence symbol; hence
 p(\ui,\vr,\ut)
 & = & p(\iota_0\!=\!\ui,\tau_1\!=\!0,R_1\!=\!r_1,\ldots,\tau_n\!=\!0,R_n\!=\!r_n,\tau_{n+1}\!=\!\ut)
 \nonumber\\
-& = & p(\ui,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\ut)\,.
+& = & p(\ui,\tm_1,r_1,\ldots,\tm_n,r_n,\ut)\,.
 \label{eq:pr:gen}
 \end{eqnarray}
 
@@ -184,7 +185,7 @@ The `*' symbol is just a representational device -- its presence has no effect o
 of the variables $\iota_0$ and/or $\tau_{n+1}$ should be marginalised out. Thus, for example:
 \begin{eqnarray}
 p(\vr) 
-& = & p(*,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,*)~=~p(\tau^-_1,r_1,\ldots,\tau^-_n,r_n)\,.
+& = & p(*,\tm_1,r_1,\ldots,\tm_n,r_n,*)~=~p(\tm_1,r_1,\ldots,\tm_n,r_n)\,.
 \end{eqnarray}
 In practice, we allow for both observed values and missing values by introducing an indicator function $\delta(\cdot)$,
 where $\delta(x\!=\!y)=1$ if $x=y$ and $\delta(x\!=\!y)=0$ if $x\ne y$;  by definition, we take $\delta(x\!=\!*)=1$.
@@ -194,7 +195,7 @@ p(\ui,\vr,\ut)
 & = & 
 \sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)
 \,\sum_{\tau_{n+1}=0}^{1}\delta(\tau_{n+1}\!=\!\ut)\;
-p(\iota_0,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\tau_{n+1})\,.
+p(\iota_0,\tm_1,r_1,\ldots,\tm_n,r_n,\tau_{n+1})\,.
 \end{eqnarray}
 In general, if the domain ${\cal R}$  is discrete, then the likelihood of an observed sequence is given by
 \begin{eqnarray}
@@ -206,7 +207,7 @@ p(\ui,\uvr,\ut)
 \cdots\sum_{r_n\in{\cal R}} \delta(r_n\!=\!\ur_n)
 \nonumber\\
 && \hspace*{5mm}
-p(\iota_0,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\tau_{n+1})\,.
+p(\iota_0,\tm_1,r_1,\ldots,\tm_n,r_n,\tau_{n+1})\,.
 \label{eq:pr:discrete}
 \end{eqnarray}
 Alternatively, if ${\cal R}$ is continuous, then the likelihood becomes
@@ -219,7 +220,7 @@ p(\ui,\uvr,\ut)
 \cdots\int_{{\cal R}} \delta(r_n\!-\!\ur_n)
 \nonumber\\
 && \hspace*{5mm}
-p(\iota_0,\tau^-_1,r_1,\ldots,\tau^-_n,r_n,\tau_{n+1})
+p(\iota_0,\tm_1,r_1,\ldots,\tm_n,r_n,\tau_{n+1})
 \;dr_1\,dr_2\cdots dr_n
 \,,
 \end{eqnarray}
@@ -260,12 +261,12 @@ in scope to some arbitray {\em historical} stage $s$, as also shown.
     \node (Np1up) at (14, 0.9) {};
     \node[onode] (Np1) at (14, 0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau^-_1}{}$}  (dots1) ;
-    \draw[->] (dots1) edge node [pos=0.5, above] {$\stackrel{\tau^-_s}{}$}  (s) ;
-    \draw[->] (s) edge node [pos=0.5, above] {$\stackrel{\tau^-_{s+1}}{}$}  (dots2) ;
-    \draw[->] (dots2) edge node [pos=0.5, above] {$\stackrel{\tau^-_t}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tau^-_{t+1}}{}$}  (dots3) ;
-    \draw[->] (dots3) edge node [pos=0.5, above] {$\stackrel{\tau^-_{N}}{}$} (N) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tm_1}{}$}  (dots1) ;
+    \draw[->] (dots1) edge node [pos=0.5, above] {$\stackrel{\tm_s}{}$}  (s) ;
+    \draw[->] (s) edge node [pos=0.5, above] {$\stackrel{\tm_{s+1}}{}$}  (dots2) ;
+    \draw[->] (dots2) edge node [pos=0.5, above] {$\stackrel{\tm_t}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tm_{t+1}}{}$}  (dots3) ;
+    \draw[->] (dots3) edge node [pos=0.5, above] {$\stackrel{\tm_{N}}{}$} (N) ;
     \draw[->] (N) edge node [pos=0.5, above] {$\stackrel{\tau^+_{N+1}}{}$} (Np1) ;
 
     \draw[dashed] (sup2) edge node {} (sdown) ;
@@ -306,16 +307,16 @@ p(\ui,\uvr_{1,s-1},\uvr_{s,t},\uvr_{t+1,n},\ut)
 \end{eqnarray}
 where
 \begin{eqnarray}
-\alpha_t(\vr_{s,t}) & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{s-1},\ur_{s-1},
-\tau^-_s,r_s,\ldots,\tau^-_t,r_t)
+\alpha_t(\vr_{s,t}) & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tm_{s-1},\ur_{s-1},
+\tm_s,r_s,\ldots,\tm_t,r_t)
 \label{eq:fwd-pass}
 \end{eqnarray}
 is the foward factor
 and
 \begin{eqnarray}
 \beta_t(\vr_{s,t}) & = & 
-p(\tau^-_{t+1},\ur_{t+1},\ldots,\tau^-_n,\ur_n,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tau^-_{s-1},\ur_{s-1},
-\tau^-_s,r_s,\ldots,\tau^-_t,r_t)\
+p(\tm_{t+1},\ur_{t+1},\ldots,\tm_n,\ur_n,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tm_{s-1},\ur_{s-1},
+\tm_s,r_s,\ldots,\tm_t,r_t)\
 \label{eq:bwd-pass}
 \end{eqnarray}
 is the backward factor.
@@ -328,15 +329,14 @@ the nature of the fine-grained dependencies, as disdcussed in the next section.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Markov Sequence Processes}
 \label{sec:markov-processes}
-In Section~\ref{sec:random-processes} we defined a random process $R$ and the sequences it generates.
-We now assume that the process is also {\em causal}, meaning that each stage of a sequence,
+In Section~\ref{sec:random-processes}, we defined a causal random sequence process $R$, such that each stage of a sequence,
 including the termination stage, depends only on the preceding stages.
 This causal process, depicted in Figure~\ref{fig:causal-process}, is simply the random process from
 Figure~\ref{fig:simple-random-process} with additional, explicit dependencies (in the form of dashed arrows).
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0}{}$};
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0^+}{}$};
     \node[onode] (0) at (0,0) {};
     \node[cnode] (1) at (2,0) {$R_1$};
     \node[cnode] (2) at (4, 0)  {$R_2$};
@@ -345,11 +345,11 @@ Figure~\ref{fig:simple-random-process} with additional, explicit dependencies (i
     \node[cnode] (N) at (10, 0)  {$R_N$};
     \node[onode] (tt) at (12, 0) {};
 
-    \draw[->] (0) edge node [pos=0.55, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^-_4}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tau^-_N}{}$}  (N) ;
+    \draw[->] (0) edge node [pos=0.55, above] {$\stackrel{\tm_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tm_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tm_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tm_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tm_N}{}$}  (N) ;
     \draw[->] (N) edge node [pos=0.45, above] {$\stackrel{\tau^+_{N+1}}{}$} (tt) ;
 
    \begin{scope}[dashed]
@@ -369,76 +369,77 @@ Figure~\ref{fig:simple-random-process} with additional, explicit dependencies (i
     \draw[->] (3) to[out=45,in=135] (tt) ;
    \end{scope}
 \end{tikzpicture}
-\caption{\em A fully-dependent, causal process for generating complete sequences of arbitrary length.
+\caption{\em A fully-dependent, causal process for generating complete, random sequences of random length $N$.
 Solid arrows indicate stage transitions. 
-Both dashed arrows and solid arrows indicate parent--child dependencies, such that the child node is conditionally dependent on the parent and all other ancestral nodes.}
+Both dashed arrows and solid arrows indicate parent--child dependencies, such that each stage is conditionally dependent on the preceding stages.}
 \label{fig:causal-process}
 \end{figure}
-
 Hence, under the Markov assumption of conditional independence,
-the causal sequence process leads to the full-dependency conditional model
+the causal sequence process leads to the fully-dependent conditional model
 \begin{eqnarray}
-p(\ui,\vr,\ut) & = &
-p(\iota_0\!=\!\ui)
-\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!\ui)
-\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!\ui,\tau_1\!=\!0)
-\,p(\tau_2\!=\!0\,|\,\iota_0\!=\!\ui,\tau_1\!=\!0,R_1\!=\!r_1)
-\nonumber\\&&
-{}\times p(R_2\!=\!r_2\,|\,\iota_0\!=\!\ui,\tau_1\!=\!0,R_1\!=\!r_1,\tau_2\!=\!0)
-\cdots
-p(R_n\!=\!r_n\,|\,\iota_0\!=\!\ui,\ldots,\tau_{n}\!=\!0)
-\nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!\ut\:|\;\iota_0\!=\!\ui,\ldots,R_n\!=\!r_n)
+p(\iota_0,\vr,\tau_{n+1}) & = &
+p(\iota_0,\tm_1,r_1,\ldots,\tm_n,r_n,\tau_{n+1})
 \nonumber\\
 & = &
-p({\iota})
-\,p(\tau^-_1\,|\,\ui)
-\,p(r_1\,|\,\ui,\tau^-_1)
-\,p(\tau^-_2\,|\,\ui,\tau^-_1,r_1)
-\, p(r_2\,|\,\ui,\tau^-_1,r_1,\tau^-_2)
+p(\iota_0)
+\,p(\tm_1\,|\,\iota_0)
+\,p(r_1\,|\,\iota_0,\tm_1)
+\,p(\tm_2\,|\,\iota_0,\tm_1,r_1)
+\, p(r_2\,|\,\iota_0,\tm_1,r_1,\tm_2)
 \nonumber\\
 &&
 \cdots
-p(r_n\,|\,\ui,\ldots,\tau^-_{n})
-\, p(\ut\:|\;\ui,\ldots,r_n)
+p(\tm_n\,|\,\iota_0,\ldots,\tm_{n-1},r_{n-1})
+p(r_n\,|\,\iota_0,\ldots,\tm_{n})
+\, p(\tau_{n+1}\,|\,\iota_0,\ldots,r_n)
+\nonumber\\
+& = &
+p(\iota_0)
+\left\{\prod_{t=1}^{n}p(\tm_t,r_t\,|\,\iota_0,\vec{\tau}^-_{1,t-1},\vr_{1,t-1})\right\}
+ p(\tau_{n+1}\,|\,\iota_0,\vec{\tau}^-_{1,n},\vr_{1,n})
 \,.
 \label{eq:temporal-model-full}
 \end{eqnarray}
-We can generalise this model by first defining a forward observation sub-sequence $\vr_t=(r_1,r_2,\ldots,r_t)$,
-for $t=1,2,\ldots,n$, where $\vr_0$ is taken to be the empty sub-sequence by definition.
- For later convenience, we also define the backward observation sub-sequence $\rvec{r}_t=(r_t,r_{t+1},\ldots,r_n)$,
-for $t=n,n-1,\ldots,1$; likewise, $\rvec{r}_{n+1}$ is an empty sub-sequence.
-Hence, we obtain
-\begin{eqnarray}
-p({\iota},\vr,{\tau}) & = &
-p(\iota_0\!=\!{\iota})
-%\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
-\left\{\prod_{t=1}^{n}p(\tau_t\!=\!0\,|\,\iota_0\!=\!{\iota},\vec{\tau}_{t-1}\!=\!\vec{0},
-\vec{R}_{t-1}\!=\!\vr_{t-1})\right.
-\nonumber\\&&
-\hspace*{20mm}{}\times \left.\rule{0pt}{6mm}
-p(R_t\!=\!r_t\,|\,\iota_0\!=\!{\iota},\vec{\tau}_t\!=\!\vec{0},\vec{R}_{t-1}\!=\!\vr_{t-1})\right\}
-\nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!{\tau}\:|\;\iota_0\!=\!{\iota},\vec{\tau}_n\!=\!\vec{0},\vec{R}_n\!=\!\vr_n)
-\nonumber\\
-& = &
-p({\iota})
-\left\{\prod_{t=1}^{n}p(\tau^-_t\,|\,{\iota},\vec{\tau^-}_{t-1},\vr_{t-1})
-\,p(r_t\,|\,{\iota},\vec{\tau^-}_t,\vr_{t-1})\right\}
- p({\tau}\:|\;{\iota},\vec{\tau^-}_n,\vr_n)
-\,.
-\label{eq:temporal-model}
-\end{eqnarray}
 
-In practice, the full-dependency model is usually considerably simplified by 
-dropping some of the explicit (dashed) dependencies.
+In practice, this full model is considerably simplified by dropping some or even most of the explicit (dashed) dependencies.
 For example, one might limit the 
 conditionality on past values to a maximum of $m$ depenencies.
-This leads to the so-called {\em $m$-th order Markov model}.
+This leads to the so-called {\em $m$-th order Markov model},
+given by
+\begin{eqnarray}
+p(\iota_0,\vr,\tau_{n+1}) & = &
+p(\iota_0)
+\left\{\prod_{t=1}^{m}p(\tm_t,r_t\,|\,\iota_0,\vec{\tau}^-_{1,t-1},\vr_{1,t-1})\right\}
+\left\{\prod_{t=m+1}^{n}p(\tm_t,r_t\,|\,\vec{\tau}^-_{t-m,t-1},\vr_{t-m,t-1})\right\}
+\nonumber\\&&
+ p^*(\tau_{n+1}\,|\,\iota_0,\vec{\tau}^-_{1,n},\vr_{1,n})
+\,,
+\label{eq:m-th-order}
+\end{eqnarray}
+where
+\begin{eqnarray}
+ p^*(\tau_{n+1}\,|\,\iota_0,\vec{\tau}^-_{1,n},\vr_{1,n}) & = & \left\{\begin{array}{ll}
+ p(\tau_{n+1}\,|\,\iota_0,\vec{\tau}^-_{1,n},\vr_{1,n})\,, &
+\mbox{ for $n<m$}\,,
+\\
+ p(\tau_{n+1}\,|\,\vec{\tau}^-_{n-m+1,n},\vr_{n-m+1,n})\,, &
+\mbox{ for $n\ge m$}
+\end{array}\right.\,.
+\end{eqnarray}
+In the special case of $m=1$, the first-order Markov model,
+depicted in Figure~\ref{fig:simple-random-process}, takes on the especially-simple conditional form
+(assuming a non-empty sequence) of
+\begin{eqnarray}
+p(\iota_0,\vr,\tau_{n+1}) & = &
+p(\iota_0)\,p(\tm_1,r_1\,|\,\iota_0)
+\left\{\prod_{t=2}^{n}p(\tm_t,r_t\,|\,\tm_{t-1},r_{t-1})\right\}
+\,p(\tau_{n+1}\,|\,\tm_n,r_n)
+\,.
+\end{eqnarray}
 An example from the realm of natural language understanding is the lexicographical analysis of the character
 sequences of words using bigrams (pairs of adjacent characters, corresponding to $m=1$), and trigrams 
-(triples of adjacent characters, corresponding to $m=2$), et cetera.
-The second-order Markov sequence process is depicted in Figure~\ref{fig:causal-process-2}.
+(triples of adjacent characters, corresponding to $m=2$), etc.
+The second-order Markov sequence process, for example, is depicted in Figure~\ref{fig:causal-process-2}.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
@@ -454,12 +455,12 @@ The second-order Markov sequence process is depicted in Figure~\ref{fig:causal-p
     \node[cnode] (N) at (12, 0)  {$R_N$};
     \node[onode] (tt) at (14, 0) {};
 
-    \draw[->] (0) edge node [pos=0.6, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^-_4}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.55, above] {$\stackrel{\tau^-_{N-1}}{}$}  (Nm1) ;
-    \draw[->] (Nm1) edge node [pos=0.5, above] {$\stackrel{\tau^-_N}{}$}  (N) ;
+    \draw[->] (0) edge node [pos=0.6, above] {$\stackrel{\tm_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tm_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tm_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tm_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.55, above] {$\stackrel{\tm_{N-1}}{}$}  (Nm1) ;
+    \draw[->] (Nm1) edge node [pos=0.5, above] {$\stackrel{\tm_N}{}$}  (N) ;
     \draw[->] (N) edge node [pos=0.4, above] {$\stackrel{\tau^+_{N+1}}{}$}  (tt) ;
 
    \begin{scope}[dashed]
@@ -472,31 +473,9 @@ The second-order Markov sequence process is depicted in Figure~\ref{fig:causal-p
     \draw[->] (Nm1) to[out=40,in=140] (tt) ;
    \end{scope}
 \end{tikzpicture}
-\caption{\em A second-order Markov process for generating complete sequences of arbitrary length.}
+\caption{\em A 2nd-order Markov process for generating complete, random sequences of random length $N$.}
 \label{fig:causal-process-2}
 \end{figure}
-
-In the special case of $m=1$, the first-order Markov model takes on the restricted conditional form
-\begin{eqnarray}
-p({\iota},\vr,{\tau}) & = &
-p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
-\,p(R_1\!=\!r_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
-\nonumber\\&&
-{}\times\left\{\prod_{t=2}^{n}p(\tau_t\!=\!0\,|\,R_{t-1}\!=\!r_{t-1})
-\,p(R_t\!=\!r_t\,|\,\tau_t\!=\!0,R_{t-1}\!=\!r_{t-1})\right\}
-\nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!{\tau}\:|\;R_n\!=\!r_n)
-\nonumber\\
-& = &
-p({\iota})\,p(\tau^-_1\,|\,{\iota})
-\,p(r_1\,|\,{\iota},\tau^-_1)
-\left\{\prod_{t=2}^{n}p(\tau^-_t\,|\,r_{t-1})
-\,p(r_t\,|\,\tau^-_t,r_{t-1})\right\}
-\,p({\tau}\:|\;r_n)
-\,.
-\end{eqnarray}
-This is just a Markov interpretation of the random process depicted in Figure~\ref{fig:simple-random-process},
-where each stage directly depends only on the previous stage {\em and} on the transition path between the two adjacent stages.
 
 \section{Stateful Markov Sequence Processes}
 Consider the first-order Markov process $R$ depicted in Figure~\ref{fig:simple-random-process}.
@@ -525,11 +504,11 @@ $(S_{t+1},X_{t+1})$.
     \node[cnode] (Nx) at (10, -2)  {$X_N$};
     \node[onode] (tt) at (12,0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^-_4}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.7, above left] {$\stackrel{\tau^-_N}{}$} (N) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tm_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tm_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tm_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tm_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.7, above left] {$\stackrel{\tm_N}{}$} (N) ;
     \draw[->] (N) edge node [pos=0.75, above left] {$\stackrel{\tau^+_{N+1}}{}$} (tt) ;
 
    \begin{scope}[dashed]
@@ -576,12 +555,12 @@ p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
 {}\times p(\tau_{n+1}\!=\!{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
 \nonumber\\
 &=&
-p({\iota})\,p(\tau^-_1\,|\,{\iota})
-\,p(s_1\,|\,{\iota},\tau^-_1)
-\,p(x_1\,|\,s_1,{\iota},\tau^-_1)
+p({\iota})\,p(\tm_1\,|\,{\iota})
+\,p(s_1\,|\,{\iota},\tm_1)
+\,p(x_1\,|\,s_1,{\iota},\tm_1)
 \nonumber\\&&
-{}\times\left\{\prod_{t=2}^{n}p(\tau^-_t\,|\,s_{t-1},x_{t-1})
-\,p(s_t\,|\,\tau^-_t,s_{t-1},x_{t-1})
+{}\times\left\{\prod_{t=2}^{n}p(\tm_t\,|\,s_{t-1},x_{t-1})
+\,p(s_t\,|\,\tm_t,s_{t-1},x_{t-1})
 \,p(x_t\,|\,s_t,s_{t-1},x_{t-1})\right\}
 \nonumber\\&&
 {}\times p({\tau}\,|\,s_n,x_n)
@@ -610,11 +589,11 @@ This restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
     \node[cnode] (Nx) at (10, -2)  {$X_N$};
     \node[onode] (tt) at (12,0) {};
 
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tau^-_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tau^-_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tau^-_3}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tau^-_4}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tau^-_N}{}$}  (N) ;
+    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tm_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tm_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tm_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tm_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tm_N}{}$}  (N) ;
     \draw[->] (N) edge node [pos=0.5, above] {$\stackrel{\tau^+_{N+1}}{}$}  (tt) ;
 
    \begin{scope}[dashed]
@@ -642,12 +621,12 @@ p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
 \;p(\tau_{n+1}\!=\!{\tau}\,|\,S_n\!=\!s_n)
 \nonumber\\
 &=&
-p({\iota})\,p(\tau^-_1\,|\,{\iota})
-\,p(s_1\,|\,{\iota},\tau^-_1)
+p({\iota})\,p(\tm_1\,|\,{\iota})
+\,p(s_1\,|\,{\iota},\tm_1)
 \,p(x_1\,|\,s_1)
 \nonumber\\&&
-{}\times\left\{\prod_{t=2}^{n}p(\tau^-_t\,|\,s_{t-1})
-\,p(s_t\,|\,\tau^-_t,s_{t-1})\,p(x_t\,|\,s_t)\right\}
+{}\times\left\{\prod_{t=2}^{n}p(\tm_t\,|\,s_{t-1})
+\,p(s_t\,|\,\tm_t,s_{t-1})\,p(x_t\,|\,s_t)\right\}
 \,p({\tau}\,|\,s_n)
 \,.
 \label{eq:stateful-1-model}
@@ -680,22 +659,22 @@ $p(\tau_{n+1}=*\,|\,S_n)=1$ and hence $p(\ut\,|\,s_n)$ is well defined.
 However, if the initiation marker $\iota_0$ is unobserved, i.e.\ $\ui=*$ from above, then the marginalisation is more difficult
 because $\iota_0$ also conditions $S_1$ via $p(S_1\,|\,\iota_0,\tau_1)$. To allow for this, we note that
 \begin{eqnarray}
- p(\iota,\tau^-_1,s_1) & = & p(\iota_0=\iota)\,p(\tau_1=0\,|\,\iota_0=\iota)\,p(S_1=s_1\,|\,\iota_0=\iota,\tau_1=0)\,,
+ p(\iota,\tm_1,s_1) & = & p(\iota_0=\iota)\,p(\tau_1=0\,|\,\iota_0=\iota)\,p(S_1=s_1\,|\,\iota_0=\iota,\tau_1=0)\,,
 \end{eqnarray}
 and so define
 \begin{eqnarray}
- p(\ui,\tau^-_1,s_1) & = & \sum_{\iota=0}^{1}\delta(\iota\!=\!\ui) \, p(\iota,\tau^-_1,s_1)\,,
+ p(\ui,\tm_1,s_1) & = & \sum_{\iota=0}^{1}\delta(\iota\!=\!\ui) \, p(\iota,\tm_1,s_1)\,,
 \end{eqnarray}
 where $\delta(\cdot)=1$ (or else $0$) if its argument is true (or else false);
  by definition, we take $\delta(a=*)=1$.
 Hence, we may write
 \begin{eqnarray}
 p(\ui,\vec{s},\underline{\vec{x}},\ut) & = & 
-p(\ui,\tau^-_1,s_1)
+p(\ui,\tm_1,s_1)
 \,p(\underline{x}_1\,|\,s_1)
 %\nonumber\\&&{}\times
-\left\{\prod_{t=2}^{n}p(\tau^-_t\,|\,s_{t-1})
-\,p(s_t\,|\,\tau^-_t,s_{t-1})\,p(\underline{x}_t\,|\,s_t)\right\}
+\left\{\prod_{t=2}^{n}p(\tm_t\,|\,s_{t-1})
+\,p(s_t\,|\,\tm_t,s_{t-1})\,p(\underline{x}_t\,|\,s_t)\right\}
 \,p(\ut\,|\,s_n)
 \,.
 \label{eq:stateful-1-model:hidden-markers}
@@ -741,10 +720,10 @@ and so on up to $s_n$. This is equivalent to evaluating the reordered model
 \nonumber\\&&
 \hspace*{10mm}{}
 \left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
-p(\ui,\tau^-_1,s_1)\,p(\underline{x}_1\,|\,s_1)\,p(\tau^-_2\,|\,s_1)\,p(s_2\,|\,\tau^-_2,s_1)\right\}
+p(\ui,\tm_1,s_1)\,p(\underline{x}_1\,|\,s_1)\,p(\tm_2\,|\,s_1)\,p(s_2\,|\,\tm_2,s_1)\right\}
 \nonumber\\&&
 \left.\rule{0pt}{6mm}
-p(\underline{x}_{2}\,|\,s_2)\,p(\tau^-_3\,|\,s_2)\,p(s_3\,|\,\tau^-_3,s_2)\right\}
+p(\underline{x}_{2}\,|\,s_2)\,p(\tm_3\,|\,s_2)\,p(s_3\,|\,\tm_3,s_2)\right\}
 \cdots
 \left.\rule{0pt}{6mm}\,p(\underline{x}_{n}\,|\,s_n)
 \,p(\ut\,|\,s_n)\right\}
@@ -753,9 +732,9 @@ p(\underline{x}_{2}\,|\,s_2)\,p(\tau^-_3\,|\,s_2)\,p(s_3\,|\,\tau^-_3,s_2)\right
 \end{eqnarray}
  The forward pass commences with the first stage of the sequence, and includes the inner terms that are dependent on state $s_1$, namely
 \begin{eqnarray}
-  \alpha_1(s_1) & = & p(\ui,\tau^-_1,s_1)\,p(\underline{x}_1\,|\,s_1)
+  \alpha_1(s_1) & = & p(\ui,\tm_1,s_1)\,p(\underline{x}_1\,|\,s_1)
 \nonumber\\&=&
-p(\ui,\tau^-_1,s_1,\underline{x}_1)~\equiv~p(\ui,\underline{\vec{s}}_0\circ s_1,\underline{\vec{x}}_1)\,,
+p(\ui,\tm_1,s_1,\underline{x}_1)~\equiv~p(\ui,\underline{\vec{s}}_0\circ s_1,\underline{\vec{x}}_1)\,,
 \label{eq:alpha_1}
 \end{eqnarray}
 where the operator `$\circ$' indicates the concatenation of either two elements, two sequences or an element and a sequence, to form a longer sequence.
@@ -765,20 +744,20 @@ The next step of the forward pass now moves on to the second stage and includes 
 \begin{eqnarray}
   \alpha_2(s_2) & = & 
 \left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
-\alpha_1(s_1)\,p(\tau^-_2\,|\,s_1)\,p(s_2\,|\,\tau^-_2,s_1)\right\}
+\alpha_1(s_1)\,p(\tm_2\,|\,s_1)\,p(s_2\,|\,\tm_2,s_1)\right\}
 \,p(\underline{x}_2\,|\,s_2)
 \nonumber\\&=&
 \left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
-p(\ui,\tau^-_1,s_1,\underline{x}_1)\,p(\tau^-_2\,|\,s_1)\,p(s_2\,|\,\tau^-_2,s_1)\right\}
+p(\ui,\tm_1,s_1,\underline{x}_1)\,p(\tm_2\,|\,s_1)\,p(s_2\,|\,\tm_2,s_1)\right\}
 \,p(\underline{x}_2\,|\,s_2)
 \nonumber\\&=&
 \left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
-p(\ui,\tau^-_1,s_1,\underline{x}_1,\tau^-_2,s_2)\right\}
+p(\ui,\tm_1,s_1,\underline{x}_1,\tm_2,s_2)\right\}
 \,p(\underline{x}_2\,|\,s_2)
 \nonumber\\&=&
-p(\ui,\tau^-_1,\underline{s}_1,\underline{x}_1,\tau^-_2,s_2)\,p(\underline{x}_2\,|\,s_2)
+p(\ui,\tm_1,\underline{s}_1,\underline{x}_1,\tm_2,s_2)\,p(\underline{x}_2\,|\,s_2)
 \nonumber\\&=&
-p(\ui,\tau^-_1,\underline{s}_1,\underline{x}_1,\tau^-_2,s_2,\underline{x}_2)
+p(\ui,\tm_1,\underline{s}_1,\underline{x}_1,\tm_2,s_2,\underline{x}_2)
 ~\equiv~p(\ui,\underline{\vec{s}}_1\circ s_2,\underline{\vec{x}}_2)
 \,.
 \label{eq:alpha_2}
@@ -787,7 +766,7 @@ Recursively, the last step of the forward pass stops at the $n$-th stage, giving
 \begin{eqnarray}
   \alpha_n(s_n) & = & 
 \left\{\sum_{s_{n-1}\in{\cal S}}\delta(s_{n-1}\!=\!\underline{s}_{n-1})\,
-\alpha_{n-1}(s_{n-1})\,p(\tau^-_n\,|\,s_{n-1})\,p(s_n\,|\,\tau^-_n,s_{n-1})\right\}
+\alpha_{n-1}(s_{n-1})\,p(\tm_n\,|\,s_{n-1})\,p(s_n\,|\,\tm_n,s_{n-1})\right\}
 \,p(\underline{x}_n\,|\,s_n)
 \nonumber\\&\equiv&
 p(\ui,\underline{\vec{s}}_{n-1}\circ s_n,\underline{\vec{x}}_{n-1})\,p(\underline{x}_n\,|\,s_n)
@@ -810,15 +789,15 @@ This is equivalent to evaluating the reordered model
    p(\ui,\underline{\vec{s}},\underline{\vec{x}},\ut) 
 & = & 
    \left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
-p(\ui,\tau^-_1,s_1)\,p(\underline{x}_1\,|\,s_1)\,p(\tau^-_2\,|\,s_1)\,
+p(\ui,\tm_1,s_1)\,p(\underline{x}_1\,|\,s_1)\,p(\tm_2\,|\,s_1)\,
 \cdots\right.
 \nonumber\\&&
 \;\;\;\left\{\sum_{s_{n-1}\in{\cal S}}\delta(s_{n-1}\!=\!\underline{s}_{n-1})\,
-p(s_{n-1}\,|\,\tau^-_{n-1},s_{n-2})\,p(\underline{x}_{n-1}\,|\,s_{n-1})\,p(\tau^-_n\,|\,s_{n-1})\right.
+p(s_{n-1}\,|\,\tm_{n-1},s_{n-2})\,p(\underline{x}_{n-1}\,|\,s_{n-1})\,p(\tm_n\,|\,s_{n-1})\right.
 \nonumber\\&&
 \hspace*{4mm}
 \left.\rule{0pt}{7mm}\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
-p(s_n\,|\,\tau^-_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
+p(s_n\,|\,\tm_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
 \,p(\ut\,|\,s_n)\right\}\right\}
 \cdots\left.\rule{0pt}{7mm}\right\}
 \,.
@@ -833,34 +812,34 @@ The next step in the backward pass then moves backward to the $n$-th stage and i
 non-terminating transition from $s_{n-1}$ to $s_n$
 \begin{eqnarray}
   \beta_{n-1}(s_{n-1}) & = &
-p(\tau^-_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
-p(s_n\,|\,\tau^-_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
+p(\tm_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
+p(s_n\,|\,\tm_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
 \,\beta_n(s_n)\right\}
 \nonumber\\&=&
-p(\tau^-_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
-p(s_n\,|\,\tau^-_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
+p(\tm_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
+p(s_n\,|\,\tm_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
 \,p(\ut\,|\,s_n)\right\}
 \nonumber\\&=&
-p(\tau^-_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
-p(s_n,\underline{x}_{n},\ut\,|\,\tau^-_n,s_{n-1})\right\}
+p(\tm_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
+p(s_n,\underline{x}_{n},\ut\,|\,\tm_n,s_{n-1})\right\}
 \nonumber\\&=&
-p(\tau^-_n\,|\,s_{n-1})\,p(\underline{s}_n,\underline{x}_n,\ut\,|\,\tau^-_n,s_{n-1})
+p(\tm_n\,|\,s_{n-1})\,p(\underline{s}_n,\underline{x}_n,\ut\,|\,\tm_n,s_{n-1})
 \nonumber\\&=&
-p(\tau^-_n,\underline{s}_n,\underline{x}_n,\ut\,|\,s_{n-1})
+p(\tm_n,\underline{s}_n,\underline{x}_n,\ut\,|\,s_{n-1})
 ~\equiv~p(\circ\underline{\rvec{s}}_n,\underline{\rvec{x}}_n,\ut\,|\,s_{n-1})\,.
 \end{eqnarray}
-Observe that we have explicitly included the concatenation operator to indicate the presence of $\tau^-_{n}$. 
+Observe that we have explicitly included the concatenation operator to indicate the presence of $\tm_{n}$. 
 Symbolically, we may write $p(\vr)=p(\vr_t\circ\rvec{r}_{t+1})=p(\vr_t\circ)p(\rvec{r}_{t+1})=p(\vr_t)p(\circ\rvec{r}_{t+1})$.
 
 Recursively, the last step of the backward pass reaches the first stage, giving
 \begin{eqnarray}
   \beta_{1}(s_{1}) & = &
-p(\tau^-_2\,|\,s_{1})\,\sum_{s_2\in{\cal S}}\delta(s_2\!=\!\underline{s}_2)\,
-p(s_2\,|\,\tau^-_2,s_{1})\,p(\underline{x}_{2}\,|\,s_2)
+p(\tm_2\,|\,s_{1})\,\sum_{s_2\in{\cal S}}\delta(s_2\!=\!\underline{s}_2)\,
+p(s_2\,|\,\tm_2,s_{1})\,p(\underline{x}_{2}\,|\,s_2)
 \,\beta_2(s_2)
 \nonumber\\&=&
-p(\tau^-_2\,|\,s_{1})\,
-p(\underline{s}_2,\underline{x}_2,\tau^-_3,\ldots,\underline{s}_n,\underline{x}_n,\ut\,|\,\tau^-_2,s_{1})
+p(\tm_2\,|\,s_{1})\,
+p(\underline{s}_2,\underline{x}_2,\tm_3,\ldots,\underline{s}_n,\underline{x}_n,\ut\,|\,\tm_2,s_{1})
 \nonumber\\&\equiv&
 p(\circ\underline{\rvec{s}}_2,\underline{\rvec{x}}_2,\ut\,|\,s_{1})\,.
 \end{eqnarray}
@@ -868,7 +847,7 @@ The remaining terms then give the observed likelihood
 \begin{eqnarray}
    p(\ui,\underline{\vec{s}},\underline{\vec{x}},\ut) 
 & = & 
-   \sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,p(\ui,\tau^-_1,s_1)\,\beta_1(s_1)\,.
+   \sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,p(\ui,\tm_1,s_1)\,\beta_1(s_1)\,.
 \end{eqnarray}
 In general, we obtain
 \begin{eqnarray}
