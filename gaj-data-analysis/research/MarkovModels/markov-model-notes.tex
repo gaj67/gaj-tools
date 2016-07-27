@@ -276,7 +276,7 @@ in scope to some arbitray {\em historical} stage $s$, as also shown.
     \draw[-] (tup2) edge node {} (tdown) ;
 
 \end{tikzpicture}
-\caption{\em Causality allows the sequence to be partitioned at some pivot stage $t$. Further
+\caption{\em Causality allows the sequence to be partitioned at some pivot stage $t$, thereby dividing the sequence into past and future stages. Further
 limitation of past dependencies to some historical stage $s$ defines the active region for
 one step of the forward--backward algorithm.}
 \label{fig:forwar-backard}
@@ -321,9 +321,9 @@ p(\tm_{t+1},\ur_{t+1},\ldots,\tm_n,\ur_n,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tm_{
 \label{eq:bwd-pass-basic}
 \end{eqnarray}
 is the backward factor.
-The entire forward pass of the forward--backward algorithm starts at the initiation `stage' with $\ui$ and
+The entire forward pass of the forward--backward algorithm starts at the initiation stage with $\ui$ and
 recursively computes $\alpha_t$ for each $t=1,2,\ldots,n$. Likewise,
-the backward pass starts at termination `stage' with $\ut$, and recursively computes $\beta_t$
+the backward pass starts at termination stage with $\ut$, and recursively computes $\beta_t$
 for each $t=n,n-1,\ldots,1$. The precise details of these recursive calculations rely upon
 the nature of the fine-grained dependencies, as disdcussed in the next section.
 
@@ -404,7 +404,7 @@ p(\iota_0)
 
 In practice, this full model is considerably simplified by dropping some or even most of the explicit (dashed) dependencies.
 For example, one might limit the 
-conditionality on past values to a maximum of $m$ depenencies.
+conditionality on past stages to a maximum of $m$ depenencies.
 This leads to the so-called {\em $m$-th order Markov model},
 given by
 \begin{eqnarray}
