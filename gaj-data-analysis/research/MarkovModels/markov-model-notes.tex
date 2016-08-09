@@ -484,29 +484,29 @@ The second-order Markov sequence process, for example, is depicted in Figure~\re
 The basic description of the forward--backward algorithm in Section~\ref{sec:forward-backward-basic}
 can now be refined under the restriction of the general, causal sequence process to an $m$-th order Markov process.
 Specifically, we take the limiting historical stage to be $s=\max(1, t-m+1)$ for $t>0$ (i.e.\ non-empty sequences).
-Then, for the initial stages $t<m$, for $m>1$, the forward factor~\eqref{eq:fwd-pass-basic} becomes
-\begin{eqnarray}
-\alpha_t(\vr_{1,t}) & = & p(\iota_0,\tm_1,r_1,\ldots,\tm_t,r_t)
+Then, for a sufficiently long sequence (i.e.\ $n\ge m$), the forward factor~\eqref{eq:fwd-pass-basic} may be
+computed for stages $t=m,m+1,\ldots,n$ via
+%\begin{eqnarray}
+%\alpha_t(\vr_{1,t}) & = & p(\iota_0,\tm_1,r_1,\ldots,\tm_t,r_t)
+%~=~
+%p(\iota_0)\,\prod_{i=1}^{t}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr_{1,i-1})\,.
+%\label{eq:fwd-pass-m-init}
+%\end{eqnarray}
+%Furthermore, if $t<m-1$ then at stage $t+1$ we have
+%\begin{eqnarray}
+%\alpha_{t+1}(\vr_{1,t+1}) & = & p(\iota_0,\tm_1,r_1,\ldots,\tm_{t+1},r_{t+1})
+%~=~
+%p(\iota_0)\,\prod_{i=1}^{t+1}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr_{1,i-1})
 %\nonumber\\& = &
-~=~
-p(\iota_0)\,\prod_{i=1}^{t}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr_{1,i-1})\,.
-\label{eq:fwd-pass-m-init}
-\end{eqnarray}
-Furthermore, if $t<m-1$ then at stage $t+1$ we have
+%\alpha_t(\vr_{1,t})\,p(\tm_{t+1},r_{t+1}\,|\,\iota_0,\vec{\tau}^-_{1,t},\vr_{1,t})\,.
+%\end{eqnarray}
+%Note that for $m>1$ the forward pass commences from
+%\begin{eqnarray}
+%\alpha_1(r_1) & = &  p(\iota_0)\,p(\tm_1,r_1\,|\,\iota_0)\,.
+%\end{eqnarray}
+%However, if the sequence is sufficiently long, then for later stages $t\ge m$ we obtain
 \begin{eqnarray}
-\alpha_{t+1}(\vr_{1,t+1}) & = & p(\iota_0,\tm_1,r_1,\ldots,\tm_{t+1},r_{t+1})
-~=~
-p(\iota_0)\,\prod_{i=1}^{t+1}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr_{1,i-1})
-\nonumber\\& = &
-\alpha_t(\vr_{1,t})\,p(\tm_{t+1},r_{t+1}\,|\,\iota_0,\vec{\tau}^-_{1,t},\vr_{1,t})\,.
-\end{eqnarray}
-Note that for $m>1$ the forward pass commences from
-\begin{eqnarray}
-\alpha_1(r_1) & = &  p(\iota_0)\,p(\tm_1,r_1\,|\,\iota_0)\,.
-\end{eqnarray}
-However, if the sequence is sufficiently long, then for later stages $t\ge m$ we obtain
-\begin{eqnarray}
-\!\!\!
+\hspace*{-5mm}
 \alpha_t(\vr_{t-m+1,t}) & = & p(\ui,\tm_1,\ur_1,\ldots,\tm_{t-m},\ur_{t-m},\tm_{t-m+1},r_{t-m+1},\ldots,\tm_t,r_t)
 \nonumber\\& = &
 \sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)\,
@@ -515,10 +515,11 @@ However, if the sequence is sufficiently long, then for later stages $t\ge m$ we
 \sum_{r_{t-m}\in{\cal R}} \delta(r_{t-m}\!=\!\ur_{t-m})
 \nonumber\\&&
 p(\iota_0)\left\{\prod_{i=1}^{m}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr_{1,i-1})\right\}
-\left\{\prod_{i=m+1}^{t}p(\tm_i,r_i\,|\,\vec{\tau}^-_{i-m,i-1},\vr_{i-m,i-1})\right\}
+\left\{\prod_{i=m+1}^{t}p(\tm_i,r_i\,|\,\vec{\tau}^-_{i-m,i-1},\vr_{i-m,i-1})\right\}\,,
 \label{eq:fwd-pass-m}
 \end{eqnarray}
-from equation~\eqref{eq:m-th-order}. Moving to the next stage $t+1$ then provides the recursive result that
+from equation~\eqref{eq:m-th-order}. 
+However, if $m\le t<n$ then we may further simplify the forward pass by observing that
 \begin{eqnarray}
 \!\!\!\!\!
 \alpha_{t+1}(\vr_{t-m+2,t+1}) & = & 
@@ -536,18 +537,21 @@ p(\iota_0)\left\{\prod_{i=1}^{m}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr
 \,p(\tm_{t+1},r_{t+1}\,|\,\vec{\tau}^-_{t-m+1,t},\vr_{t-m+1,t})\,.
 \label{eq:fwd-pass-m-recursive}
 \end{eqnarray}
-For the special case of $m=1$, the forward pass reduces to
+Effectively, this recursion comes from moving the size-$m$ active region (window) from stage $t$ to stage $t+1$ and thereby marginalising over the
+observation $\ur_{t-m+1}$ that has now left the window.
+Note that for the special case of $m=1$, the forward pass reduces to
 \begin{eqnarray}
 \alpha_1(r_1) & = &  \sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)\,
 p(\iota_0)\,p(\tm_1,r_1\,|\,\iota_0)\,,
 \nonumber\\
-\alpha_{t+1}(r_{t+1}) & = &
-\sum_{r_{t}\in{\cal R}} \delta(r_{t}\!=\!\ur_{t})\,\alpha_t(r_{t})
-\,p(\tm_{t+1},r_{t+1}\,|\,\tm_{t},r_{t})\,.
+\alpha_{t}(r_{t}) & = &
+\sum_{r_{t-1}\in{\cal R}} \delta(r_{t-1}\!=\!\ur_{t-1})\,\alpha_{t-1}(r_{t-1})
+\,p(\tm_{t},r_{t}\,|\,\tm_{t-1},r_{t-1})
+\hspace*{2mm}\mbox{ for $t=2,\ldots,n$}
+\,.
 \end{eqnarray}
 
-Similarly, for  stages $t\ge m$
-the backward factor~\eqref{eq:bwd-pass-basic} becomes
+Similarly, the backward pass is also well-defined for stages $t\ge m$, such that the backward factor~\eqref{eq:bwd-pass-basic} becomes
 \begin{eqnarray}
 \beta_t(\vr_{t-m+1,t}) & = & 
 p(\tm_{t+1},\ur_{t+1},\ldots,\tm_n,\ur_n,\ut\,|\,\tm_{t-m+1},r_{t-m+1},\ldots,\tm_t,r_t)
@@ -562,7 +566,7 @@ p(\tm_{i},r_{i}\,|\,\vec{\tau}^-_{i-m,i-1},\vr_{i-m,i-1})\right\}
 p(\tau_{n+1}\,|\,\vec{\tau}^-_{n-m+1,n},\vr_{n-m+1,n})
 \,.
 \end{eqnarray}
-Furthermore, if $t>m$ then we may move backward to stage $t-1$ to obtain the recursive relationship
+Furthermore, if $m<t\le n$ then we may move the window backwards from stage $t$ to stage $t-1$, thereby obtaining the recursive relationship
 \begin{eqnarray}
 \beta_{t-1}(\vr_{t-m,t-1}) & = & 
 p(\tm_{t},\ur_{t},\ldots,\tm_n,\ur_n,\ut\,|\,\tm_{t-m},r_{t-m},\ldots,\tm_{t-1},r_{t-1})
@@ -580,32 +584,20 @@ p(\tau_{n+1}\,|\,\vec{\tau}^-_{n-m+1,n},\vr_{n-m+1,n})
 p(\tm_{t},r_{t}\,|\,\vec{\tau}^-_{t-m,t-1},\vr_{t-m,t-1})\,\beta_{t}(\vr_{t-m+1,t})
 \,.
 \end{eqnarray}
-
-stages $t<m$ 
-\begin{eqnarray}
-\beta_t(\vr_{1,t}) & = & 
-p(\tm_{t+1},\ur_{t+1},\ldots,\tm_n,\ur_n,\ut\,|\,\iota_0,\tm_{1},r_{1},\ldots,\tm_t,r_t)\,,
-\end{eqnarray}
-
-In general, the backward pass is defined via
-\begin{eqnarray}
-\beta_{t-1}(\vr_{t-m,t-1}) & = & 
-\sum_{r_{t}\in{\cal R}} \delta(r_{t}\!=\!\ur_{t})\,
-p_m^*(\tm_{t},r_{t}\,|\,\iota_0,\vec{\tau}^-_{1,t-1},\vr_{1,t-1})\,\beta_{t}(\vr_{t-m+1,t})
-\,.
-\end{eqnarray}
 For the special case of $m=1$, the backward pass reduces to
 \begin{eqnarray}
 \beta_n(r_n) & = &  \sum_{\tau_{n+1}=0}^{1}\delta(\tau_{n+1}\!=\!\ut)\,
 p(\tau_{n+1}\,|\,\tm_n,r_n)\,,
 \nonumber\\
-\beta_{t-1}(r_{t-1}) & = &
-\sum_{r_{t}\in{\cal R}} \delta(r_{t}\!=\!\ur_{t})\,
-p(\tm_{t},r_{t}\,|\,\tm_{t-1},r_{t-1})
-\,\beta_t(r_{t})
+\beta_{t}(r_{t}) & = &
+\sum_{r_{t+1}\in{\cal R}} \delta(r_{t+1}\!=\!\ur_{t+1})\,
+p(\tm_{t+1},r_{t+1}\,|\,\tm_{t},r_{t})
+\,\beta_{t+1}(r_{t+1})\hspace*{2mm}\mbox{ for $t=n-1,\ldots,1$}
 \,.
 \end{eqnarray}
-
+Note that, in general, for a short sequence of length $n<m$ we must evaluate the observation likelihood~\eqref{eq:pr:discrete} directly using
+equation~\eqref{eq:m-th-order}. The forward--backward algorithm is of no help in such a case, since the active window overlaps
+both ends of the sequence, namely $\ui$ and $\ut$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Stateful Markov Sequence Processes}
