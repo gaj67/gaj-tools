@@ -22,6 +22,12 @@
 \newcommand{\vr}{\vec{r}}
 \newcommand{\uvr}{\underline{\vr}}
 \newcommand{\tm}{\tau^{-}}
+\newcommand{\vs}{\vec{s}}
+\newcommand{\uvs}{\underline{\vs}}
+\newcommand{\vx}{\vec{x}}
+\newcommand{\uvx}{\underline{\vx}}
+\newcommand{\ux}{\underline{x}}
+\newcommand{\us}{\underline{s}}
 
 \begin{document}
 \maketitle
@@ -171,18 +177,18 @@ p(\ui,\vr,\ut)
 \label{eq:pr:gen}
 \end{eqnarray}
 
-\subsection{Missing Values}
+\subsection{Missing Values}\label{sec:missing-values}
 
 The main difference between a complete, generated sequence $\vr=(r_1,\ldots,r_n)$
-and the observed sequence of values, say $\uvr=(\ur_1,\ldots,\ur_n)$, 
-is the possibility that some values were unobserved\footnote{We are ignoring the very real problem
+and the observed sequence of values, say\footnote{We are ignoring the very real problem
 of aligning the observed values with the generated stages. This difficulty can be partially alleviated under the assumption of stationary distributions, such that each stage behaves
-like the previous one.}, i.e.\ {\em missing} or systematically {\em hidden}.
+like the previous one.} 
+$\uvr=(\ur_1,\ldots,\ur_n)$, 
+is the possibility that some values were unobserved, i.e.\ arbitrarily {\em missing} or systematically {\em hidden}.
 For convenience, let $\ur_t=*$ denote the case where the  observed value of the $t$-th stage is missing.
 Likewise, let $\ui=*$ if we do not know whether or not we observed the start of the generated sequence,
 and let $\ut=*$ if we do not kow whether or not we observed the end of the generated sequence.
-The `*' symbol is just a representational device -- its presence has no effect on the computed probabilities, other than to indicate that the true values
-of the variables $\iota_0$ and/or $\tau_{n+1}$ should be marginalised out. Thus, for example:
+The `*' symbol is just a representational device -- its presence has no effect on the computed probabilities, other than to indicate that any associated variable should be marginalised out. Thus, for example:
 \begin{eqnarray}
 p(\vr) 
 & = & p(*,\tm_1,r_1,\ldots,\tm_n,r_n,*)~=~p(\tm_1,r_1,\ldots,\tm_n,r_n)\,.
@@ -224,11 +230,11 @@ p(\iota_0,\tm_1,r_1,\ldots,\tm_n,r_n,\tau_{n+1})
 \;dr_1\,dr_2\cdots dr_n
 \,,
 \end{eqnarray}
-where $\delta(\cdot)$ is now the Dirac delta function, and where, by extension, we define $\delta(x-*)=1$.
+where $\delta(\cdot)$ is now the Dirac delta function, and where, by extension, we define $\delta(x\!-\!*)=1$.
 On the understanding that $\sum$ and $\delta(x\!=\!y)$ must be swapped respectively for $\int$ and $\delta(x\!-\!y)$ as needed for a continuous 
-or semi-continuous domain, we may, without loss of generality, henceforth simply utilise the discrete form~\eqref{eq:pr:discrete}.
+or semi-continuous domain, we may henceforth simply utilise the discrete form~\eqref{eq:pr:discrete} without loss of generality.
 
-\subsection{Forward--Backward Algorithm}
+\subsection{Generic Forward--Backward Algorithm}
 \label{sec:forward-backward-basic}
 
 The likelihood~\eqref{eq:pr:discrete} of an observed sequence $\uvr$ has been written in a computationally inefficient form,
@@ -308,23 +314,24 @@ p(\ui,\uvr_{1,s-1},\uvr_{s,t},\uvr_{t+1,n},\ut)
 \end{eqnarray}
 where
 \begin{eqnarray}
-\alpha_t(\vr_{s,t}) & = & p(\ui,\tau_1^-,\ur_1,\ldots,\tm_{s-1},\ur_{s-1},
+\alpha_t(\vr_{s,t}) & = & p(\ui,\uvr_{1,s-1},\vr_{s,t})~=~p(\ui,\tau_1^-,\ur_1,\ldots,\tm_{s-1},\ur_{s-1},
 \tm_s,r_s,\ldots,\tm_t,r_t)
 \label{eq:fwd-pass-basic}
 \end{eqnarray}
-is the foward factor
+is the foward factor,
 and
 \begin{eqnarray}
-\beta_t(\vr_{s,t}) & = & 
+\beta_t(\vr_{s,t}) & = & p(\uvr_{t+1,n},\ut\,|\,\ui,\uvr_{1,s-1},\vr_{s,t})
+\nonumber\\& = &
 p(\tm_{t+1},\ur_{t+1},\ldots,\tm_n,\ur_n,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tm_{s-1},\ur_{s-1},
 \tm_s,r_s,\ldots,\tm_t,r_t)\
 \label{eq:bwd-pass-basic}
 \end{eqnarray}
 is the backward factor.
-The entire forward pass of the forward--backward algorithm starts at the initiation stage with $\ui$ and
-recursively computes $\alpha_t$ for each $t=1,2,\ldots,n$. Likewise,
-the backward pass starts at termination stage with $\ut$, and recursively computes $\beta_t$
-for each $t=n,n-1,\ldots,1$. The precise details of these recursive calculations rely upon
+The entire forward pass of the forward--backward algorithm starts from some historical stage $t_0$ and
+progressively computes $\alpha_t$ forward along the sequence for each applicable stage $t_0\le t\le n$. Likewise,
+the backward pass starts at termination stage, and computes $\beta_t$
+backwards along the sequence for each applicable stage $t_0\le t\le n$. The precise details of these calculations rely upon
 the nature of the fine-grained dependencies, as disdcussed in the next section.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -481,8 +488,8 @@ The second-order Markov sequence process, for example, is depicted in Figure~\re
 \subsection{Markov Forward--Backward Algorithm}
 \label{sec:forward-backward-markov}
 
-The basic description of the forward--backward algorithm in Section~\ref{sec:forward-backward-basic}
-can now be refined under the restriction of the general, causal sequence process to an $m$-th order Markov process.
+The basic description of the generic forward--backward algorithm in Section~\ref{sec:forward-backward-basic}
+can now be refined under the restriction of the causal sequence process to an $m$-th order Markov process.
 Specifically, we take the limiting historical stage to be $s=\max(1, t-m+1)$ for $t>0$ (i.e.\ non-empty sequences).
 Then, for a sufficiently long sequence (i.e.\ $n\ge m$), the forward factor~\eqref{eq:fwd-pass-basic} may be
 computed for stages $t=m,m+1,\ldots,n$ via
@@ -519,7 +526,7 @@ p(\iota_0)\left\{\prod_{i=1}^{m}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr
 \label{eq:fwd-pass-m}
 \end{eqnarray}
 from equation~\eqref{eq:m-th-order}. 
-However, if $m\le t<n$ then we may further simplify the forward pass by observing that
+Furthermore, if $m\le t<n$ then we may simplify the forward pass by observing that
 \begin{eqnarray}
 \!\!\!\!\!
 \alpha_{t+1}(\vr_{t-m+2,t+1}) & = & 
@@ -537,9 +544,9 @@ p(\iota_0)\left\{\prod_{i=1}^{m}p(\tm_i,r_i\,|\,\iota_0,\vec{\tau}^-_{1,i-1},\vr
 \,p(\tm_{t+1},r_{t+1}\,|\,\vec{\tau}^-_{t-m+1,t},\vr_{t-m+1,t})\,.
 \label{eq:fwd-pass-m-recursive}
 \end{eqnarray}
-Effectively, this recursion comes from moving the size-$m$ active region (window) from stage $t$ to stage $t+1$ and thereby marginalising over the
+Effectively, this recursive relation comes from moving the size-$m$ active region (window) from stage $t$ to stage $t+1$ and thereby marginalising over the
 observation $\ur_{t-m+1}$ that has now left the window.
-Note that for the special case of $m=1$, the forward pass reduces to
+Note that for the special case of $m=1$, this forward pass reduces to
 \begin{eqnarray}
 \alpha_1(r_1) & = &  \sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)\,
 p(\iota_0)\,p(\tm_1,r_1\,|\,\iota_0)\,,
@@ -566,7 +573,7 @@ p(\tm_{i},r_{i}\,|\,\vec{\tau}^-_{i-m,i-1},\vr_{i-m,i-1})\right\}
 p(\tau_{n+1}\,|\,\vec{\tau}^-_{n-m+1,n},\vr_{n-m+1,n})
 \,.
 \end{eqnarray}
-Furthermore, if $m<t\le n$ then we may move the window backwards from stage $t$ to stage $t-1$, thereby obtaining the recursive relationship
+Likewise, if $m<t\le n$ then we may move the window backwards from stage $t$ to stage $t-1$, thereby obtaining the recursive relation
 \begin{eqnarray}
 \beta_{t-1}(\vr_{t-m,t-1}) & = & 
 p(\tm_{t},\ur_{t},\ldots,\tm_n,\ur_n,\ut\,|\,\tm_{t-m},r_{t-m},\ldots,\tm_{t-1},r_{t-1})
@@ -584,7 +591,7 @@ p(\tau_{n+1}\,|\,\vec{\tau}^-_{n-m+1,n},\vr_{n-m+1,n})
 p(\tm_{t},r_{t}\,|\,\vec{\tau}^-_{t-m,t-1},\vr_{t-m,t-1})\,\beta_{t}(\vr_{t-m+1,t})
 \,.
 \end{eqnarray}
-For the special case of $m=1$, the backward pass reduces to
+For the special case of $m=1$, this backward pass reduces to
 \begin{eqnarray}
 \beta_n(r_n) & = &  \sum_{\tau_{n+1}=0}^{1}\delta(\tau_{n+1}\!=\!\ut)\,
 p(\tau_{n+1}\,|\,\tm_n,r_n)\,,
@@ -605,11 +612,12 @@ Consider the first-order Markov process $R$ depicted in Figure~\ref{fig:simple-r
 Suppose now that the random variable $R_t$ at stage $t$ can be decomposed into the tuple
 $R_t=(S_t,X_t)$, where $S_t$ is a random {\em state} variable taking values $s_t\in{\cal S}$, and $X_t$
 is a random {\em value} variable taking values $x_t\in{\cal X}$.
-As is usual, we presuppose that the stage transitions in the sequence generating process are primarily between states, e.g.\ from $S_{t-1}$ to $S_t$.
-It follows that the value is generated after the state has been determined, i.e.\ $X_t$ depends upon $S_t$.
+We make the common presumption that the stage transitions in the sequence generating process are entirely between states, e.g.\ from $S_{t-1}$ to $S_t$.
+It follows from causaion that the value is generated after the state has been determined, i.e.\ $X_t$ depends upon $S_t$.
 Keeping to the first-order Markov interpretation of stage-to-stage dependencies leads to
 the {\em stateful} process depicted in Figure~\ref{fig:stateful-process}, with full cross-dependencies between $(S_t,X_t)$ and
-$(S_{t+1},X_{t+1})$.
+$(S_{t+1},X_{t+1})$. Note that the restriction to order $m=1$ is not really onerous --  we may at any time generalise the process by inserting additional (dashed) dependencies
+(viz Figure~\ref{fig:causal-process}).
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
@@ -656,37 +664,54 @@ $(S_{t+1},X_{t+1})$.
     \draw[->] (Nx) to (tt) ;
    \end{scope}
 \end{tikzpicture}
-\caption{\em A random process for generating complete state--value sequences of arbitrary length,
+\caption{\em A first-order Markov process for generating complete state--value sequences of random length $N$,
 with explicit cross-dependencies between adjacent stages.}
 \label{fig:stateful-process}
 \end{figure}
 
-Hence, the fully-structured state--valuel model is now given by
+For convenience, we may notionally separate the observed states at each stage from the observed values at the corresponding stages, by loosely defining
 \begin{eqnarray}
-p({\iota},\vec{s},\vec{x},{\tau}) & = & 
-p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
-\,p(S_1\!=\!s_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
+\vr & = & (r_1,r_2,\ldots,r_n)
+\nonumber\\& = & 
+((s_1,x_1),(s_2,x_2),\ldots,(s_n,x_n))
+\nonumber\\& \equiv & 
+(s_1,\ldots,s_n)\odot (x_1,\ldots,x_n)~=~(\vs,\vx)\,.
+\end{eqnarray}
+Consequently, the likelihood of a stateful sequence is now given by
+\begin{eqnarray}
+p(\iota_0,\vs,\vx,\tau_{n+1}) & = &
+p(\iota_0,\tm_1,s_1,x_1,\ldots,\tm_n,s_n,x_n,\tau_{n+1})
+\nonumber\\& = &
+p(\iota_0)\,p(\tm_1,s_1\,|\,\iota_0)\,p(x_1\,|\,\iota_0,\tm_1,s_1)
+\nonumber\\{}&&\times
+\left\{\prod_{t=2}^{n}p(\tm_t,s_t\,|\,\tm_{t-1},s_{t-1},x_{t-1})\,p(x_t\,|\,\tm_t,s_t,\tm_{t-1},s_{t-1},x_{t-1})\right\}
 \nonumber\\&&{}\times
-\,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1,\iota_0\!=\!{\iota},\tau_1\!=\!0)
-\nonumber\\&&
-{}\times\left\{\prod_{t=2}^{n}p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
-\nonumber\\&&\hspace*{10mm}{}\times\left.
-\,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
-\nonumber\\&&\hspace*{10mm}{}\times\left.\rule{0pt}{6mm}
-\,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right\}
-\nonumber\\&&
-{}\times p(\tau_{n+1}\!=\!{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
-\nonumber\\
-&=&
-p({\iota})\,p(\tm_1\,|\,{\iota})
-\,p(s_1\,|\,{\iota},\tm_1)
-\,p(x_1\,|\,s_1,{\iota},\tm_1)
-\nonumber\\&&
-{}\times\left\{\prod_{t=2}^{n}p(\tm_t\,|\,s_{t-1},x_{t-1})
-\,p(s_t\,|\,\tm_t,s_{t-1},x_{t-1})
-\,p(x_t\,|\,s_t,s_{t-1},x_{t-1})\right\}
-\nonumber\\&&
-{}\times p({\tau}\,|\,s_n,x_n)
+p(\tau_{n+1}\,|\,\tm_n,s_n,x_n)
+%
+%p({\iota},\vec{s},\vec{x},{\tau}) & = & 
+%p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
+%\,p(S_1\!=\!s_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
+%\nonumber\\&&{}\times
+%\,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1,\iota_0\!=\!{\iota},\tau_1\!=\!0)
+%\nonumber\\&&
+%{}\times\left\{\prod_{t=2}^{n}p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
+%\nonumber\\&&\hspace*{10mm}{}\times\left.
+%\,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
+%\nonumber\\&&\hspace*{10mm}{}\times\left.\rule{0pt}{6mm}
+%\,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right\}
+%\nonumber\\&&
+%{}\times p(\tau_{n+1}\!=\!{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
+%\nonumber\\
+%&=&
+%p({\iota})\,p(\tm_1\,|\,{\iota})
+%\,p(s_1\,|\,{\iota},\tm_1)
+%\,p(x_1\,|\,s_1,{\iota},\tm_1)
+%\nonumber\\&&
+%{}\times\left\{\prod_{t=2}^{n}p(\tm_t\,|\,s_{t-1},x_{t-1})
+%\,p(s_t\,|\,\tm_t,s_{t-1},x_{t-1})
+%\,p(x_t\,|\,s_t,s_{t-1},x_{t-1})\right\}
+%\nonumber\\&&
+%{}\times p({\tau}\,|\,s_n,x_n)
 \,.
 \end{eqnarray}
 Conditioning the state $S_t$ on both the previous state $S_{t-1}$ and its value $X_{t-1}$
@@ -726,108 +751,77 @@ This restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
     \draw[->] (N) to (Nx) ;
    \end{scope}
 \end{tikzpicture}
-\caption{\em A first-order Markov process for generating complete state--value  sequences of arbitrary length.}
+\caption{\em A first-order Markov process for generating complete state--value  sequences of random length $N$.}
 \label{fig:stateful-1-process}
 \end{figure}
-
 The corresponding sequence model is now given by
 \begin{eqnarray}
-p({\iota},\vec{s},\vec{x},{\tau}) & = & 
-p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
-\,p(S_1\!=\!s_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
-\,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1)
-\nonumber\\&&
-{}\times\left\{\prod_{t=2}^{n}p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1})
-\,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,S_{t-1}\!=\!s_{t-1})\right.
-\nonumber\\&&\hspace*{10mm}{}\times\left.\rule{0pt}{6mm}
-\,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t)\right\}
-\;p(\tau_{n+1}\!=\!{\tau}\,|\,S_n\!=\!s_n)
-\nonumber\\
-&=&
-p({\iota})\,p(\tm_1\,|\,{\iota})
-\,p(s_1\,|\,{\iota},\tm_1)
-\,p(x_1\,|\,s_1)
-\nonumber\\&&
-{}\times\left\{\prod_{t=2}^{n}p(\tm_t\,|\,s_{t-1})
-\,p(s_t\,|\,\tm_t,s_{t-1})\,p(x_t\,|\,s_t)\right\}
-\,p({\tau}\,|\,s_n)
-\,.
+p(\iota_0,\vs,\vx,\tau_{n+1}) & = &
+%p(\iota_0,\tm_1,s_1,x_1,\ldots,\tm_n,s_n,x_n,\tau_{n+1})
+%\nonumber\\& = &
+p(\iota_0)\,p(\tm_1,s_1\,|\,\iota_0)\,p(x_1\,|\,\tm_1,s_1)
+\nonumber\\{}&&\times
+\left\{\prod_{t=2}^{n}p(\tm_t,s_t\,|\,\tm_{t-1},s_{t-1})\,p(x_t\,|\,\tm_t,s_t)\right\}
+%\nonumber\\&&{}\times
+\,p(\tau_{n+1}\,|\,\tm_n,s_n)\,.
 \label{eq:stateful-1-model}
 \end{eqnarray}
-%Observe that the $\tau_1$ dependency can additionally be dropped in practice,
-%since zero-length sequences convey little information, and are in fact undetectable if the
-%generating process does not explicitly indicate the start and end of sequences.
-%So far, we have made no assumption as to whether the states take continuous values or discrete values.
-%In the next section, we consider the important sub-class of models where the states are discrete-valued.
 
 \subsection{Hidden State Sequences}\label{sec:hidden-state}
 
-In the previous section, we considered the joint probability $p({\iota},\vec{s},\vec{x},{\tau})$ of a stateful, first-order Markov process (Figure~\ref{fig:stateful-1-process}) under the assumption that the initiation and termination markers of the sequence were known in advance and that
-both the sequence $\vec{s}$ of states and the sequence $\vec{x}$ of values were fully observed.
-Let us now consider the implications of having unobserved (or {\em hidden} or {\em missing}) markers, states and/or values.
-Firstly, let us use an underline symbol, e.g.\ $\ui$, to denote a variable with an observed value that might be either known or missing, and let the bare variable, e.g.\
-$\iota$, denote a known (but possibly arbitrary) value. As noted in Section~\ref{sec:random-processes}, we use the `*' symbol to denote a missing value, e.g.\ $\ui=*$,
-on the understanding that its use in a probability expression implies the marginalisation of the expression over all possible values of the affected variable.
-
-Thus, if the value of $X_{t}$ of some stage $t$ is unobserved, then we write
-$\underline{x}_{t}=*$ to denote marginalisation over all possible values of $x_{t}\in{\cal X}$. 
-Since $X_t$ depends only upon $S_t$, we may then define $p(X_t=*\,|\,S_t)=1$ for all $t=1,2,\ldots,n$, and so $p(\underline{x}_t\,|\,s_t)$ is likewise well defined.
-%Hence, having some $\underline{x}_{t'}=*$ is equivalent to simply dropping the specific term $p(x_{t'}\,|\,s_{t'})$ from 
-%equation~\eqref{eq:stateful-1-model}. Consequently, 
-%We henceforth assume with no loss of generality that all values in $\vec{x}$ are observed.
-
-Similarly, if the termination marker $\tau_{n+1}$ is unobserved, then we write $\ut=*$ to indicate maginalisation over
-$\tau_{n+1}\in\{0,1\}$,  with the consequence that
-$p(\tau_{n+1}=*\,|\,S_n)=1$ and hence $p(\ut\,|\,s_n)$ is well defined.
-However, if the initiation marker $\iota_0$ is unobserved, i.e.\ $\ui=*$ from above, then the marginalisation is more difficult
-because $\iota_0$ also conditions $S_1$ via $p(S_1\,|\,\iota_0,\tau_1)$. To allow for this, we note that
+A special case of the stateful Markov sequence process is the so-called {\em hidden Markov model} (HMM), where the values of the state sequence $\vs$ are
+entirely unobserved (and perhaps unobservable). However, more generally we have to consider the possibility that the values of any of the random variables 
+$\iota_0$, $S_t$, $X_t$ and $\tau_{n+1}$ might or might not have been observed in practice. The extension of equation~\eqref{eq:pr:discrete} is straightforward
+for discrete\footnote{Recall from Section~\ref{sec:missing-values} that the continuous analogue is readily derivable from the discrete model.} states and values, namely
 \begin{eqnarray}
- p(\iota,\tm_1,s_1) & = & p(\iota_0=\iota)\,p(\tau_1=0\,|\,\iota_0=\iota)\,p(S_1=s_1\,|\,\iota_0=\iota,\tau_1=0)\,,
+p(\ui,\uvs,\uvx,\ut) 
+& = & 
+\sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)
+\sum_{s_1\in{\cal S}} \delta(s_1\!=\!\us_1)
+\sum_{x_1\in{\cal X}} \delta(x_1\!=\!\ux_1)
+\cdots\sum_{s_n\in{\cal S}} \delta(s_n\!=\!\us_n)
+\sum_{x_n\in{\cal X}} \delta(x_n\!=\!\ux_n)
+\nonumber\\&&
+\,\sum_{\tau_{n+1}=0}^{1}\delta(\tau_{n+1}\!=\!\ut)
+\,p(\iota_0,\tm_1,s_1,x_1,\ldots,\tm_n,s_n,x_n,\tau_{n+1})\,.
+\label{eq:pr:discrete:state-value}
 \end{eqnarray}
-and so define
+This calculation can be simplified further under the first-order state--value model~\eqref{eq:stateful-1-model}.
+For example, the fact that an $x_t$ is unobserved, i.e.\ $\ux_t=*$, is easily handled, since $X_t$ depends only on $S_t$ in stage $t$. Specifically, the marginalisation over $x_t\in{\cal X}$ affects exactly one term in the model, and consequently we may
+define $p(*\,|\,\tm_t,s_t)=p(X_t\!=\!*\,|\,\tau_t\!=\!0,S_t\!=\!s_t)=1$; hence $p(\underline{x}_t\,|\,\tm_t,s_t)$ is well defined. Note that this simplification is only applicable when
+$X_t$ does not depend upon any earlier $X_{t-k}$; such higher-order dependencies will require the more general handling of marginalisation above.
+
+Similarly, if the termination marker $\tau_{n+1}$ is unobserved, i.e.\ $\ut=*$, then 
+ $p(\ut\,|\,\tm_n,s_n)$ is still well defined if we let
+$p(\tau_{n+1}=*\,|\,\tau_n\!=\!0,S_n\!=\!s_n)=1$.
+However, if the initiation marker $\iota_0$ is unobserved, i.e.\ $\ui=*$, then the marginalisation is more difficult
+because $\iota_0$ also conditions $S_1$ via $p(S_1\,|\,\iota_0,\tau_1)$. To allow for this, we define (for order $m=1$) that
 \begin{eqnarray}
- p(\ui,\tm_1,s_1) & = & \sum_{\iota=0}^{1}\delta(\iota\!=\!\ui) \, p(\iota,\tm_1,s_1)\,,
+ p(\ui,\tm_1,s_1) & = & \sum_{\iota=0}^{1}\delta(\iota\!=\!\ui) \,p(\iota_0)\,p(\tm_1,s_1\,|\,\iota_0)\,,
 \end{eqnarray}
-where $\delta(\cdot)=1$ (or else $0$) if its argument is true (or else false);
- by definition, we take $\delta(a=*)=1$.
-Hence, we may write
+such that
 \begin{eqnarray}
-p(\ui,\vec{s},\underline{\vec{x}},\ut) & = & 
+p(\ui,\vs,\uvx,\ut) & = & 
 p(\ui,\tm_1,s_1)
-\,p(\underline{x}_1\,|\,s_1)
-%\nonumber\\&&{}\times
-\left\{\prod_{t=2}^{n}p(\tm_t\,|\,s_{t-1})
-\,p(s_t\,|\,\tm_t,s_{t-1})\,p(\underline{x}_t\,|\,s_t)\right\}
+\,p(\ux_1\,|\,\tm_1,s_1)
+\left\{\prod_{t=2}^{n}p(\tm_t,s_t\,|\,\tm_{t-1},s_{t-1})
+\,p(\ux_t\,|\,s_t)\right\}
 \,p(\ut\,|\,s_n)
 \,.
 \label{eq:stateful-1-model:hidden-markers}
 \end{eqnarray}
-
-
-Finally, if state $S_{t}$ is unobserved, then $\underline{s}_{t}=*$  denotes marginalisation over all $s_{t}\in{\cal S}$. 
-Once again, this marginalisation is made difficult because $S_t$ is involved in multiple dependencies, conditioning $X_t$, $\tau_{t+1}$ and possibly $S_{t+1}$.
-%Hence, state marginalisation is more involved than just dropping a single term from equation~\eqref{eq:stateful-1-model}.
-The possibility that multiple states might be unobserved complicates this marginalisation even further.
-Note that a process in which the observed state sequence $\underline{\vec{s}}$ is entirely unknown is called a {\em hidden Markov model} (or HMM).
-In order to deal with hidden states, it is convenient to assume that states take discrete\footnote{For states with continuous values, we would need to replace 
-the state summations by integrations, and the use of the Kronecker $\delta(a\!=\!b)$ by the Dirac $\delta(a-b)$.} 
-values, such that ${\cal S}=\left\{\sigma_1,\sigma_2,\ldots,\sigma_S\right\}$.
-Thus, let $\vec{s}$ represent some {\em completion} of $\underline{\vec{s}}$, i.e.\ an arbitrary sequence $\vec{s}=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$ that is consistent with all observed states in $\underline{\vec{s}}$.
-Then we may define
+Hence, we obtain
 \begin{eqnarray}
-p(\ui,\underline{\vec{s}},\underline{\vec{x}},\ut) & = &
-\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)
-\cdots
-\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)
-%\nonumber\\&& 
-\,p(\ui,\vec{s},\underline{\vec{x}},\ut)\,.
-\label{eq:state-marg}
+p(\ui,\uvs,\uvx,\ut) & = & 
+\sum_{s_1\in{\cal S}} \delta(s_1\!=\!\us_1)
+\cdots\sum_{s_n\in{\cal S}} \delta(s_n\!=\!\us_n)
+\,p(\ui,\vs,\uvx,\ut)\,,
 \end{eqnarray}
-This is just the marginalisation over every plausible completion $\vec{s}$ of the observed sequence $\underline{\vec{s}}$.
-Note that if $S_t$ is a hidden state, then $\underline{s}_t=*$ and $\delta(s_t\!=\!*)=1$ for all $s_t\in{\cal S}$; otherwise, the summation over $s_t$ collapses to the observed value $\underline{s}_t$.
+which is effectively the conventional HMM formulation (apart from the presence of the $\delta(\cdot)$ indicators).
 
+\subsection{Stateful Forward--Backward Algorithm}\label{sec:forward-backward:stateful}
 
-\subsection{Modified Forward--Backward Algorithm}\label{sec:forward-backward}
+Under the conventions discussed in the previous section, the forward--backward algorithm for order $m$ stateful Markov sequences takes the form
 
 The observed sequence model~\eqref{eq:state-marg} can be efficiently evaluated by marginalising over the state of each stage
 in turn, using a modification of the {\em forward--backward algorithm} to include knowledge of
