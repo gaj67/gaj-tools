@@ -386,7 +386,7 @@ Hence, under the Markov assumption of conditional independence,
 the causal sequence process leads to the fully-dependent conditional model
 \begin{eqnarray}
 p(\iota_0,\vr,\tau_{n+1}) & = &
-p(\iota_0,\tm_1,r_1,\ldots,\tm_n,r_n,\tau_{n+1})
+p(\iota_0,\tm_1,r_1,\tm_2,r_2,\ldots,\tm_n,r_n,\tau_{n+1})
 \nonumber\\
 & = &
 p(\iota_0)
@@ -451,7 +451,7 @@ The second-order Markov sequence process, for example, is depicted in Figure~\re
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0}{}$};
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0^+}{}$};
     \node[onode] (0) at (0,0) {};
     \node[cnode] (1) at (2,0) {$R_1$};
     \node[cnode] (2) at (4, 0)  {$R_2$};
@@ -608,6 +608,189 @@ both ends of the sequence, namely $\ui$ and $\ut$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Stateful Markov Sequence Processes}
+Consider the fully-dependent causal process $R$ depicted in Figure~\ref{fig:causal-process}.
+Suppose now that the random variable $R_t$ at stage $t$ can be decomposed into the tuple
+$R_t=(S_t,X_t)$, where $S_t$ is a random {\em state} variable taking values $s_t\in{\cal S}$, and $X_t$
+is a random {\em value} variable taking values $x_t\in{\cal X}$.
+We make the common presumption that the stage transitions in the sequence generating process are entirely between states, e.g.\ from $S_{t-1}$ to $S_t$.
+It follows from causation that the value $x_t$ is generated after the state $s_t$ has been determined, i.e.\ $X_t$ depends upon $S_t$.
+Consequently, the fully-dependent  stateful sequence process, shown in Figure~\ref{fig:stateful-full}, is derived from Figure~\ref{fig:causal-process}
+by replacing each node $R_t$ by the pair of nodes $S_t$ and $X_t$ with a dependency from $S_t$ to $X_t$, such that every {\em afferent} dependency pointing to $R_t$ becomes two dependencies pointing to $S_t$ and $X_t$, and every {\em efferent} dependency pointing from $R_t$ becomes two dependencies pointing from $S_t$ and $X_t$, respectively.
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0^+}{}$};
+    \node[onode] (0) at (0,0) {};
+    \node[cnode] (1) at (2,0) {$S_1$};
+    \node[cnode] (1x) at (2,-3) {$X_1$};
+    \node[cnode] (2) at (4, 0)  {$S_2$};
+    \node[cnode] (2x) at (4, -3)  {$X_2$};
+    \node[cnode] (3) at (6, 0)  {$S_3$};
+    \node[cnode] (3x) at (6, -3)  {$X_3$};
+    \node (t) at (8, 0) {$\cdots$};
+    \node (tx) at (8, -3) {$\cdots$};
+    \node[cnode] (N) at (10, 0)  {$S_N$};
+    \node[cnode] (Nx) at (10, -3)  {$X_N$};
+    \node[onode] (tt) at (12, 0) {};
+
+    \draw[->] (0) edge node [pos=0.55, above] {$\stackrel{\tm_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tm_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tm_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tm_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tm_N}{}$}  (N) ;
+    \draw[->] (N) edge node [pos=0.45, above] {$\stackrel{\tau^+_{N+1}}{}$} (tt) ;
+
+   \begin{scope}[dashed]
+    \draw[->] (0) to[out=40,in=140] (2) ;
+    \draw[->] (0) to[out=45,in=135] (3) ;
+    \draw[->] (0) to[out=50,in=130] (t) ;
+    \draw[->] (0) to[out=55,in=125] (N) ;
+    \draw[->] (0) to[out=60,in=120] (tt) ;
+    \draw[->] (1) to[out=40,in=140] (3) ;
+    \draw[->] (1) to[out=45,in=135] (t) ;
+    \draw[->] (1) to[out=50,in=130] (N) ;
+    \draw[->] (1) to[out=55,in=125] (tt) ;
+    \draw[->] (2) to[out=40,in=140] (t) ;
+    \draw[->] (2) to[out=45,in=135] (N) ;
+    \draw[->] (2) to[out=50,in=130] (tt) ;
+    \draw[->] (3) to[out=40,in=140] (N) ;
+    \draw[->] (3) to[out=45,in=135] (tt) ;
+   \end{scope}
+
+   \begin{scope}[dashed]
+    \draw[->] (0) to (1x) ;
+    \draw[->] (0) to (2x) ;
+    \draw[->] (0) to (3x) ;
+    \draw[->] (0) to (tx) ;
+    \draw[->] (0) to (Nx) ;
+
+    \draw[->] (1) to (1x) ;
+    \draw[->] (1) to (2x) ;
+    \draw[->] (1) to (3x) ;
+    \draw[->] (1) to (tx) ;
+    \draw[->] (1) to (Nx) ;
+    \draw[->] (2) to (2x) ;
+    \draw[->] (2) to (3x) ;
+    \draw[->] (2) to (tx) ;
+    \draw[->] (2) to (Nx) ;
+    \draw[->] (3) to (3x) ;
+    \draw[->] (3) to (tx) ;
+    \draw[->] (3) to (Nx) ;
+    \draw[->] (t) to (tx) ;
+    \draw[->] (t) to (Nx) ;
+    \draw[->] (N) to (Nx) ;
+
+    \draw[->] (1x) to (2) ;
+    \draw[->] (1x) to (3) ;
+    \draw[->] (1x) to (t) ;
+    \draw[->] (1x) to (N) ;
+    \draw[->] (2x) to (3) ;
+    \draw[->] (2x) to (t) ;
+    \draw[->] (2x) to (N) ;
+    \draw[->] (3x) to (t) ;
+    \draw[->] (3x) to (N) ;
+    \draw[->] (tx) to (N) ;
+
+    \draw[->] (1x) to (tt) ;
+    \draw[->] (2x) to (tt) ;
+    \draw[->] (3x) to (tt) ;
+    \draw[->] (tx) to (tt) ;
+    \draw[->] (Nx) to (tt) ;
+   \end{scope}
+
+   \begin{scope}[dashed]
+    \draw[->] (1x) to (2x) ;
+    \draw[->] (2x) to (3x) ;
+    \draw[->] (3x) to (tx) ;
+    \draw[->] (tx) to (Nx) ;
+
+    \draw[->] (1x) to[out=-40,in=-140] (3x) ;
+    \draw[->] (1x) to[out=-45,in=-135] (tx) ;
+    \draw[->] (1x) to[out=-50,in=-130] (Nx) ;
+    \draw[->] (2x) to[out=-40,in=-140] (tx) ;
+    \draw[->] (2x) to[out=-45,in=-135] (Nx) ;
+    \draw[->] (3x) to[out=-40,in=-140] (Nx) ;
+   \end{scope}
+\end{tikzpicture}
+\caption{\em A fully-dependent, causal, stateful process for generating complete, random sequences of random length $N$ consisting of pairs of states and values.}
+\label{fig:stateful-full}
+\end{figure}
+For convenience, we may notionally separate the states from the corresponding values at each stage by loosely defining
+\begin{eqnarray}
+\vr & = & (r_1,r_2,\ldots,r_n)
+\nonumber\\& = & 
+((s_1,x_1),(s_2,x_2),\ldots,(s_n,x_n))
+\nonumber\\& \equiv & 
+(s_1,\ldots,s_n)\odot (x_1,\ldots,x_n)~=~(\vs,\vx)\,.
+\end{eqnarray}
+Hence, the joint likelihood of a fully-dependent state--value sequence is now derived from model~\eqref{eq:temporal-model-full} to be
+\begin{eqnarray}
+p(\iota_0,\vs,\vx,\tau_{n+1}) & = &
+p(\iota_0,\tm_1,s_1,x_1,\tm_2,s_2,x_2,\ldots,\tm_n,s_n,x_n,\tau_{n+1})
+\nonumber\\
+& = &
+p(\iota_0)
+\left\{\prod_{t=1}^{n}p(\tm_t,s_t\,|\,\iota_0,\vec{\tau}^-_{1,t-1},\vs_{1,t-1},\vx_{1,t-1})\,p(x_t\,|\,\iota_0,\vec{\tau}^-_{1,t-1},\vs_{1,t},\vx_{1,t-1})\right\}
+\nonumber\\&&{}\times
+ p(\tau_{n+1}\,|\,\iota_0,\vec{\tau}^-_{1,n},\vs_{1,n},\vx_{1,n})
+\,.
+\label{eq:stateful-model-full}
+\end{eqnarray}
+
+In practice, the dependence of $S_t$ and $X_t$ on $X_{t-1}$ (and further ancestral values) induces a regression model of some complexity,
+especially if the set ${\cal X}$ of values is continuous and/or multi-dimensional. Also, such a dependency causes difficulties handling missing values (see Section~\ref{sec:hidden-state}).
+Finally, as we discussed earlier, the general `spirit' of  stateful processes is that the state drives the value, not the other way around.
+Hence, common practice is to limit all dependencies to a maximum of $m$ previous {\em nodes}, as shown in Figure~\ref{fig:stateful-m}.
+\begin{figure}[hbt]
+\centering
+\begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0^+}{}$};
+    \node[onode] (0) at (0,0) {};
+    \node[cnode] (1) at (2,0) {$S_1$};
+    \node[cnode] (1x) at (2,-2) {$X_1$};
+    \node[cnode] (2) at (4, 0)  {$S_2$};
+    \node[cnode] (2x) at (4, -2)  {$X_2$};
+    \node[cnode] (3) at (6, 0)  {$S_3$};
+    \node[cnode] (3x) at (6, -2)  {$X_3$};
+    \node (t) at (8, 0) {$\cdots$};
+    \node (tx) at (8, -3) {$\cdots$};
+    \node[cnode] (N) at (10, 0)  {$S_N$};
+    \node[cnode] (Nx) at (10, -2)  {$X_N$};
+    \node[onode] (tt) at (12, 0) {};
+
+    \draw[->] (0) edge node [pos=0.55, above] {$\stackrel{\tm_1}{}$}  (1) ;
+    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tm_2}{}$}  (2) ;
+    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tm_3}{}$}  (3) ;
+    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tm_4}{}$}  (t) ;
+    \draw[->] (t) edge node [pos=0.5, above] {$\stackrel{\tm_N}{}$}  (N) ;
+    \draw[->] (N) edge node [pos=0.45, above] {$\stackrel{\tau^+_{N+1}}{}$} (tt) ;
+
+   \begin{scope}[dashed]
+    \draw[->] (0) to[out=40,in=140] (2) ;
+    \draw[->] (1) to[out=40,in=140] (3) ;
+    \draw[->] (2) to[out=40,in=140] (t) ;
+    \draw[->] (3) to[out=40,in=140] (N) ;
+   \end{scope}
+
+   \begin{scope}[dashed]
+    \draw[->] (0) to (1x) ;
+    \draw[->] (1) to (1x) ;
+    \draw[->] (1) to (2x) ;
+    \draw[->] (2) to (2x) ;
+    \draw[->] (2) to (3x) ;
+    \draw[->] (3) to (3x) ;
+    \draw[->] (3) to (tx) ;
+    \draw[->] (t) to (tx) ;
+    \draw[->] (t) to (Nx) ;
+    \draw[->] (N) to (Nx) ;
+   \end{scope}
+
+\end{tikzpicture}
+\caption{\em An example ($m=2$) of an $m$th-order stateful Markov process for generating complete, random sequences of random length $N$ consisting of pairs of states and values.}
+\label{fig:stateful-m}
+\end{figure}
+
+**********************************************
 Consider the first-order Markov process $R$ depicted in Figure~\ref{fig:simple-random-process}.
 Suppose now that the random variable $R_t$ at stage $t$ can be decomposed into the tuple
 $R_t=(S_t,X_t)$, where $S_t$ is a random {\em state} variable taking values $s_t\in{\cal S}$, and $X_t$
@@ -621,7 +804,7 @@ $(S_{t+1},X_{t+1})$. Note that the restriction to order $m=1$ is not really oner
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0}{}$};
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0^+}{}$};
     \node[onode] (0) at (0,0) {};
     \node[cnode] (1) at (2,0) {$S_1$};
     \node[cnode] (1x) at (2,-2) {$X_1$};
@@ -724,7 +907,7 @@ This restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0}{}$};
+    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0^+}{}$};
     \node[onode] (0) at (0,0) {};
     \node[cnode] (1) at (2,0) {$S_1$};
     \node[cnode] (1x) at (2,-2) {$X_1$};
@@ -766,6 +949,7 @@ p(\iota_0)\,p(\tm_1,s_1\,|\,\iota_0)\,p(x_1\,|\,\tm_1,s_1)
 \,p(\tau_{n+1}\,|\,\tm_n,s_n)\,.
 \label{eq:stateful-1-model}
 \end{eqnarray}
+
 
 \subsection{Hidden State Sequences}\label{sec:hidden-state}
 
@@ -815,9 +999,9 @@ Hence, we obtain
 p(\ui,\uvs,\uvx,\ut) & = & 
 \sum_{s_1\in{\cal S}} \delta(s_1\!=\!\us_1)
 \cdots\sum_{s_n\in{\cal S}} \delta(s_n\!=\!\us_n)
-\,p(\ui,\vs,\uvx,\ut)\,,
+\,p(\ui,\vs,\uvx,\ut)\,.
 \end{eqnarray}
-which is effectively the conventional HMM formulation (apart from the presence of the $\delta(\cdot)$ indicators).
+Note that the conventional HMM formulation is obtained by dropping the $\ui$, $\uvs$ and $\ut$ terms and the $\delta(\cdot)$ indicators.
 
 \subsection{Stateful Forward--Backward Algorithm}\label{sec:forward-backward:stateful}
 
