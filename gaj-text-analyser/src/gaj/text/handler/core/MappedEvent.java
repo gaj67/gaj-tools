@@ -68,7 +68,7 @@ import java.util.Map.Entry;
         return myEventLabel == null || myEventLabel.equals(theirEventLabel);
     }
 
-    private boolean matchesEventProperties(/* @Nullable */Map<String, V> myEventProperties, Event<?, ?> event) {
+    private boolean matchesEventProperties(/*@Nullable*/Map<String, V> myEventProperties, Event<?, ?> event) {
         return myEventProperties == null || event.hasProperties(myEventProperties);
     }
 

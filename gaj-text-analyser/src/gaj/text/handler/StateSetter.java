@@ -25,7 +25,7 @@ public interface StateSetter<S> {
      * History after adding new state Z:
      * 
      * <pre>
-     * ... -> X (grandparent) -> Y (parent & last) -> Z (current)
+     * ... -> X (grandparent) -> Y (parent & previous) -> Z (current)
      * </pre>
      *
      * @param state
@@ -45,7 +45,7 @@ public interface StateSetter<S> {
      * </pre>
      * History after removing state Z:
      * <pre>
-     * ... -> X (parent) -> Y (current); Z (last)
+     * ... -> X (parent) -> Y (current); Z (previous)
      * </pre>
      */
     void rewindState();

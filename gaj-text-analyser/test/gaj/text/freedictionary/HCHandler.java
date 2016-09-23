@@ -1,5 +1,6 @@
 package gaj.text.freedictionary;
 
+import static gaj.text.handler.sax.StateSAXEventRuleFactory.newRule;
 import gaj.text.handler.Action;
 import gaj.text.handler.StateEventRule;
 import gaj.text.handler.sax.ContextfStatefulSAXEventRuleHandler;
@@ -53,111 +54,111 @@ public class HCHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     protected Collection<StateEventRule<State, SAXEvent>> getRules() {
         if (rules == null) {
             rules = new ArrayList<>();
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.INIT,
                     HCEvents.START_SECTION,
                     State.SECTION, this::initSection));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SECTION,
                     HCEvents.START_SECTION_WORD,
                     State.WORD, this::captureTextOn));
             rules.add(StateSAXEventRuleFactory.<State> newRule(
                     SAXEventType.CHARACTERS, this::appendTextBuffer));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     null, State.WORD, State.SECTION,
                     HCEvents.END_SECTION_WORD,
                     State.REWIND, this::getSectionWord));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SECTION,
                     HCEvents.START_SEGMENT,
                     State.SEGMENT, this::initSegment));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SECTION, State.SEGMENT,
                     HCEvents.START_SEGMENT_TAG,
                     State.TAG, this::captureTextOn));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SEGMENT, State.TAG,
                     HCEvents.END_SEGMENT_TAG,
                     State.REWIND, this::getSegmentTag));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.TAG, State.SEGMENT,
                     HCEvents.START_SEGMENT_TAG,
                     State.TAG_FEATURE, this::captureTextOn, (Action) () -> appendTextBuffer("[")));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.TAG_FEATURE,
                     HCEvents.END_SEGMENT_TAG,
                     State.REWIND, this::getSegmentTag, (Action) () -> appendTextBuffer("]")));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SEGMENT,
                     HCEvents.START_SEGMENT_WORD,
                     State.WORD, this::captureTextOn));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     null, State.WORD, State.SEGMENT,
                     HCEvents.END_SEGMENT_WORD,
                     State.REWIND, this::addSegmentWord));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.WORD, State.SEGMENT,
                     HCEvents.START_SEGMENT_WORD,
                     State.WORD, this::captureTextOn));
             // TODO handle intra-word elements.
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SEGMENT,
                     HCEvents.START_SEGMENT_ITEM,
                     State.ITEM, this::initItem));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SEGMENT,
                     HMEvents.START_SEGMENT_ITEM2,
                     State.ITEM, this::initItem));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.ITEM,
                     HCEvents.START_SEGMENT_EXAMPLE,
                     State.EXAMPLE, this::captureTextOn));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     null, State.EXAMPLE, State.ITEM,
                     HCEvents.END_SEGMENT_EXAMPLE,
                     State.REWIND, this::addItemExample));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.ITEM,
                     HCEvents.START_SEGMENT_SUBITEM,
                     State.SUBITEM, this::initSubItem));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SUBITEM,
                     HCEvents.START_SEGMENT_EXAMPLE,
                     State.EXAMPLE, this::captureTextOn));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     null, State.EXAMPLE, State.SUBITEM,
                     HCEvents.END_SEGMENT_EXAMPLE,
                     State.REWIND, this::addSubItemExample));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SUBITEM,
                     HCEvents.END_SEGMENT_SUBITEM,
                     State.REWIND, this::addSubItem));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.ITEM,
                     HCEvents.END_SEGMENT_ITEM,
                     State.REWIND, this::addItem));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SEGMENT,
                     HCEvents.END_SEGMENT,
                     State.REWIND, this::addSegment));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SECTION,
                     HCEvents.START_SECTION_REP,
                     null, this::addSection));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SECTION,
                     HCEvents.END_SECTION_REP,
                     null, this::initSection));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.SECTION,
                     HCEvents.END_SECTION,
                     State.REWIND, this::addSection));
             // Expect the unexpected
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.OTHER, SAXEventType.BEGIN_ELEMENT, State.OTHER));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     State.OTHER, SAXEventType.END_ELEMENT, State.REWIND));
-            rules.add(StateSAXEventRuleFactory.newRule(
+            rules.add(newRule(
                     SAXEventType.BEGIN_ELEMENT, State.OTHER));
         }
         return rules;

@@ -13,13 +13,13 @@ import gaj.text.handler.StateTransition;
 
     /*package-private*/ StateEventRuleImpl(
             /*@Nullable*/ StateGetter<S> stateGetter,
-            /* @Nullable */E event,
+            /*@Nullable*/ E event,
             /*@Nullable*/ StateTransition<S> stateTransition)
-            {
+    {
         this.stateGetter = stateGetter;
         this.event = event;
         this.stateTransition = stateTransition;
-            }
+    }
 
     @Override
     public boolean matches(StateGetter<S> stateGetter, E event) {
