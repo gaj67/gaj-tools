@@ -1,4 +1,4 @@
-2package gaj.text.handler.core;
+package gaj.text.handler.core;
 
 import gaj.text.handler.StateGetter;
 import java.util.ArrayList;
