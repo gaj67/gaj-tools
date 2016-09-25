@@ -3,7 +3,6 @@ package gaj.text.handler.sax;
 import gaj.text.handler.Action;
 import gaj.text.handler.StateEventRule;
 import gaj.text.handler.StateTransition;
-import java.util.Collection;
 
 public abstract class StatefulSAXEventRuleHandler<S> extends StatefulSAXEventHandler<S> {
 
@@ -24,14 +23,13 @@ public abstract class StatefulSAXEventRuleHandler<S> extends StatefulSAXEventHan
 
     protected StatefulSAXEventRuleHandler() {}
 
-    protected abstract Collection<StateEventRule<S, SAXEvent>> getRules();
+    protected abstract Iterable<StateEventRule<S, SAXEvent>> getRules();
 
     @Override
     public void handle(SAXEvent event) {
         System.out.printf("Event: %s[%s]%s ", event.getType(), event.getLabel(), event.getProperties());
         System.out.printf("Before: %s->%s ", getPreviousState(), getState());
-        final Collection<StateEventRule<S, SAXEvent>> rules = getRules();
-        for (StateEventRule<S, SAXEvent> rule : rules) {
+        for (StateEventRule<S, SAXEvent> rule : getRules()) {
             if (rule.matches(this, event)) {
                 System.out.printf("Have rule ");
                 StateTransition<S> transition = rule.getStateTransition();

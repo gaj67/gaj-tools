@@ -3,7 +3,6 @@ package gaj.text.handler.sax;
 import gaj.text.handler.Action;
 import gaj.text.handler.StateEventRule;
 import gaj.text.handler.StateTransition;
-import java.util.Collection;
 
 public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStatefulSAXEventHandler<S> {
 
@@ -27,7 +26,7 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
 
     protected ContextfStatefulSAXEventRuleHandler() {}
 
-    protected abstract Collection<StateEventRule<S, SAXEvent>> getRules();
+    protected abstract Iterable<StateEventRule<S, SAXEvent>> getRules();
 
     protected void setTrace(boolean isTrace) {
         IS_TRACE = isTrace;
@@ -35,13 +34,12 @@ public abstract class ContextfStatefulSAXEventRuleHandler<S> extends ContextStat
 
     @Override
     public void handle(SAXEvent event) {
-        final Collection<StateEventRule<S, SAXEvent>> rules = getRules();
         if (IS_TRACE) {
             System.out.printf("Event: %s[%s]%s ", event.getType(), event.getLabel(), event.getProperties());
             System.out.printf("Before: %s->%s(%s) ", getParentState(), getState(), getPreviousState());
         }
         int i = -1;
-        for (StateEventRule<S, SAXEvent> rule : rules) {
+        for (StateEventRule<S, SAXEvent> rule : getRules()) {
         	i++;
             if (rule.matches(this, event)) {
                 if (IS_TRACE)

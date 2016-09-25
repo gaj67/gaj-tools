@@ -1,4 +1,4 @@
-package gaj.text.freedictionary;
+package gaj.text.app.freedictionary.xml;
 
 /**
  * Indicates the possible macro-states that a section handler may take.

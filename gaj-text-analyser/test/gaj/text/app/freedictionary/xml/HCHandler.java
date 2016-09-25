@@ -1,4 +1,4 @@
-package gaj.text.freedictionary;
+package gaj.text.app.freedictionary.xml;
 
 import static gaj.text.handler.sax.StateSAXEventRuleFactory.newRule;
 import gaj.text.handler.Action;
@@ -7,11 +7,13 @@ import gaj.text.handler.sax.ContextfStatefulSAXEventRuleHandler;
 import gaj.text.handler.sax.SAXEvent;
 import gaj.text.handler.sax.SAXEventType;
 import gaj.text.handler.sax.StateSAXEventRuleFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class HCHandler extends ContextfStatefulSAXEventRuleHandler<State> {
 
@@ -25,6 +27,8 @@ public class HCHandler extends ContextfStatefulSAXEventRuleHandler<State> {
 	private static final String ITEM_SUBITEMS_KEY = "subitems";
 	private static final String EXAMPLES_KEY = "examples";
 
+	private final Consumer<UnstructuredData> consumer;
+
     private List<StateEventRule<State, SAXEvent>> rules = null;
 
     private Map<String, Object> sectionData = null;
@@ -36,7 +40,11 @@ public class HCHandler extends ContextfStatefulSAXEventRuleHandler<State> {
         super.setTrace(IS_TRACE);
     }
 
-    @Override
+    public HCHandler(Consumer<UnstructuredData> consumer) {
+		this.consumer = consumer;
+	}
+
+	@Override
     public State nullState() {
         return State.INIT;
     }
@@ -285,8 +293,15 @@ public class HCHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     }
 
     protected void addSection() {
-        // if (IS_TRACE)
-        System.out.printf("sectionData=%s%n", sectionData);
+        if (IS_TRACE) {
+        	System.out.printf("sectionData=%s%n", sectionData);
+        }
+        consumer.accept(new UnstructuredData() {
+			@Override
+			public Map<String, Object> getData() {
+				return sectionData;
+			}
+		});
         sectionData = null;
     }
 
