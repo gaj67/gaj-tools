@@ -254,28 +254,30 @@ public class HCHandler extends ContextfStatefulSAXEventRuleHandler<State> {
     }
 
     protected void addSubItem() {
-        if (IS_TRACE)
-            System.out.printf("subitemData=%s%n", subitemData);
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>> subitems = (List<Map<String, Object>>) itemData.get(ITEM_SUBITEMS_KEY);
-        if (subitems == null) {
-            subitems = new ArrayList<>();
-            itemData.put(ITEM_SUBITEMS_KEY, subitems);
+    	if (IS_TRACE) System.out.printf("subitemData=%s%n", subitemData);
+    	if (!subitemData.isEmpty()) {
+    		@SuppressWarnings("unchecked")
+    		List<Map<String, Object>> subitems = (List<Map<String, Object>>) itemData.get(ITEM_SUBITEMS_KEY);
+    		if (subitems == null) {
+    			subitems = new ArrayList<>();
+    			itemData.put(ITEM_SUBITEMS_KEY, subitems);
+    		}
+    		subitems.add(subitemData);
         }
-        subitems.add(subitemData);
         subitemData = null;
     }
 
     protected void addItem() {
-        if (IS_TRACE)
-            System.out.printf("itemData=%s%n", itemData);
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>> items = (List<Map<String, Object>>) segmentData.get(SEGMENT_ITEMS_KEY);
-        if (items == null) {
-            items = new ArrayList<>();
-            segmentData.put(SEGMENT_ITEMS_KEY, items);
+    	if (IS_TRACE) System.out.printf("itemData=%s%n", itemData);
+    	if (!itemData.isEmpty()) {
+    		@SuppressWarnings("unchecked")
+    		List<Map<String, Object>> items = (List<Map<String, Object>>) segmentData.get(SEGMENT_ITEMS_KEY);
+    		if (items == null) {
+    			items = new ArrayList<>();
+    			segmentData.put(SEGMENT_ITEMS_KEY, items);
+    		}
+    		items.add(itemData);
         }
-        items.add(itemData);
         itemData = null;
     }
 
