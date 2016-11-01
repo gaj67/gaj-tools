@@ -130,4 +130,62 @@ public abstract class CurveFactory {
         return -(H0d2 + Math.sqrt(D)) / T0d3;
     }
 
+    /**
+     * Fits a quadratic curve through two points (u,f(u)) and (v,f(v)) with
+     * known gradient f'(u).
+     * 
+     * @param u
+     *            The value of one point, u.
+     * @param fu
+     *            The value of f(u).
+     * @param dfu
+     *            The value of f'(u).
+     * @param v
+     *            The value of another point, v.
+     * @param fv
+     *            The value of f(v).
+     * @return The local turning point of the quadratic.
+     */
+    public static double quadraticOptimum(double u, double fu, double dfu, double v, double fv) {
+        /*
+         * Now, f(u) = au^2+bu+c; f(v) = av^2+bv+c
+         * => f(v)-f(u) = a(v^2-u^2)+b(v-u) = a(v+u)(v-u)+b(v-u)
+         * => [f(v)-f(u)]/(v-u) = a(v+u)+b.
+         * Also, f'(u) = 2au+b
+         * => [f(v)-f(u)]/(v-u) - f'(u) = a(v-u)
+         * => a = {[f(v)-f(u)]/(v-u) - f'(u)}/(v-u).
+         * And f'(u)/(2a) = u+b/(2a)
+         * => x* = -b/(2a) = u-f'(u)/(2a).
+         */
+        final double delta = v - u;
+        final double a = ((fv - fu) / delta - dfu) / delta;
+        return u - 0.5 * dfu / a;
+    }
+
+    /**
+     * Fits a quadratic curve through two x-values, u and v, with known
+     * gradients f'(u) and f'(v).
+     * 
+     * @param u
+     *            The value of one point, u.
+     * @param dfu
+     *            The value of f'(u).
+     * @param v
+     *            The value of another point, v.
+     * @param dfv
+     *            The value of f'(v).
+     * @return The local turning point of the quadratic.
+     */
+    public static double quadraticOptimum(double u, double dfu, double v, double dfv) {
+        /*
+         * Now, f(u) = au^2+bu+c; f(v) = av^2+bv+c 
+         * => f'(u) = 2au+b; f'(v) = 2av+b
+         * => f'(v)-f'(u) = 2a(v-u)
+         * => 2a = [f'(v)-f'(u)]/(v-u).
+         * And f'(u)/(2a) = u+b/(2a)
+         * => x* = -b/(2a) = u-f'(u)/(2a) = u-(v-u)*f'(u)/[f'(v)-f'(u)].
+         */
+        return u - (v - u) * dfu / (dfv - dfu);
+    }
+
 }
