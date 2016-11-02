@@ -1,16 +1,16 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.Classifier;
-import gaj.data.classifier.ClassifierScoreInfo;
-import gaj.data.classifier.DataScorer;
-import gaj.data.classifier.DatumScore;
-import gaj.data.classifier.GoldData;
-import gaj.data.classifier.GoldDatum;
-import gaj.data.classifier.ParameterisedClassifier;
-import gaj.data.vector.DataVector;
-import gaj.data.vector.WritableVector;
-import gaj.impl.vector.DataIterator;
-import gaj.impl.vector.VectorFactory;
+import gaj.analysis.data.classifier.Classifier;
+import gaj.analysis.data.classifier.ClassifierScoreInfo;
+import gaj.analysis.data.classifier.DataScorer;
+import gaj.analysis.data.classifier.DatumScore;
+import gaj.analysis.data.classifier.GoldData;
+import gaj.analysis.data.classifier.GoldDatum;
+import gaj.analysis.data.classifier.ParameterisedClassifier;
+import gaj.analysis.data.vector.DataVector;
+import gaj.analysis.data.vector.WritableVector;
+import gaj.analysis.data.vector.impl.DataIterator;
+import gaj.analysis.data.vector.impl.VectorFactory;
 import java.util.Iterator;
 
 /**

@@ -1,12 +1,12 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.Classification;
-import gaj.data.classifier.DatumScore;
-import gaj.data.matrix.WritableMatrix;
-import gaj.data.vector.DataVector;
-import gaj.data.vector.WritableVector;
-import gaj.impl.matrix.MatrixFactory;
-import gaj.impl.vector.VectorFactory;
+import gaj.analysis.data.classifier.Classification;
+import gaj.analysis.data.classifier.DatumScore;
+import gaj.analysis.data.matrix.WritableMatrix;
+import gaj.analysis.data.matrix.impl.MatrixFactory;
+import gaj.analysis.data.vector.DataVector;
+import gaj.analysis.data.vector.WritableVector;
+import gaj.analysis.data.vector.impl.VectorFactory;
 
 public class LogisticClassifier extends BaseClassifier {
 

@@ -1,12 +1,12 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.ClassifierScoreInfo;
-import gaj.data.classifier.DataScorer;
-import gaj.data.classifier.ParameterisedClassifier;
-import gaj.data.classifier.TrainingControl;
-import gaj.data.classifier.TrainingSummary;
-import gaj.data.classifier.TrainingState;
 import java.util.Arrays;
+import gaj.analysis.data.classifier.ClassifierScoreInfo;
+import gaj.analysis.data.classifier.DataScorer;
+import gaj.analysis.data.classifier.ParameterisedClassifier;
+import gaj.analysis.data.classifier.TrainingControl;
+import gaj.analysis.data.classifier.TrainingState;
+import gaj.analysis.data.classifier.TrainingSummary;
 
 /**
  * A base class for implementing a classifier training algorithm.
@@ -20,8 +20,7 @@ public abstract class BaseTrainer extends TrainingAlgorithm {
      * @param classifier - The classifier to be trained.
      * @param scorers - The data scorers to measure classifier performance.
      */
-    protected BaseTrainer(ParameterisedClassifier classifier,
-            DataScorer[] scorers) {
+    protected BaseTrainer(ParameterisedClassifier classifier, DataScorer[] scorers) {
         super(classifier, scorers);
     }
 
@@ -55,7 +54,7 @@ public abstract class BaseTrainer extends TrainingAlgorithm {
     }
 
     /**
-     * Ends the training run, and summarises the training pocess.
+     * Ends the training run, and summarises the training process.
      * 
      * @param state
      * 

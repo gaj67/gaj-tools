@@ -1,8 +1,8 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.DatumScore;
-import gaj.data.classifier.ParameterisedClassifier;
-import gaj.data.vector.DataVector;
+import gaj.analysis.data.classifier.DatumScore;
+import gaj.analysis.data.classifier.ParameterisedClassifier;
+import gaj.analysis.data.vector.DataVector;
 
 /**
  * Offers a base class for a parameterised classifier.

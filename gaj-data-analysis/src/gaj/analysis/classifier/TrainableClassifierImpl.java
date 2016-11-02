@@ -1,12 +1,12 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.Classification;
-import gaj.data.classifier.DataScorer;
-import gaj.data.classifier.DatumScore;
-import gaj.data.classifier.ParameterisedClassifier;
-import gaj.data.classifier.ScoredTrainer;
-import gaj.data.classifier.TrainableClassifier;
-import gaj.data.vector.DataVector;
+import gaj.analysis.data.classifier.Classification;
+import gaj.analysis.data.classifier.DataScorer;
+import gaj.analysis.data.classifier.DatumScore;
+import gaj.analysis.data.classifier.ParameterisedClassifier;
+import gaj.analysis.data.classifier.ScoredTrainer;
+import gaj.analysis.data.classifier.TrainableClassifier;
+import gaj.analysis.data.vector.DataVector;
 
 /*package-private*/class TrainableClassifierImpl implements TrainableClassifier {
 

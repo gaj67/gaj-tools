@@ -1,12 +1,12 @@
 package gaj.analysis.markov;
 
-import gaj.data.markov.SequenceType;
-import gaj.data.matrix.DataMatrix;
-import gaj.data.matrix.WritableMatrix;
-import gaj.data.vector.DataVector;
-import gaj.data.vector.IndexVector;
-import gaj.impl.matrix.MatrixFactory;
-import gaj.impl.vector.VectorFactory;
+import gaj.analysis.data.markov.SequenceType;
+import gaj.analysis.data.matrix.DataMatrix;
+import gaj.analysis.data.matrix.WritableMatrix;
+import gaj.analysis.data.matrix.impl.MatrixFactory;
+import gaj.analysis.data.vector.DataVector;
+import gaj.analysis.data.vector.IndexVector;
+import gaj.analysis.data.vector.impl.VectorFactory;
 
 /**
  * Provides the basic methods for analysing one-step Markov sequences.

@@ -1,7 +1,7 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.GoldData;
-import gaj.data.vector.DataVector;
+import gaj.analysis.data.classifier.GoldData;
+import gaj.analysis.data.vector.DataVector;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -1,12 +1,12 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.ClassifierScoreInfo;
-import gaj.data.classifier.DataScorer;
-import gaj.data.classifier.ParameterisedClassifier;
-import gaj.data.classifier.TrainingControl;
-import gaj.data.classifier.TrainingState;
-import gaj.data.vector.DataVector;
-import gaj.impl.vector.VectorFactory;
+import gaj.analysis.data.classifier.ClassifierScoreInfo;
+import gaj.analysis.data.classifier.DataScorer;
+import gaj.analysis.data.classifier.ParameterisedClassifier;
+import gaj.analysis.data.classifier.TrainingControl;
+import gaj.analysis.data.classifier.TrainingState;
+import gaj.analysis.data.vector.DataVector;
+import gaj.analysis.data.vector.impl.VectorFactory;
 
 /**
  * Implements a classifier trainer using

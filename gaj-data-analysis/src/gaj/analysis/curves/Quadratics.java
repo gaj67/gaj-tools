@@ -1,7 +1,7 @@
 package gaj.analysis.curves;
 
-import gaj.data.vector.DataVector;
-import gaj.impl.vector.VectorFactory;
+import gaj.analysis.data.vector.DataVector;
+import gaj.analysis.data.vector.impl.VectorFactory;
 
 /**
  * Provides methods for fitting, using and interpreting quadratic curves of the

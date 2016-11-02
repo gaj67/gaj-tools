@@ -1,13 +1,13 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.DataScorer;
-import gaj.data.classifier.ParameterisedClassifier;
-import gaj.data.classifier.ScoredTrainer;
-import gaj.data.classifier.TrainingControl;
-import gaj.data.classifier.TrainingSummary;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import gaj.analysis.data.classifier.DataScorer;
+import gaj.analysis.data.classifier.ParameterisedClassifier;
+import gaj.analysis.data.classifier.ScoredTrainer;
+import gaj.analysis.data.classifier.TrainingControl;
+import gaj.analysis.data.classifier.TrainingSummary;
 
 /**
  * A base class for implementing a trainer for

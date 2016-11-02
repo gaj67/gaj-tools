@@ -1,7 +1,7 @@
 package gaj.analysis.curves;
 
-import gaj.data.vector.DataVector;
-import gaj.impl.vector.VectorFactory;
+import gaj.analysis.data.vector.DataVector;
+import gaj.analysis.data.vector.impl.VectorFactory;
 
 /**
  * Provides methods for fitting, using and interpreting cubic curves of the form
@@ -55,6 +55,56 @@ public abstract class Cubics {
         final double c = dfu - u * (3 * a * u + 2 * b);
         final double d = fu - u * (c + u * (b + u * a));
         return new double[] { a, b, c, d };
+    }
+
+    /**
+     * Determines the local maximum turning point of the cubic f(x) =
+     * ax^3+bx^2+cx+d.
+     * 
+     * @param coeffs
+     *            - The [a,b,c,d] array of cubic coefficients.
+     * @return The position x* of the local maximum turning point, or a value of
+     *         +infinity if no such point exists.
+     */
+    public static double cubicMaximum(double[] coeffs) {
+        /*
+         * Now, f(x) = ax^3+bx^2+cx+d
+         * =>  f'(x) = 3ax^2+2bx+c.
+         * Let f'(x*) = 0
+         * => x* = (-B +/- sqrt{B^2-4AC})/(2A)
+         *       = (-(2b) +/- sqrt{4b^2-12ac})/(6a)
+         *       = (-b +/- sqrt{b^2-3ac})/(3a).
+         * Note: a > 0 (or a < 0) means local maximum is left (or right) of -b/(3a).
+         */
+        final double discrim = coeffs[1] * coeffs[1] - 3 * coeffs[0] * coeffs[2]; // b^2-3ac.
+        if (discrim < 0)
+            return Double.POSITIVE_INFINITY;
+        return (-coeffs[1] - Math.sqrt(discrim)) / (3 * coeffs[0]);
+    }
+
+    /**
+     * Determines the local minimum turning point of the cubic f(x) =
+     * ax^3+bx^2+cx+d.
+     * 
+     * @param coeffs
+     *            - The [a,b,c,d] array of cubic coefficients.
+     * @return The position x* of the local minimum turning point, or a value of
+     *         -infinity if no such point exists.
+     */
+    public static double cubicMinimum(double[] coeffs) {
+        /*
+         * Now, f(x) = ax^3+bx^2+cx+d
+         * =>  f'(x) = 3ax^2+2bx+c.
+         * Let f'(x*) = 0
+         * => x* = (-B +/- sqrt{B^2-4AC})/(2A)
+         *       = (-(2b) +/- sqrt{4b^2-12ac})/(6a)
+         *       = (-b +/- sqrt{b^2-3ac})/(3a).
+         * Note: a > 0 (or a < 0) means local minimum is right (or left) of -b/(3a).
+         */
+        final double discrim = coeffs[1] * coeffs[1] - 3 * coeffs[0] * coeffs[2]; // b^2-3ac.
+        if (discrim < 0)
+            return Double.NEGATIVE_INFINITY;
+        return (-coeffs[1] + Math.sqrt(discrim)) / (3 * coeffs[0]);
     }
 
     /**

@@ -1,7 +1,7 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.ParameterisedClassifier;
-import gaj.data.classifier.TrainableClassifier;
+import gaj.analysis.data.classifier.ParameterisedClassifier;
+import gaj.analysis.data.classifier.TrainableClassifier;
 
 public abstract class ClassifierFactory {
 

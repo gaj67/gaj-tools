@@ -1,13 +1,14 @@
 package gaj.analysis.classifier;
 
-import gaj.data.classifier.ClassifierScoreInfo;
-import gaj.data.classifier.DataScorer;
-import gaj.data.classifier.ParameterisedClassifier;
-import gaj.data.classifier.TrainingControl;
-import gaj.data.classifier.TrainingSummary;
+import gaj.analysis.data.classifier.ClassifierScoreInfo;
+import gaj.analysis.data.classifier.DataScorer;
+import gaj.analysis.data.classifier.ParameterisedClassifier;
+import gaj.analysis.data.classifier.TrainingControl;
+import gaj.analysis.data.classifier.TrainingSummary;
 
 /**
- * Specifies the training algorithm used train a parameterised classifier on gold-standard data.
+ * Specifies the training algorithm used to train a parameterised classifier on
+ * gold-standard data.
  */
 public abstract class TrainingAlgorithm {
 

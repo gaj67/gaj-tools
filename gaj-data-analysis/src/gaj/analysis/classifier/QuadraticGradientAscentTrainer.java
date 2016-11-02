@@ -1,10 +1,10 @@
 package gaj.analysis.classifier;
 
 import gaj.analysis.curves.Quadratics;
-import gaj.data.classifier.ClassifierScoreInfo;
-import gaj.data.classifier.DataScorer;
-import gaj.data.classifier.ParameterisedClassifier;
-import gaj.data.vector.DataVector;
+import gaj.analysis.data.classifier.ClassifierScoreInfo;
+import gaj.analysis.data.classifier.DataScorer;
+import gaj.analysis.data.classifier.ParameterisedClassifier;
+import gaj.analysis.data.vector.DataVector;
 
 /**
  * Implements a classifier trainer using
