@@ -1,7 +1,7 @@
 package gaj.analysis.classifier.impl;
 
 import gaj.analysis.classifier.Classification;
-import gaj.analysis.data.vector.DataVector;
+import gaj.analysis.numeric.vector.DataVector;
 import gaj.common.annotations.PackagePrivate;
 
 @PackagePrivate class ClassificationImpl implements Classification {

@@ -4,7 +4,7 @@ import gaj.analysis.classifier.ClassifierScoreInfo;
 import gaj.analysis.classifier.DataScorer;
 import gaj.analysis.classifier.ParameterisedClassifier;
 import gaj.analysis.curves.Cubics;
-import gaj.analysis.data.vector.DataVector;
+import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Implements a classifier trainer using

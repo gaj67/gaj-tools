@@ -2,8 +2,8 @@ package gaj.numeric.test;
 
 import static org.junit.Assert.*;
 import java.util.Iterator;
-import gaj.analysis.data.vector.DataVector;
-import gaj.analysis.data.vector.impl.VectorFactory;
+import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.impl.VectorFactory;
 import org.junit.Test;
 
 public class VectorTest {

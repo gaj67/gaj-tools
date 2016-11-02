@@ -1,6 +1,6 @@
 package gaj.analysis.classifier;
 
-import gaj.analysis.data.vector.DataVector;
+import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Specifies a model controlled by parameters.

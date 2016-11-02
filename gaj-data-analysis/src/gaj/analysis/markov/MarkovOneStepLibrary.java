@@ -1,11 +1,11 @@
 package gaj.analysis.markov;
 
-import gaj.analysis.data.matrix.DataMatrix;
-import gaj.analysis.data.matrix.WritableMatrix;
-import gaj.analysis.data.matrix.impl.MatrixFactory;
-import gaj.analysis.data.vector.DataVector;
-import gaj.analysis.data.vector.IndexVector;
-import gaj.analysis.data.vector.impl.VectorFactory;
+import gaj.analysis.numeric.matrix.DataMatrix;
+import gaj.analysis.numeric.matrix.WritableMatrix;
+import gaj.analysis.numeric.matrix.impl.MatrixFactory;
+import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.IndexVector;
+import gaj.analysis.numeric.vector.impl.VectorFactory;
 import java.util.List;
 
 /**

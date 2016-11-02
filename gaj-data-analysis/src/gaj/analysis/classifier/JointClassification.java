@@ -1,6 +1,6 @@
 package gaj.analysis.classifier;
 
-import gaj.analysis.data.vector.DataVector;
+import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Specifies the probabilistic, joint classification of a given instance of numerical feature data.

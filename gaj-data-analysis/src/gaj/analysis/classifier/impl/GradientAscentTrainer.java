@@ -5,8 +5,8 @@ import gaj.analysis.classifier.DataScorer;
 import gaj.analysis.classifier.ParameterisedClassifier;
 import gaj.analysis.classifier.TrainingControl;
 import gaj.analysis.classifier.TrainingState;
-import gaj.analysis.data.vector.DataVector;
-import gaj.analysis.data.vector.impl.VectorFactory;
+import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.impl.VectorFactory;
 
 /**
  * Implements a classifier trainer using

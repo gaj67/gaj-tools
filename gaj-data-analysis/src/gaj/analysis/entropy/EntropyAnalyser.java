@@ -2,7 +2,7 @@ package gaj.analysis.entropy;
 
 import java.util.HashMap;
 import java.util.Map;
-import gaj.analysis.data.vector.IndexVector;
+import gaj.analysis.numeric.vector.IndexVector;
 
 public abstract class EntropyAnalyser {
 
