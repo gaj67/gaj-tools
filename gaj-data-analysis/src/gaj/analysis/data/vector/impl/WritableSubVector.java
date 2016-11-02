@@ -3,6 +3,10 @@ package gaj.analysis.data.vector.impl;
 import gaj.analysis.data.vector.DataVector;
 import gaj.analysis.data.vector.WritableVector;
 
+/**
+ * Implements a vector as a reference to a contiguous subsequence of elements in
+ * another vector.
+ */
 public class WritableSubVector extends SubVector implements WritableVector {
 
     private final WritableVector vector;

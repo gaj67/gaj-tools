@@ -1,4 +1,4 @@
-package gaj.analysis.data.numeric.impl;
+package gaj.analysis.data;
 
 import gaj.analysis.data.matrix.DataMatrix;
 import gaj.analysis.data.matrix.impl.MatrixFactory;
@@ -6,10 +6,9 @@ import gaj.analysis.data.object.DataObject;
 import gaj.analysis.data.vector.DataVector;
 import gaj.analysis.data.vector.impl.VectorFactory;
 
-public class NumericFactory {
+public abstract class Numerics {
 
-    private NumericFactory() {
-    }
+    private Numerics() {}
 
     /**
      * Computes the relevant norm of the data object.
@@ -22,14 +21,17 @@ public class NumericFactory {
             return ((DataVector) data).norm();
         if (data instanceof DataMatrix)
             return ((DataMatrix) data).norm();
-        throw new IllegalArgumentException("Unknown data object");
+        throw new IllegalArgumentException("Unhandled data object: " + data);
     }
 
     /**
-     * Scales the data object by a multiplicative factor.
+     * Scales the data object by a multiplicative factor. The result is a
+     * compound object.
      * 
-     * @param data - The data object to be scaled.
-     * @param multiplier - The scaling factor.
+     * @param data
+     *            - The data object to be scaled.
+     * @param multiplier
+     *            - The scaling factor.
      * @return The scaled data object.
      */
     public static DataObject scale(DataObject data, double multiplier) {
@@ -37,15 +39,15 @@ public class NumericFactory {
             return VectorFactory.scale((DataVector) data, multiplier);
         if (data instanceof DataMatrix)
             return MatrixFactory.scale((DataMatrix) data, multiplier);
-        throw new IllegalArgumentException("Unknown data object");
+        throw new IllegalArgumentException("Unhandled data object: " + data);
     }
 
     public static DataObject add(DataObject obj1, DataObject obj2) {
-        if (obj1 instanceof DataVector)
+        if (obj1 instanceof DataVector && obj2 instanceof DataVector)
             return VectorFactory.add((DataVector) obj1, (DataVector) obj2);
-        if (obj1 instanceof DataMatrix)
+        if (obj1 instanceof DataMatrix && obj2 instanceof DataMatrix)
             return MatrixFactory.add((DataMatrix) obj1, (DataMatrix) obj2);
-        throw new IllegalArgumentException("Unknown data object");
+        throw new IllegalArgumentException("Unhandled data objects: " + obj1 + ", " + obj2);
     }
 
     /**
@@ -56,11 +58,11 @@ public class NumericFactory {
      * @return The scalar product.
      */
     public static double dot(DataObject obj1, DataObject obj2) {
-        if (obj1 instanceof DataVector)
+        if (obj1 instanceof DataVector && obj2 instanceof DataVector)
             return VectorFactory.dot((DataVector) obj1, (DataVector) obj2);
-        if (obj1 instanceof DataMatrix)
+        if (obj1 instanceof DataMatrix && obj2 instanceof DataMatrix)
             return MatrixFactory.dot((DataMatrix) obj1, (DataMatrix) obj2);
-        throw new IllegalArgumentException("Unknown data object");
+        throw new IllegalArgumentException("Unhandled data objects: " + obj1 + ", " + obj2);
     }
 
     public static void display(String prefix, DataObject obj, String suffix) {
@@ -69,7 +71,7 @@ public class NumericFactory {
         else if (obj instanceof DataMatrix)
             MatrixFactory.display(prefix, (DataMatrix) obj, suffix);
         else
-            throw new IllegalArgumentException("Unknown data object");
+            throw new IllegalArgumentException("Unhandled data object: " + obj);
     }
 
 }

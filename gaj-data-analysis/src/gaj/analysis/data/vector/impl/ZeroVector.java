@@ -1,7 +1,7 @@
 package gaj.analysis.data.vector.impl;
 
+import gaj.analysis.data.vector.AddableVector;
 import gaj.analysis.data.vector.DataVector;
-import gaj.analysis.data.vector.WritableVector;
 
 /*package-private*/class ZeroVector extends SparseVector {
 
@@ -27,7 +27,7 @@ import gaj.analysis.data.vector.WritableVector;
     }
 
     @Override
-    public void addTo(WritableVector vector) {
+    public void addTo(AddableVector vector) {
     }
 
     @Override

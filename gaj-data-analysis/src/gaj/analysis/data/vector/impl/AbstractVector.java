@@ -1,9 +1,8 @@
 package gaj.analysis.data.vector.impl;
 
-import gaj.analysis.data.object.StructureType;
-import gaj.analysis.data.vector.DataVector;
-import gaj.analysis.data.vector.WritableVector;
 import java.util.Iterator;
+import gaj.analysis.data.vector.AddableVector;
+import gaj.analysis.data.vector.DataVector;
 
 /**
  * The basis for all vector implementations.
@@ -22,11 +21,6 @@ public abstract class AbstractVector implements DataVector {
     @Override
     final public int size() {
         return length;
-    }
-
-    @Override
-    final public StructureType structureType() {
-        return StructureType.VECTOR;
     }
 
     @Override
@@ -83,7 +77,7 @@ public abstract class AbstractVector implements DataVector {
         return sum;
     }
 
-    public void addTo(WritableVector vector) {
+    public void addTo(AddableVector vector) {
         for (int i = 0; i < length; i++)
             vector.add(i, get(i));
     }

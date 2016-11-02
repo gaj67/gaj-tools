@@ -1,18 +1,19 @@
 package gaj.analysis.data.vector.impl;
 
+import gaj.analysis.data.vector.AddableVector;
 import gaj.analysis.data.vector.DataVector;
-import gaj.analysis.data.vector.WritableVector;
+import gaj.common.annotations.PackagePrivate;
 
 /**
  * Provides a view onto part of another vector.
  */
-/* package-private */class SubVector extends CompoundVector {
+@PackagePrivate class SubVector extends CompoundVector {
 
     private final DataVector vector;
     protected final int start;
     protected final int end;
 
-    /* package-private */public SubVector(DataVector vector, int start, int length) {
+    @PackagePrivate public SubVector(DataVector vector, int start, int length) {
         super(length);
         this.vector = vector;
         this.start = start;
@@ -52,7 +53,7 @@ import gaj.analysis.data.vector.WritableVector;
     }
 
     @Override
-    public void addTo(WritableVector vector) {
+    public void addTo(AddableVector vector) {
         int i = 0;
         for (int pos = start; pos < end; pos++)
             vector.add(i++, this.vector.get(pos));

@@ -1,14 +1,16 @@
 package gaj.analysis.data.vector.impl;
 
 import java.util.Arrays;
+import gaj.analysis.data.vector.AddableVector;
 import gaj.analysis.data.vector.ArrayVector;
 import gaj.analysis.data.vector.DataVector;
 import gaj.analysis.data.vector.WritableVector;
+import gaj.common.annotations.PackagePrivate;
 
 /**
  * Implements a data vector as a true array of numbers.
  */
-/* package-private */class WritableArrayVector extends DenseVector implements ArrayVector, WritableVector {
+@PackagePrivate class WritableArrayVector extends DenseVector implements ArrayVector, WritableVector {
 
     private final double[] data;
 
@@ -17,7 +19,7 @@ import gaj.analysis.data.vector.WritableVector;
      *
      * @param length - The length of the vector.
      */
-    /* package-private */WritableArrayVector(int length) {
+    @PackagePrivate WritableArrayVector(int length) {
         super(length);
         this.data = new double[length];
     }
@@ -27,7 +29,7 @@ import gaj.analysis.data.vector.WritableVector;
      *
      * @param values - The array of values.
      */
-    /* package-private */WritableArrayVector(double[] values) {
+    @PackagePrivate WritableArrayVector(double[] values) {
         super(values.length);
         this.data = values;
     }
@@ -37,7 +39,7 @@ import gaj.analysis.data.vector.WritableVector;
      *
      * @param vector - The vector of values.
      */
-    /* package-private */WritableArrayVector(ArrayVector vector) {
+    @PackagePrivate WritableArrayVector(ArrayVector vector) {
         super(vector.size());
         this.data = Arrays.copyOf(vector.getArray(), vector.size());
     }
@@ -72,7 +74,7 @@ import gaj.analysis.data.vector.WritableVector;
     }
 
     @Override
-    public void addTo(WritableVector vector) {
+    public void addTo(AddableVector vector) {
         for (int i = 0; i < data.length; i++) {
             vector.add(i, data[i]);
         }

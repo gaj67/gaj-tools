@@ -1,7 +1,7 @@
 package gaj.analysis.data.vector.impl;
 
+import gaj.analysis.data.vector.AddableVector;
 import gaj.analysis.data.vector.DataVector;
-import gaj.analysis.data.vector.WritableVector;
 import gaj.common.annotations.PackagePrivate;
 
 /**
@@ -35,7 +35,7 @@ import gaj.common.annotations.PackagePrivate;
     }
 
     @Override
-    public void addTo(WritableVector vector) {
+    public void addTo(AddableVector vector) {
     }
 
     @Override

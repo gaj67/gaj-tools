@@ -1,8 +1,8 @@
 package gaj.analysis.data.vector.impl;
 
 import java.util.Iterator;
+import gaj.analysis.data.vector.AddableVector;
 import gaj.analysis.data.vector.DataVector;
-import gaj.analysis.data.vector.WritableVector;
 
 /**
  * Implements a data vector as an array of index/value pairs, with ascending indices.
@@ -81,7 +81,7 @@ import gaj.analysis.data.vector.WritableVector;
     }
 
     @Override
-    public void addTo(WritableVector vector) {
+    public void addTo(AddableVector vector) {
         for (int i = 0; i < values.length; i++)
             vector.add(indices[i], values[i]);
     }

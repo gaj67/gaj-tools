@@ -1,22 +1,21 @@
 package gaj.analysis.data.vector.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import gaj.analysis.data.object.RepresentationType;
 import gaj.analysis.data.vector.ArrayVector;
 import gaj.analysis.data.vector.DataVector;
 import gaj.analysis.data.vector.IndexVector;
 import gaj.analysis.data.vector.WritableVector;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Provides access to numerical vectors.
  */
 public abstract class VectorFactory {
 
-    private VectorFactory() {
-    }
+    private VectorFactory() {}
 
     /**
      * Creates an immutable vector of the required length, full of zeroes.
@@ -131,14 +130,42 @@ public abstract class VectorFactory {
     /**
      * Scales the vector by a multiplicative factor.
      * <p/>
-     * Note: The underlying vector is copied, and the elements are scaled once.
+     * Note: The underlying vector is NOT copied, merely wrapped with a
+     * multiplier. Hence, each element will be scaled by the multiplier each
+     * time that element is accessed. Useful for scaling a large vector for a
+     * one-shot use.
+     * <p/>
+     * Note: If the divisor is zero, then the returned vector is zero-valued.
      *
-     * @param vector - The data vector to be scaled.
-     * @param multiplier - The scaling factor.
+     * @param vector
+     *            - The data vector to be scaled.
+     * @param divisor
+     *            - The scaling factor.
      * @return The scaled data vector.
      */
-    public static DataVector multiply(DataVector vector, double multiplier) {
-        WritableVector newVec = VectorFactory.newVector(vector);
+    public static DataVector descale(DataVector vector, double divisor) {
+        if (vector instanceof ZeroVector) {
+            return vector;
+        }
+        if (divisor == 0) {
+            return new ZeroVector(vector.size());
+        }
+        return new ScaledVector(vector, 1.0 / divisor);
+    }
+
+    /**
+     * Scales the vector by a multiplicative factor.
+     * <p/>
+     * Note: The underlying vector is copied, and the elements are scaled once.
+     *
+     * @param vector
+     *            - The data vector to be scaled.
+     * @param multiplier
+     *            - The scaling factor.
+     * @return The scaled data vector.
+     */
+    public static WritableVector multiply(DataVector vector, double multiplier) {
+        WritableVector newVec = copy(vector);
         newVec.multiply(multiplier);
         return newVec;
     }
@@ -148,18 +175,18 @@ public abstract class VectorFactory {
      * <p/>
      * Note: The underlying vector is copied, and the elements are scaled once.
      * <p/>
-     * Note: If the divisor is zero, then the returned vector is zero-valued.
+     * Note: If the divisor is zero, then the returned vector is zero-valued but
+     * mutable.
      *
-     * @param vector - The data vector to be scaled.
-     * @param divisor - The inverse scaling factor.
+     * @param vector
+     *            - The data vector to be scaled.
+     * @param divisor
+     *            - The inverse scaling factor.
      * @return The scaled data vector.
      */
-    public static DataVector divide(DataVector vector, double divisor) {
-        if (divisor == 0.0) {
-            return VectorFactory.newZeroVector(vector.size());
-        }
-        WritableVector newVec = VectorFactory.newVector(vector);
-        newVec.multiply(1.0 / divisor);
+    public static WritableVector divide(DataVector vector, double divisor) {
+        WritableVector newVec = copy(vector);
+        newVec.multiply((divisor == 0.0) ? 0.0 : (1.0 / divisor));
         return newVec;
     }
 
@@ -172,9 +199,9 @@ public abstract class VectorFactory {
      * @param vec2 - The denominator.
      * @return The new vector.
      */
-    public static DataVector divide(DataVector vec1, DataVector vec2) {
+    public static WritableVector divide(DataVector vec1, DataVector vec2) {
         final int len = vec1.size();
-        WritableVector newVec = VectorFactory.newVector(len);
+        WritableVector newVec = newVector(len);
         for (int pos = 0; pos < len; pos++) {
             double divisor = vec2.get(pos);
             if (divisor != 0.0) {
@@ -272,19 +299,20 @@ public abstract class VectorFactory {
      * @param v2 - The second vector.
      * @return The product vector.
      */
-    public static DataVector multiply(DataVector v1, DataVector v2) {
-        WritableVector vw = newVector(v1);
+    public static WritableVector multiply(DataVector v1, DataVector v2) {
+        WritableVector vw = copy(v1);
         vw.multiply(v2);
         return vw;
     }
 
     /**
-     * Obtains a writable vector copy of the given vector.
+     * Obtains a dense, writable vector copy of the given vector.
      *
-     * @param vec - The vector.
+     * @param vec
+     *            - The vector.
      * @return A writable vector.
      */
-    public static WritableVector newVector(DataVector vec) {
+    public static WritableVector copy(DataVector vec) {
         return newVector(toArray(vec));
     }
 
@@ -309,14 +337,37 @@ public abstract class VectorFactory {
     }
 
     /**
-     * Determines whether or not two vectors have equal values to the
-     * given order of accuracy.
+     * Forces any deferred computations on the vector to be carried out and
+     * produces a dense result.
+     * 
+     * @param vector
+     *            - The vector to be computed.
+     * @return A dense vector with all elements computed. This might be the
+     *         original vector if it is already dense.
+     */
+    public static DataVector compute(DataVector vector) {
+        if (vector.representationType() == RepresentationType.DENSE)
+            return vector;
+        final int N = vector.size();
+        double[] data = new double[N];
+        for (int i = 0; i < N; i++) {
+            data[i] = vector.get(i);
+        }
+        return new WritableArrayVector(data);
+    }
+
+    /**
+     * Determines whether or not two vectors have equal values to the given
+     * order of accuracy.
      *
-     * @param v1 - The first vector.
-     * @param v2 - The second vector.
-     * @param accuracy - The largest allowable difference.
-     * @return A value of true (or false) if the two vectors do (or do not) agree
-     * on dimensions and values.
+     * @param v1
+     *            - The first vector.
+     * @param v2
+     *            - The second vector.
+     * @param accuracy
+     *            - The largest allowable difference.
+     * @return A value of true (or false) if the two vectors do (or do not)
+     *         agree on dimensions and values.
      */
     public static boolean equals(DataVector v1, DataVector v2, double accuracy) {
         final int length = v1.size();

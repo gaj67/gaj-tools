@@ -2,11 +2,17 @@ package gaj.analysis.data.vector;
 
 import java.util.Iterator;
 import gaj.analysis.data.object.DataObject;
+import gaj.analysis.data.object.StructureType;
 
 /**
  * Provides access to numerical data as a vector.
  */
 public interface DataVector extends DataObject, Iterable<Double> {
+
+    @Override
+    default StructureType structureType() {
+        return StructureType.VECTOR;
+    }
 
     // ***************************************
     // Intrinsic properties of the vector.

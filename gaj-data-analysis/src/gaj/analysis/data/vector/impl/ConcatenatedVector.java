@@ -1,9 +1,9 @@
 package gaj.analysis.data.vector.impl;
 
-import gaj.analysis.data.vector.DataVector;
-import gaj.analysis.data.vector.WritableVector;
-import gaj.common.annotations.PackagePrivate;
 import java.util.Iterator;
+import gaj.analysis.data.vector.AddableVector;
+import gaj.analysis.data.vector.DataVector;
+import gaj.common.annotations.PackagePrivate;
 
 /**
  * Implements the (deferred) concatenation of multiple data vectors together into a single, compound vector.
@@ -92,12 +92,17 @@ import java.util.Iterator;
     }
 
     @Override
-    public void addTo(WritableVector vector) {
+    public void addTo(AddableVector vector) {
         int pos = 0;
         for (DataVector vector1 : vectors) {
-            WritableVector vector2 = new WritableSubVector(vector, pos, vector1.size());
-            ((AbstractVector) vector1).addTo(vector2);
-            pos += vector1.size();
+            if (vector1 instanceof AbstractVector) {
+                ((AbstractVector) vector1).addTo(new AddableSubVector(vector, pos, vector1.size()));
+                pos += vector1.size();
+            } else {
+                for (double value : vector1) {
+                    vector.add(pos++, value);
+                }
+            }
         }
     }
 
