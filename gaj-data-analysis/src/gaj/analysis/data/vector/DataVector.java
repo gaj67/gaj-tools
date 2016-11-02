@@ -14,6 +14,11 @@ public interface DataVector extends DataObject, Iterable<Double> {
         return StructureType.VECTOR;
     }
 
+    @Override
+    default int numDimensions() {
+        return 1;
+    }
+
     // ***************************************
     // Intrinsic properties of the vector.
 

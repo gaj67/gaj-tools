@@ -24,11 +24,6 @@ public abstract class AbstractVector implements DataVector {
     }
 
     @Override
-    final public int numDimensions() {
-        return 1;
-    }
-
-    @Override
     public double norm() {
         if (norm < 0)
             norm = _norm();

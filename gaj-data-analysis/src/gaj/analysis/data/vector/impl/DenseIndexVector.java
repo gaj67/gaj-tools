@@ -2,12 +2,13 @@ package gaj.analysis.data.vector.impl;
 
 import java.util.Iterator;
 import gaj.analysis.data.vector.IndexVector;
+import gaj.common.annotations.PackagePrivate;
 
-/*package-private*/class DenseIndexVector implements IndexVector {
+@PackagePrivate class DenseIndexVector implements IndexVector {
 
     private final int[] values;
 
-    /* package-private */DenseIndexVector(int[] data) {
+    @PackagePrivate DenseIndexVector(int[] data) {
         this.values = data;
     }
 
