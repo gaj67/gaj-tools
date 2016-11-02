@@ -1,6 +1,5 @@
 package gaj.analysis.markov;
 
-import gaj.analysis.data.markov.SequenceType;
 import gaj.analysis.data.matrix.DataMatrix;
 import gaj.analysis.data.matrix.WritableMatrix;
 import gaj.analysis.data.matrix.impl.MatrixFactory;

@@ -1,7 +1,6 @@
 package gaj.markov.test;
 
 import static org.junit.Assert.assertTrue;
-import gaj.analysis.data.markov.SequenceType;
 import gaj.analysis.data.matrix.DataMatrix;
 import gaj.analysis.data.matrix.impl.MatrixFactory;
 import gaj.analysis.data.vector.DataVector;
@@ -9,6 +8,7 @@ import gaj.analysis.data.vector.IndexVector;
 import gaj.analysis.data.vector.impl.VectorFactory;
 import gaj.analysis.markov.MarkovOneStepAnalyser;
 import gaj.analysis.markov.MarkovOneStepLibrary;
+import gaj.analysis.markov.SequenceType;
 import org.junit.Test;
 
 public class MarkovTest {

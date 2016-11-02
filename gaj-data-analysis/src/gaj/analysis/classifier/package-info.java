@@ -1,4 +1,4 @@
 /**
- * A package for implementing probabilistic classifiers, including training algorithms and data scorers, etc.
+ * A package for specifying data suitable for training or applying a probabilistic classifier.
  */
 package gaj.analysis.classifier;
