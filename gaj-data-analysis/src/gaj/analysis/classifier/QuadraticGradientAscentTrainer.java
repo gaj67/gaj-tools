@@ -1,6 +1,6 @@
 package gaj.analysis.classifier;
 
-import gaj.analysis.curves.CurveFactory;
+import gaj.analysis.curves.Quadratics;
 import gaj.data.classifier.ClassifierScoreInfo;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.ParameterisedClassifier;
@@ -28,7 +28,7 @@ public class QuadraticGradientAscentTrainer extends GradientAscentTrainer {
     protected void recomputeStepSize(ClassifierScoreInfo newTrainingScore) {
         final DataVector g0 = getTrainingScore().getGradient();
         final DataVector g1 = newTrainingScore.getGradient();
-        double s = CurveFactory.quadraticOptimumScaling(g0, g1, direction);
+        double s = Quadratics.quadraticOptimumScaling(g0, g1, direction);
         stepSize *= (s > 0 && s < 1) ? s : 0.5;
     }
 
@@ -36,7 +36,7 @@ public class QuadraticGradientAscentTrainer extends GradientAscentTrainer {
     protected void recomputeStepSizeAndDirection() {
         final DataVector g1 = getTrainingScore().getGradient();
         final DataVector g0 = getPrevTrainingScore().getGradient();
-        double s = CurveFactory.quadraticOptimumScaling(g0, g1, direction);
+        double s = Quadratics.quadraticOptimumScaling(g0, g1, direction);
         stepSize *= Math.abs(s - 1);
         direction = g1;
     }

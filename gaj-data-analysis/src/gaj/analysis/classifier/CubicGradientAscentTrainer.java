@@ -1,6 +1,6 @@
 package gaj.analysis.classifier;
 
-import gaj.analysis.curves.CurveFactory;
+import gaj.analysis.curves.Cubics;
 import gaj.data.classifier.ClassifierScoreInfo;
 import gaj.data.classifier.DataScorer;
 import gaj.data.classifier.ParameterisedClassifier;
@@ -28,7 +28,7 @@ public class CubicGradientAscentTrainer extends GradientAscentTrainer {
     @Override
     protected void recomputeStepSize(ClassifierScoreInfo newTrainingScore) {
         final ClassifierScoreInfo ts = getTrainingScore();
-        double s = CurveFactory.cubicOptimumScaling(
+        double s = Cubics.cubicOptimumScaling(
                 ts.getScore(), ts.getGradient(),
                 newTrainingScore.getScore(), newTrainingScore.getGradient(),
                 stepSize, direction);
@@ -43,7 +43,7 @@ public class CubicGradientAscentTrainer extends GradientAscentTrainer {
         final ClassifierScoreInfo curInfo = getTrainingScore();
         final DataVector g1 = curInfo.getGradient();
         final ClassifierScoreInfo prevInfo = getPrevTrainingScore();
-        double s = CurveFactory.cubicOptimumScaling(
+        double s = Cubics.cubicOptimumScaling(
                 prevInfo.getScore(), prevInfo.getGradient(),
                 curInfo.getScore(), g1,
                 stepSize, direction);

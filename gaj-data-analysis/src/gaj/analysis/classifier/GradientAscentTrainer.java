@@ -21,8 +21,7 @@ public class GradientAscentTrainer extends BaseTrainer {
      * @param classifier - The classifier to be trained.
      * @param scorers - The data scorers to measure classifier performance.
      */
-    protected GradientAscentTrainer(ParameterisedClassifier classifier,
-            DataScorer[] scorers) {
+    protected GradientAscentTrainer(ParameterisedClassifier classifier, DataScorer[] scorers) {
         super(classifier, scorers);
         computeStepSizeAndDirection();
     }
