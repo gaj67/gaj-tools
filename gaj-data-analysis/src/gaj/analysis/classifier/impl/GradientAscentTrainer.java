@@ -2,7 +2,7 @@ package gaj.analysis.classifier.impl;
 
 import gaj.analysis.classifier.ClassifierScoreInfo;
 import gaj.analysis.classifier.DataScorer;
-import gaj.analysis.classifier.ParameterisedClassifier;
+import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.classifier.TrainingControl;
 import gaj.analysis.classifier.TrainingState;
 import gaj.analysis.numeric.vector.DataVector;
@@ -21,7 +21,7 @@ public class GradientAscentTrainer extends BaseTrainer {
      * @param classifier - The classifier to be trained.
      * @param scorers - The data scorers to measure classifier performance.
      */
-    protected GradientAscentTrainer(ParameterisedClassifier classifier, DataScorer[] scorers) {
+    protected GradientAscentTrainer(OptimisableClassifier classifier, DataScorer[] scorers) {
         super(classifier, scorers);
         computeStepSizeAndDirection();
     }

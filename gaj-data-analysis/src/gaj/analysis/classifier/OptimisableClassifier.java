@@ -1,13 +1,12 @@
 package gaj.analysis.classifier;
 
+import gaj.analysis.model.OptimisableModel;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Specifies a classifier with a model controlled by parameters.
- * <p/>
- * Note: These parameters need not take the form of a single vector, but must be representable as a vector for external manipulation, e.g. parameter search for score optimisation.
  */
-public interface ParameterisedClassifier extends Classifier, Parameterised {
+public interface OptimisableClassifier extends Classifier, OptimisableModel {
 
     /**
      * Indicates whether or not it is safe to call the {@link #getGradient}()

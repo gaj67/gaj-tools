@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import gaj.analysis.classifier.DataScorer;
-import gaj.analysis.classifier.ParameterisedClassifier;
+import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.classifier.ScoredTrainer;
 import gaj.analysis.classifier.TrainingControl;
 import gaj.analysis.classifier.TrainingSummary;
@@ -29,9 +29,9 @@ public class ClassifierTrainer implements ScoredTrainer {
      * and subsequent scorers, if any, represent testing data.
      * @param algo - The training algorithm.
      */
-    protected ClassifierTrainer(ParameterisedClassifier classifier, DataScorer[] scorers, Class<? extends TrainingAlgorithm> algo) {
+    protected ClassifierTrainer(OptimisableClassifier classifier, DataScorer[] scorers, Class<? extends TrainingAlgorithm> algo) {
         try {
-            Constructor<? extends TrainingAlgorithm> constructor = algo.getDeclaredConstructor(ParameterisedClassifier.class, DataScorer[].class);
+            Constructor<? extends TrainingAlgorithm> constructor = algo.getDeclaredConstructor(OptimisableClassifier.class, DataScorer[].class);
             trainer = constructor.newInstance(classifier, scorers);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             throw new IllegalStateException(e);

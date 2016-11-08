@@ -2,7 +2,7 @@ package gaj.analysis.classifier.impl;
 
 import gaj.analysis.classifier.ClassifierScoreInfo;
 import gaj.analysis.classifier.DataScorer;
-import gaj.analysis.classifier.ParameterisedClassifier;
+import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.classifier.TrainingControl;
 import gaj.analysis.classifier.TrainingSummary;
 
@@ -16,7 +16,7 @@ public abstract class TrainingAlgorithm {
     // Instantiation interface.
 
     /** The classifier set by {@link #bindArguments}(). */
-    protected final ParameterisedClassifier classifier;
+    protected final OptimisableClassifier classifier;
     /** The training and testing scorers set by {@link #bindArguments}(). */
     protected final DataScorer[] scorers;
     /** Indicates the number of training and testing scores. */
@@ -32,7 +32,7 @@ public abstract class TrainingAlgorithm {
      * @param classifier - The classifier to be trained.
      * @param scorers - The data scorers to measure classifier performance.
      */
-    protected TrainingAlgorithm(ParameterisedClassifier classifier, DataScorer[] scorers) {
+    protected TrainingAlgorithm(OptimisableClassifier classifier, DataScorer[] scorers) {
         this.classifier = classifier;
         this.scorers = scorers;
         numScores = scorers.length;

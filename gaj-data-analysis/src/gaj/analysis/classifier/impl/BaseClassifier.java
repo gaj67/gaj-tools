@@ -1,14 +1,14 @@
 package gaj.analysis.classifier.impl;
 
 import gaj.analysis.classifier.DatumScore;
-import gaj.analysis.classifier.ParameterisedClassifier;
+import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Offers a base class for a parameterised classifier.
  * By default, no gradient is computed.
  */
-public abstract class BaseClassifier implements ParameterisedClassifier {
+public abstract class BaseClassifier implements OptimisableClassifier {
 
     /** Total number C of classes. */
     protected final int numClasses;

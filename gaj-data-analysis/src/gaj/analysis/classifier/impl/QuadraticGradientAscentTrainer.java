@@ -2,7 +2,7 @@ package gaj.analysis.classifier.impl;
 
 import gaj.analysis.classifier.ClassifierScoreInfo;
 import gaj.analysis.classifier.DataScorer;
-import gaj.analysis.classifier.ParameterisedClassifier;
+import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.curves.Quadratics;
 import gaj.analysis.numeric.vector.DataVector;
 
@@ -20,7 +20,7 @@ public class QuadraticGradientAscentTrainer extends GradientAscentTrainer {
      * @param classifier - The classifier to be trained.
      * @param scorers - The data scorers to measure classifier performance.
      */
-    protected QuadraticGradientAscentTrainer(ParameterisedClassifier classifier, DataScorer[] scorers) {
+    protected QuadraticGradientAscentTrainer(OptimisableClassifier classifier, DataScorer[] scorers) {
         super(classifier, scorers);
     }
 

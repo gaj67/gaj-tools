@@ -6,7 +6,7 @@ import gaj.analysis.classifier.DataScorer;
 import gaj.analysis.classifier.DatumScore;
 import gaj.analysis.classifier.GoldData;
 import gaj.analysis.classifier.GoldDatum;
-import gaj.analysis.classifier.ParameterisedClassifier;
+import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.WritableVector;
 import gaj.analysis.numeric.vector.impl.DataIterator;
@@ -116,7 +116,7 @@ public abstract class BaseScorer implements DataScorer {
     }
 
     @Override
-    public ClassifierScoreInfo getClassifierScoreInfo(ParameterisedClassifier classifier) {
+    public ClassifierScoreInfo getClassifierScoreInfo(OptimisableClassifier classifier) {
         if (!hasGradient() || !classifier.hasGradient()) {
             return getClassifierScore(getClassifierScore(classifier), null);
         } else {

@@ -2,7 +2,7 @@ package gaj.analysis.classifier.impl;
 
 import gaj.analysis.classifier.ClassifierScoreInfo;
 import gaj.analysis.classifier.DataScorer;
-import gaj.analysis.classifier.ParameterisedClassifier;
+import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.curves.Cubics;
 import gaj.analysis.numeric.vector.DataVector;
 
@@ -20,7 +20,7 @@ public class CubicGradientAscentTrainer extends GradientAscentTrainer {
      * @param classifier - The classifier to be trained.
      * @param scorers - The data scorers to measure classifier performance.
      */
-    protected CubicGradientAscentTrainer(ParameterisedClassifier classifier,
+    protected CubicGradientAscentTrainer(OptimisableClassifier classifier,
             DataScorer[] scorers) {
         super(classifier, scorers);
     }

@@ -1,6 +1,6 @@
 package gaj.analysis.classifier.impl;
 
-import gaj.analysis.classifier.ParameterisedClassifier;
+import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.classifier.TrainableClassifier;
 
 public abstract class ClassifierFactory {
@@ -15,7 +15,7 @@ public abstract class ClassifierFactory {
      * @param numFeatures - The length of each feature vector.
      * @return A logistic classifier.
      */
-    public static ParameterisedClassifier newLogisticClassifier(int numClasses, int numFeatures) {
+    public static OptimisableClassifier newLogisticClassifier(int numClasses, int numFeatures) {
         return new LogisticClassifier(numClasses, numFeatures);
     }
 
@@ -27,7 +27,7 @@ public abstract class ClassifierFactory {
      * @return A trainable classifier.
      */
     public static TrainableClassifier newClassifierTrainer(
-            ParameterisedClassifier classifier, Class<? extends TrainingAlgorithm> algo) {
+            OptimisableClassifier classifier, Class<? extends TrainingAlgorithm> algo) {
         return new TrainableClassifierImpl(classifier, algo);
     }
 

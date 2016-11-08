@@ -3,17 +3,17 @@ package gaj.analysis.classifier.impl;
 import gaj.analysis.classifier.Classification;
 import gaj.analysis.classifier.DataScorer;
 import gaj.analysis.classifier.DatumScore;
-import gaj.analysis.classifier.ParameterisedClassifier;
+import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.classifier.ScoredTrainer;
 import gaj.analysis.classifier.TrainableClassifier;
 import gaj.analysis.numeric.vector.DataVector;
 
 /*package-private*/class TrainableClassifierImpl implements TrainableClassifier {
 
-    private final ParameterisedClassifier classifier;
+    private final OptimisableClassifier classifier;
     private final Class<? extends TrainingAlgorithm> trainerClass;
 
-    /* package-private */TrainableClassifierImpl(ParameterisedClassifier classifier,
+    /* package-private */TrainableClassifierImpl(OptimisableClassifier classifier,
             Class<? extends TrainingAlgorithm> trainerClass) {
         this.classifier = classifier;
         this.trainerClass = trainerClass;
