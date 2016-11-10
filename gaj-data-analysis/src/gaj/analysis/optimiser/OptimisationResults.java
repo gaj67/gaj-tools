@@ -1,26 +1,11 @@
 package gaj.analysis.optimiser;
 
 /**
- * Summarises the iterative parameters updates performed during model
- * optimisation.
+ * Summarises the results of a single round of model optimisation. All values,
+ * e.g. number of iterations, etc., are relative to the start of the
+ * optimisation round.
  */
-public interface OptimisationResults {
-
-    /**
-     * Indicates the number of update iterations actually performed during the
-     * latest round of optimisation.
-     * 
-     * @return The number of iterations.
-     */
-    int numIterations();
-
-    /**
-     * Indicates the total number of update sub-iterations actually performed
-     * during the latest round of optimisation.
-     * 
-     * @return The total number of sub-iterations.
-     */
-    int numSubIterations();
+public interface OptimisationResults extends OptimisationState {
 
     /**
      * Indicates the optimisation and (optionally) validation scores of the
@@ -36,13 +21,8 @@ public interface OptimisationResults {
      * 
      * @return The final score(s).
      */
-    double[] finalScores();
-
-    /**
-     * Indicates the status of the optimiser after the optimisation process.
-     * 
-     * @return The optimiser status.
-     */
-    OptimiserStatus getStatus();
+    default double[] finalScores() {
+        return getScores();
+    }
 
 }

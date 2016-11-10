@@ -1,9 +1,10 @@
 package gaj.analysis.optimiser;
 
 /**
- * Indicates the reason why the optimisation process halted.
+ * Indicates either that the optimisation process is still running, or provides
+ * the reason why the process halted.
  */
-public enum OptimiserStatus {
+public enum OptimisationStatus {
 
     /**
      * The optimisation process has not yet halted, and may be continued

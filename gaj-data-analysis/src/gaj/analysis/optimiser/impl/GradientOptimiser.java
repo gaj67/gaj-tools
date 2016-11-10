@@ -7,7 +7,7 @@ import gaj.analysis.numeric.vector.impl.VectorFactory;
 import gaj.analysis.optimiser.GradientEnabled;
 import gaj.analysis.optimiser.GradientOptimisationParams;
 import gaj.analysis.optimiser.OptimisationParams;
-import gaj.analysis.optimiser.OptimiserStatus;
+import gaj.analysis.optimiser.OptimisationStatus;
 
 /**
  * Implements an optimiser using linear gradient ascent/descent to
@@ -34,7 +34,7 @@ public class GradientOptimiser extends IterativeOptimiser {
      */
     protected GradientOptimiser(OptimisableModel model, ModelScorer[] scorers) {
         super(model, scorers);
-        if (!(getOptimisationScore() instanceof GradientEnabled))
+        if (!(getScoreInfo() instanceof GradientEnabled))
             throw new IllegalArgumentException("The optimisation scorer must be able to compute gradients");
         computeStepSizeAndDirection();
     }
@@ -48,7 +48,7 @@ public class GradientOptimiser extends IterativeOptimiser {
     protected void computeStepSizeAndDirection() {
         // TODO Normalise step-size by gradient size.
         stepSize = 0.5;
-        direction = ((GradientEnabled) getOptimisationScore()).getGradient();
+        direction = ((GradientEnabled) getScoreInfo()).getGradient();
     }
 
     /**
@@ -69,28 +69,28 @@ public class GradientOptimiser extends IterativeOptimiser {
      */
     protected void recomputeStepSizeAndDirection() {
         // Best guess for step-size is previous step-size.
-        direction = ((GradientEnabled) getOptimisationScore()).getGradient();
+        direction = ((GradientEnabled) getScoreInfo()).getGradient();
     }
 
     @Override
-    protected OptimiserStatus preUpdate(OptimisationParams params) {
-        OptimiserStatus status = super.preUpdate(params);
-        if (status != OptimiserStatus.RUNNING)
+    protected OptimisationStatus preUpdate(OptimisationParams params) {
+        OptimisationStatus status = super.preUpdate(params);
+        if (status != OptimisationStatus.RUNNING)
             return status;
         final double gradientTolerance = (params instanceof GradientOptimisationParams) 
                 ? ((GradientOptimisationParams) params).gradientTolerance() : -1;
         if (gradientTolerance > 0 && direction.norm() < gradientTolerance)
-            return OptimiserStatus.GRADIENT_TOO_SMALL;
-        return OptimiserStatus.RUNNING;
+            return OptimisationStatus.GRADIENT_TOO_SMALL;
+        return OptimisationStatus.RUNNING;
     }
 
     @Override
-    protected OptimiserStatus update(OptimisationParams params) {
-        OptimiserStatus status = performLineSearch(params);
-        if (status != OptimiserStatus.RUNNING)
+    protected OptimisationStatus update(OptimisationParams params) {
+        OptimisationStatus status = performLineSearch(params);
+        if (status != OptimisationStatus.RUNNING)
             return status;
         recomputeStepSizeAndDirection();
-        return OptimiserStatus.RUNNING;
+        return OptimisationStatus.RUNNING;
     }
 
     /**
@@ -103,9 +103,9 @@ public class GradientOptimiser extends IterativeOptimiser {
      * 
      * @return The state of the optimiser after line search has been performed.
      */
-    protected OptimiserStatus performLineSearch(OptimisationParams params) {
+    protected OptimisationStatus performLineSearch(OptimisationParams params) {
         double prevScore = getScores()[0];
-        OptimiserStatus status = OptimiserStatus.MAX_SUB_ITERATIONS_EXCEEDED;
+        OptimisationStatus status = OptimisationStatus.MAX_SUB_ITERATIONS_EXCEEDED;
         double prevStepSize = 0;
         int maxSubIterations = params.maxSubIterations();
         if (maxSubIterations <= 0)
@@ -116,14 +116,14 @@ public class GradientOptimiser extends IterativeOptimiser {
                     getModel().getParameters(),
                     VectorFactory.scale(direction, params.optimisationDirection() * (stepSize - prevStepSize)));
             if (!getModel().setParameters(newParams)) {
-                status = OptimiserStatus.UPDATE_FAILED;
+                status = OptimisationStatus.UPDATE_FAILED;
                 break;
             }
             incSubIterations();
             computeOptimisationScore();
             if (params.optimisationDirection() * (getScores()[0] - prevScore) > 0) {
                 // Score has improved.
-                status = OptimiserStatus.RUNNING;
+                status = OptimisationStatus.RUNNING;
                 break;
             }
             // Set up further line search.
