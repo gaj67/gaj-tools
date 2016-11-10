@@ -104,34 +104,27 @@ public class GradientOptimiser extends IterativeOptimiser {
      * @return The state of the optimiser after line search has been performed.
      */
     protected OptimisationStatus performLineSearch(OptimisationParams params) {
-        double prevScore = getScores()[0];
-        OptimisationStatus status = OptimisationStatus.MAX_SUB_ITERATIONS_EXCEEDED;
+        final double prevScore = getScores()[0];
         double prevStepSize = 0;
-        int maxSubIterations = params.maxSubIterations();
-        if (maxSubIterations <= 0)
-            maxSubIterations = Integer.MAX_VALUE;
-        int numSubIterations = 0;
-        while (numSubIterations < maxSubIterations) {
+        final int maxSubIterations = (params.maxSubIterations() > 0) ? params.maxSubIterations() : Integer.MAX_VALUE;
+        while (innerSubIterations() < maxSubIterations) {
             DataVector newParams = VectorFactory.add(
                     getModel().getParameters(),
                     VectorFactory.scale(direction, params.optimisationDirection() * (stepSize - prevStepSize)));
             if (!getModel().setParameters(newParams)) {
-                status = OptimisationStatus.UPDATE_FAILED;
-                break;
+                return OptimisationStatus.UPDATE_FAILED;
             }
             incSubIterations();
             computeOptimisationScore();
             if (params.optimisationDirection() * (getScores()[0] - prevScore) > 0) {
                 // Score has improved.
-                status = OptimisationStatus.RUNNING;
-                break;
+                return OptimisationStatus.RUNNING;
             }
             // Set up further line search.
-            numSubIterations++;
             prevStepSize = stepSize;
             recomputeStepSize();
         }
-        return status;
+        return OptimisationStatus.MAX_SUB_ITERATIONS_EXCEEDED;
     }
 
 }

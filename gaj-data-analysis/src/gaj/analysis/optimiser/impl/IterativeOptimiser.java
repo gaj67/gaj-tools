@@ -18,13 +18,19 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * Specifies the total number of iterations already performed at the start
      * of the current round of optimisation.
      */
-    private int baseIterations = 0;
+    private int outerIterations = 0;
 
     /**
      * Specifies the total number of sub-iterations already performed at the
      * start of the current round of optimisation.
      */
-    private int baseSubIterations = 0;
+    private int outerSubIterations = 0;
+
+    /**
+     * Specifies the total number of sub-iterations already performed at the
+     * start of the current iteration within the current round of optimisation.
+     */
+    private int innerSubIterations = 0;
 
     protected IterativeOptimiser(OptimisableModel model, ModelScorer[] scorers) {
         super(model, scorers);
@@ -37,7 +43,7 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * @return The relative number of iterations.
      */
     protected int relIterations() {
-        return numIterations() - baseIterations;
+        return numIterations() - outerIterations;
     }
 
     /**
@@ -47,14 +53,24 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * @return The relative number of sub-iterations.
      */
     protected int relSubIterations() {
-        return numSubIterations() - baseSubIterations;
+        return numSubIterations() - outerSubIterations;
+    }
+
+    /**
+     * Obtains the number of sub-iterations performed during the current
+     * iteration within the current round of optimisation.
+     * 
+     * @return The relative number of sub-iterations.
+     */
+    protected int innerSubIterations() {
+        return numSubIterations() - innerSubIterations;
     }
 
     @Override
     public OptimisationResults optimise(OptimisationParams params) {
         final double[] initialScores = Arrays.copyOf(getScores(), numScores());
-        baseIterations = numIterations();
-        baseSubIterations = numSubIterations();
+        outerIterations = numIterations();
+        outerSubIterations = numSubIterations();
         OptimisationStatus status = start(params);
         setStatus(status);
         while (status == OptimisationStatus.RUNNING) {
@@ -89,6 +105,7 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * @return The status of the optimiser after the iteration.
      */
     protected OptimisationStatus iterate(OptimisationParams params) {
+        innerSubIterations = numSubIterations();
         OptimisationStatus status = preUpdate(params);
         if (status != OptimisationStatus.RUNNING)
             return status;
@@ -112,8 +129,6 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
     protected OptimisationStatus preUpdate(OptimisationParams params) {
         if (params.maxIterations() > 0 && relIterations() >= params.maxIterations())
             return OptimisationStatus.MAX_ITERATIONS_EXCEEDED;
-        if (params.maxSubIterations() > 0 && relSubIterations() >= params.maxSubIterations())
-            return OptimisationStatus.MAX_SUB_ITERATIONS_EXCEEDED;
         return OptimisationStatus.RUNNING;
     }
 
