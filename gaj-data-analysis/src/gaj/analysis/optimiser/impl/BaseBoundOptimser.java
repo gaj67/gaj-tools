@@ -33,10 +33,13 @@ public abstract class BaseBoundOptimser implements BoundOptimiser {
     /** Current number of optimisation iterations performed. */
     private int numIterations = 0;
 
+    /** Current number of sub-optimisation iterations performed across all iterations. */
+    private int subIterations = 0;
+
     /**
      * Current status of the optimisation process.
      */
-    private OptimiserStatus status = OptimiserStatus.NOT_HALTED;
+    private OptimiserStatus status = OptimiserStatus.RUNNING;
 
     /**
      * Binds the optimisation algorithm to the given model and scorers.
@@ -53,7 +56,16 @@ public abstract class BaseBoundOptimser implements BoundOptimiser {
         if (numScores <= 0)
             throw new IllegalArgumentException("An optimisation scorer must be specified!");
         scores = new double[numScores];
-        optimisationScore = computeScores(scores);
+        computeScores();
+    }
+
+    /**
+     * Obtains the optimisable model bound to the optimiser.
+     * 
+     * @return The model to be optimised.
+     */
+    public OptimisableModel getModel() {
+        return model;
     }
 
     /**
@@ -65,31 +77,21 @@ public abstract class BaseBoundOptimser implements BoundOptimiser {
         return numScores;
     }
 
-    /**
-     * Obtains the current number of optimisation iterations performed.
-     * 
-     * @return The number of iterations.
-     */
     @Override
     public int numIterations() {
         return numIterations;
     }
 
-    /**
-     * Obtains the current model optimisation score information.
-     * 
-     * @return The optimisation score information.
-     */
+    @Override
+    public int numSubIterations() {
+        return subIterations;
+    }
+
     @Override
     public ScoreInfo getOptimisationScore() {
         return optimisationScore;
     }
 
-    /**
-     * Obtains the current model optimisation and validation scores.
-     * 
-     * @return The array of scores.
-     */
     @Override
     public double[] getScores() {
         return scores;
@@ -125,66 +127,35 @@ public abstract class BaseBoundOptimser implements BoundOptimiser {
     }
 
     /**
-     * Increments the number of optimisation iterations performed by the
-     * specified amount.
-     * 
-     * @param numIterations
-     *            - The number of additional iterations performed.
+     * Increments the number of sub-optimisation iterations performed.
      */
-    protected void incIterations(int numIterations) {
-        this.numIterations += numIterations;
+    protected void incSubIterations() {
+        subIterations++;
     }
 
     /**
-     * Specifies the classifier optimisation and validation scores, and other
-     * optimisation information.
-     * 
-     * @param optimisationScore
-     *            - The optimisation score information.
-     * @param scores
-     *            - The optimisation and validation scores.
+     * Computes the current optimisation and validation scores of the model.
      */
-    protected void setScores(ScoreInfo optimisationScore, double[] scores) {
-        this.optimisationScore = optimisationScore;
-        this.scores = scores;
-    }
-
-    /**
-     * Computes the current optimisation and validation scores of the model on
-     * the gold-standard data.
-     * 
-     * @param scores
-     *            - The array of optimisation and validation scores.
-     * @return The optimisation score information.
-     */
-    protected ScoreInfo computeScores(double[] scores) {
-        computeValidationScores(scores);
-        return computeOptimisationScore(scores);
+    protected void computeScores() {
+        computeValidationScores();
+        computeOptimisationScore();
     }
 
     /**
      * Computes the current optimisation score of the model.
-     * 
-     * @param scores
-     *            - The array of optimisation and validation scores.
-     * @return The optimisation score information.
      */
-    protected ScoreInfo computeOptimisationScore(double[] scores) {
-        ScoreInfo info = scorers[0].score(model);
-        scores[0] = info.getScore();
-        return info;
+    protected void computeOptimisationScore() {
+        optimisationScore = scorers[0].score(model);
+        scores[0] = optimisationScore.getScore();
     }
 
     /**
-     * Computes the current validation scores of the model on the gold-standard
-     * data.
-     * 
-     * @param scores
-     *            - The array of optimisation and validation scores.
+     * Computes the current validation scores of the model.
      */
-    protected void computeValidationScores(double[] scores) {
-        for (int i = 1; i < scorers.length; i++)
+    protected void computeValidationScores() {
+        for (int i = 1; i < scorers.length; i++) {
             scores[i] = scorers[i].score(model).getScore();
+        }
     }
 
     /**

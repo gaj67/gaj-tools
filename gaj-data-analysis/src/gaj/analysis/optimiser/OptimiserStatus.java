@@ -9,7 +9,7 @@ public enum OptimiserStatus {
      * The optimisation process has not yet halted, and may be continued
      * further.
      */
-    NOT_HALTED,
+    RUNNING,
     /**
      * The optimisation process halted due to the convergence of the
      * optimisation scores to within tolerance.

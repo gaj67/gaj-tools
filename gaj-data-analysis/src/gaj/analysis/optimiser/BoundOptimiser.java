@@ -18,12 +18,20 @@ public interface BoundOptimiser {
     OptimisationResults optimise(OptimisationParams params);
 
     /**
-     * Indicates the total number of model update iterations actually performed
-     * by the optimiser so far.
+     * Indicates the total number of iterations performed by the optimiser so
+     * far.
      * 
      * @return The number of iterations.
      */
     int numIterations();
+
+    /**
+     * Indicates the total number of sub-optimisation iterations performed
+     * across all iterations.
+     * 
+     * @return The number of sub-iterations.
+     */
+    public int numSubIterations();
 
     /**
      * Indicates the current status of the optimiser.

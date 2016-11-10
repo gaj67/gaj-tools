@@ -14,56 +14,54 @@ import gaj.analysis.optimiser.OptimiserStatus;
 public abstract class IterativeOptimiser extends BaseBoundOptimser {
 
     /**
-     * Specifies the total number of sub-iterations performed by the
-     * {@link #update}() method over the course of a single call to
-     * {@link #optimise}().
+     * Specifies the total number of iterations already performed at the start
+     * of the current round of optimisation.
      */
-    private int subIterations = 0;
+    private int baseIterations = 0;
+
+    /**
+     * Specifies the total number of sub-iterations already performed at the
+     * start of the current round of optimisation.
+     */
+    private int baseSubIterations = 0;
 
     protected IterativeOptimiser(OptimisableModel model, ModelScorer[] scorers) {
         super(model, scorers);
     }
 
     /**
-     * Obtains the total number of sub-iterations performed by {@link #update}()
-     * during the current round of optimisation.
+     * Obtains the number of iterations performed during the current round of
+     * optimisation.
      * 
-     * @return The number of sub-iterations.
+     * @return The relative number of iterations.
      */
-    protected int numSubIterations() {
-        return subIterations;
+    protected int relIterations() {
+        return numIterations() - baseIterations;
     }
 
     /**
-     * Increments the number of sub-iterations. To be called by
-     * {@link #update}().
+     * Obtains the number of sub-iterations performed during the current round
+     * of optimisation.
+     * 
+     * @return The relative number of sub-iterations.
      */
-    protected void incSubIterations() {
-        subIterations++;
-    }
-
-    /**
-     * Increments the number of sub-iterations by the amount specified. To be
-     * called by {@link #update}().
-     */
-    protected void incSubIterations(int increment) {
-        subIterations += increment;
+    protected int relSubIterations() {
+        return numSubIterations() - baseSubIterations;
     }
 
     @Override
     public OptimisationResults optimise(OptimisationParams params) {
-        final int initialIterations = numIterations();
-        subIterations = 0;
         final double[] initialScores = Arrays.copyOf(getScores(), numScores());
-        OptimiserStatus status = start(params, getStatus());
+        baseIterations = numIterations();
+        baseSubIterations = numSubIterations();
+        OptimiserStatus status = start(params);
         setStatus(status);
-        while (status == OptimiserStatus.NOT_HALTED) {
+        while (status == OptimiserStatus.RUNNING) {
             status = iterate(params);
             setStatus(status);
         }
-        final int finalIterations = numIterations();
         final double[] finalScores = Arrays.copyOf(getScores(), numScores());
-        return end(getResults(finalIterations - initialIterations, subIterations, initialScores, finalScores, status));
+        return end(getResults(relIterations(), relSubIterations(), initialScores, finalScores, status));
     }
 
     /**
@@ -72,20 +70,18 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * 
      * @param params
      *            - The parameters controlling the optimisation process.
-     * @param curStatus
-     *            - The current status of the optimiser.
      * @return The status with which to start this round of optimisation.
      */
-    protected OptimiserStatus start(OptimisationParams params, OptimiserStatus curStatus) {
+    protected OptimiserStatus start(OptimisationParams params) {
+        OptimiserStatus curStatus = getStatus();
         if (OptimiserStatus.MAX_ITERATIONS_EXCEEDED == curStatus || OptimiserStatus.MAX_SUB_ITERATIONS_EXCEEDED == curStatus)
-            return OptimiserStatus.NOT_HALTED;
+            return OptimiserStatus.RUNNING;
         return curStatus;
     }
 
     /**
-     * Attempts one major iteration of optimisation, updating the scores and
-     * number of iterations via {@link #setScores}() and
-     * {@link #incIterations}(), respectively.
+     * Attempts one major iteration of optimisation, updating the optimisation
+     * and validation scores and the number of iterations.
      * 
      * @param params
      *            - The parameters controlling the optimisation process.
@@ -93,14 +89,15 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      */
     protected OptimiserStatus iterate(OptimisationParams params) {
         OptimiserStatus status = preUpdate(params);
-        if (status != OptimiserStatus.NOT_HALTED)
+        if (status != OptimiserStatus.RUNNING)
             return status;
         double[] prevScores = Arrays.copyOf(getScores(), numScores());
         status = update(params);
-        if (status != OptimiserStatus.NOT_HALTED)
+        if (status != OptimiserStatus.RUNNING)
             return status;
         incIterations();
-        return postUpdate(params, prevScores, getScores());
+        computeValidationScores();
+        return postUpdate(params, prevScores);
     }
 
     /**
@@ -112,18 +109,17 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * @return The status of the optimiser before commencing an update.
      */
     protected OptimiserStatus preUpdate(OptimisationParams params) {
-        if (params.maxIterations() > 0 && numIterations() >= params.maxIterations())
+        if (params.maxIterations() > 0 && relIterations() >= params.maxIterations())
             return OptimiserStatus.MAX_ITERATIONS_EXCEEDED;
-        if (params.maxSubIterations() > 0 && numSubIterations() >= params.maxSubIterations())
+        if (params.maxSubIterations() > 0 && relSubIterations() >= params.maxSubIterations())
             return OptimiserStatus.MAX_SUB_ITERATIONS_EXCEEDED;
-        return OptimiserStatus.NOT_HALTED;
+        return OptimiserStatus.RUNNING;
     }
 
     /**
      * Performs an update of the model parameters. If successful, this method is
-     * responsible for updating the optimiser scores and number of
-     * sub-iterations performed via {@link #setScores}() and
-     * {@link #incSubIterations}(), respectively.
+     * responsible for updating the optimisation score and number of
+     * sub-iterations performed.
      * 
      * @param params
      *            - The parameters controlling the optimisation process.
@@ -140,21 +136,18 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      *            - The parameters controlling the optimisation process.
      * @param prevScores
      *            - The optimisation and validation scores before the update.
-     * @param curScores
-     *            - The optimisation and validation scores after the update.
      * @return The status of the optimiser after successfully performing an
      *         update.
      */
-    protected OptimiserStatus postUpdate(OptimisationParams params, double[] prevScores, double[] curScores) {
-        final double prevScore = prevScores[0];
-        final double diffScore = params.optimisationDirection() * (curScores[0] - prevScore);
+    protected OptimiserStatus postUpdate(OptimisationParams params, double[] prevScores) {
+        final double diffScore = params.optimisationDirection() * (getScores()[0] - prevScores[0]);
         if (diffScore <= 0)
             return OptimiserStatus.SCORE_NOT_IMPROVED;
         if (params.scoreTolerance() > 0 && diffScore < params.scoreTolerance())
             return OptimiserStatus.SCORE_CONVERGED;
-        if (params.relativeScoreTolerance() > 0 && diffScore < Math.abs(prevScore) * params.relativeScoreTolerance())
+        if (params.relativeScoreTolerance() > 0 && diffScore < Math.abs(prevScores[0]) * params.relativeScoreTolerance())
             return OptimiserStatus.RELATIVE_SCORE_CONVERGED;
-        return OptimiserStatus.NOT_HALTED;
+        return OptimiserStatus.RUNNING;
     }
 
     /**
