@@ -1,14 +1,8 @@
 package gaj.analysis.optimiser;
 
-public interface OptimisationParams {
+import com.sun.istack.internal.Nullable;
 
-    /**
-     * Indicates whether to maximise or minimise the model score.
-     * 
-     * @return A value of true (or false) if the score is to be maximised (or
-     *         minimised).
-     */
-    boolean maximiseScore();
+public interface OptimisationParams {
 
     /**
      * Indicates the direction of score optimisation.
@@ -16,44 +10,61 @@ public interface OptimisationParams {
      * @return A positive (or negative) value corresponding to score
      *         maximisation (or minimisation).
      */
-    default int optimisationDirection() {
-        return maximiseScore() ? +1 : -1;
-    }
+    int getOptimisationDirection();
 
     /**
      * Specifies the maximum number of update iterations to perform during
-     * training.
+     * optimisation.
      * 
      * @return The maximum number of iterations, or a non-positive value if
      *         there is no maximum.
      */
-    int maxIterations();
-
-    /**
-     * Specifies the maximum number of minor iterations that may be performed
-     * during a major (score-improving) iteration.
-     * 
-     * @return The maximum number of sub-iterations, or a non-positive value if
-     *         there is no maximum.
-     */
-    int maxSubIterations();
+    default int getMaxIterations() {
+        return 0;
+    }
 
     /**
      * Specifies the smallest difference in accuracy scores between update
-     * iterations, below which training will cease.
+     * iterations, below which optimisation will cease.
      * 
      * @return The minimum score tolerance, or a non-positive value if tolerance
      *         is not to be checked.
      */
-    double scoreTolerance();
+    default double getScoreTolerance() {
+        return 0;
+    }
 
     /**
      * Specifies the smallest relative difference in accuracy scores between
-     * update iterations, below which training will cease.
+     * update iterations, below which optimisation will cease.
      * 
      * @return The minimum relative score tolerance, or a non-positive value if
      *         tolerance is not to be checked.
      */
-    double relativeScoreTolerance();
+    default double getRelativeScoreTolerance() {
+        return 0;
+    }
 
+    /**
+     * Specifies the type of algorithm to use for searching for a direction in
+     * which to update the model parameters.
+     * 
+     * @return The direction search algorithm type, or a value of null to use
+     *         the default algorithm.
+     */
+    default @Nullable DirectionSearcherType getDirectionSearchType() {
+        return null;
+    }
+    
+    /**
+     * Specifies the type of algorithm to use for searching along a given
+     * direction in order to update the model parameters.
+     * 
+     * @return The line search algorithm type, or a value of null to use the
+     *         default algorithm.
+     */
+    default @Nullable LineSearcherType getLineSearchType() {
+        return null;
+    }
+    
 }

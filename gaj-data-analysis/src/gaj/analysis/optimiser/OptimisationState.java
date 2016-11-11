@@ -12,14 +12,14 @@ public interface OptimisationState {
      * 
      * @return The number of iterations.
      */
-    int numIterations();
+    int getNumIterations();
 
     /**
      * Indicates the number of sub-iterations performed.
      * 
      * @return The number of sub-iterations.
      */
-    int numSubIterations();
+    int getNumSubIterations();
 
     /**
      * Indicates the optimisation and (optionally) validation scores of the

@@ -12,7 +12,7 @@ import gaj.analysis.optimiser.OptimisationStatus;
  * Specifies the basis for a reusable scheme for iterative optimisation. Each
  * call to {@link #optimise}() takes up where the previous call left off.
  */
-public abstract class IterativeOptimiser extends BaseBoundOptimser {
+public abstract class IterativeOptimiser extends UpdatableOptimser {
 
     /**
      * Specifies the total number of iterations already performed at the start
@@ -42,8 +42,8 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * 
      * @return The relative number of iterations.
      */
-    protected int relIterations() {
-        return numIterations() - outerIterations;
+    protected int getRelativeNumIterations() {
+        return getNumIterations() - outerIterations;
     }
 
     /**
@@ -52,8 +52,8 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * 
      * @return The relative number of sub-iterations.
      */
-    protected int relSubIterations() {
-        return numSubIterations() - outerSubIterations;
+    protected int getRelativeNumSubIterations() {
+        return getNumSubIterations() - outerSubIterations;
     }
 
     /**
@@ -62,15 +62,15 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * 
      * @return The relative number of sub-iterations.
      */
-    protected int innerSubIterations() {
-        return numSubIterations() - innerSubIterations;
+    protected int getInnerNumSubIterations() {
+        return getNumSubIterations() - innerSubIterations;
     }
 
     @Override
     public OptimisationResults optimise(OptimisationParams params) {
         final double[] initialScores = Arrays.copyOf(getScores(), numScores());
-        outerIterations = numIterations();
-        outerSubIterations = numSubIterations();
+        outerIterations = getNumIterations();
+        outerSubIterations = getNumSubIterations();
         OptimisationStatus status = start(params);
         setStatus(status);
         while (status == OptimisationStatus.RUNNING) {
@@ -78,7 +78,7 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
             setStatus(status);
         }
         final double[] finalScores = Arrays.copyOf(getScores(), numScores());
-        return end(getResults(relIterations(), relSubIterations(), initialScores, finalScores, getScoreInfo(), status));
+        return end(getResults(getRelativeNumIterations(), getRelativeNumSubIterations(), initialScores, finalScores, getScoreInfo(), status));
     }
 
     /**
@@ -105,7 +105,7 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * @return The status of the optimiser after the iteration.
      */
     protected OptimisationStatus iterate(OptimisationParams params) {
-        innerSubIterations = numSubIterations();
+        innerSubIterations = getNumSubIterations();
         OptimisationStatus status = preUpdate(params);
         if (status != OptimisationStatus.RUNNING)
             return status;
@@ -113,7 +113,7 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
         status = update(params);
         if (status != OptimisationStatus.RUNNING)
             return status;
-        incIterations();
+        incNumIterations();
         computeValidationScores();
         return postUpdate(params, prevScores);
     }
@@ -127,7 +127,7 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      * @return The status of the optimiser before commencing an update.
      */
     protected OptimisationStatus preUpdate(OptimisationParams params) {
-        if (params.maxIterations() > 0 && relIterations() >= params.maxIterations())
+        if (params.getMaxIterations() > 0 && getRelativeNumIterations() >= params.getMaxIterations())
             return OptimisationStatus.MAX_ITERATIONS_EXCEEDED;
         return OptimisationStatus.RUNNING;
     }
@@ -156,12 +156,12 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
      *         update.
      */
     protected OptimisationStatus postUpdate(OptimisationParams params, double[] prevScores) {
-        final double diffScore = params.optimisationDirection() * (getScores()[0] - prevScores[0]);
+        final double diffScore = params.getOptimisationDirection() * (getScores()[0] - prevScores[0]);
         if (diffScore <= 0)
             return OptimisationStatus.SCORE_NOT_IMPROVED;
-        if (params.scoreTolerance() > 0 && diffScore < params.scoreTolerance())
+        if (params.getScoreTolerance() > 0 && diffScore < params.getScoreTolerance())
             return OptimisationStatus.SCORE_CONVERGED;
-        if (params.relativeScoreTolerance() > 0 && diffScore < Math.abs(prevScores[0]) * params.relativeScoreTolerance())
+        if (params.getRelativeScoreTolerance() > 0 && diffScore < Math.abs(prevScores[0]) * params.getRelativeScoreTolerance())
             return OptimisationStatus.RELATIVE_SCORE_CONVERGED;
         return OptimisationStatus.RUNNING;
     }
@@ -180,22 +180,22 @@ public abstract class IterativeOptimiser extends BaseBoundOptimser {
     private OptimisationResults getResults(int numIterations, int subIterations, double[] initialScores, double[] finalScores, ScoreInfo scoreInfo, OptimisationStatus status) {
         return new OptimisationResults() {
             @Override
-            public int numIterations() {
+            public int getNumIterations() {
                 return numIterations;
             }
 
             @Override
-            public int numSubIterations() {
+            public int getNumSubIterations() {
                 return subIterations;
             }
 
             @Override
-            public double[] initalScores() {
+            public double[] getInitalScores() {
                 return initialScores;
             }
 
             @Override
-            public double[] finalScores() {
+            public double[] getFinalScores() {
                 return finalScores;
             }
 

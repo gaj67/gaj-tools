@@ -3,6 +3,7 @@ package gaj.analysis.optimiser.impl;
 import gaj.analysis.model.ModelScorer;
 import gaj.analysis.model.OptimisableModel;
 import gaj.analysis.model.ScoreInfo;
+import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.optimiser.BoundOptimiser;
 import gaj.analysis.optimiser.OptimisationParams;
 import gaj.analysis.optimiser.OptimisationResults;
@@ -10,7 +11,7 @@ import gaj.analysis.optimiser.OptimisationResults;
 /**
  * Specifies the base form of a bound optimisation algorithm.
  */
-public abstract class BaseBoundOptimser extends ModifiableOptimisationState implements BoundOptimiser {
+public abstract class UpdatableOptimser extends ModifiableOptimisationState implements BoundOptimiser {
 
     /** The model to be optimised. */
     private final OptimisableModel model;
@@ -31,7 +32,7 @@ public abstract class BaseBoundOptimser extends ModifiableOptimisationState impl
      * @param scorers
      *            - The data scorer(s) used to measure model performance.
      */
-    protected BaseBoundOptimser(OptimisableModel model, ModelScorer[] scorers) {
+    protected UpdatableOptimser(OptimisableModel model, ModelScorer[] scorers) {
         this.model = model;
         this.scorers = scorers;
         numScores = scorers.length;
@@ -48,6 +49,27 @@ public abstract class BaseBoundOptimser extends ModifiableOptimisationState impl
      */
     public OptimisableModel getModel() {
         return model;
+    }
+
+    /**
+     * Obtains the current parameters of the model.
+     * 
+     * @return The model parameters
+     */
+    public DataVector getModelParameters() {
+        return model.getParameters();
+    }
+
+    /**
+     * Sets the current parameters of the model.
+     * 
+     * @param params
+     *            - The model parameters
+     * @return A value of true (or false) if the model parameters were (or were
+     *         not) successfully updated.
+     */
+    public boolean setModelParameters(DataVector params) {
+        return model.setParameters(params);
     }
 
     /**

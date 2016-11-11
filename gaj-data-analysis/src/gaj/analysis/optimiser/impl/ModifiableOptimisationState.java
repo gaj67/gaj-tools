@@ -30,49 +30,27 @@ public class ModifiableOptimisationState implements OptimisationState {
     private ScoreInfo optimisationScore;
 
     @Override
-    public int numIterations() {
+    public int getNumIterations() {
         return numIterations;
     }
 
     /**
      * Increments the number of optimisation iterations performed.
      */
-    protected void incIterations() {
+    protected void incNumIterations() {
         numIterations++;
     }
 
-    /**
-     * Increments the number of optimisation iterations performed by the
-     * specified amount.
-     * 
-     * @param numIterations
-     *            - The number of additional iterations performed.
-     */
-    protected void incIterations(int numIterations) {
-        this.numIterations += numIterations;
-    }
-
     @Override
-    public int numSubIterations() {
+    public int getNumSubIterations() {
         return subIterations;
     }
 
     /**
      * Increments the number of sub-optimisation iterations performed.
      */
-    protected void incSubIterations() {
+    protected void incNumSubIterations() {
         subIterations++;
-    }
-
-    /**
-     * Increments the number of sub-optimisation iterations performed by the
-     * specified amount.
-     * 
-     * @param numSubIterations
-     *            - The number of additional sub-iterations performed.
-     */
-    protected void incSubIterations(int numSubIterations) {
-        subIterations += numSubIterations;
     }
 
     @Override

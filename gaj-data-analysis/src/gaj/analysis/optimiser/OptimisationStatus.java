@@ -22,11 +22,6 @@ public enum OptimisationStatus {
      */
     RELATIVE_SCORE_CONVERGED,
     /**
-     * The optimisation process halted due to the magnitude of the optimisation
-     * score gradient being below tolerance.
-     */
-    GRADIENT_TOO_SMALL,
-    /**
      * The optimisation process halted due to the number of iterations exceeding
      * the prescribed maximum.
      */
@@ -40,11 +35,32 @@ public enum OptimisationStatus {
      * The optimisation process halted due to a failure to update the model
      * parameters.
      */
-    UPDATE_FAILED,
+    PARAMETER_UPDATE_FAILED,
     /**
      * The optimisation process halted due to the optimisation score not
      * improving within a major iteration.
      */
-    SCORE_NOT_IMPROVED;
+    SCORE_NOT_IMPROVED,
+    /**
+     * The optimisation process halted because the required gradient information
+     * could not be obtained.
+     */
+    GRADIENT_UNAVAILABLE,
+    /**
+     * The optimisation process halted because no model parameters update
+     * direction could be found.
+     */
+    DIRECTION_UNAVAILABLE,
+    /**
+     * The optimisation process halted due to the magnitude of the model
+     * parameters update direction being below tolerance.
+     */
+    DIRECTION_TOO_SMALL,
+    /**
+     * The optimisation process halted due to some unspecified problem.
+     */
+    HALTED_WITH_ERROR,
+
+    ;
 
 }

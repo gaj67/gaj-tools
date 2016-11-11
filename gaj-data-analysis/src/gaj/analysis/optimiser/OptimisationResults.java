@@ -13,7 +13,7 @@ public interface OptimisationResults extends OptimisationState {
      * 
      * @return The initial score(s).
      */
-    double[] initalScores();
+    double[] getInitalScores();
 
     /**
      * Indicates the optimisation and (optionally) validation scores of the
@@ -21,7 +21,7 @@ public interface OptimisationResults extends OptimisationState {
      * 
      * @return The final score(s).
      */
-    default double[] finalScores() {
+    default double[] getFinalScores() {
         return getScores();
     }
 
