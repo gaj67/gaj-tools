@@ -154,8 +154,8 @@ public abstract class Cubics {
          * Then f'(x1*) = 0 = f'(x0) + (x1*-x0).f''(x0)
          * + 1/2 f'''(x0):(x1*-x0)^2 + O(||x1*-x0||^3)
          * => 0 = g0 + s*d.H0 + 1/2*s^2*T0:d^2 + O(||d||^3)
-         * => 1/2*T0:d^3*s^2 + d.H0.d*s + g0.d = 0
-         * => s = (-d.H0.d - sqrt{(d.H0.d)^2-2*T0:d^3*g0.d}) / T0:d^3.
+         * => 1/2*T0:d^3*s^2 + d.H0.d*s + g0.d = O(||d||^4)
+         * => hat{s} = (-d.H0.d - sqrt{(d.H0.d)^2-2*T0:d^3*g0.d}) / T0:d^3.
          */
         double g0d = r * VectorFactory.dot(g0, d);
         double g1d = r * VectorFactory.dot(g1, d);

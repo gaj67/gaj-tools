@@ -25,13 +25,24 @@ public interface LineSearchParams {
     }
 
     /**
-     * Specifies the minimum acceptable size of the direction vector in which to
+     * Specifies the minimum acceptable size of the direction step in which to
      * search.
      * 
-     * @return The minimum direction tolerance, or a non-positive value if the
-     *         tolerance is not to be checked.
+     * @return The minimum direction step, or a non-positive value if the step
+     *         is not to be checked.
      */
-    default double getMinDirectionTolerance() {
+    default double getMinDirectionStep() {
+        return 0;
+    }
+
+    /**
+     * Specifies the maximum acceptable size of the direction step in which to
+     * search.
+     * 
+     * @return The maximum direction step, or a non-positive value if the step
+     *         is not to be checked.
+     */
+    default double getMaxDirectionStep() {
         return 0;
     }
 
