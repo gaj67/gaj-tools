@@ -163,7 +163,7 @@ public abstract class Quadratics {
          * => 0 = g0+s*d.H0 + O(||d||^2)
          * => 0 = g0.d+s*d.H0.d + O(||d||^3)
          * => s = -g0.d/d.H0.d + O(||d||^3)
-         * = -g0.d/(g1-g0).d + O(||d||^3).
+         *      = -g0.d/(g1-g0).d + O(||d||^3).
          */
         double g0d = VectorFactory.dot(g0, d);
         double g1d = VectorFactory.dot(g1, d);

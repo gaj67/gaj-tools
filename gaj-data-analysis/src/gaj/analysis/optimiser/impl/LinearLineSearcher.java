@@ -2,6 +2,7 @@ package gaj.analysis.optimiser.impl;
 
 import gaj.analysis.model.ScoreInfo;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.optimiser.LineSearchParams;
 import gaj.analysis.optimiser.LineSearcherType;
 
 /**
@@ -20,7 +21,9 @@ public class LinearLineSearcher extends BaseLineSearcher {
     }
 
     @Override
-    protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore) {
+    protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore,
+            LineSearchParams params) 
+    {
         return prevStepSize * 0.5;
     }
 

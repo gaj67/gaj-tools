@@ -31,6 +31,10 @@ public abstract class LineSearcherFactory {
         switch (type) {
             case LINEAR:
                 return new LinearLineSearcher(optimiser);
+            case QUADRATIC:
+                return new QuadraticLineSearcher(optimiser);
+            case CUBIC:
+                return new CubicLineSearcher(optimiser);
             default:
                 throw new IllegalArgumentException("Unhandled line searcher type: " + type);
         }

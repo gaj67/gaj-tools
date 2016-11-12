@@ -37,7 +37,7 @@ public abstract class BaseLineSearcher implements LineSearcher {
     public LineSearchStatus search(DataVector direction, LineSearchParams params) {
         final ScoreInfo prevScore = optimiser.getScoreInfo();
         double prevStepSize = 0;
-        double stepSize = computeStepSize(direction, prevScore);
+        double stepSize = computeStepSize(direction, prevScore, params);
         LineSearchStatus status = checkStepSize(stepSize, direction, prevScore, params);
         if (status != LineSearchStatus.SUCCESSFUL) return status;
         final int maxSubIterations = (params.getMaxLineSearchIterations() > 0) 
@@ -55,7 +55,7 @@ public abstract class BaseLineSearcher implements LineSearcher {
             if (scoreImproved(params, prevScore)) return LineSearchStatus.SUCCESSFUL;
             // Set up further line search.
             prevStepSize = stepSize;
-            stepSize = recomputeStepSize(stepSize, direction, prevScore);
+            stepSize = recomputeStepSize(stepSize, direction, prevScore, params);
             status = checkStepSize(stepSize, direction, prevScore, params);
             if (status != LineSearchStatus.SUCCESSFUL) return status;
         }
@@ -69,9 +69,11 @@ public abstract class BaseLineSearcher implements LineSearcher {
      *            - The search direction.
      * @param prevScore
      *            - The initial optimisation score information.
+     * @param params
+     *            - The line search parameters.
      * @return The initial step-size.
      */
-    protected double computeStepSize(DataVector direction, ScoreInfo prevScore) {
+    protected double computeStepSize(DataVector direction, ScoreInfo prevScore, LineSearchParams params) {
         // TODO Control step-size according to direction norm and tolerances.
         return 1;
     }
@@ -85,9 +87,12 @@ public abstract class BaseLineSearcher implements LineSearcher {
      *            - The search direction.
      * @param prevScore
      *            - The initial optimisation score information.
+     * @param params
+     *            - The line search parameters.
      * @return The new step-size.
      */
-    abstract protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore);
+    abstract protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore,
+            LineSearchParams params);
 
     /**
      * Checks that the magnitude of the update of the model parameters is within
