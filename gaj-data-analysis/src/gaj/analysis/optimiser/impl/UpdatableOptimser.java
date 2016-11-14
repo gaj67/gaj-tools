@@ -121,7 +121,7 @@ public abstract class UpdatableOptimser extends ModifiableOptimisationState impl
     protected void computeValidationScores() {
         double[] scores = getScores();
         for (int i = 1; i < scorers.length; i++) {
-            scores[i] = scorers[i].score(model).getScore();
+            scores[i] = scorers[i].scoreOnly(model);
         }
     }
 

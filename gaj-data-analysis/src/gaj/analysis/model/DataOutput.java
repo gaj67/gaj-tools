@@ -5,4 +5,11 @@ package gaj.analysis.model;
  */
 public interface DataOutput {
 
+    /**
+     * Obtains the input data used to compute this output.
+     * 
+     * @return The input data.
+     */
+    DataInput getInput();
+
 }
