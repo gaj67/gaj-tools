@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import gaj.analysis.numeric.object.RepresentationType;
+import gaj.analysis.numeric.RepresentationType;
 import gaj.analysis.numeric.vector.ArrayVector;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.IndexVector;

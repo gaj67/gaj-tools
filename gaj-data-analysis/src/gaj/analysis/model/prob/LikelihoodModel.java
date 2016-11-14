@@ -1,4 +1,8 @@
-package gaj.analysis.model;
+package gaj.analysis.model.prob;
+
+import gaj.analysis.model.DataInput;
+import gaj.analysis.model.DataModel;
+import gaj.analysis.model.ParameterisedModel;
 
 /**
  * A model of the probability (likelihood) p(x) of an observation x.

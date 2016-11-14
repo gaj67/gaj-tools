@@ -1,6 +1,6 @@
 package gaj.analysis.numeric.matrix;
 
-import gaj.analysis.numeric.object.DataObject;
+import gaj.analysis.numeric.DataObject;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**

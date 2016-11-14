@@ -1,6 +1,6 @@
 package gaj.analysis.numeric.vector.impl;
 
-import gaj.analysis.numeric.object.RepresentationType;
+import gaj.analysis.numeric.RepresentationType;
 
 public abstract class DenseVector extends AbstractVector {
 

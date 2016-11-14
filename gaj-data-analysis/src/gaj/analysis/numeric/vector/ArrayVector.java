@@ -1,6 +1,6 @@
 package gaj.analysis.numeric.vector;
 
-import gaj.analysis.numeric.object.RepresentationType;
+import gaj.analysis.numeric.RepresentationType;
 
 /**
  * Marks a vector as having a flat array representation,

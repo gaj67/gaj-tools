@@ -1,4 +1,4 @@
-package gaj.analysis.numeric.object;
+package gaj.analysis.numeric;
 
 /**
  * Indicates the type of structure used to contain data elements.

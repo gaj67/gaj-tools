@@ -1,4 +1,6 @@
-package gaj.analysis.model;
+package gaj.analysis.model.prob;
+
+import gaj.analysis.model.DataOutput;
 
 /**
  * Encapsulates the output of a {@link LikelihoodModel}.

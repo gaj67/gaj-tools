@@ -1,5 +1,6 @@
-package gaj.analysis.model;
+package gaj.analysis.model.prob;
 
+import gaj.analysis.model.DataOutput;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**
