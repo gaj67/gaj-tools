@@ -1,6 +1,6 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.model.GradientVectorEnabled;
+import gaj.analysis.model.VectorGradientComputable;
 import gaj.analysis.model.ScoreInfo;
 import gaj.analysis.numeric.vector.SettableVector;
 import gaj.analysis.optimiser.DirectionSearchParams;
@@ -27,8 +27,8 @@ public class GradientDirectionSearcher extends BaseDirectionSearcher {
     @Override
     public DirectionSearchStatus search(SettableVector direction) {
         ScoreInfo scoreInfo = getOptimiser().getScoreInfo();
-        if (scoreInfo instanceof GradientVectorEnabled) {
-            direction.set(((GradientVectorEnabled) scoreInfo).getGradient());
+        if (scoreInfo instanceof VectorGradientComputable) {
+            direction.set(((VectorGradientComputable) scoreInfo).getGradient());
             return DirectionSearchStatus.AVAILABLE;
         }
         return DirectionSearchStatus.GRADIENT_UNAVAILABLE;

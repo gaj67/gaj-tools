@@ -1,7 +1,7 @@
 package gaj.analysis.optimiser.impl;
 
 import gaj.analysis.curves.Cubics;
-import gaj.analysis.model.GradientVectorEnabled;
+import gaj.analysis.model.VectorGradientComputable;
 import gaj.analysis.model.ScoreInfo;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.optimiser.LineSearchParams;
@@ -29,11 +29,11 @@ public class CubicLineSearcher extends BaseLineSearcher {
     protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore) 
     {
         ScoreInfo curScore = getOptimiser().getScoreInfo();
-        if (prevScore instanceof GradientVectorEnabled && curScore instanceof GradientVectorEnabled) {
+        if (prevScore instanceof VectorGradientComputable && curScore instanceof VectorGradientComputable) {
             double y0 = prevScore.getScore();
-            DataVector g0 = ((GradientVectorEnabled) prevScore).getGradient();
+            DataVector g0 = ((VectorGradientComputable) prevScore).getGradient();
             double y1 = curScore.getScore();
-            DataVector g1 = ((GradientVectorEnabled) curScore).getGradient();
+            DataVector g1 = ((VectorGradientComputable) curScore).getGradient();
             double s = (getParams().getDirectionSign() > 0)
                     ? Cubics.cubicMaximumScaling(y0, g0, y1, g1, prevStepSize, direction)
                     : Cubics.cubicMinimumScaling(y0, g0, y1, g1, prevStepSize, direction);

@@ -1,12 +1,11 @@
 package gaj.analysis.model.prob;
 
-import gaj.analysis.model.DataOutput;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**
- * Encapsulates the output of a {@link DiscriminativeModel}.
+ * Encapsulates the output of a {@link PosteriorModel}.
  */
-public interface DiscriminativeOutput extends DataOutput {
+public interface PosteriorOutput extends ProbDataOutput {
 
     /**
      * Obtains the posterior probabilities p(y|x) of the input data x for each

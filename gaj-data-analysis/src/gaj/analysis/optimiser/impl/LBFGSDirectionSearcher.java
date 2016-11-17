@@ -1,6 +1,6 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.model.GradientVectorEnabled;
+import gaj.analysis.model.VectorGradientComputable;
 import gaj.analysis.model.ScoreInfo;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.SettableVector;
@@ -16,19 +16,32 @@ import gaj.analysis.optimiser.LBFGSDirectionSearchParams;
  */
 public class LBFGSDirectionSearcher extends BaseDirectionSearcher {
 
+    /** Maximum number of updates to keep. */
     private final int maxSize;
+    /** Stores the differences in model parameters, s_{k-1} = x_k - x_{k-1}. */
     private final DataVector[] s;
+    /** Stores the differences in score gradients, y_{k-1} = g_k - g_{}k-1}. */
     private final DataVector[] y;
+    /** Stores the update-gradient projection scalings, rho_k = 1/(y_k . s_k) */
     private final double[] rho;
+    /** Temporary storage for on-the-fly projection scalings. */
     private final double[] alpha;
 
+    /** The previous model parameters. */
     private DataVector x_km1;
+    /** The previous score gradient. */
     private DataVector g_km1;
+    /** The current number of updates stored, up to the maximum number allowed. */
     private int curSize = 0;
+    /**
+     * The current position of the latest update. Note: Once the storage is
+     * full, the subsequent current position will wrap around, and the newest
+     * update will replace the oldest update.
+     */
     private int curPos = -1;
 
     /**
-     * Binds the direction search to the optimiser.
+     * Binds the direction search to the optimiser and the search parameters.
      * 
      * @param optimiser
      *            - An updatable optimiser.
@@ -53,8 +66,8 @@ public class LBFGSDirectionSearcher extends BaseDirectionSearcher {
     public DirectionSearchStatus search(SettableVector direction) {
         // Get gradient.
         ScoreInfo scoreInfo = getOptimiser().getScoreInfo();
-        if (scoreInfo instanceof GradientVectorEnabled) {
-            DataVector g_k = ((GradientVectorEnabled) scoreInfo).getGradient();
+        if (scoreInfo instanceof VectorGradientComputable) {
+            DataVector g_k = ((VectorGradientComputable) scoreInfo).getGradient();
             DataVector x_k = getOptimiser().getModelParameters();
             // Get direction.
             if (curPos < 0) {

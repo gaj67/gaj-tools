@@ -1,6 +1,7 @@
 package gaj.analysis.numeric.matrix.impl;
 
-import gaj.analysis.numeric.matrix.WritableMatrix;
+import gaj.analysis.numeric.matrix.AddableMatrix;
+import gaj.analysis.numeric.matrix.SubtractableMatrix;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.impl.VectorFactory;
 import gaj.common.annotations.PackagePrivate;
@@ -37,7 +38,11 @@ import gaj.common.annotations.PackagePrivate;
     }
 
     @Override
-    protected void addTo(WritableMatrix matrix) {
+    protected void addTo(AddableMatrix matrix) {
+    }
+
+    @Override
+    protected void subtractFrom(SubtractableMatrix matrix) {
     }
 
 }

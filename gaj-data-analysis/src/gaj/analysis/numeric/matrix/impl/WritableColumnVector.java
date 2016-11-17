@@ -37,8 +37,20 @@ import gaj.analysis.numeric.vector.impl.DenseVector;
     }
 
     @Override
+    public void subtract(double value) {
+        for (int row = 0; row < length; row++) {
+            data[row][column] -= value;
+        }
+    }
+
+    @Override
     public void add(int row, double value) {
         data[row][column] += value;
+    }
+
+    @Override
+    public void subtract(int row, double value) {
+        data[row][column] -= value;
     }
 
     @Override
@@ -67,6 +79,21 @@ import gaj.analysis.numeric.vector.impl.DenseVector;
             int row = 0;
             for (double value : vector) {
                 data[row++][column] += value;
+            }
+        }
+    }
+
+    @Override
+    public void subtract(DataVector vector) {
+        if (vector instanceof ArrayVector) {
+            final double[] values = ((ArrayVector) vector).getArray();
+            for (int row = 0; row < length; row++) {
+                data[row][column] -= values[row];
+            }
+        } else {
+            int row = 0;
+            for (double value : vector) {
+                data[row++][column] -= value;
             }
         }
     }

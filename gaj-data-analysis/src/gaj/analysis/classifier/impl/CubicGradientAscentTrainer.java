@@ -28,7 +28,7 @@ public class CubicGradientAscentTrainer extends GradientAscentTrainer {
     @Override
     protected void recomputeStepSize(ClassifierScoreInfo newTrainingScore) {
         final ClassifierScoreInfo ts = getTrainingScore();
-        double s = Cubics.cubicOptimumScaling(
+        double s = Cubics.cubicMaximumScaling(
                 ts.getScore(), ts.getGradient(),
                 newTrainingScore.getScore(), newTrainingScore.getGradient(),
                 stepSize, direction);
@@ -43,7 +43,7 @@ public class CubicGradientAscentTrainer extends GradientAscentTrainer {
         final ClassifierScoreInfo curInfo = getTrainingScore();
         final DataVector g1 = curInfo.getGradient();
         final ClassifierScoreInfo prevInfo = getPrevTrainingScore();
-        double s = Cubics.cubicOptimumScaling(
+        double s = Cubics.cubicMaximumScaling(
                 prevInfo.getScore(), prevInfo.getGradient(),
                 curInfo.getScore(), g1,
                 stepSize, direction);

@@ -1,7 +1,7 @@
 package gaj.analysis.optimiser.impl;
 
 import gaj.analysis.curves.Quadratics;
-import gaj.analysis.model.GradientVectorEnabled;
+import gaj.analysis.model.VectorGradientComputable;
 import gaj.analysis.model.ScoreInfo;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.optimiser.LineSearchParams;
@@ -29,9 +29,9 @@ public class QuadraticLineSearcher extends BaseLineSearcher {
     protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore) 
     {
         ScoreInfo curScore = getOptimiser().getScoreInfo();
-        if (prevScore instanceof GradientVectorEnabled && curScore instanceof GradientVectorEnabled) {
-            DataVector g0 = ((GradientVectorEnabled) prevScore).getGradient();
-            DataVector g1 = ((GradientVectorEnabled) curScore).getGradient();
+        if (prevScore instanceof VectorGradientComputable && curScore instanceof VectorGradientComputable) {
+            DataVector g0 = ((VectorGradientComputable) prevScore).getGradient();
+            DataVector g1 = ((VectorGradientComputable) curScore).getGradient();
             double s = Quadratics.quadraticOptimumScaling(g0, g1, direction);
             if (s > 0 && s < 1) return s * prevStepSize;
         }

@@ -1,15 +1,18 @@
 package gaj.analysis.model.prob;
 
 import gaj.analysis.model.DataInput;
-import gaj.analysis.model.DataModel;
-import gaj.analysis.model.ParameterisedModel;
 
 /**
  * A model of the posterior probability p(y|x) of an observation x for known,
  * discrete values of y. Typically, y is a label for either a class (for a
  * supervised model) or a cluster (for an unsupervised model).
  */
-public interface DiscriminativeModel extends DataModel, ParameterisedModel {
+public interface PosteriorModel extends ProbDataModel {
+
+    @Override
+    default ProbModelType getProbModelType() {
+        return ProbModelType.POSTERIOR;
+    }
 
     /**
      * Computes the posterior probabilities p(y|x) for each y.
@@ -23,6 +26,6 @@ public interface DiscriminativeModel extends DataModel, ParameterisedModel {
      * @return The output object.
      */
     @Override
-    DiscriminativeOutput process(DataInput x, boolean includeAuxiliary);
+    PosteriorOutput process(DataInput x, boolean includeAuxiliary);
 
 }

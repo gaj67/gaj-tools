@@ -1,6 +1,5 @@
 package gaj.analysis.model.prob;
 
-import gaj.analysis.model.DataOutput;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**
@@ -9,7 +8,7 @@ import gaj.analysis.numeric.vector.DataVector;
  * Note: Any additional information, such as a gradient matrix, will be computed
  * against the joint probabilities.
  */
-public interface JointOutput extends DataOutput {
+public interface JointOutput extends LikelihoodOutput, PosteriorOutput {
 
     /**
      * Obtains the marginal probability p(x) = sum_{y} p(y,x) of the input data
@@ -17,7 +16,8 @@ public interface JointOutput extends DataOutput {
      * 
      * @return The marginal probability.
      */
-    double getMarginalProbability();
+    @Override
+    double getDataProbability();
 
     /**
      * Obtains the joint probabilities p(y,x) of the input data x for each
@@ -28,11 +28,12 @@ public interface JointOutput extends DataOutput {
     DataVector getJointProbabilities();
 
     /**
-     * Obtains the posterior probabilities p(y|x) of the input data x for each
-     * indexable label y.
+     * Obtains the posterior probabilities p(y|x) = p(y,x)/p(x) of the input
+     * data x for each indexable label y.
      * 
      * @return The posterior probabilities.
      */
+    @Override
     DataVector getPosteriorProbabilities();
 
 }
