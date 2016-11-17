@@ -17,14 +17,16 @@ public class QuadraticLineSearcher extends BaseLineSearcher {
      * 
      * @param optimiser
      *            - The optimiser to be updated.
+     * @param params
+     *            - The parameters controlling the termination of the line
+     *            search.
      */
-    public QuadraticLineSearcher(UpdatableOptimser optimiser) {
-        super(optimiser);
+    public QuadraticLineSearcher(UpdatableOptimser optimiser, LineSearchParams params) {
+        super(optimiser, params);
     }
 
     @Override
-    protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore,
-            LineSearchParams params) 
+    protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore) 
     {
         ScoreInfo curScore = getOptimiser().getScoreInfo();
         if (prevScore instanceof GradientVectorEnabled && curScore instanceof GradientVectorEnabled) {

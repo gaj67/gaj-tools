@@ -13,6 +13,9 @@ import gaj.analysis.optimiser.OptimisationResults;
  */
 public abstract class UpdatableOptimser extends ModifiableOptimisationState implements BoundOptimiser {
 
+    private static final boolean WITH_AUXILIARY = true;
+    private static final boolean NO_AUXILIARY = false;
+
     /** The model to be optimised. */
     private final OptimisableModel model;
 
@@ -110,7 +113,7 @@ public abstract class UpdatableOptimser extends ModifiableOptimisationState impl
      * Computes the current optimisation score of the model.
      */
     protected void computeOptimisationScore() {
-        ScoreInfo optimisationScore = scorers[0].score(model);
+        ScoreInfo optimisationScore = scorers[0].score(model, WITH_AUXILIARY);
         setScoreInfo(optimisationScore);
         getScores()[0] = optimisationScore.getScore();
     }
@@ -121,7 +124,7 @@ public abstract class UpdatableOptimser extends ModifiableOptimisationState impl
     protected void computeValidationScores() {
         double[] scores = getScores();
         for (int i = 1; i < scorers.length; i++) {
-            scores[i] = scorers[i].scoreOnly(model);
+            scores[i] = scorers[i].score(model, NO_AUXILIARY).getScore();
         }
     }
 

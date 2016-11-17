@@ -17,10 +17,14 @@ public interface GenerativeModel extends DataModel, ParameterisedModel {
      * 
      * @param x
      *            - The input data.
+     * @param includeAuxiliary
+     *            - A flag indicating whether (true) or not (false) to include
+     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
+     *            output.
      * @return The output object.
      */
     @Override
-    GenerativeOutput process(DataInput x);
+    GenerativeOutput process(DataInput x, boolean includeAuxiliary);
 
     /**
      * Obtains the prior probability p(y) for each y.

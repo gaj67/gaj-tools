@@ -15,14 +15,16 @@ public class LinearLineSearcher extends BaseLineSearcher {
      * 
      * @param optimiser
      *            - The optimiser to be updated.
+     * @param params
+     *            - The parameters controlling the termination of the line
+     *            search.
      */
-    public LinearLineSearcher(UpdatableOptimser optimiser) {
-        super(optimiser);
+    public LinearLineSearcher(UpdatableOptimser optimiser, LineSearchParams params) {
+        super(optimiser, params);
     }
 
     @Override
-    protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore,
-            LineSearchParams params) 
+    protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore) 
     {
         return prevStepSize * 0.5;
     }

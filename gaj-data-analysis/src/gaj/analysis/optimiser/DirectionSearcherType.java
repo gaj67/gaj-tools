@@ -9,6 +9,14 @@ public enum DirectionSearcherType {
     /**
      * Specifies a direct gradient ascent or descent search.
      */
-    GRADIENT;
+    GRADIENT,
+
+    /**
+     * Specifies a limited-memory Broyden–Fletcher–Goldfarb–Shanno quasi-Newton
+     * search.
+     */
+    LBFGS,
+
+    ;
 
 }

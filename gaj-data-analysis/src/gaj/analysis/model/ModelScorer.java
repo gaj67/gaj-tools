@@ -11,18 +11,13 @@ public interface ModelScorer {
      * 
      * @param model
      *            - The model to be scored.
-     * @return The score of the model, plus any associated information.
+     * @param includeAuxiliary
+     *            - A flag indicating whether (true) or not (false) to include
+     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
+     *            output.
+     * @return The score of the model, optionally with any associated
+     *         information.
      */
-    ScoreInfo score(Model model);
-
-    /**
-     * Scores the given model, without computing any unnecessary side
-     * information.
-     * 
-     * @param model
-     *            - The model to be scored.
-     * @return The numerical score of the model.
-     */
-    double scoreOnly(Model model);
+    ScoreInfo score(Model model, boolean includeAuxiliary);
 
 }

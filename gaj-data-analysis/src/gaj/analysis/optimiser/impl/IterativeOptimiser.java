@@ -156,7 +156,7 @@ public abstract class IterativeOptimiser extends UpdatableOptimser {
      *         update.
      */
     protected OptimisationStatus postUpdate(OptimisationParams params, double[] prevScores) {
-        final double diffScore = params.getOptimisationDirection() * (getScores()[0] - prevScores[0]);
+        final double diffScore = params.getDirectionSign() * (getScores()[0] - prevScores[0]);
         if (diffScore <= 0)
             return OptimisationStatus.SCORE_NOT_IMPROVED;
         if (params.getScoreTolerance() > 0 && diffScore < params.getScoreTolerance())

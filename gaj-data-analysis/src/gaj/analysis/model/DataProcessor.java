@@ -10,8 +10,12 @@ public interface DataProcessor {
      * 
      * @param input
      *            - The input data.
+     * @param includeAuxiliary
+     *            - A flag indicating whether (true) or not (false) to include
+     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
+     *            output.
      * @return The output data.
      */
-    DataOutput process(DataInput input);
+    DataOutput process(DataInput input, boolean includeAuxiliary);
 
 }

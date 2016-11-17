@@ -17,14 +17,16 @@ public class CubicLineSearcher extends BaseLineSearcher {
      * 
      * @param optimiser
      *            - The optimiser to be updated.
+     * @param params
+     *            - The parameters controlling the termination of the line
+     *            search.
      */
-    public CubicLineSearcher(UpdatableOptimser optimiser) {
-        super(optimiser);
+    public CubicLineSearcher(UpdatableOptimser optimiser, LineSearchParams params) {
+        super(optimiser, params);
     }
 
     @Override
-    protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore,
-            LineSearchParams params) 
+    protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore) 
     {
         ScoreInfo curScore = getOptimiser().getScoreInfo();
         if (prevScore instanceof GradientVectorEnabled && curScore instanceof GradientVectorEnabled) {
@@ -32,7 +34,7 @@ public class CubicLineSearcher extends BaseLineSearcher {
             DataVector g0 = ((GradientVectorEnabled) prevScore).getGradient();
             double y1 = curScore.getScore();
             DataVector g1 = ((GradientVectorEnabled) curScore).getGradient();
-            double s = (params.getOptimisationDirection() > 0)
+            double s = (getParams().getDirectionSign() > 0)
                     ? Cubics.cubicMaximumScaling(y0, g0, y1, g1, prevStepSize, direction)
                     : Cubics.cubicMinimumScaling(y0, g0, y1, g1, prevStepSize, direction);
             if (s > 0 && s < 1) return s * prevStepSize;

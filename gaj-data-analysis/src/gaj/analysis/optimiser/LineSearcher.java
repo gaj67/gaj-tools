@@ -15,12 +15,9 @@ public interface LineSearcher {
      * x0 + rho*d.
      * 
      * @param direction
-     *            - The direction (d) in which to search.
-     * @param params
-     *            - The parameters controlling the termination of the line
-     *            search.
+     *            - The direction, d, in which to search.
      * @return The status of the optimisation after the search.
      */
-    LineSearchStatus search(DataVector direction, LineSearchParams params);
+    LineSearchStatus search(DataVector direction);
 
 }

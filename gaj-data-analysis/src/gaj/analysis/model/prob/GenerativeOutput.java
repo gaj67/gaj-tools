@@ -19,12 +19,12 @@ public interface GenerativeOutput extends DataOutput {
     DataVector getPriorProbabilities();
 
     /**
-     * Obtains the marginal probability p(x) = sum_{y} p(y,x) of the input data
-     * x.
+     * Obtains the conditional probabilities p(x|y) of the input data x for each
+     * indexable label y.
      * 
-     * @return The marginal probability.
+     * @return The conditional probabilities.
      */
-    double getMarginalProbability();
+    DataVector getConditionalProbabilities();
 
     /**
      * Obtains the joint probabilities p(y,x) of the input data x for each
@@ -33,6 +33,14 @@ public interface GenerativeOutput extends DataOutput {
      * @return The joint probabilities.
      */
     DataVector getJointProbabilities();
+
+    /**
+     * Obtains the marginal probability p(x) = sum_{y} p(y,x) of the input data
+     * x.
+     * 
+     * @return The marginal probability.
+     */
+    double getMarginalProbability();
 
     /**
      * Obtains the posterior probabilities p(y|x) of the input data x for each

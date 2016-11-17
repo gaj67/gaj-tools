@@ -13,15 +13,21 @@ import gaj.analysis.optimiser.LineSearcher;
 public abstract class BaseLineSearcher implements LineSearcher {
 
     private final UpdatableOptimser optimiser;
+    private final LineSearchParams params;
 
     /**
-     * Binds the line search to the updatable optimiser.
+     * Binds the line search to the updatable optimiser and the search
+     * parameters.
      * 
      * @param optimiser
      *            - The optimiser to be updated.
+     * @param params
+     *            - The parameters controlling the termination of the line
+     *            search.
      */
-    protected BaseLineSearcher(UpdatableOptimser optimiser) {
+    protected BaseLineSearcher(UpdatableOptimser optimiser, LineSearchParams params) {
         this.optimiser = optimiser;
+        this.params = params;
     }
 
     /**
@@ -33,12 +39,21 @@ public abstract class BaseLineSearcher implements LineSearcher {
         return optimiser;
     }
 
+    /**
+     * Obtains the parameters controlling the line search.
+     * 
+     * @return The line search parameters.
+     */
+    protected LineSearchParams getParams() {
+        return params;
+    }
+
     @Override
-    public LineSearchStatus search(DataVector direction, LineSearchParams params) {
+    public LineSearchStatus search(DataVector direction) {
         final ScoreInfo prevScore = optimiser.getScoreInfo();
         double prevStepSize = 0;
-        double stepSize = computeStepSize(direction, prevScore, params);
-        LineSearchStatus status = checkStepSize(stepSize, direction, prevScore, params);
+        double stepSize = computeStepSize(direction, prevScore);
+        LineSearchStatus status = checkStepSize(stepSize, direction, prevScore);
         if (status != LineSearchStatus.SUCCESSFUL) return status;
         final int maxSubIterations = (params.getMaxLineSearchIterations() > 0) 
                 ? params.getMaxLineSearchIterations() : Integer.MAX_VALUE;
@@ -46,7 +61,7 @@ public abstract class BaseLineSearcher implements LineSearcher {
         while (numSubIterations < maxSubIterations) {
             DataVector newParams = VectorFactory.add(
                     optimiser.getModelParameters(),
-                    VectorFactory.scale(direction, params.getOptimisationDirection() * (stepSize - prevStepSize)));
+                    VectorFactory.scale(direction, params.getDirectionSign() * (stepSize - prevStepSize)));
             if (!optimiser.setModelParameters(newParams)) {
                 return LineSearchStatus.PARAMETER_UPDATE_FAILED;
             }
@@ -55,8 +70,8 @@ public abstract class BaseLineSearcher implements LineSearcher {
             if (scoreImproved(params, prevScore)) return LineSearchStatus.SUCCESSFUL;
             // Set up further line search.
             prevStepSize = stepSize;
-            stepSize = recomputeStepSize(stepSize, direction, prevScore, params);
-            status = checkStepSize(stepSize, direction, prevScore, params);
+            stepSize = recomputeStepSize(stepSize, direction, prevScore);
+            status = checkStepSize(stepSize, direction, prevScore);
             if (status != LineSearchStatus.SUCCESSFUL) return status;
         }
         return LineSearchStatus.MAX_ITERATIONS_EXCEEDED;
@@ -69,11 +84,9 @@ public abstract class BaseLineSearcher implements LineSearcher {
      *            - The search direction.
      * @param prevScore
      *            - The initial optimisation score information.
-     * @param params
-     *            - The line search parameters.
      * @return The initial step-size.
      */
-    protected double computeStepSize(DataVector direction, ScoreInfo prevScore, LineSearchParams params) {
+    protected double computeStepSize(DataVector direction, ScoreInfo prevScore) {
         // TODO Control step-size according to direction norm and tolerances.
         return 1;
     }
@@ -87,12 +100,9 @@ public abstract class BaseLineSearcher implements LineSearcher {
      *            - The search direction.
      * @param prevScore
      *            - The initial optimisation score information.
-     * @param params
-     *            - The line search parameters.
      * @return The new step-size.
      */
-    abstract protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore,
-            LineSearchParams params);
+    abstract protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore);
 
     /**
      * Checks that the magnitude of the update of the model parameters is within
@@ -104,13 +114,10 @@ public abstract class BaseLineSearcher implements LineSearcher {
      *            - The search direction.
      * @param prevScore
      *            - The initial optimisation score information.
-     * @param params
-     *            - The line search parameters.
      * @return A status of {@link LineSearchStatus#SUCCESSFUL} if the direction
      *         step is acceptable, or an error status if it is not.
      */
-    protected LineSearchStatus checkStepSize(double stepSize, DataVector direction, ScoreInfo prevScore,
-            LineSearchParams params) 
+    protected LineSearchStatus checkStepSize(double stepSize, DataVector direction, ScoreInfo prevScore) 
     {
         if (stepSize <= 0) return LineSearchStatus.DIRECTION_STEP_TOO_SMALL;
         if (params.getMinDirectionStep() > 0 || params.getMaxDirectionStep() > 0) {
@@ -135,7 +142,7 @@ public abstract class BaseLineSearcher implements LineSearcher {
      */
     protected boolean scoreImproved(LineSearchParams params, ScoreInfo prevScore) {
         // TODO Implement Wolfe conditions.
-        return (params.getOptimisationDirection() * (optimiser.getScores()[0] - prevScore.getScore()) > 0);
+        return (params.getDirectionSign() * (optimiser.getScores()[0] - prevScore.getScore()) > 0);
     }
 
 }

@@ -16,9 +16,13 @@ public interface DiscriminativeModel extends DataModel, ParameterisedModel {
      * 
      * @param x
      *            - The input data.
+     * @param includeAuxiliary
+     *            - A flag indicating whether (true) or not (false) to include
+     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
+     *            output.
      * @return The output object.
      */
     @Override
-    DiscriminativeOutput process(DataInput x);
+    DiscriminativeOutput process(DataInput x, boolean includeAuxiliary);
 
 }
