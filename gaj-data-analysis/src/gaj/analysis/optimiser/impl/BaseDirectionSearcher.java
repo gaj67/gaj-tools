@@ -30,7 +30,7 @@ public abstract class BaseDirectionSearcher implements DirectionSearcher {
      * 
      * @return The optimiser bound to this direction searcher.
      */
-    public UpdatableOptimser getOptimiser() {
+    protected UpdatableOptimser getOptimiser() {
         return optimiser;
     }
 
@@ -39,7 +39,7 @@ public abstract class BaseDirectionSearcher implements DirectionSearcher {
      * 
      * @return The parameters bound to this direction searcher.
      */
-    public DirectionSearchParams getParams() {
+    protected DirectionSearchParams getParams() {
         return params;
     }
 

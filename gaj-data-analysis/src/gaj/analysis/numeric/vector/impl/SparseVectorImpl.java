@@ -3,6 +3,7 @@ package gaj.analysis.numeric.vector.impl;
 import java.util.Iterator;
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.SubtractableVector;
 
 /**
  * Implements a data vector as an array of index/value pairs, with ascending indices.
@@ -84,6 +85,12 @@ import gaj.analysis.numeric.vector.DataVector;
     public void addTo(AddableVector vector) {
         for (int i = 0; i < values.length; i++)
             vector.add(indices[i], values[i]);
+    }
+
+    @Override
+    public void subtractFrom(SubtractableVector vector) {
+        for (int i = 0; i < values.length; i++)
+            vector.subtract(indices[i], values[i]);
     }
 
 }

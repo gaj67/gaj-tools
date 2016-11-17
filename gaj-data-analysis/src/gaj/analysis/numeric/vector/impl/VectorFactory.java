@@ -264,6 +264,29 @@ public abstract class VectorFactory {
         return summedVector;
     }
 
+    /**
+     * Subtracts one or more data vectors from the initial vector.
+     *
+     * @param initialVector
+     *            - The initial vector from which to subtract the remaining
+     *            vectors.
+     * @param subVectors
+     *            - An array of vectors to be subtracted from the initial
+     *            vector.
+     * @return The adjusted vector.
+     */
+    public static WritableVector subtract(DataVector initialVector, DataVector... subVectors) {
+        WritableVector finalVector = copy(initialVector);
+        for (DataVector vector : subVectors) {
+            if (vector instanceof AbstractVector) {
+                ((AbstractVector) vector).subtractFrom(finalVector);
+            } else {
+                finalVector.subtract(vector);
+            }
+        }
+        return finalVector;
+    }
+
     public static void display(String prefix, DataVector vector, String suffix) {
         System.out.print(prefix);
         display(vector);

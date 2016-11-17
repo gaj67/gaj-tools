@@ -6,6 +6,6 @@ package gaj.analysis.numeric.vector;
  * immutable data vectors. In particular, beware
  * of changing data after the vector has been cached.
  */
-public interface WritableVector extends SettableVector, AddableVector, MultiplicableVector {
+public interface WritableVector extends SettableVector, AddableVector, SubtractableVector, MultiplicableVector {
 
 }
