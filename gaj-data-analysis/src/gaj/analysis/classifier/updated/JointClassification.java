@@ -1,4 +1,4 @@
-package gaj.analysis.classifier;
+package gaj.analysis.classifier.updated;
 
 import gaj.analysis.numeric.vector.DataVector;
 
@@ -19,6 +19,6 @@ public interface JointClassification extends Classification {
      * 
      * @return The marginal likelihood, p(x).
      */
-    double marginal(DataVector features);
+    double marginal();
 
 }

@@ -1,7 +1,7 @@
 package gaj.analysis.classifier.impl;
 
-import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.classifier.TrainableClassifier;
+import gaj.analysis.classifier.updated.OptimisableClassifier;
 
 public abstract class ClassifierFactory {
 

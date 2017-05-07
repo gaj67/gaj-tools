@@ -1,7 +1,7 @@
 package gaj.analysis.classifier.impl;
 
-import gaj.analysis.classifier.Classification;
 import gaj.analysis.classifier.DatumScore;
+import gaj.analysis.classifier.updated.Classification;
 import gaj.analysis.numeric.matrix.WritableMatrix;
 import gaj.analysis.numeric.matrix.impl.MatrixFactory;
 import gaj.analysis.numeric.vector.DataVector;

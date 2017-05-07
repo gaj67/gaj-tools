@@ -1,11 +1,11 @@
 package gaj.analysis.classifier.impl;
 
-import gaj.analysis.classifier.Classification;
 import gaj.analysis.classifier.DataScorer;
 import gaj.analysis.classifier.DatumScore;
-import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.classifier.ScoredTrainer;
 import gaj.analysis.classifier.TrainableClassifier;
+import gaj.analysis.classifier.updated.Classification;
+import gaj.analysis.classifier.updated.OptimisableClassifier;
 import gaj.analysis.numeric.vector.DataVector;
 
 /*package-private*/class TrainableClassifierImpl implements TrainableClassifier {

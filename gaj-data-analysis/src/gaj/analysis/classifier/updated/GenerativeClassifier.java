@@ -1,4 +1,4 @@
-package gaj.analysis.classifier;
+package gaj.analysis.classifier.updated;
 
 import gaj.analysis.numeric.vector.DataVector;
 

@@ -2,9 +2,9 @@ package gaj.analysis.classifier.impl;
 
 import gaj.analysis.classifier.ClassifierScoreInfo;
 import gaj.analysis.classifier.DataScorer;
-import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.classifier.TrainingControl;
 import gaj.analysis.classifier.TrainingSummary;
+import gaj.analysis.classifier.updated.OptimisableClassifier;
 
 /**
  * Specifies the training algorithm used to train a parameterised classifier on

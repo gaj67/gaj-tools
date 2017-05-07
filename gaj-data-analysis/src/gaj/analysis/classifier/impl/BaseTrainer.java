@@ -3,10 +3,10 @@ package gaj.analysis.classifier.impl;
 import java.util.Arrays;
 import gaj.analysis.classifier.ClassifierScoreInfo;
 import gaj.analysis.classifier.DataScorer;
-import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.classifier.TrainingControl;
 import gaj.analysis.classifier.TrainingState;
 import gaj.analysis.classifier.TrainingSummary;
+import gaj.analysis.classifier.updated.OptimisableClassifier;
 
 /**
  * A base class for implementing a classifier training algorithm.

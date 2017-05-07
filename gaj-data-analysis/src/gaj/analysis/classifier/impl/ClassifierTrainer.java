@@ -4,10 +4,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import gaj.analysis.classifier.DataScorer;
-import gaj.analysis.classifier.OptimisableClassifier;
 import gaj.analysis.classifier.ScoredTrainer;
 import gaj.analysis.classifier.TrainingControl;
 import gaj.analysis.classifier.TrainingSummary;
+import gaj.analysis.classifier.updated.OptimisableClassifier;
 
 /**
  * A base class for implementing a trainer for

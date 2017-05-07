@@ -1,33 +1,42 @@
-package gaj.analysis.classifier;
+package gaj.analysis.classifier.updated;
 
 /**
  * Specifies the fundamental type of model used by a probabilistic classifier.
  */
-public enum ModelType {
+public enum ClassifierModelType {
 
     /**
      * Indicates that the classifier directly models p(class|features).
      */
     DISCRIMINATIVE,
+
     /**
      * Indicates that the classifier directly models p(class,features).
      */
     JOINT,
+
     /**
      * Indicates that the classifier directly models p(features|class) and p(class).
      */
-    GENERATIVE;
+    GENERATIVE,
 
-    public ModelType getClassifierType(Classifier classifier) {
+    /**
+     * Indicates a classifier with no explicit model or with an unknown model.
+     */
+    OTHER;
+
+    public ClassifierModelType getClassifierModelType(Classifier classifier) {
         return (classifier instanceof GenerativeClassifier) ? GENERATIVE
                 : (classifier instanceof JointClassifier) ? JOINT
-                        : DISCRIMINATIVE;
+                : (classifier instanceof DiscriminativeClassifier) ? DISCRIMINATIVE 
+                : OTHER;
     }
 
-    public ModelType getClassifierType(Class<? extends Classifier> klass) {
+    public ClassifierModelType getClassifierModelType(Class<? extends Classifier> klass) {
         return (GenerativeClassifier.class.isAssignableFrom(klass)) ? GENERATIVE
                 : (JointClassifier.class.isAssignableFrom(klass)) ? JOINT
-                        : DISCRIMINATIVE;
+                : (DiscriminativeClassifier.class.isAssignableFrom(klass)) ? DISCRIMINATIVE 
+                : OTHER;
     }
 
 }

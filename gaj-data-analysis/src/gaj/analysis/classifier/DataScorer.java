@@ -1,10 +1,14 @@
 package gaj.analysis.classifier;
 
+import gaj.analysis.classifier.updated.Classifier;
+import gaj.analysis.classifier.updated.OptimisableClassifier;
+import gaj.analysis.model.ModelScorer;
+
 /**
  * Provides the means for scoring the accuracy of a classifier
  * against a known gold-standard data set.
  */
-public interface DataScorer {
+public interface DataScorer extends ModelScorer {
 
     /**
      * Indicates the total number C of classes in the classification scheme.

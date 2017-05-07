@@ -1,12 +1,12 @@
 package gaj.analysis.classifier.impl;
 
-import gaj.analysis.classifier.Classifier;
 import gaj.analysis.classifier.ClassifierScoreInfo;
 import gaj.analysis.classifier.DataScorer;
 import gaj.analysis.classifier.DatumScore;
 import gaj.analysis.classifier.GoldData;
 import gaj.analysis.classifier.GoldDatum;
-import gaj.analysis.classifier.OptimisableClassifier;
+import gaj.analysis.classifier.updated.Classifier;
+import gaj.analysis.classifier.updated.OptimisableClassifier;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.WritableVector;
 import gaj.analysis.numeric.vector.impl.DataIterator;

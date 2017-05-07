@@ -65,11 +65,11 @@ public class LoggedClassifierTrainer {
     protected void train(ScoredTrainer trainer, TrainingControl control) {
         long start = System.currentTimeMillis();
         System.out.println("Iteration, scores, prameters");
-        printScores(trainer.numIterations(), trainer.getScores(), classifier.getParameters());
+        printScores(trainer.getNumIterations(), trainer.getScores(), classifier.getParameters());
         TrainingState state = TrainingState.NOT_HALTED;
         while (state != TrainingState.SCORE_CONVERGED) {
             TrainingSummary summary = trainer.train(control);
-            printScores(trainer.numIterations(), trainer.getScores(), classifier.getParameters());
+            printScores(trainer.getNumIterations(), trainer.getScores(), classifier.getParameters());
             state = summary.getTrainingState();
             if (state != TrainingState.MAX_ITERATIONS_EXCEEDED) {
                 // Training ceased earlier than expected, e.g. due to convergence.
@@ -80,7 +80,7 @@ public class LoggedClassifierTrainer {
         long end = System.currentTimeMillis();
         double time = 1e-3 * (end - start);
         System.out.printf("#iterations=%d, time=%4.2f seconds (%4.2f ms/iter)%n",
-                trainer.numIterations(), time, 1e3 * time / trainer.numIterations());
+                trainer.getNumIterations(), time, 1e3 * time / trainer.getNumIterations());
         VectorFactory.display("Final classifier parameters =", classifier.getParameters(), "\n");
     }
 

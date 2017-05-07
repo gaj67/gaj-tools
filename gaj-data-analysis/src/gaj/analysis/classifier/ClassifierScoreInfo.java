@@ -1,17 +1,19 @@
 package gaj.analysis.classifier;
 
+import gaj.analysis.model.ScoreInfo;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Encapsulates the score of a classifier as computed by a dataScorer.
  */
-public interface ClassifierScoreInfo {
+public interface ClassifierScoreInfo extends ScoreInfo {
 
     /**
      * Obtains the score of the classifier on gold-standard data.
      * 
      * @return The classification score.
      */
+    @Override
     double getScore();
 
     /**

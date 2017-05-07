@@ -2,7 +2,7 @@ package gaj.analysis.classifier.impl;
 
 import gaj.analysis.classifier.ClassifierScoreInfo;
 import gaj.analysis.classifier.DataScorer;
-import gaj.analysis.classifier.OptimisableClassifier;
+import gaj.analysis.classifier.updated.OptimisableClassifier;
 import gaj.analysis.curves.Cubics;
 import gaj.analysis.numeric.vector.DataVector;
 

@@ -1,5 +1,7 @@
 package gaj.analysis.classifier;
 
+import gaj.analysis.classifier.updated.OptimisableClassifier;
+
 /**
  * Specifies a classifier that can have its parameters updated by training
  * (and optionally testing) against gold-standard data.
