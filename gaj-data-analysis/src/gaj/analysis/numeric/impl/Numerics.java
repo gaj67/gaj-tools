@@ -1,8 +1,8 @@
-package gaj.analysis.numeric;
+package gaj.analysis.numeric.impl;
 
+import gaj.analysis.numeric.DataObject;
 import gaj.analysis.numeric.matrix.DataMatrix;
 import gaj.analysis.numeric.matrix.impl.MatrixFactory;
-import gaj.analysis.numeric.object.DataObject;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.impl.VectorFactory;
 

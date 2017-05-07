@@ -1,0 +1,39 @@
+package gaj.analysis.model.prob;
+
+import gaj.analysis.model.DataInput;
+import gaj.analysis.numeric.vector.DataVector;
+
+/**
+ * A model of the conditional probability p(x|y) of an observation x for known,
+ * discrete values of y. Typically, y is a label for either a class (for a
+ * supervised model) or a cluster (for an unsupervised model).
+ */
+public interface GenerativeModel extends ProbDataModel {
+
+    @Override
+    default ProbModelType getProbModelType() {
+        return ProbModelType.GENERATIVE;
+    }
+
+    /**
+     * Computes the conditional probabilities p(x|y) for each y.
+     * 
+     * @param x
+     *            - The input data.
+     * @param includeAuxiliary
+     *            - A flag indicating whether (true) or not (false) to include
+     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
+     *            output.
+     * @return The output object.
+     */
+    @Override
+    GenerativeOutput process(DataInput x, boolean includeAuxiliary);
+
+    /**
+     * Obtains the prior probability p(y) for each y.
+     * 
+     * @return The prior probabilities.
+     */
+    DataVector getPriorProbabilities();
+
+}

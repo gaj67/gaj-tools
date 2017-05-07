@@ -8,7 +8,7 @@ import gaj.analysis.numeric.vector.WritableVector;
  * immutable data. In particular, beware
  * of changing data after the matrix has been cached.
  */
-public interface WritableMatrix extends SettableMatrix, AddableMatrix, MultiplicableMatrix {
+public interface WritableMatrix extends SettableMatrix, AddableMatrix, SubtractableMatrix, MultiplicableMatrix {
 
     /**
      * Obtains a row of the matrix.

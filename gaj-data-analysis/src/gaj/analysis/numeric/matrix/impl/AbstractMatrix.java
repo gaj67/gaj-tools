@@ -1,8 +1,9 @@
 package gaj.analysis.numeric.matrix.impl;
 
+import gaj.analysis.numeric.StructureType;
+import gaj.analysis.numeric.matrix.AddableMatrix;
 import gaj.analysis.numeric.matrix.DataMatrix;
-import gaj.analysis.numeric.matrix.WritableMatrix;
-import gaj.analysis.numeric.object.StructureType;
+import gaj.analysis.numeric.matrix.SubtractableMatrix;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**
@@ -75,8 +76,18 @@ public abstract class AbstractMatrix<T extends DataVector> implements DataMatrix
      * 
      * @param matrix - A modifiable matrix.
      */
-    protected void addTo(WritableMatrix matrix) {
+    protected void addTo(AddableMatrix matrix) {
         matrix.add(this);
+    }
+
+    /**
+     * Subtracts the current matrix values from the given matrix.
+     * 
+     * @param matrix
+     *            - A modifiable matrix.
+     */
+    protected void subtractFrom(SubtractableMatrix matrix) {
+        matrix.subtract(this);
     }
 
 }

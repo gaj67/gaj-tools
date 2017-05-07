@@ -1,9 +1,9 @@
 package gaj.analysis.optimiser.impl;
 
 import gaj.analysis.curves.Cubics;
+import gaj.analysis.model.VectorGradientComputable;
 import gaj.analysis.model.ScoreInfo;
 import gaj.analysis.numeric.vector.DataVector;
-import gaj.analysis.optimiser.GradientEnabled;
 import gaj.analysis.optimiser.LineSearchParams;
 import gaj.analysis.optimiser.LineSearcherType;
 
@@ -17,22 +17,24 @@ public class CubicLineSearcher extends BaseLineSearcher {
      * 
      * @param optimiser
      *            - The optimiser to be updated.
+     * @param params
+     *            - The parameters controlling the termination of the line
+     *            search.
      */
-    public CubicLineSearcher(UpdatableOptimser optimiser) {
-        super(optimiser);
+    public CubicLineSearcher(UpdatableOptimser optimiser, LineSearchParams params) {
+        super(optimiser, params);
     }
 
     @Override
-    protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore,
-            LineSearchParams params) 
+    protected double recomputeStepSize(double prevStepSize, DataVector direction, ScoreInfo prevScore) 
     {
         ScoreInfo curScore = getOptimiser().getScoreInfo();
-        if (prevScore instanceof GradientEnabled && curScore instanceof GradientEnabled) {
+        if (prevScore instanceof VectorGradientComputable && curScore instanceof VectorGradientComputable) {
             double y0 = prevScore.getScore();
-            DataVector g0 = ((GradientEnabled) prevScore).getGradient();
+            DataVector g0 = ((VectorGradientComputable) prevScore).getGradient();
             double y1 = curScore.getScore();
-            DataVector g1 = ((GradientEnabled) curScore).getGradient();
-            double s = (params.getOptimisationDirection() > 0)
+            DataVector g1 = ((VectorGradientComputable) curScore).getGradient();
+            double s = (getParams().getDirectionSign() > 0)
                     ? Cubics.cubicMaximumScaling(y0, g0, y1, g1, prevStepSize, direction)
                     : Cubics.cubicMinimumScaling(y0, g0, y1, g1, prevStepSize, direction);
             if (s > 0 && s < 1) return s * prevStepSize;

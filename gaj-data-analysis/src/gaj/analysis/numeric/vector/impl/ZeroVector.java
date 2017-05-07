@@ -2,6 +2,7 @@ package gaj.analysis.numeric.vector.impl;
 
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.SubtractableVector;
 
 /*package-private*/class ZeroVector extends SparseVector {
 
@@ -28,6 +29,10 @@ import gaj.analysis.numeric.vector.DataVector;
 
     @Override
     public void addTo(AddableVector vector) {
+    }
+
+    @Override
+    public void subtractFrom(SubtractableVector vector) {
     }
 
     @Override

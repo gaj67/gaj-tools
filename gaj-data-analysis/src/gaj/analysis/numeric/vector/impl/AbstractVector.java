@@ -3,6 +3,7 @@ package gaj.analysis.numeric.vector.impl;
 import java.util.Iterator;
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.SubtractableVector;
 
 /**
  * The basis for all vector implementations.
@@ -75,6 +76,11 @@ public abstract class AbstractVector implements DataVector {
     public void addTo(AddableVector vector) {
         for (int i = 0; i < length; i++)
             vector.add(i, get(i));
+    }
+
+    public void subtractFrom(SubtractableVector vector) {
+        for (int i = 0; i < length; i++)
+            vector.subtract(i, get(i));
     }
 
 }

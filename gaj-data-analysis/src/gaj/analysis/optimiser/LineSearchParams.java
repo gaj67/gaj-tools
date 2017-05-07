@@ -6,12 +6,19 @@ package gaj.analysis.optimiser;
 public interface LineSearchParams {
 
     /**
-     * Indicates the direction of score optimisation.
+     * Indicates the sign of the direction of score optimisation.
      * 
      * @return A positive (or negative) value corresponding to score
      *         maximisation (or minimisation).
      */
-    int getOptimisationDirection();
+    int getDirectionSign();
+
+    /**
+     * Specifies the type of line searcher to use.
+     * 
+     * @return The line searcher type.
+     */
+    LineSearcherType getLineSearcherType();
 
     /**
      * Specifies the maximum number of iterations to perform during a line

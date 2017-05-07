@@ -1,4 +1,4 @@
-package gaj.analysis.numeric.object;
+package gaj.analysis.numeric;
 
 /**
  * Indicates the underlying type of representation used to store the data elements.

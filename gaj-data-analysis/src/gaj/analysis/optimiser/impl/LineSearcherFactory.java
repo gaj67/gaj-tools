@@ -1,6 +1,5 @@
 package gaj.analysis.optimiser.impl;
 
-import com.sun.istack.internal.Nullable;
 import gaj.analysis.optimiser.LineSearchParams;
 import gaj.analysis.optimiser.LineSearcher;
 import gaj.analysis.optimiser.LineSearcherType;
@@ -19,24 +18,20 @@ public abstract class LineSearcherFactory {
      * 
      * @param optimiser
      *            - An updatable optimiser.
-     * @param type
-     *            - The type of line searcher required.
+     * @param params
+     *            - The parameters to control each line search.
      * @return An instantiated line searcher.
      */
-    public static LineSearcher newLineSearcher(UpdatableOptimser optimiser, @Nullable LineSearcherType type) {
-        if (type == null) {
-            // Assume the default algorithm (this might change over time).
-            return new LinearLineSearcher(optimiser);
-        }
-        switch (type) {
+    public static LineSearcher newLineSearcher(UpdatableOptimser optimiser, LineSearchParams params) {
+        switch (params.getLineSearcherType()) {
             case LINEAR:
-                return new LinearLineSearcher(optimiser);
+                return new LinearLineSearcher(optimiser, params);
             case QUADRATIC:
-                return new QuadraticLineSearcher(optimiser);
+                return new QuadraticLineSearcher(optimiser, params);
             case CUBIC:
-                return new CubicLineSearcher(optimiser);
+                return new CubicLineSearcher(optimiser, params);
             default:
-                throw new IllegalArgumentException("Unhandled line searcher type: " + type);
+                throw new IllegalArgumentException("Unhandled line searcher type: " + params.getLineSearcherType());
         }
     }
 
@@ -46,18 +41,22 @@ public abstract class LineSearcherFactory {
      * 
      * @param params
      *            - The optimisation parameters.
-     * @param type
-     *            - The type of line search algorithm.
      * @return The line search parameters.
      */
-    public static LineSearchParams getLineSearchParams(OptimisationParams params, @Nullable LineSearcherType type) {
+    public static LineSearchParams getLineSearchParams(OptimisationParams params) {
         if (params instanceof LineSearchParams) return (LineSearchParams) params;
-        final int optimisationDirection = params.getOptimisationDirection();
+        final int dirSign = params.getDirectionSign();
+        final LineSearcherType type = (params.getLineSearcherType() == null) ? LineSearcherType.LINEAR : params.getLineSearcherType();
         // TODO Vary the default parameters depending upon type.
         return new LineSearchParams() {
             @Override
-            public int getOptimisationDirection() {
-                return optimisationDirection;
+            public int getDirectionSign() {
+                return dirSign;
+            }
+
+            @Override
+            public LineSearcherType getLineSearcherType() {
+                return type;
             }
         };
     }

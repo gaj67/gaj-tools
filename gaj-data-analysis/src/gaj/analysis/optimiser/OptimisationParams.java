@@ -5,12 +5,12 @@ import com.sun.istack.internal.Nullable;
 public interface OptimisationParams {
 
     /**
-     * Indicates the direction of score optimisation.
+     * Indicates the sign of the direction of score optimisation.
      * 
      * @return A positive (or negative) value corresponding to score
      *         maximisation (or minimisation).
      */
-    int getOptimisationDirection();
+    int getDirectionSign();
 
     /**
      * Specifies the maximum number of update iterations to perform during
@@ -52,7 +52,7 @@ public interface OptimisationParams {
      * @return The direction search algorithm type, or a value of null to use
      *         the default algorithm.
      */
-    default @Nullable DirectionSearcherType getDirectionSearchType() {
+    default @Nullable DirectionSearcherType getDirectionSearcherType() {
         return null;
     }
     
@@ -63,7 +63,7 @@ public interface OptimisationParams {
      * @return The line search algorithm type, or a value of null to use the
      *         default algorithm.
      */
-    default @Nullable LineSearcherType getLineSearchType() {
+    default @Nullable LineSearcherType getLineSearcherType() {
         return null;
     }
     

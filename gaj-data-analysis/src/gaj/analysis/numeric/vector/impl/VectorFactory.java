@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import gaj.analysis.numeric.object.RepresentationType;
+import gaj.analysis.numeric.RepresentationType;
 import gaj.analysis.numeric.vector.ArrayVector;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.IndexVector;
@@ -262,6 +262,29 @@ public abstract class VectorFactory {
             }
         }
         return summedVector;
+    }
+
+    /**
+     * Subtracts one or more data vectors from the initial vector.
+     *
+     * @param initialVector
+     *            - The initial vector from which to subtract the remaining
+     *            vectors.
+     * @param subVectors
+     *            - An array of vectors to be subtracted from the initial
+     *            vector.
+     * @return The adjusted vector.
+     */
+    public static WritableVector subtract(DataVector initialVector, DataVector... subVectors) {
+        WritableVector finalVector = copy(initialVector);
+        for (DataVector vector : subVectors) {
+            if (vector instanceof AbstractVector) {
+                ((AbstractVector) vector).subtractFrom(finalVector);
+            } else {
+                finalVector.subtract(vector);
+            }
+        }
+        return finalVector;
     }
 
     public static void display(String prefix, DataVector vector, String suffix) {

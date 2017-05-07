@@ -4,6 +4,7 @@ import gaj.analysis.model.ModelScorer;
 import gaj.analysis.model.OptimisableModel;
 import gaj.analysis.numeric.vector.SettableVector;
 import gaj.analysis.numeric.vector.impl.VectorFactory;
+import gaj.analysis.optimiser.DirectionSearchParams;
 import gaj.analysis.optimiser.DirectionSearchStatus;
 import gaj.analysis.optimiser.DirectionSearcher;
 import gaj.analysis.optimiser.LineSearchParams;
@@ -24,12 +25,6 @@ public class SearchOptimiser extends IterativeOptimiser {
      */
     private DirectionSearcher dirSearcher;
 
-    /**
-     * The search parameters currently in use for the current round of
-     * optimisation.
-     */
-    private LineSearchParams searchParams;
-    
     /**
      * The line search algorithm currently in use for the current round of
      * optimisation.
@@ -56,9 +51,10 @@ public class SearchOptimiser extends IterativeOptimiser {
 
     @Override
     public OptimisationResults optimise(OptimisationParams params) {
-        dirSearcher = DirectionSearcherFactory.newDirectionSearcher(this, params.getDirectionSearchType());
-        searchParams = LineSearcherFactory.getLineSearchParams(params, params.getLineSearchType());
-        lineSearcher = LineSearcherFactory.newLineSearcher(this, params.getLineSearchType());
+        DirectionSearchParams dirSearchParams = DirectionSearcherFactory.getDirectionSearchParams(params);
+        dirSearcher = DirectionSearcherFactory.newDirectionSearcher(this, dirSearchParams);
+        LineSearchParams lineSearchParams = LineSearcherFactory.getLineSearchParams(params);
+        lineSearcher = LineSearcherFactory.newLineSearcher(this, lineSearchParams);
         return super.optimise(params);
     }
 
@@ -66,7 +62,7 @@ public class SearchOptimiser extends IterativeOptimiser {
     protected OptimisationStatus update(OptimisationParams params) {
         DirectionSearchStatus dsStatus = dirSearcher.search(direction);
         if (dsStatus != DirectionSearchStatus.AVAILABLE) return dsStatus.getOptimisationStatus();
-        LineSearchStatus lsStatus = lineSearcher.search(direction, searchParams);
+        LineSearchStatus lsStatus = lineSearcher.search(direction);
         return lsStatus.getOptimisationStatus();
     }
 

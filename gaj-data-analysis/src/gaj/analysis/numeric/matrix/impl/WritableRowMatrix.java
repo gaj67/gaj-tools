@@ -1,5 +1,6 @@
 package gaj.analysis.numeric.matrix.impl;
 
+import gaj.analysis.numeric.matrix.AddableMatrix;
 import gaj.analysis.numeric.matrix.DataMatrix;
 import gaj.analysis.numeric.matrix.RowArrayMatrix;
 import gaj.analysis.numeric.matrix.WritableMatrix;
@@ -59,8 +60,22 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
     }
 
     @Override
+    public void subtract(double value) {
+        for (double[] rowVec : data) {
+            for (int column = 0; column < numColumns; column++) {
+                rowVec[column] -= value;
+            }
+        }
+    }
+
+    @Override
     public void add(int row, int column, double value) {
         data[row][column] += value;
+    }
+
+    @Override
+    public void subtract(int row, int column, double value) {
+        data[row][column] -= value;
     }
 
     @Override
@@ -85,6 +100,22 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
     }
 
     @Override
+    public void subtractRow(int row, DataVector vector) {
+        final double[] theRow = data[row];
+        if (vector instanceof ArrayVector) {
+            final double[] values = ((ArrayVector) vector).getArray();
+            for (int column = 0; column < numColumns; column++) {
+                theRow[column] -= values[column];
+            }
+        } else {
+            int column = 0;
+            for (double value : vector) {
+                theRow[column++] -= value;
+            }
+        }
+    }
+
+    @Override
     public void addColumn(final int column, DataVector vector) {
         if (vector instanceof ArrayVector) {
             final double[] values = ((ArrayVector) vector).getArray();
@@ -100,6 +131,21 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
     }
 
     @Override
+    public void subtractColumn(final int column, DataVector vector) {
+        if (vector instanceof ArrayVector) {
+            final double[] values = ((ArrayVector) vector).getArray();
+            for (int row = 0; row < numRows; row++) {
+                data[row][column] -= values[row];
+            }
+        } else {
+            int row = 0;
+            for (double value : vector) {
+                data[row++][column] -= value;
+            }
+        }
+    }
+
+    @Override
     public void add(DataMatrix matrix) {
         for (int row = 0; row < numRows; row++) {
             addRow(row, matrix.getRow(row));
@@ -107,7 +153,14 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
     }
 
     @Override
-    protected void addTo(WritableMatrix matrix) {
+    public void subtract(DataMatrix matrix) {
+        for (int row = 0; row < numRows; row++) {
+            subtractRow(row, matrix.getRow(row));
+        }
+    }
+
+    @Override
+    protected void addTo(AddableMatrix matrix) {
         for (int row = 0; row < numRows; row++) {
             matrix.addRow(row, getRow(row));
         }

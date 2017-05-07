@@ -1,8 +1,8 @@
 package gaj.analysis.numeric.vector;
 
 import java.util.Iterator;
-import gaj.analysis.numeric.object.DataObject;
-import gaj.analysis.numeric.object.StructureType;
+import gaj.analysis.numeric.DataObject;
+import gaj.analysis.numeric.StructureType;
 
 /**
  * Provides access to numerical data as a vector.

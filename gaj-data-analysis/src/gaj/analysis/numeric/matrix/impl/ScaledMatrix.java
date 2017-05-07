@@ -1,8 +1,9 @@
 package gaj.analysis.numeric.matrix.impl;
 
+import gaj.analysis.numeric.RepresentationType;
+import gaj.analysis.numeric.matrix.AddableMatrix;
 import gaj.analysis.numeric.matrix.DataMatrix;
-import gaj.analysis.numeric.matrix.WritableMatrix;
-import gaj.analysis.numeric.object.RepresentationType;
+import gaj.analysis.numeric.matrix.SubtractableMatrix;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.impl.VectorFactory;
 import gaj.common.annotations.PackagePrivate;
@@ -42,9 +43,15 @@ import gaj.common.annotations.PackagePrivate;
     }
 
     @Override
-    public void addTo(WritableMatrix matrix) {
+    public void addTo(AddableMatrix matrix) {
         for (int row = 0; row < numRows; row++)
             matrix.addRow(row, getRow(row));
+    }
+
+    @Override
+    public void subtractFrom(SubtractableMatrix matrix) {
+        for (int row = 0; row < numRows; row++)
+            matrix.subtractRow(row, getRow(row));
     }
 
     @Override

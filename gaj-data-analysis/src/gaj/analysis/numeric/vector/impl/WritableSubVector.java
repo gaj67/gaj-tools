@@ -34,8 +34,20 @@ public class WritableSubVector extends SubVector implements WritableVector {
     }
 
     @Override
+    public void subtract(double value) {
+        for (int i = start; i < end; i++) {
+            vector.subtract(i, value);
+        }
+    }
+
+    @Override
     public void add(int pos, double value) {
         vector.add(start + pos, value);
+    }
+
+    @Override
+    public void subtract(int pos, double value) {
+        vector.subtract(start + pos, value);
     }
 
     @Override
@@ -51,6 +63,14 @@ public class WritableSubVector extends SubVector implements WritableVector {
         int pos = start;
         for (double value : vector) {
             this.vector.add(pos++, value);
+        }
+    }
+
+    @Override
+    public void subtract(DataVector vector) {
+        int pos = start;
+        for (double value : vector) {
+            this.vector.subtract(pos++, value);
         }
     }
 

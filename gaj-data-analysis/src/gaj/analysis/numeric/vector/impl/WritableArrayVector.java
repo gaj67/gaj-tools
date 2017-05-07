@@ -4,6 +4,7 @@ import java.util.Arrays;
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.ArrayVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.SubtractableVector;
 import gaj.analysis.numeric.vector.WritableVector;
 import gaj.common.annotations.PackagePrivate;
 
@@ -81,6 +82,13 @@ import gaj.common.annotations.PackagePrivate;
     }
 
     @Override
+    public void subtractFrom(SubtractableVector vector) {
+        for (int i = 0; i < data.length; i++) {
+            vector.subtract(i, data[i]);
+        }
+    }
+
+    @Override
     public void set(int pos, double value) {
         data[pos] = value;
     }
@@ -93,8 +101,20 @@ import gaj.common.annotations.PackagePrivate;
     }
 
     @Override
+    public void subtract(double value) {
+        for (int i = 0; i < length; i++) {
+            data[i] -= value;
+        }
+    }
+
+    @Override
     public void add(int pos, double value) {
         data[pos] += value;
+    }
+
+    @Override
+    public void subtract(int pos, double value) {
+        data[pos] -= value;
     }
 
     @Override
@@ -121,6 +141,21 @@ import gaj.common.annotations.PackagePrivate;
             int i = 0;
             for (double value : vector) {
                 data[i++] += value;
+            }
+        }
+    }
+
+    @Override
+    public void subtract(DataVector vector) {
+        if (vector instanceof ArrayVector) {
+            double[] values = ((ArrayVector) vector).getArray();
+            for (int i = 0; i < length; i++) {
+                data[i] -= values[i];
+            }
+        } else {
+            int i = 0;
+            for (double value : vector) {
+                data[i++] -= value;
             }
         }
     }
