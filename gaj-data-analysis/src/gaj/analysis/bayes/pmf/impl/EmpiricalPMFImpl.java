@@ -1,20 +1,30 @@
-package gaj.analysis.bayes.impl;
+package gaj.analysis.bayes.pmf.impl;
 
-import gaj.analysis.bayes.PDF;
+import gaj.analysis.bayes.pmf.EmpiricalPMF;
 import gaj.common.annotations.PackagePrivate;
 
-/**
- * Basic implementation of a PDF.
- */
-@PackagePrivate class SimplePDF implements PDF {
+@PackagePrivate class EmpiricalPMFImpl implements EmpiricalPMF {
 
+    private final int startIndex;
+    private final int endIndex;
     private final int numElements;
     private final double[] probs;
 
-    @PackagePrivate
-    SimplePDF(int numElements) {
+    @PackagePrivate EmpiricalPMFImpl(int startIndex, int numElements) {
+        this.startIndex = startIndex;
         this.numElements = numElements;
+        this.endIndex = startIndex + numElements - 1;
         this.probs = new double[numElements];
+    }
+    
+    @Override
+    public int start() {
+        return startIndex;
+    }
+
+    @Override
+    public int end() {
+        return endIndex;
     }
 
     @Override
@@ -23,23 +33,23 @@ import gaj.common.annotations.PackagePrivate;
     }
 
     @Override
-    public double get(int index) {
-        return (index >= 0 && index < numElements) ? probs[index] : 0;
+    public double prob(int index) {
+        return (startIndex <= index && index <= endIndex) ? probs[index - startIndex] : 0;
     }
 
     @Override
     public void set(int index, double value) {
-        if (index >= 0 && index < numElements) probs[index] = value;
+        if (startIndex <= index && index <= endIndex) probs[index - startIndex] = value;
     }
 
     @Override
     public void add(int index, double value) {
-        if (index >= 0 && index < numElements) probs[index] += value;
+        if (startIndex <= index && index <= endIndex) probs[index - startIndex] += value;
     }
 
     @Override
     public void mult(int index, double value) {
-        if (index >= 0 && index < numElements) probs[index] *= value;
+        if (startIndex <= index && index <= endIndex) probs[index - startIndex] *= value;
     }
 
     @Override

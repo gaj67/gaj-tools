@@ -3,7 +3,7 @@ package gaj.analysis.bayes;
 /**
  * Discretised version of a probability density or mass function.
  */
-public interface PDF {
+public interface MutablePDF {
 
     /**
      * @return The number of distinct PDF elements.
