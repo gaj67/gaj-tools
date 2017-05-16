@@ -8,8 +8,8 @@ public interface EmpiricalPMF extends UnivariatePMF {
 
     /**
      * Sets the probability mass, f(x_i), of the specified element, x_i, for i
-     * in {start, start+1, ..., end-1, end}. This method has no effect if i <
-     * start or i > end. The resulting value may be unnormalised.
+     * in {S, S+1, ..., E-1, E}. This method has no effect if i < S or i > E.
+     * The resulting value may be unnormalised.
      * 
      * @param index
      *            - The index, i, of the element x_i.
@@ -20,8 +20,8 @@ public interface EmpiricalPMF extends UnivariatePMF {
 
     /**
      * Increments the probability mass, f(x_i), of the specified element, x_i,
-     * for i in {start, start+1, ..., end-1, end}. This method has no effect if
-     * i < start or i > end. The resulting value may be unnormalised.
+     * for i in {S, S+1, ..., E-1, E}. This method has no effect if i < S or i >
+     * E. The resulting value may be unnormalised.
      * 
      * @param index
      *            - The index, i, of the element x_i.
@@ -32,8 +32,8 @@ public interface EmpiricalPMF extends UnivariatePMF {
 
     /**
      * Scales the probability mass, f(x_i), of the specified element, x_i, for i
-     * in {start, start+1, ..., end-1, end}. This method has no effect if i <
-     * start or i > end. The resulting value may be unnormalised.
+     * in {S, S+1, ..., E-1, E}. This method has no effect if i < S or i > E.
+     * The resulting value may be unnormalised.
      * 
      * @param index
      *            - The index, i, of the element x_i.

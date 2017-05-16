@@ -3,8 +3,8 @@ package gaj.analysis.bayes.pmf;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * Each element of the discrete domain X = {x_{start}, x_{start+1}, ...,
- * x_{end-1}, x_{end}} is a unique instance of the specified type, T.
+ * Each element of the discrete domain X = {x_i | i in {S, S+1, ..., E-1, E}} is
+ * a unique instance of the specified type, T.
  */
 public interface LabelledPMF<T> extends UnivariatePMF {
 
@@ -13,8 +13,8 @@ public interface LabelledPMF<T> extends UnivariatePMF {
      * 
      * @param index
      *            - The index i of the element.
-     * @return The value x_i of the element for start <= i <= end, or a value of
-     *         null if i < start or i > end.
+     * @return The value x_i of the element for S <= i <= E, or a value of null
+     *         if i < S or i > E.
      */
     @Nullable
     T value(int index);
@@ -25,9 +25,8 @@ public interface LabelledPMF<T> extends UnivariatePMF {
      * 
      * @param value
      *            - The value, x_i.
-     * @return The element index, i in {start, start+1, ..., end-1, end}, or a
-     *         value of -infinity if the value does not correspond to any
-     *         element.
+     * @return The element index, i in {S, S+1, ..., E-1, E}, or a value of
+     *         -infinity if the value does not correspond to any element.
      */
     int index(T value);
 

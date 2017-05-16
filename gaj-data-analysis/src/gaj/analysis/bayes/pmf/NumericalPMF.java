@@ -1,7 +1,7 @@
 package gaj.analysis.bayes.pmf;
 
 /**
- * Represents a {@link UnivariatePMF} where the domain X = {x_1, x_2, ..., x_N}
+ * Represents a {@link UnivariatePMF} where the domain X = {x_i | i in {S, S+1, ..., E-1, E}} 
  * contains distinct numerical elements x_i in [L, U].
  */
 public interface NumericalPMF extends UnivariatePMF {
@@ -25,8 +25,8 @@ public interface NumericalPMF extends UnivariatePMF {
      * 
      * @param index
      *            - The index i.
-     * @return The value x_i for i in {start, start+1, ..., end-1, end}, or
-     *         -infinity if i < start, or +infinity if i > end.
+     * @return The value L <= x_i <= U for S <= i <= E, or a value of -infinity
+     *         if i < S, or a value of +infinity if i > E.
      */
     double value(int index);
 
@@ -35,9 +35,8 @@ public interface NumericalPMF extends UnivariatePMF {
      * 
      * @param value
      *            - The value x.
-     * @return The index i in {start, start+1, ..., end-1, end} if L <= x <= U,
-     *         or a value of -infinity if x < L, or a value of +infinity if x >
-     *         U.
+     * @return The index S <= i <= E if L <= x <= U, or a value of -infinity if
+     *         x < L, or a value of +infinity if x > U.
      */
     int index(double value);
 
