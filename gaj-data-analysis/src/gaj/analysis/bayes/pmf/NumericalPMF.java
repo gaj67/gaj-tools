@@ -4,7 +4,7 @@ package gaj.analysis.bayes.pmf;
  * Represents a {@link UnivariatePMF} where the domain X = {x_i | i in {S, S+1, ..., E-1, E}} 
  * contains distinct numerical elements x_i in [L, U].
  */
-public interface NumericalPMF extends UnivariatePMF {
+public interface NumericalPMF extends EmpiricalPMF {
 
     /**
      * Obtains the lower bound L of the domain [L, U].

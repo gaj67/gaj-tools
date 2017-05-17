@@ -6,7 +6,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * Each element of the discrete domain X = {x_i | i in {S, S+1, ..., E-1, E}} is
  * a unique instance of the specified type, T.
  */
-public interface LabelledPMF<T> extends UnivariatePMF {
+public interface LabelledPMF<T> extends EmpiricalPMF {
 
     /**
      * Obtains the value, x_i, of the given element with index i.

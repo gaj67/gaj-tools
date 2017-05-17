@@ -10,12 +10,16 @@ import gaj.common.annotations.PackagePrivate;
     private final T[] values;
 
     @SuppressWarnings("unchecked")
-    @PackagePrivate
-    LabelledEmpiricalPMFImpl(int startIndex, Iterable<T> values) {
+    @PackagePrivate LabelledEmpiricalPMFImpl(int startIndex, Iterable<T> values) {
         super(startIndex, getNumElements(values));
         ArrayList<T> theLabels = new ArrayList<T>();
         for (T value : values) theLabels.add(value);
         this.values = (T[]) theLabels.toArray();
+    }
+
+    @PackagePrivate LabelledEmpiricalPMFImpl(int startIndex, T[] values) {
+        super(startIndex, values.length);
+        this.values = values;
     }
 
     private static int getNumElements(Iterable<?> values) {

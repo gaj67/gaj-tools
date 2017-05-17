@@ -60,10 +60,10 @@ import gaj.common.annotations.PackagePrivate;
             sum += probs[i];
         }
         if (sum > 0) {
-            double norm = 1 / sum;
+            double norm = 1.0 / sum;
             for (int i = 0; i < numElements; i++) probs[i] *= norm;
         } else {
-            double norm = 1 / numElements;
+            double norm = 1.0 / numElements;
             for (int i = 0; i < numElements; i++) probs[i] = norm;
         }
     }

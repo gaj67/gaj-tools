@@ -1,10 +1,11 @@
 package gaj.numeric.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
+import org.junit.Test;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.impl.VectorFactory;
-import org.junit.Test;
 
 public class VectorTest {
 
