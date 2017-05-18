@@ -1,12 +1,13 @@
-package gaj.analysis.bayes.pmf.impl;
+package gaj.analysis.bayes.pmf.impl.integer;
 
-import gaj.analysis.bayes.pmf.UnivariatePMF;
+import gaj.analysis.bayes.pmf.IndexPMF;
 import gaj.common.annotations.PackagePrivate;
 
 /**
- * Provides a standard Poisson distribution.
+ * Provides a standard Poisson distribution, with integer counts.
  */
-@PackagePrivate class PoissonPMFImpl implements UnivariatePMF {
+@PackagePrivate
+class PoissonPMFImpl implements IndexPMF<Integer> {
 
     private final double lambda;
     private final double prob0;
@@ -25,22 +26,22 @@ import gaj.common.annotations.PackagePrivate;
     }
     
     @Override
-    public int start() {
+    public Integer start() {
         return 0;
     }
 
     @Override
-    public int end() {
+    public Integer end() {
         return Integer.MAX_VALUE;
     }
 
     @Override
-    public int size() {
+    public Integer size() {
         return Integer.MAX_VALUE;
     }
 
     @Override
-    public double prob(int index) {
+    public double prob(Integer index) {
         if (index < 0) return 0.0;
         if (index == 0) return prob0;
         if (lambda > 300) {

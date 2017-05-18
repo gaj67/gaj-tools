@@ -2,15 +2,15 @@ package gaj.bayes.test;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import gaj.analysis.bayes.pmf.EmpiricalIndexPMF;
 import gaj.analysis.bayes.pmf.EmpiricalPMF;
-import gaj.analysis.bayes.pmf.LabelledPMF;
-import gaj.analysis.bayes.pmf.impl.PMFFactory;
+import gaj.analysis.bayes.pmf.impl.integer.PMFFactory;
 
 public class BayesTest {
 
     @Test
     public void testMAndMExampleV1() {
-        EmpiricalPMF pmf = PMFFactory.newEmpiricalPMF(2);
+        EmpiricalIndexPMF<Integer> pmf = PMFFactory.newPMF(2);
         pmf.normalise();
         assertEquals(0.5, pmf.prob(0), 1e-10);
         assertEquals(0.5, pmf.prob(1), 1e-10);
@@ -23,11 +23,9 @@ public class BayesTest {
 
     @Test
     public void testMAndMExampleV2() {
-        LabelledPMF<String> pmf = PMFFactory.newLabelledPMF(new String[] { "Bowl 1", "Bowl 2" });
-        final int BOWL_1 = pmf.index("Bowl 1");
-        assertEquals(0, BOWL_1);
-        final int BOWL_2 = pmf.index("Bowl 2");
-        assertEquals(1, BOWL_2);
+        final String BOWL_1 = "Bowl 1";
+        final String BOWL_2 = "Bowl 2";
+        EmpiricalPMF<String> pmf = PMFFactory.newPMF(BOWL_1, BOWL_2);
         pmf.normalise();
         assertEquals(0.5, pmf.prob(BOWL_1), 1e-10);
         assertEquals(0.5, pmf.prob(BOWL_2), 1e-10);

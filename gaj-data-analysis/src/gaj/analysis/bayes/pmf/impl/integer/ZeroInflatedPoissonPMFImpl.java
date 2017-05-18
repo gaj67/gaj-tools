@@ -1,4 +1,4 @@
-package gaj.analysis.bayes.pmf.impl;
+package gaj.analysis.bayes.pmf.impl.integer;
 
 import gaj.common.annotations.PackagePrivate;
 
@@ -29,7 +29,7 @@ import gaj.common.annotations.PackagePrivate;
     }
 
     @Override
-    public double prob(int index) {
+    public double prob(Integer index) {
         return (index < 0) ? 0 : (index == 0) ? (alpha + oneMinusAlpha * super.prob(0)) : (oneMinusAlpha * super.prob(index));
     }
 

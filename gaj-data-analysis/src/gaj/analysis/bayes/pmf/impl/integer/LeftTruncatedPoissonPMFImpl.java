@@ -1,4 +1,4 @@
-package gaj.analysis.bayes.pmf.impl;
+package gaj.analysis.bayes.pmf.impl.integer;
 
 import gaj.common.annotations.PackagePrivate;
 
@@ -23,14 +23,20 @@ import gaj.common.annotations.PackagePrivate;
     @PackagePrivate LeftTruncatedPoissonPMFImpl(double lambda, int minCount) {
         super(lambda);
         this.minCount = minCount;
+        // Compute p(N < c | lambda>)
         double prob = (minCount <= 0) ? 1 : 0;
         for (int i = 0; i < minCount; i++)
             prob += super.prob(i);
-        this.normProb = 1 / prob;
+        this.normProb = 1 / (1 - prob);
     }
 
     @Override
-    public double prob(int index) {
+    public Integer start() {
+        return minCount;
+    }
+
+    @Override
+    public double prob(Integer index) {
         if (index < minCount) return 0;
         return super.prob(index) * normProb;
     }
