@@ -2,49 +2,58 @@ package gaj.analysis.bayes.pmf;
 
 /**
  * Represents a finite and modifiable probability mass function (see
- * {@link UnivariatePMF}).
+ * {@link PMF}).
+ * 
+ * @param <T>
+ *            - The type of all values x in X.
  */
-public interface EmpiricalPMF extends UnivariatePMF {
+public interface EmpiricalPMF<T> extends PMF<T> {
 
     /**
-     * Sets the probability mass, f(x_i), of the specified element, x_i, for i
-     * in {start, start+1, ..., end-1, end}. This method has no effect if i <
-     * start or i > end. The resulting value may be unnormalised.
+     * Sets the probability mass, p(x), for the specified value x in X. This
+     * method has no effect if x not in X. The resulting value may be
+     * unnormalised.
      * 
-     * @param index
-     *            - The index, i, of the element x_i.
+     * 
      * @param value
+     *            - The value, x.
+     * @param prob
      *            - The probability value, f(x_i).
      */
-    void set(int index, double value);
+    void set(T value, double prob);
 
     /**
-     * Increments the probability mass, f(x_i), of the specified element, x_i,
-     * for i in {start, start+1, ..., end-1, end}. This method has no effect if
-     * i < start or i > end. The resulting value may be unnormalised.
+     * Increments the probability mass, p(x), for the specified value x in X.
+     * This method has no effect if x not in X. The resulting value may be
+     * unnormalised.
      * 
-     * @param index
-     *            - The index, i, of the element x_i.
+     * 
      * @param value
+     *            - The value, x.
+     * @param probInc
      *            - The incremental probability value.
      */
-    void add(int index, double value);
+    void add(T value, double probInc);
 
     /**
-     * Scales the probability mass, f(x_i), of the specified element, x_i, for i
-     * in {start, start+1, ..., end-1, end}. This method has no effect if i <
-     * start or i > end. The resulting value may be unnormalised.
+     * Scales the probability mass, p(x), for the specified value x in X. This
+     * method has no effect if x not in X. The resulting value may be
+     * unnormalised.
      * 
-     * @param index
-     *            - The index, i, of the element x_i.
+     * 
      * @param value
+     *            - The value, x.
+     * @param probScale
      *            - The probability scaling value.
      */
-    void mult(int index, double value);
+    void mult(T value, double probScale);
 
     /**
      * Normalises the probability mass values across all elements, such that
-     * sum_{x in X} f(x) = 1. <br/>
+     * sum_{x in X} p(x) = 1.
+     * 
+     * @throws IllegalArgumentException
+     *             if any p(x) < 0.
      */
     void normalise();
 
