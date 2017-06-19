@@ -1,21 +1,23 @@
 package gaj.analysis.numeric.vector.impl;
 
+import java.util.function.Function;
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.ArrayVector;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.SubtractableVector;
 import gaj.analysis.numeric.vector.WritableVector;
+import gaj.common.annotations.PackagePrivate;
 
 /**
  * Provides a view onto part of another vector.
  */
-/* package-private */class WritableSubArrayVector extends DenseVector implements WritableVector {
+@PackagePrivate class WritableSubArrayVector extends DenseVector implements WritableVector {
 
     private final double[] values;
     protected final int start;
     protected final int end;
 
-    /* package-private */public WritableSubArrayVector(double[] vector, int start, int length) {
+    @PackagePrivate WritableSubArrayVector(double[] vector, int start, int length) {
         super(length);
         this.values = vector;
         this.start = start;
@@ -173,6 +175,13 @@ import gaj.analysis.numeric.vector.WritableVector;
             for (double value : vector) {
                 values[i++] *= value;
             }
+        }
+    }
+
+    @Override
+    public void apply(Function<Double, Double> func) {
+        for (int pos = start; pos < end; pos++) {
+            values[pos] = func.apply(values[pos]);
         }
     }
 

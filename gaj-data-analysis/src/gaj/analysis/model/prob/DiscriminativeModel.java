@@ -7,11 +7,11 @@ import gaj.analysis.model.DataInput;
  * discrete values of y. Typically, y is a label for either a class (for a
  * supervised model) or a cluster (for an unsupervised model).
  */
-public interface PosteriorModel extends ProbDataModel {
+public interface DiscriminativeModel extends ProbDataModel {
 
     @Override
     default ProbModelType getProbModelType() {
-        return ProbModelType.POSTERIOR;
+        return ProbModelType.DISCRIMINATIVE;
     }
 
     /**
@@ -26,6 +26,6 @@ public interface PosteriorModel extends ProbDataModel {
      * @return The output object.
      */
     @Override
-    PosteriorOutput process(DataInput x, boolean includeAuxiliary);
+    DiscriminativeOutput process(DataInput x, boolean includeAuxiliary);
 
 }

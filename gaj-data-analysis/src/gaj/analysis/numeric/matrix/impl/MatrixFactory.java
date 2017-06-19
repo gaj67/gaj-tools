@@ -1,5 +1,6 @@
 package gaj.analysis.numeric.matrix.impl;
 
+import java.util.Arrays;
 import gaj.analysis.numeric.matrix.DataMatrix;
 import gaj.analysis.numeric.matrix.FlatArrayMatrix;
 import gaj.analysis.numeric.matrix.RowArrayMatrix;
@@ -8,7 +9,6 @@ import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.WritableVector;
 import gaj.analysis.numeric.vector.impl.AbstractVector;
 import gaj.analysis.numeric.vector.impl.VectorFactory;
-import java.util.Arrays;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -110,14 +110,14 @@ public class MatrixFactory {
      * @param vector - The length-M vector, x.
      * @return A length-N vector, y = A*x.
      */
-    public static DataVector multiply(DataMatrix matrix, DataVector vector) {
+    public static WritableVector multiply(DataMatrix matrix, DataVector vector) {
         if (matrix instanceof RowArrayMatrix) {
             return multiply((RowArrayMatrix) matrix, vector);
         }
         throw new NotImplementedException();
     }
 
-    private static DataVector multiply(RowArrayMatrix matrix, DataVector vector) {
+    private static WritableVector multiply(RowArrayMatrix matrix, DataVector vector) {
         final int numRows = matrix.numRows();
         WritableVector result = VectorFactory.newVector(numRows);
         for (int row = 0; row < numRows; row++) {
@@ -196,12 +196,17 @@ public class MatrixFactory {
     }
 
     /**
-     * Presents the matrix as a flat vector.
+     * Presents the matrix as a flat vector. If the matrix is writable, then the
+     * vector will also be writable.
      *
-     * @param matrix - The N x M matrix.
+     * @param matrix
+     *            - The N x M matrix.
      * @return A length-NM vector.
      */
     public static DataVector asVector(DataMatrix matrix) {
+        if (matrix instanceof WritableMatrix) {
+            return asVector((WritableMatrix) matrix);
+        }
         if (matrix instanceof FlatArrayMatrix) {
             return VectorFactory.newVector(((FlatArrayMatrix) matrix).getArray());
         }

@@ -16,7 +16,7 @@ public enum ProbModelType {
     /**
      * Models p(y|x), where y is discrete and finitely countable.
      */
-    POSTERIOR,
+    DISCRIMINATIVE,
 
     /**
      * Models p(y,x), where y is discrete and finitely countable.
@@ -24,7 +24,7 @@ public enum ProbModelType {
     JOINT,
 
     /**
-     * Models p(x|y), where y is discrete and finitely countable.
+     * Models p(x|y) and p(y), where y is discrete and finitely countable.
      */
     GENERATIVE,
     

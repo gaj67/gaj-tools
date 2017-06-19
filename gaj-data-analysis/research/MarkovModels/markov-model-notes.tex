@@ -167,7 +167,7 @@ with explicit stages for sequence initiation and termination, and explicit label
 \label{fig:simple-random-process}
 \end{figure}
 
-We can now handle both complete and partial sequences by introducing observed indicators $\ui$ and $\ut$
+We can now handle both completely observed and partially observed sequences by introducing indicators $\ui$ and $\ut$
 to correspond to the start-of-sequence and end-of-sequence symbols, respectively.
 In particular, $\ui=1$ corresponds to `$\langle$' and $\ui=0$ corresponds to `$[$'; when the start of the sequence is unknown,
 we let $\ui=*$ (see Section~\ref{sec:missing-values}). Likewise, $\ut=1$ corresponds to `$\rangle$', $\ut=0$ corresponds to `$]$', and
@@ -188,9 +188,9 @@ and the observed sequence of values, say\footnote{We are ignoring the very real 
 of aligning the observed values with the generated stages. This difficulty can be partially alleviated under the assumption of stationary distributions, such that each stage behaves
 like the previous one.} 
 $\uvr=(\ur_1,\ldots,\ur_n)$, 
-is the possibility that some values were unobserved, i.e.\ arbitrarily {\em missing} or systematically {\em hidden}.
-For convenience, let $\ur_t=*$ denote the case where the  observed value of the $t$-th stage is missing,
-just like $\ui=*$ or $\ut=*$ if we do not kow whether or not we observed the start or end of the generated sequence,
+is the possibility that some values were unobserved, i.e.\ either arbitrarily {\em missing} or systematically {\em hidden}.
+For convenience, let $\ur_t=*$ denote the case where the value of the $t$-th stage is unobserved; recall from above that
+ $\ui=*$ or $\ut=*$ if we do not kow whether or not we observed the start or end of the generated sequence,
 respectively.
 The `*' symbol is just a representational device -- its presence has no effect on the computed probabilities, other than to indicate that any associated variable should be marginalised out. Thus, for example:
 \begin{eqnarray}
@@ -207,7 +207,7 @@ p(\ui,\vr,\ut)
 \,\sum_{\tau_{n+1}=0}^{1}\delta(\tau_{n+1}\!=\!\ut)\;
 p(\iota_0,\tm_1,r_1,\ldots,\tm_n,r_n,\tau_{n+1})\,.
 \end{eqnarray}
-In general, if the domain ${\cal R}$  is discrete, then the likelihood of an observed sequence is given by
+In general, if the domain ${\cal R}$  is discrete, then the likelihood of an observed sequence $\uvr$  is given by
 \begin{eqnarray}
 p(\ui,\uvr,\ut) 
 & = & 
@@ -251,7 +251,7 @@ Despite not knowing these dependencies in advance, however, the basic form of th
 The first requirement is that the sequence process be {\em causal}, meaning that each stage of a sequence
 %(including the termination stage but excluding the initiation stage)
  depends only on preceding stages, and never on future stages.
-This causality allows us to split a generated sequence into two parts at some arbitrary {\em pivot} stage $t$, as shown in Figure~\ref{fig:forwar-backard}. The second requirement is that the dependence on past stages can be limited
+This causality allows us to partition a generated sequence into two parts at some arbitrary {\em pivot} stage $t$, as shown in Figure~\ref{fig:forwar-backard}. The second requirement is that the dependence on past stages can be limited
 in scope to some arbitrary {\em historical} stage $s$, as also shown.
 \begin{figure}[hbt]
 \centering
@@ -294,7 +294,7 @@ one step of the forward--backward algorithm.}
 \end{figure}
 
 Let us now define the sub-sequence $\vr_{s,t}=(r_s,r_{s+1},\ldots,r_t)$; by definition,
-$\vr_{s,t}=(\,)$ if $s>t$. Furthermore, define the concatenation operator `$\circ$', such that
+$\vr_{s,t}=(\,)$ if $s>t$. Furthermore, consider a concatenation operator `$\circ$', such that
 $\vr_{s,k}\circ\vr_{k+1,t}=\vr_{s,t}$.
 Then observe, for a sufficiently long sequence (defined in Section~\ref{sec:markov-processes}), that
 \begin{eqnarray}
@@ -336,7 +336,7 @@ p(\tm_{t+1},\ur_{t+1},\ldots,\tm_n,\ur_n,\ut\,|\,\ui,\tau_1^-,\ur_1,\ldots,\tm_{
 is the backward factor.
 The entire forward pass of the forward--backward algorithm starts from some initial, historical stage $t_0$ and
 progressively computes $\alpha_t$ forward along the sequence for each applicable stage $t_0\le t\le n$. Likewise,
-the backward pass starts at termination stage, and computes $\beta_t$
+the backward pass starts at termination stage $n$, and computes $\beta_t$
 backwards along the sequence for each applicable stage $t_0\le t\le n$. The precise details of these calculations rely upon
 the nature of the fine-grained dependencies, as disdcussed in the next section.
 
@@ -756,13 +756,7 @@ by replacing each node $R_t$ by the pair of nodes $S_t$ and $X_t$ with a depende
 \label{fig:stateful-full}
 \end{figure}
 For convenience, we may notionally separate the states from the corresponding values at each stage by loosely defining
-\begin{eqnarray}
-\vr & = & (r_1,r_2,\ldots,r_n)
-\nonumber\\& = & 
-((s_1,x_1),(s_2,x_2),\ldots,(s_n,x_n))
-\nonumber\\& \equiv & 
-(s_1,\ldots,s_n)\odot (x_1,\ldots,x_n)~=~(\vs,\vx)\,.
-\end{eqnarray}
+$\vr=(\vs,\vx)$.
 Hence, the joint likelihood of a fully-dependent state--value sequence is now derived from model~\eqref{eq:temporal-model-full} as
 \begin{eqnarray}
 p(\iota_0,\vs,\vx,\tau_{n+1}) & = &
@@ -777,8 +771,10 @@ p(\iota_0)
 \label{eq:stateful-model-full}
 \end{eqnarray}
 
-In practice, the dependence of $S_t$ and $X_t$ on $X_{t-1}$ (and further historical values) induces a regression model of some complexity,
-especially if the set ${\cal X}$ of values is continuous and/or multi-dimensional. Also, such a dependency causes difficulties handling missing values (see Section~\ref{sec:hidden-state}).
+The dependence of $S_t$ and $X_t$ on $X_{t-1}$ (and further historical values) induces a regression model that can be useful in some circumstances, e.g.\ in sequence classification problems.
+However, the increased complexity of such models can be difficult to manage in practice,
+especially if the set ${\cal X}$ of values is continuous and/or multi-dimensional.
+Also, such a dependency causes difficulties handling missing values (see Section~\ref{sec:hidden-state}).
 Lastly, as we discussed earlier, the general `spirit' of  stateful processes is that the state drives the value, not the other way around.
 Hence, common practice is to limit the dependicies of $X_t$ to only  the current and previous states, as shown in Figure~\ref{fig:stateful-sub}.
 \begin{figure}[hbt]
@@ -919,123 +915,27 @@ as shown in Figure~\ref{fig:stateful-m-ell}.
 (at most) $\ell-1$ previous states.}
 \label{fig:stateful-m-ell}
 \end{figure}
-The corresponding likelohood model of this order-$(m,\ell)$ state--value sequence process is ?????????????????????????????.
-
-
-**********************************************
-Consider the first-order Markov process $R$ depicted in Figure~\ref{fig:simple-random-process}.
-Suppose now that the random variable $R_t$ at stage $t$ can be decomposed into the tuple
-$R_t=(S_t,X_t)$, where $S_t$ is a random {\em state} variable taking values $s_t\in{\cal S}$, and $X_t$
-is a random {\em value} variable taking values $x_t\in{\cal X}$.
-We make the common presumption that the stage transitions in the sequence generating process are entirely between states, e.g.\ from $S_{t-1}$ to $S_t$.
-It follows from causaion that the value is generated after the state has been determined, i.e.\ $X_t$ depends upon $S_t$.
-Keeping to the first-order Markov interpretation of stage-to-stage dependencies leads to
-the {\em stateful} process depicted in Figure~\ref{fig:stateful-process}, with full cross-dependencies between $(S_t,X_t)$ and
-$(S_{t+1},X_{t+1})$. Note that the restriction to order $m=1$ is not really onerous --  we may at any time generalise the process by inserting additional (dashed) dependencies
-(viz Figure~\ref{fig:causal-process}).
-\begin{figure}[hbt]
-\centering
-\begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
-    \node (0i) at (-0.7,0) [right] {$\stackrel{\iota_0^+}{}$};
-    \node[onode] (0) at (0,0) {};
-    \node[cnode] (1) at (2,0) {$S_1$};
-    \node[cnode] (1x) at (2,-2) {$X_1$};
-    \node[cnode] (2) at (4, 0)  {$S_2$};
-    \node[cnode] (2x) at (4, -2)  {$X_2$};
-    \node[cnode] (3) at (6, 0)  {$S_3$};
-    \node[cnode] (3x) at (6, -2)  {$X_3$};
-    \node (t) at (8, 0) {$\cdots$};
-    \node (tx) at (8, -2)  {$\cdots$};
-    \node[cnode] (N) at (10, 0)  {$S_N$};
-    \node[cnode] (Nx) at (10, -2)  {$X_N$};
-    \node[onode] (tt) at (12,0) {};
-
-    \draw[->] (0) edge node [pos=0.5, above] {$\stackrel{\tm_1}{}$}  (1) ;
-    \draw[->] (1) edge node [pos=0.5, above] {$\stackrel{\tm_2}{}$}  (2) ;
-    \draw[->] (2) edge node [pos=0.5, above] {$\stackrel{\tm_3}{}$}  (3) ;
-    \draw[->] (3) edge node [pos=0.5, above] {$\stackrel{\tm_4}{}$}  (t) ;
-    \draw[->] (t) edge node [pos=0.7, above left] {$\stackrel{\tm_N}{}$} (N) ;
-    \draw[->] (N) edge node [pos=0.75, above left] {$\stackrel{\tau^+_{N+1}}{}$} (tt) ;
-
-   \begin{scope}[dashed]
-    \draw[->] (0) to (1x) ;
-    \draw[->] (1) to (1x) ;
-    \draw[->] (1) to (2x) ;
-    \draw[->] (1x) to (2) ;
-    \draw[->] (1x) to (2x) ;
-    \draw[->] (2) to (2x) ;
-    \draw[->] (2) to (3x) ;
-    \draw[->] (2x) to (3) ;
-    \draw[->] (2x) to (3x) ;
-    \draw[->] (3) to (3x) ;
-    \draw[->] (3) to (tx) ;
-    \draw[->] (3x) to (tx) ;
-    \draw[->] (3x) to (t) ;
-    \draw[->] (t) to (Nx) ;
-    \draw[->] (t) to (tx) ;
-    \draw[->] (N) to (Nx) ;
-    \draw[->] (tx) to (N) ;
-    \draw[->] (tx) to (Nx) ;
-    \draw[->] (Nx) to (tt) ;
-   \end{scope}
-\end{tikzpicture}
-\caption{\em A first-order Markov process for generating complete state--value sequences of random length $N$,
-with explicit cross-dependencies between adjacent stages.}
-\label{fig:stateful-process}
-\end{figure}
-
-For convenience, we may notionally separate the observed states at each stage from the observed values at the corresponding stages, by loosely defining
-\begin{eqnarray}
-\vr & = & (r_1,r_2,\ldots,r_n)
-\nonumber\\& = & 
-((s_1,x_1),(s_2,x_2),\ldots,(s_n,x_n))
-\nonumber\\& \equiv & 
-(s_1,\ldots,s_n)\odot (x_1,\ldots,x_n)~=~(\vs,\vx)\,.
-\end{eqnarray}
-Consequently, the likelihood of a stateful sequence is now given by
+The corresponding likelihood model of this order-$(m,\ell)$ state--value sequence process is
 \begin{eqnarray}
 p(\iota_0,\vs,\vx,\tau_{n+1}) & = &
-p(\iota_0,\tm_1,s_1,x_1,\ldots,\tm_n,s_n,x_n,\tau_{n+1})
-\nonumber\\& = &
-p(\iota_0)\,p(\tm_1,s_1\,|\,\iota_0)\,p(x_1\,|\,\iota_0,\tm_1,s_1)
-\nonumber\\{}&&\times
-\left\{\prod_{t=2}^{n}p(\tm_t,s_t\,|\,\tm_{t-1},s_{t-1},x_{t-1})\,p(x_t\,|\,\tm_t,s_t,\tm_{t-1},s_{t-1},x_{t-1})\right\}
-\nonumber\\&&{}\times
-p(\tau_{n+1}\,|\,\tm_n,s_n,x_n)
-%
-%p({\iota},\vec{s},\vec{x},{\tau}) & = & 
-%p(\iota_0\!=\!{\iota})\,p(\tau_1\!=\!0\,|\,\iota_0\!=\!{\iota})
-%\,p(S_1\!=\!s_1\,|\,\iota_0\!=\!{\iota},\tau_1\!=\!0)
-%\nonumber\\&&{}\times
-%\,p(X_1\!=\!x_1\,|\,S_1\!=\!s_1,\iota_0\!=\!{\iota},\tau_1\!=\!0)
-%\nonumber\\&&
-%{}\times\left\{\prod_{t=2}^{n}p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
-%\nonumber\\&&\hspace*{10mm}{}\times\left.
-%\,p(S_t\!=\!s_t\,|\,\tau_t\!=\!0,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right.
-%\nonumber\\&&\hspace*{10mm}{}\times\left.\rule{0pt}{6mm}
-%\,p(X_t\!=\!x_t\,|\,S_t\!=\!s_t,S_{t-1}\!=\!s_{t-1},X_{t-1}\!=\!x_{t-1})\right\}
-%\nonumber\\&&
-%{}\times p(\tau_{n+1}\!=\!{\tau}\,|\,S_n\!=\!s_n,X_n\!=\!x_n)
-%\nonumber\\
-%&=&
-%p({\iota})\,p(\tm_1\,|\,{\iota})
-%\,p(s_1\,|\,{\iota},\tm_1)
-%\,p(x_1\,|\,s_1,{\iota},\tm_1)
-%\nonumber\\&&
-%{}\times\left\{\prod_{t=2}^{n}p(\tm_t\,|\,s_{t-1},x_{t-1})
-%\,p(s_t\,|\,\tm_t,s_{t-1},x_{t-1})
-%\,p(x_t\,|\,s_t,s_{t-1},x_{t-1})\right\}
-%\nonumber\\&&
-%{}\times p({\tau}\,|\,s_n,x_n)
-\,.
+p(\iota_0)
+\left\{\prod_{t=1}^{m}p(\tm_t,s_t\,|\,\iota_0,\vec{\tau}^-_{1,t-1},\vs_{1,t-1})\right\}
+\left\{\prod_{t=1}^{\ell-1}p(x_t\,|\,\iota_0,\vec{\tau}^-_{1,t},\vs_{1,t})\right\}
+\nonumber\\&&
+\times
+\left\{\prod_{t=m+1}^{n}p(\tm_t,s_t\,|\,\vec{\tau}^-_{t-m,t-1},\vs_{t-m,t-1})\right\}
+\left\{\prod_{t=\ell}^{n}p(x_t\,|\,\vec{\tau}^-_{t-\ell+1,t},\vs_{t-\ell+1,t})\right\}
+\nonumber\\&&
+\times
+p(\tau_{n+1}\,|\,\vec{\tau}^-_{n-m+1,n},\vs_{n-m+1,n})\,,
+\label{eq:mth-ellth-order}
 \end{eqnarray}
-Conditioning the state $S_t$ on both the previous state $S_{t-1}$ and its value $X_{t-1}$
-can be useful in some circumstances, e.g.\ in sequence classification problems.
-However, due to the increased complexity of such models, it is more usual to further restrict the stateful process
+for $n\ge m$ and $n\ge\ell-1$.
+
+It is more usual to further restrict the stateful process depicted in Figure~\ref{fig:stateful-sub}
 by also imposing the first-order Markov assumption at the level
-of the state--value dependencies themselves. In terms of the process depicted in Figure~\ref{fig:stateful-process},
-this means retaining only direct node-to-node dependencies, rather than stage-to-stage dependencies.
-This restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
+of the state--value dependencies themselves, as well as the stage-to-stage dependencies;
+this restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, onode/.style={fill=black!50, draw,circle,minimum size=1em}]
@@ -1069,7 +969,7 @@ This restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
 \caption{\em A first-order Markov process for generating complete state--value  sequences of random length $N$.}
 \label{fig:stateful-1-process}
 \end{figure}
-The corresponding sequence model is now given by
+The corresponding order-$(1,1)$ sequence model is now given by
 \begin{eqnarray}
 p(\iota_0,\vs,\vx,\tau_{n+1}) & = &
 %p(\iota_0,\tm_1,s_1,x_1,\ldots,\tm_n,s_n,x_n,\tau_{n+1})
@@ -1104,12 +1004,12 @@ p(\ui,\uvs,\uvx,\ut)
 \end{eqnarray}
 This calculation can be simplified further under the first-order state--value model~\eqref{eq:stateful-1-model}.
 For example, the fact that an $x_t$ is unobserved, i.e.\ $\ux_t=*$, is easily handled, since $X_t$ depends only on $S_t$ in stage $t$. Specifically, the marginalisation over $x_t\in{\cal X}$ affects exactly one term in the model, and consequently we may
-define $p(*\,|\,\tm_t,s_t)=p(X_t\!=\!*\,|\,\tau_t\!=\!0,S_t\!=\!s_t)=1$; hence $p(\underline{x}_t\,|\,\tm_t,s_t)$ is well defined. Note that this simplification is only applicable when
+define $p(*\,|\,\tm_t,s_t)=\sum_{x_t\in{\cal X}}p(X_t\!=\!x_t\,|\,\tau_t\!=\!0,S_t\!=\!s_t)=1$; hence $p(\underline{x}_t\,|\,\tm_t,s_t)$ is well defined. Note that this simplification is only applicable when
 $X_t$ does not depend upon any earlier $X_{t-k}$; such higher-order dependencies will require the more general handling of marginalisation above.
 
 Similarly, if the termination marker $\tau_{n+1}$ is unobserved, i.e.\ $\ut=*$, then 
  $p(\ut\,|\,\tm_n,s_n)$ is still well defined if we let
-$p(\tau_{n+1}=*\,|\,\tau_n\!=\!0,S_n\!=\!s_n)=1$.
+$p(*\,|\,\tm_n,s_n)=\sum_{\tau_{n+1}=0}^{1} p(\tau_{n+1}\,|\,\tau_n\!=\!0,S_n\!=\!s_n)=1$.
 However, if the initiation marker $\iota_0$ is unobserved, i.e.\ $\ui=*$, then the marginalisation is more difficult
 because $\iota_0$ also conditions $S_1$ via $p(S_1\,|\,\iota_0,\tau_1)$. To allow for this, we define (for order $m=1$) that
 \begin{eqnarray}
@@ -1121,8 +1021,8 @@ p(\ui,\vs,\uvx,\ut) & = &
 p(\ui,\tm_1,s_1)
 \,p(\ux_1\,|\,\tm_1,s_1)
 \left\{\prod_{t=2}^{n}p(\tm_t,s_t\,|\,\tm_{t-1},s_{t-1})
-\,p(\ux_t\,|\,s_t)\right\}
-\,p(\ut\,|\,s_n)
+\,p(\ux_t\,|\,\tm_t,s_t)\right\}
+\,p(\ut\,|\,\tm_t,s_n)
 \,.
 \label{eq:stateful-1-model:hidden-markers}
 \end{eqnarray}

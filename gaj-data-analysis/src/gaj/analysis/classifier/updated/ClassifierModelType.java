@@ -25,14 +25,14 @@ public enum ClassifierModelType {
      */
     OTHER;
 
-    public ClassifierModelType getClassifierModelType(Classifier classifier) {
+    public static ClassifierModelType getClassifierModelType(Classifier classifier) {
         return (classifier instanceof GenerativeClassifier) ? GENERATIVE
                 : (classifier instanceof JointClassifier) ? JOINT
                 : (classifier instanceof DiscriminativeClassifier) ? DISCRIMINATIVE 
                 : OTHER;
     }
 
-    public ClassifierModelType getClassifierModelType(Class<? extends Classifier> klass) {
+    public static ClassifierModelType getClassifierModelType(Class<? extends Classifier> klass) {
         return (GenerativeClassifier.class.isAssignableFrom(klass)) ? GENERATIVE
                 : (JointClassifier.class.isAssignableFrom(klass)) ? JOINT
                 : (DiscriminativeClassifier.class.isAssignableFrom(klass)) ? DISCRIMINATIVE 

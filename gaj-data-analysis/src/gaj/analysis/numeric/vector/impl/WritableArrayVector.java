@@ -1,6 +1,7 @@
 package gaj.analysis.numeric.vector.impl;
 
 import java.util.Arrays;
+import java.util.function.Function;
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.ArrayVector;
 import gaj.analysis.numeric.vector.DataVector;
@@ -199,6 +200,13 @@ import gaj.common.annotations.PackagePrivate;
             sum += value;
         }
         return sum;
+    }
+
+    @Override
+    public void apply(Function<Double, Double> func) {
+        for (int i = 0; i < data.length; i++) {
+            data[i] = func.apply(data[i]);
+        }
     }
 
 }

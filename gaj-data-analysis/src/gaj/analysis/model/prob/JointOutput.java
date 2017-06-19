@@ -8,7 +8,7 @@ import gaj.analysis.numeric.vector.DataVector;
  * Note: Any additional information, such as a gradient matrix, will be computed
  * against the joint probabilities.
  */
-public interface JointOutput extends LikelihoodOutput, PosteriorOutput {
+public interface JointOutput extends LikelihoodOutput, DiscriminativeOutput {
 
     /**
      * Obtains the marginal probability p(x) = sum_{y} p(y,x) of the input data
