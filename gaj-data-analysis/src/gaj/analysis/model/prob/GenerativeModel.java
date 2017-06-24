@@ -1,6 +1,8 @@
 package gaj.analysis.model.prob;
 
-import gaj.analysis.model.DataInput;
+import org.eclipse.jdt.annotation.Nullable;
+import gaj.analysis.model.AuxiliaryInfo;
+import gaj.analysis.model.DataObject;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**
@@ -20,14 +22,14 @@ public interface GenerativeModel extends ProbDataModel {
      * 
      * @param x
      *            - The input data.
-     * @param includeAuxiliary
-     *            - A flag indicating whether (true) or not (false) to include
-     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
-     *            output.
+     * @param info
+     *            - Optional object either specifying auxiliary information for
+     *            the processor, or requesting auxiliary information be
+     *            provided.
      * @return The output object.
      */
     @Override
-    GenerativeOutput process(DataInput x, boolean includeAuxiliary);
+    GenerativeOutput process(DataObject x, @Nullable AuxiliaryInfo info);
 
     /**
      * Obtains the prior probability p(y) for each y.

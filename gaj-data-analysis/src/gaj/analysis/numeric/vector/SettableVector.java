@@ -9,11 +9,20 @@ package gaj.analysis.numeric.vector;
 public interface SettableVector extends DataVector {
 
     /**
+     * Sets every element of the vector to the given value.
+     * 
+     * @param value
+     *            - The new element value.
+     */
+    void set(double value);
+
+    /**
      * Sets the value of a vector element.
      * 
-     * @param pos - The index position of the element
-     * (counting from 0).
-     * @param value - The new element value.
+     * @param pos
+     *            - The index position of the element (counting from 0).
+     * @param value
+     *            - The new element value.
      */
     void set(int pos, double value);
 

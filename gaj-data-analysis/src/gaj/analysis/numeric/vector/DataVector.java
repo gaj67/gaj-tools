@@ -1,13 +1,13 @@
 package gaj.analysis.numeric.vector;
 
 import java.util.Iterator;
-import gaj.analysis.numeric.DataObject;
+import gaj.analysis.numeric.DimensionalDataObject;
 import gaj.analysis.numeric.StructureType;
 
 /**
  * Provides access to numerical data as a vector.
  */
-public interface DataVector extends DataObject, Iterable<Double> {
+public interface DataVector extends DimensionalDataObject, Iterable<Double> {
 
     @Override
     default StructureType structureType() {

@@ -1,12 +1,12 @@
 package gaj.analysis.numeric;
 
-import gaj.analysis.model.DataInput;
+import gaj.analysis.model.DataObject;
 
 /**
  * Indicates dimensionalised numerical data, e.g. a vector or matrix or tensor, etc., or a
  * collection of such data objects.
  */
-public interface DataObject extends DataInput {
+public interface DimensionalDataObject extends DataObject {
 
     /**
      * Indicates the type of data structure.

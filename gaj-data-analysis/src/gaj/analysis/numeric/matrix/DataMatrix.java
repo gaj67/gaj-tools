@@ -1,12 +1,12 @@
 package gaj.analysis.numeric.matrix;
 
-import gaj.analysis.numeric.DataObject;
+import gaj.analysis.numeric.DimensionalDataObject;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Provides access to numerical data as an array.
  */
-public interface DataMatrix extends DataObject {
+public interface DataMatrix extends DimensionalDataObject {
 
     /**
      * @return The number of rows in the matrix.

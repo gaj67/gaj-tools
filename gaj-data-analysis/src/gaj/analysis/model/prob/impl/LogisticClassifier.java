@@ -1,6 +1,7 @@
 package gaj.analysis.model.prob.impl;
 
-import gaj.analysis.model.DataInput;
+import gaj.analysis.model.AuxiliaryInfo;
+import gaj.analysis.model.DataObject;
 import gaj.analysis.model.prob.DiscriminativeModel;
 import gaj.analysis.model.prob.DiscriminativeOutput;
 import gaj.analysis.model.prob.ProbModelType;
@@ -62,7 +63,7 @@ public class LogisticClassifier implements DiscriminativeModel {
     }
 
     @Override
-    public DiscriminativeOutput process(DataInput x, boolean includeAuxiliary) {
+    public DiscriminativeOutput process(DataObject x, AuxiliaryInfo info) {
         if (!(x instanceof DataVector)) {
             throw new IllegalArgumentException("DataVector input required!");
         }
@@ -72,22 +73,25 @@ public class LogisticClassifier implements DiscriminativeModel {
         }
         WritableVector weights = MatrixFactory.multiply(params, features);
         // TODO Handle very small or very large weights.
-        weights.set(numClasses - 1, 0);
         weights.apply(Math::exp);
-        double norm = 1.0 / weights.sum();
-        weights.multiply(norm);
+        double sum = weights.sum();
+        if (sum == 0) {
+            weights.set(1.0 / numClasses);
+        } else {
+            weights.multiply( 1.0 / sum);
+        }
         // TODO Handle gradient information.
-        return new SimplePosteriors(weights, x, getProbModelType());
+        return new SimplePosteriors(weights, features, getProbModelType());
     }
 
     // ================================================================
     private static class SimplePosteriors implements DiscriminativeOutput {
 
-        private WritableVector probs;
-        private DataInput features;
+        private DataVector probs;
+        private DataVector features;
         private ProbModelType probModelType;
 
-        private SimplePosteriors(WritableVector probs, DataInput features, ProbModelType probModelType) {
+        private SimplePosteriors(DataVector probs, DataVector features, ProbModelType probModelType) {
             this.probs = probs;
             this.features = features;
             this.probModelType = probModelType;
@@ -99,13 +103,13 @@ public class LogisticClassifier implements DiscriminativeModel {
         }
 
         @Override
-        public DataInput getInput() {
-            return features;
+        public DataVector getPosteriorProbabilities() {
+            return probs;
         }
 
         @Override
-        public DataVector getPosteriorProbabilities() {
-            return probs;
+        public DataVector getFeatures() {
+            return features;
         }
 
     }

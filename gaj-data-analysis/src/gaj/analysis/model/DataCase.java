@@ -10,7 +10,7 @@ public interface DataCase {
      * 
      * @return The data element.
      */
-    DataInput getData();
+    DataObject getData();
 
     /**
      * Obtains the index corresponding to the label for the data element.

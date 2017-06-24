@@ -1,6 +1,6 @@
 package gaj.analysis.model;
 
-import gaj.analysis.numeric.DataObject;
+import gaj.analysis.numeric.DimensionalDataObject;
 
 /**
  * Indicates that a gradient can be computed upon request, typically from a
@@ -13,6 +13,6 @@ public interface GradientComputable extends GradientAware {
      * 
      * @return The gradient.
      */
-    DataObject getGradient();
+    DimensionalDataObject getGradient();
 
 }

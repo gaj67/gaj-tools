@@ -1,7 +1,9 @@
 package gaj.analysis.model.prob;
 
-import gaj.analysis.model.DataInput;
+import org.eclipse.jdt.annotation.Nullable;
+import gaj.analysis.model.AuxiliaryInfo;
 import gaj.analysis.model.DataModel;
+import gaj.analysis.model.DataObject;
 import gaj.analysis.model.ParameterisedModel;
 
 /**
@@ -24,14 +26,14 @@ public interface ProbDataModel extends DataModel, ParameterisedModel {
      * 
      * @param x
      *            - The input data.
-     * @param includeAuxiliary
-     *            - A flag indicating whether (true) or not (false) to include
-     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
-     *            output.
+     * @param info
+     *            - Optional object either specifying auxiliary information for
+     *            the processor, or requesting auxiliary information be
+     *            provided.
      * @return The output object containing the computed probability of the
      *         input.
      */
     @Override
-    ProbDataOutput process(DataInput input, boolean includeAuxiliary);
+    ProbDataOutput process(DataObject input, @Nullable AuxiliaryInfo info);
 
 }

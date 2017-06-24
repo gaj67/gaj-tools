@@ -1,6 +1,8 @@
 package gaj.analysis.model.prob;
 
-import gaj.analysis.model.DataInput;
+import org.eclipse.jdt.annotation.Nullable;
+import gaj.analysis.model.AuxiliaryInfo;
+import gaj.analysis.model.DataObject;
 
 /**
  * A model of the probability (likelihood) p(x) of an observation x.
@@ -17,13 +19,13 @@ public interface LikelihoodModel extends ProbDataModel {
      * 
      * @param x
      *            - The input data.
-     * @param includeAuxiliary
-     *            - A flag indicating whether (true) or not (false) to include
-     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
-     *            output.
+     * @param info
+     *            - Optional object either specifying auxiliary information for
+     *            the processor, or requesting auxiliary information be
+     *            provided.
      * @return The output object.
      */
     @Override
-    LikelihoodOutput process(DataInput x, boolean includeAuxiliary);
+    LikelihoodOutput process(DataObject x, @Nullable AuxiliaryInfo info);
 
 }

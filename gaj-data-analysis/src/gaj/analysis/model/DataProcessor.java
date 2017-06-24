@@ -1,5 +1,7 @@
 package gaj.analysis.model;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 /**
  * A processor of data.
  */
@@ -10,12 +12,12 @@ public interface DataProcessor {
      * 
      * @param input
      *            - The input data.
-     * @param includeAuxiliary
-     *            - A flag indicating whether (true) or not (false) to include
-     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
-     *            output.
+     * @param info
+     *            - Optional object either specifying auxiliary information for
+     *            the processor, or requesting auxiliary information be
+     *            provided.
      * @return The output data.
      */
-    DataOutput process(DataInput input, boolean includeAuxiliary);
+    DataObject process(DataObject input, @Nullable AuxiliaryInfo info);
 
 }
