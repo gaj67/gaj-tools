@@ -2,12 +2,13 @@ package gaj.analysis.numeric.vector.impl;
 
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.SparseVector;
 import gaj.common.annotations.PackagePrivate;
 
 /**
  * Implements a fixed vector of the form [v, v, ..., v] for constant v.
  */
-@PackagePrivate class FixedVector extends SparseVector {
+@PackagePrivate class FixedVector extends AbstractVector implements SparseVector {
 
     private final double value;
 

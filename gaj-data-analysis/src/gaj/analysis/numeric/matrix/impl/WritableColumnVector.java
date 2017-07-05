@@ -3,14 +3,15 @@ package gaj.analysis.numeric.matrix.impl;
 import java.util.function.Function;
 import gaj.analysis.numeric.vector.ArrayVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.DenseVector;
 import gaj.analysis.numeric.vector.WritableVector;
-import gaj.analysis.numeric.vector.impl.DenseVectorImpl;
+import gaj.analysis.numeric.vector.impl.AbstractVector;
 import gaj.common.annotations.PackagePrivate;
 
 /**
  * Wraps the specified column of a row-based, dense matrix.
  */
-@PackagePrivate class WritableColumnVector extends DenseVectorImpl implements WritableVector {
+@PackagePrivate class WritableColumnVector extends AbstractVector implements DenseVector, WritableVector {
 
     private final double[][] data;
     private final int column;

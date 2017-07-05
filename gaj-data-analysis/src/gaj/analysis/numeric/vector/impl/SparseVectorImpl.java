@@ -3,23 +3,25 @@ package gaj.analysis.numeric.vector.impl;
 import java.util.Iterator;
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.SparseVector;
 import gaj.analysis.numeric.vector.SubtractableVector;
+import gaj.common.annotations.PackagePrivate;
 
 /**
  * Implements a data vector as an array of index/value pairs, with ascending indices.
  */
-/* package-private */class SparseVectorImpl extends SparseVector {
+@PackagePrivate class SparseVectorImpl extends AbstractVector implements SparseVector {
 
-    /* package-private */final int[] indices;
-    /* package-private */final double[] values;
+    /* @PackagePrivate */ final int[] indices;
+    /* @PackagePrivate */ final double[] values;
 
-    /* package-private */SparseVectorImpl(int length, int[] indices, double[] values) {
+    @PackagePrivate SparseVectorImpl(int length, int[] indices, double[] values) {
         super(length);
         this.indices = indices;
         this.values = values;
     }
 
-    /* package-private */SparseVectorImpl(int length) {
+    @PackagePrivate SparseVectorImpl(int length) {
         super(length);
         this.indices = new int[0];
         this.values = new double[0];

@@ -12,7 +12,7 @@ import gaj.common.annotations.PackagePrivate;
 /**
  * Implements a data vector as a true array of numbers.
  */
-@PackagePrivate class WritableArrayVector extends DenseVectorImpl implements ArrayVector, WritableVector {
+@PackagePrivate class WritableArrayVector extends AbstractVector implements ArrayVector, WritableVector {
 
     private final double[] data;
 

@@ -4,6 +4,7 @@ import java.util.function.Function;
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.ArrayVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.DenseVector;
 import gaj.analysis.numeric.vector.SubtractableVector;
 import gaj.analysis.numeric.vector.WritableVector;
 import gaj.common.annotations.PackagePrivate;
@@ -11,7 +12,7 @@ import gaj.common.annotations.PackagePrivate;
 /**
  * Provides a view onto part of another vector.
  */
-@PackagePrivate class WritableSubArrayVector extends DenseVectorImpl implements WritableVector {
+@PackagePrivate class WritableSubArrayVector extends AbstractVector implements DenseVector, WritableVector {
 
     private final double[] values;
     protected final int start;
