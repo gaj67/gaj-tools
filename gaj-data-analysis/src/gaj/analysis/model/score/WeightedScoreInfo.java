@@ -1,4 +1,4 @@
-package gaj.analysis.model;
+package gaj.analysis.model.score;
 
 /**
  * Indicates a {@link ScoreInfo} that has a specified weight. Typically this

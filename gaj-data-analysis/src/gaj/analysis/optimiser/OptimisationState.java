@@ -1,6 +1,6 @@
 package gaj.analysis.optimiser;
 
-import gaj.analysis.model.ScoreInfo;
+import gaj.analysis.model.score.ScoreInfo;
 
 /**
  * Summarises the state of an optimisation process.

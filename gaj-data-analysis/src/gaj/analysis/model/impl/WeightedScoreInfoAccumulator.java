@@ -1,7 +1,7 @@
 package gaj.analysis.model.impl;
 
-import gaj.analysis.model.ScoreInfo;
-import gaj.analysis.model.WeightedScoreInfo;
+import gaj.analysis.model.score.ScoreInfo;
+import gaj.analysis.model.score.WeightedScoreInfo;
 import gaj.common.annotations.PackagePrivate;
 
 @PackagePrivate class WeightedScoreInfoAccumulator {

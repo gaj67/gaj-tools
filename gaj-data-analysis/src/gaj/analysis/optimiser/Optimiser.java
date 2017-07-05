@@ -1,7 +1,7 @@
 package gaj.analysis.optimiser;
 
 import gaj.analysis.model.OptimisableModel;
-import gaj.analysis.model.ModelScorer;
+import gaj.analysis.model.score.ModelScorer;
 
 /**
  * Specifies a reusable optimiser.

@@ -1,7 +1,7 @@
 package gaj.analysis.model.prob.impl;
 
+import org.eclipse.jdt.annotation.Nullable;
 import gaj.analysis.model.AuxiliaryInfo;
-import gaj.analysis.model.DataObject;
 import gaj.analysis.model.prob.DiscriminativeModel;
 import gaj.analysis.model.prob.DiscriminativeOutput;
 import gaj.analysis.model.prob.ProbModelType;
@@ -18,7 +18,7 @@ import gaj.analysis.numeric.vector.WritableVector;
  * </pre>
  *
  */
-public class LogisticClassifier implements DiscriminativeModel {
+public class DiscriminativeLogisticClassifier implements DiscriminativeModel {
 
     private final DataMatrix params;
     private final int numClasses;
@@ -33,7 +33,7 @@ public class LogisticClassifier implements DiscriminativeModel {
      * @param numFeatures
      *            - The number of features.
      */
-    public LogisticClassifier(int numClasses, int numFeatures) {
+    public DiscriminativeLogisticClassifier(int numClasses, int numFeatures) {
         this.numClasses = numClasses;
         this.numFeatures = numFeatures;
         this.params = MatrixFactory.newMatrix(numClasses, numFeatures);
@@ -46,7 +46,7 @@ public class LogisticClassifier implements DiscriminativeModel {
      *            - The CxF logistic weights matrix, theta =
      *            [theta_{c,f}]_{c=1}^{C}_{f=1}^{F}.
      */
-    public LogisticClassifier(DataMatrix params) {
+    public DiscriminativeLogisticClassifier(DataMatrix params) {
         this.params = params;
         this.numClasses = params.numRows();
         this.numFeatures = params.numColumns();
@@ -63,11 +63,7 @@ public class LogisticClassifier implements DiscriminativeModel {
     }
 
     @Override
-    public DiscriminativeOutput process(DataObject x, AuxiliaryInfo info) {
-        if (!(x instanceof DataVector)) {
-            throw new IllegalArgumentException("DataVector input required!");
-        }
-        DataVector features = (DataVector) x;
+    public DiscriminativeOutput process(DataVector features, @Nullable AuxiliaryInfo info) {
         if (features.size() != numFeatures) {
             throw new IllegalArgumentException("Expected " + numFeatures + " features!");
         }

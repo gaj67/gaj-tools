@@ -2,7 +2,7 @@ package gaj.analysis.model.prob;
 
 import org.eclipse.jdt.annotation.Nullable;
 import gaj.analysis.model.AuxiliaryInfo;
-import gaj.analysis.model.DataObject;
+import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * A model of the posterior probability p(y|x) of an observation x for known,
@@ -17,10 +17,10 @@ public interface DiscriminativeModel extends ProbDataModel {
     }
 
     /**
-     * Computes the posterior probabilities p(y|x) for each y.
+     * Computes the posterior probabilities p(y|x) for each discrete y.
      * 
-     * @param x
-     *            - The input data.
+     * @param features
+     *            - The input feature vector, x.
      * @param info
      *            - Optional object either specifying auxiliary information for
      *            the processor, or requesting auxiliary information be
@@ -28,6 +28,6 @@ public interface DiscriminativeModel extends ProbDataModel {
      * @return The output object.
      */
     @Override
-    DiscriminativeOutput process(DataObject x, @Nullable AuxiliaryInfo info);
+    DiscriminativeOutput process(DataVector features, @Nullable AuxiliaryInfo info);
 
 }

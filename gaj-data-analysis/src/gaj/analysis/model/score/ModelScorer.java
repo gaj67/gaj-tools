@@ -1,4 +1,6 @@
-package gaj.analysis.model;
+package gaj.analysis.model.score;
+
+import gaj.analysis.model.Model;
 
 /**
  * Provides a way of scoring a model.

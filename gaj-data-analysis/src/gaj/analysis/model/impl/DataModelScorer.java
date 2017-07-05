@@ -1,11 +1,11 @@
 package gaj.analysis.model.impl;
 
-import gaj.analysis.model.DataCaseScorer;
 import gaj.analysis.model.DataModel;
-import gaj.analysis.model.DataSource;
 import gaj.analysis.model.Model;
-import gaj.analysis.model.ModelScorer;
-import gaj.analysis.model.ScoreInfo;
+import gaj.analysis.model.score.DataCaseScorer;
+import gaj.analysis.model.score.DataSource;
+import gaj.analysis.model.score.ModelScorer;
+import gaj.analysis.model.score.ScoreInfo;
 
 /**
  * Provides the basis for implementing a scorer for a data model.

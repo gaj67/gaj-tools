@@ -1,9 +1,9 @@
 package gaj.analysis.optimiser.impl;
 
 import java.util.Arrays;
-import gaj.analysis.model.ModelScorer;
 import gaj.analysis.model.OptimisableModel;
-import gaj.analysis.model.ScoreInfo;
+import gaj.analysis.model.score.ModelScorer;
+import gaj.analysis.model.score.ScoreInfo;
 import gaj.analysis.optimiser.OptimisationParams;
 import gaj.analysis.optimiser.OptimisationResults;
 import gaj.analysis.optimiser.OptimisationStatus;
