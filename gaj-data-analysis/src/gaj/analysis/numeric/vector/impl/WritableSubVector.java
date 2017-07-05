@@ -1,17 +1,19 @@
 package gaj.analysis.numeric.vector.impl;
 
+import java.util.function.Function;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.WritableVector;
+import gaj.common.annotations.PackagePrivate;
 
 /**
  * Implements a vector as a reference to a contiguous subsequence of elements in
  * another vector.
  */
-public class WritableSubVector extends SubVector implements WritableVector {
+@PackagePrivate class WritableSubVector extends SubVector implements WritableVector {
 
     private final WritableVector vector;
 
-    public WritableSubVector(WritableVector vector, int start, int length) {
+    @PackagePrivate WritableSubVector(WritableVector vector, int start, int length) {
         super(vector, start, length);
         this.vector = vector;
     }
@@ -51,26 +53,28 @@ public class WritableSubVector extends SubVector implements WritableVector {
     }
 
     @Override
+    public void set(double value) {
+        vector.set(value);
+    }
+
+    @Override
     public void set(DataVector vector) {
-        int pos = start;
-        for (double value : vector) {
-            this.vector.set(pos++, value);
+        for (int i = 0, pos = start; pos < end; pos++, i++) {
+            this.vector.set(pos, vector.get(i));
         }
     }
 
     @Override
     public void add(DataVector vector) {
-        int pos = start;
-        for (double value : vector) {
-            this.vector.add(pos++, value);
+        for (int i = 0, pos = start; pos < end; pos++, i++) {
+            this.vector.add(pos, vector.get(i));
         }
     }
 
     @Override
     public void subtract(DataVector vector) {
-        int pos = start;
-        for (double value : vector) {
-            this.vector.subtract(pos++, value);
+        for (int i = 0, pos = start; pos < end; pos++, i++) {
+            this.vector.subtract(pos, vector.get(i));
         }
     }
 
@@ -90,6 +94,13 @@ public class WritableSubVector extends SubVector implements WritableVector {
     public void multiply(DataVector vector) {
         for (int i = 0, pos = start; i < length; i++, pos++) {
             this.vector.multiply(pos, vector.get(i));
+        }
+    }
+
+    @Override
+    public void apply(Function<Double, Double> func) {
+        for (int pos = start; pos < end; pos++) {
+            vector.set(pos, func.apply(vector.get(pos)));
         }
     }
 

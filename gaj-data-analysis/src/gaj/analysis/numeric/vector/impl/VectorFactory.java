@@ -8,6 +8,7 @@ import gaj.analysis.numeric.RepresentationType;
 import gaj.analysis.numeric.vector.ArrayVector;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.IndexVector;
+import gaj.analysis.numeric.vector.IterableVector;
 import gaj.analysis.numeric.vector.WritableVector;
 
 /**
@@ -211,6 +212,19 @@ public abstract class VectorFactory {
         return newVec;
     }
 
+    public static Iterator<Double> getIterator(DataVector vector) {
+        if (vector instanceof IterableVector) {
+            return ((IterableVector) vector).iterator();
+        }
+        final int length = vector.size();
+        return new VectorIterative<Double>(length) {
+            @Override
+            protected Double get(int pos) {
+                return vector.get(pos);
+            }
+        };
+    }
+
     /**
      * Computes the dot product of two vectors.
      *
@@ -236,8 +250,8 @@ public abstract class VectorFactory {
             return vec2.dot(vec1);
         } else {
             double sum = 0;
-            final Iterator<Double> iter1 = vec1.iterator();
-            final Iterator<Double> iter2 = vec2.iterator();
+            final Iterator<Double> iter1 = getIterator(vec1);
+            final Iterator<Double> iter2 = getIterator(vec2);
             while (iter1.hasNext() && iter2.hasNext()) {
                 sum += iter1.next() * iter2.next();
             }
@@ -295,8 +309,9 @@ public abstract class VectorFactory {
 
     public static void display(DataVector vector) {
         System.out.print("[");
-        for (double value : vector) {
-            System.out.printf(" %f", value);
+        final int length = vector.size();
+        for (int i = 0; i < length; i++) {
+            System.out.printf(" %f", vector.get(i));
         }
         System.out.print(" ]");
     }
@@ -346,14 +361,14 @@ public abstract class VectorFactory {
      * @return The copied array data.
      */
     public static double[] toArray(DataVector vec) {
-        int length = vec.size();
+        final int length = vec.size();
         if (vec instanceof ArrayVector) {
             return Arrays.copyOf(((ArrayVector) vec).getArray(), length);
         } else {
             double[] data = new double[length];
-            int pos = 0;
-            for (double value : vec) {
-                data[pos++] = value;
+            for (int i = 0; i < length; i++) {
+                double value = vec.get(i);
+                data[i] = value;
             }
             return data;
         }
@@ -435,12 +450,12 @@ public abstract class VectorFactory {
     public static int argMax(DataVector vec) {
         double maxValue = Double.NEGATIVE_INFINITY;
         int maxIndex = -1;
-        int index = -1;
-        for (double value : vec) {
-            index++;
+        final int length = vec.size();
+        for (int i = 0; i < length; i++) {
+            double value = vec.get(i);
             if (value > maxValue) {
                 maxValue = value;
-                maxIndex = index;
+                maxIndex = i;
             }
         }
         return maxIndex;
@@ -455,15 +470,15 @@ public abstract class VectorFactory {
     public static List<Integer> argMaxes(DataVector vec) {
         List<Integer> maxIndices = new ArrayList<>(1);
         double maxValue = Double.NEGATIVE_INFINITY;
-        int index = -1;
-        for (double value : vec) {
-            index++;
+        final int length = vec.size();
+        for (int i = 0; i < length; i++) {
+            double value = vec.get(i);
             if (value == maxValue) {
-                maxIndices.add(index);
+                maxIndices.add(i);
             } else if (value > maxValue) {
                 maxValue = value;
                 maxIndices.clear();
-                maxIndices.add(index);
+                maxIndices.add(i);
             }
         }
         return maxIndices;

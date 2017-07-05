@@ -192,7 +192,7 @@ public class MatrixFactory {
         if (matrix instanceof FlatArrayMatrix) {
             return VectorFactory.newVector(((FlatArrayMatrix) matrix).getArray());
         }
-        return new WritableVectorMatrix(matrix);
+        return new WritableMatrixVector(matrix);
     }
 
     /**

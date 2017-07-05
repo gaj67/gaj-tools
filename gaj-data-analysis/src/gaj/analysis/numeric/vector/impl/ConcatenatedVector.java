@@ -2,13 +2,15 @@ package gaj.analysis.numeric.vector.impl;
 
 import java.util.Iterator;
 import gaj.analysis.numeric.vector.AddableVector;
+import gaj.analysis.numeric.vector.CompoundVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.IterableVector;
 import gaj.common.annotations.PackagePrivate;
 
 /**
  * Implements the (deferred) concatenation of multiple data vectors together into a single, compound vector.
  */
-@PackagePrivate class ConcatenatedVector extends CompoundVector {
+@PackagePrivate class ConcatenatedVector extends AbstractVector implements CompoundVector {
 
     private final DataVector[] vectors;
 
@@ -48,15 +50,28 @@ import gaj.common.annotations.PackagePrivate;
                 if (i >= vectors.length)
                     return false;
                 if (iter == null)
-                    iter = vectors[0].iterator();
+                    iter = getIterator(vectors[0]);
                 while (!iter.hasNext() && ++i < vectors.length)
-                    iter = vectors[i].iterator();
+                    iter = getIterator(vectors[i]);
                 return (i < vectors.length);
             }
 
             @Override
             protected Double get(int pos) {
                 return iter.next();
+            }
+        };
+    }
+
+    private Iterator<Double> getIterator(DataVector vector) {
+        if (vector instanceof IterableVector) {
+            return ((IterableVector) vector).iterator();
+        }
+        final int length = vector.size();
+        return new VectorIterative<Double>(length) {
+            @Override
+            protected Double get(int pos) {
+                return vector.get(pos);
             }
         };
     }
@@ -99,8 +114,9 @@ import gaj.common.annotations.PackagePrivate;
                 ((AbstractVector) vector1).addTo(new AddableSubVector(vector, pos, vector1.size()));
                 pos += vector1.size();
             } else {
-                for (double value : vector1) {
-                    vector.add(pos++, value);
+                final int length = vector1.size();
+                for (int i = 0; i < length; i++) {
+                    vector.add(pos++, vector1.get(i));
                 }
             }
         }

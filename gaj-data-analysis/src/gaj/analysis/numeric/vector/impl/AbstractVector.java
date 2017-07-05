@@ -3,6 +3,7 @@ package gaj.analysis.numeric.vector.impl;
 import java.util.Iterator;
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.IterableVector;
 import gaj.analysis.numeric.vector.SubtractableVector;
 
 /**
@@ -10,7 +11,7 @@ import gaj.analysis.numeric.vector.SubtractableVector;
  * <p/>
  * The default method implementations assume that {@link #get}() is efficient - override them if necessary for more efficient computation.
  */
-public abstract class AbstractVector implements DataVector {
+public abstract class AbstractVector implements IterableVector {
 
     protected final int length;
     private double norm = -1;
@@ -66,9 +67,8 @@ public abstract class AbstractVector implements DataVector {
     @Override
     public double dot(DataVector vector) {
         double sum = 0;
-        int i = 0;
-        for (double value : vector) {
-            sum += value * get(i++);
+        for (int i = 0; i < length; i++) {
+            sum += this.get(i) * vector.get(i);
         }
         return sum;
     }

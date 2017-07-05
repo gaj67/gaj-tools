@@ -1,13 +1,15 @@
 package gaj.analysis.numeric.vector.impl;
 
 import gaj.analysis.numeric.vector.AddableVector;
+import gaj.analysis.numeric.vector.CompoundVector;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.common.annotations.PackagePrivate;
 
 /**
  * Provides a view onto part of another vector.
  */
-@PackagePrivate class SubVector extends CompoundVector {
+@PackagePrivate
+class SubVector extends AbstractVector implements CompoundVector {
 
     private final DataVector vector;
     protected final int start;
@@ -23,8 +25,8 @@ import gaj.common.annotations.PackagePrivate;
     @Override
     protected double _norm() {
         double sum = 0;
-        for (int i = start; i < end; i++) {
-            double value = vector.get(i);
+        for (int pos = start; pos < end; pos++) {
+            double value = vector.get(pos);
             sum += value * value;
         }
         return Math.sqrt(sum);
@@ -33,8 +35,8 @@ import gaj.common.annotations.PackagePrivate;
     @Override
     public double sum() {
         double sum = 0;
-        for (int i = start; i < end; i++)
-            sum += vector.get(i);
+        for (int pos = start; pos < end; pos++)
+            sum += vector.get(pos);
         return sum;
     }
 
@@ -46,17 +48,15 @@ import gaj.common.annotations.PackagePrivate;
     @Override
     public double dot(DataVector vector) {
         double sum = 0;
-        int pos = start;
-        for (double value : vector)
-            sum += value * this.vector.get(pos++);
+        for (int i = 0, pos = start; pos < end; pos++, i++)
+            sum += vector.get(i) * this.vector.get(pos);
         return sum;
     }
 
     @Override
     public void addTo(AddableVector vector) {
-        int i = 0;
-        for (int pos = start; pos < end; pos++)
-            vector.add(i++, this.vector.get(pos));
+        for (int i = 0, pos = start; pos < end; pos++, i++)
+            vector.add(i, this.vector.get(pos));
     }
 
 }

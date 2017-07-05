@@ -3,9 +3,9 @@ package gaj.analysis.bayes.pmf;
 import gaj.analysis.bayes.ProbDist;
 
 /**
- * Denotes a discrete probability distribution, p(x), over a finitely or
- * infinitely countable domain, X = {x_1, x_2, ..., x_N}, such that 0 <= p(x) <=
- * 1 and sum_{x in X} p(x) = 1.
+ * Denotes a probability distribution, p(x), over a countable domain, X = {x_1,
+ * x_2, ..., x_N}, with probability mass function f:X -> [0, 1], such that
+ * sum_{x in X} f(x) = 1.
  * 
  * @param <T>
  *            - The type of all values x in X.
@@ -13,7 +13,7 @@ import gaj.analysis.bayes.ProbDist;
 public interface PMF<T> extends ProbDist {
 
     /**
-     * Obtains the probability mass, 0 <= p(x) <= 1, of the specified value, x.
+     * Obtains the probability mass, f(x), of the specified value, x.
      * 
      * @param value
      *            - The value, x.

@@ -1,13 +1,12 @@
 package gaj.analysis.numeric.vector;
 
-import java.util.Iterator;
-import gaj.analysis.numeric.DimensionalDataObject;
+import gaj.analysis.numeric.DataNumeric;
 import gaj.analysis.numeric.StructureType;
 
 /**
  * Provides access to numerical data as a vector.
  */
-public interface DataVector extends DimensionalDataObject, Iterable<Double> {
+public interface DataVector extends DataNumeric {
 
     @Override
     default StructureType structureType() {
@@ -43,14 +42,6 @@ public interface DataVector extends DimensionalDataObject, Iterable<Double> {
      * @return The element value.
      */
     double get(int pos);
-
-    /**
-     * Allows iteration over all elements of the data vector.
-     * 
-     * @return An element iterator.
-     */
-    @Override
-    Iterator<Double> iterator();
 
     // ***************************************
     // Extrinsic properties of the vector.

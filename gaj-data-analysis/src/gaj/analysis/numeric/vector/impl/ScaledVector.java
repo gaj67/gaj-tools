@@ -1,13 +1,13 @@
 package gaj.analysis.numeric.vector.impl;
 
+import gaj.analysis.numeric.vector.CompoundVector;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.common.annotations.PackagePrivate;
 
 /**
  * Wraps a vector together with a deferred multiplier.
  */
-@PackagePrivate
-class ScaledVector extends CompoundVector {
+@PackagePrivate class ScaledVector extends AbstractVector implements CompoundVector {
 
     private final double multiplier;
     private final DataVector vector;
