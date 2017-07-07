@@ -1,4 +1,4 @@
-package gaj.analysis.model.impl;
+package gaj.analysis.model.score.impl;
 
 import java.util.HashSet;
 import java.util.Set;

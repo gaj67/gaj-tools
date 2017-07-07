@@ -1,5 +1,6 @@
-package gaj.analysis.model.impl;
+package gaj.analysis.model.score.impl;
 
+import gaj.analysis.model.AuxiliaryInfo;
 import gaj.analysis.model.DataModel;
 import gaj.analysis.model.Model;
 import gaj.analysis.model.score.DataCaseScorer;
@@ -8,9 +9,9 @@ import gaj.analysis.model.score.ModelScorer;
 import gaj.analysis.model.score.ScoreInfo;
 
 /**
- * Provides the basis for implementing a scorer for a data model.
+ * Provides the basis for implementing an additive scorer for a data model.
  */
-public abstract class DataModelScorer implements ModelScorer {
+public abstract class BaseDataModelScorer implements ModelScorer {
 
     private final DataSource source;
 
@@ -20,7 +21,7 @@ public abstract class DataModelScorer implements ModelScorer {
      * @param source
      *            - The data source.
      */
-    protected DataModelScorer(DataSource source) {
+    protected BaseDataModelScorer(DataSource source) {
         this.source = source;
     }
 
@@ -29,11 +30,11 @@ public abstract class DataModelScorer implements ModelScorer {
     }
 
     @Override
-    public ScoreInfo score(Model model, boolean includeAuxiliary) {
+    public ScoreInfo score(Model model, AuxiliaryInfo info) {
         if (!(model instanceof DataModel)) {
             throw new IllegalArgumentException("Not a data model: " + model);
         }
-        DataCaseScorer caseScorer = getDataCaseScorer((DataModel) model, includeAuxiliary);
+        DataCaseScorer caseScorer = getDataCaseScorer((DataModel) model, info);
         return source.stream().map(caseScorer::score).collect(new WeightedScoreInfoCollector());
     }
 
@@ -42,12 +43,12 @@ public abstract class DataModelScorer implements ModelScorer {
      * 
      * @param model
      *            - The data model to be scored.
-     * @param includeAuxiliary
-     *            - A flag indicating whether (true) or not (false) to include
-     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
-     *            score output.
+     * @param info
+     *            - An object indicating whether or not to include auxiliary
+     *            information (e.g. gradient, Hessian, etc.) in the score
+     *            output.
      * @return A data case scorer.
      */
-    protected abstract DataCaseScorer getDataCaseScorer(DataModel model, boolean includeAuxiliary);
+    protected abstract DataCaseScorer getDataCaseScorer(DataModel model, AuxiliaryInfo info);
 
 }

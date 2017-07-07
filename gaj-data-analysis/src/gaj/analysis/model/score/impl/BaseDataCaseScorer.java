@@ -1,7 +1,8 @@
-package gaj.analysis.model.impl;
+package gaj.analysis.model.score.impl;
 
+import gaj.analysis.model.AuxiliaryInfo;
 import gaj.analysis.model.DataModel;
-import gaj.analysis.model.DataOutput;
+import gaj.analysis.model.DataObject;
 import gaj.analysis.model.score.DataCase;
 import gaj.analysis.model.score.DataCaseScorer;
 import gaj.analysis.model.score.ScoreInfo;
@@ -15,26 +16,26 @@ public abstract class BaseDataCaseScorer implements DataCaseScorer
 {
 
     private final DataModel model;
-    private final boolean includeAuxiliary;
+    private final AuxiliaryInfo info;
 
     /**
      * Binds the data case scorer to the specified data model.
      * 
      * @param model
      *            - The data model used to process each case.
-     * @param includeAuxiliary
-     *            - A flag indicating whether (true) or not (false) to include
-     *            auxiliary information with the {@link ScoreInfo}.
+     * @param info
+     *            - An object indicating whether or not to include auxiliary
+     *            information with the {@link ScoreInfo}.
      */
-    protected BaseDataCaseScorer(DataModel model, boolean includeAuxiliary) {
+    protected BaseDataCaseScorer(DataModel model, AuxiliaryInfo info) {
         this.model = model;
-        this.includeAuxiliary = includeAuxiliary;
+        this.info = info;
     }
 
     @Override
     public WeightedScoreInfo score(DataCase dataCase) {
-        DataOutput output = model.process(dataCase.getData(), includeAuxiliary);
-        return score(dataCase, output, includeAuxiliary);
+        DataObject output = model.process(dataCase.getData(), info);
+        return score(dataCase, output, info);
     }
 
     /**
@@ -44,11 +45,12 @@ public abstract class BaseDataCaseScorer implements DataCaseScorer
      *            - The data case.
      * @param output
      *            - The model output for the data case.
-     * @param includeAuxiliary
-     *            - A flag indicating whether (true) or not (false) to include
-     *            auxiliary information with the score.
-     * @return
+     * @param info
+     *            - An object either specifying auxiliary information for the
+     *            model, or requesting auxiliary information be provided with
+     *            the score.
+     * @return The weighted score of the data case.
      */
-    protected abstract WeightedScoreInfo score(DataCase dataCase, DataOutput output, boolean includeAuxiliary);
+    protected abstract WeightedScoreInfo score(DataCase dataCase, DataObject output, AuxiliaryInfo info);
 
 }

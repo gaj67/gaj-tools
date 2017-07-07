@@ -1,7 +1,8 @@
 package gaj.analysis.model.prob.impl;
 
-import org.eclipse.jdt.annotation.Nullable;
 import gaj.analysis.model.AuxiliaryInfo;
+import gaj.analysis.model.DataObject;
+import gaj.analysis.model.GradientAuxiliaryInfo;
 import gaj.analysis.model.prob.DiscriminativeModel;
 import gaj.analysis.model.prob.DiscriminativeOutput;
 import gaj.analysis.model.prob.ProbModelType;
@@ -63,7 +64,11 @@ public class DiscriminativeLogisticClassifier implements DiscriminativeModel {
     }
 
     @Override
-    public DiscriminativeOutput process(DataVector features, @Nullable AuxiliaryInfo info) {
+    public DiscriminativeOutput process(DataObject input, AuxiliaryInfo info) {
+        if (!(input instanceof DataVector)) {
+            throw new IllegalArgumentException("Expected DataVector input: " + input);
+        }
+        DataVector features = (DataVector) input;
         if (features.size() != numFeatures) {
             throw new IllegalArgumentException("Expected " + numFeatures + " features!");
         }
@@ -76,7 +81,9 @@ public class DiscriminativeLogisticClassifier implements DiscriminativeModel {
         } else {
             weights.multiply( 1.0 / sum);
         }
-        // TODO Handle gradient information.
+        if (info instanceof GradientAuxiliaryInfo) {
+            // TODO Handle gradient information.
+        }
         return new SimplePosteriors(weights, features, getProbModelType());
     }
 
