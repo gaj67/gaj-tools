@@ -2,6 +2,7 @@ package gaj.analysis.model.prob.impl;
 
 import gaj.analysis.model.AuxiliaryInfo;
 import gaj.analysis.model.DataObject;
+import gaj.analysis.model.prob.DiscriminativeGradientOuput;
 import gaj.analysis.model.prob.DiscriminativeOutput;
 import gaj.analysis.model.prob.ProbDataModel;
 import gaj.analysis.model.prob.ProbModelType;
@@ -27,11 +28,13 @@ public class DiscriminativeLikelihoodCaseScorer extends BaseDataCaseScorer {
 
     @Override
     protected WeightedScoreInfo score(DataCase dataCase, DataObject output, AuxiliaryInfo info) {
-        if (dataCase.getWeight() == 0.0) {
+        final double weight = dataCase.getWeight();
+        if (weight == 0.0) {
             // Ignored case.
             return new SimpleScore(0, 0);
         }
-        if (dataCase.getIndex() < 0) {
+        final int index = dataCase.getIndex();
+        if (index < 0) {
             // Unlabelled case.
             return new SimpleScore(0, 0);
         }
@@ -39,8 +42,12 @@ public class DiscriminativeLikelihoodCaseScorer extends BaseDataCaseScorer {
             throw new IllegalArgumentException("Require a discriminative output: " + output);
         }
         DataVector probs = ((DiscriminativeOutput) output).getPosteriorProbabilities();
-        // TODO Compute the score gradient if requested.
-        return new SimpleScore(Math.log(probs.get(dataCase.getIndex())), dataCase.getWeight());
+        double logProb = Math.log(probs.get(index));
+        if (output instanceof DiscriminativeGradientOuput) {
+            DataVector gradient = ((DiscriminativeGradientOuput) output).getPosteriorGradients().getRow(index);
+            return new GradientScore(logProb, weight, gradient);
+        }
+        return new SimpleScore(logProb, weight);
     }
 
     // ========================================================================================
