@@ -1,6 +1,8 @@
 package gaj.analysis.model.prob;
 
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.WritableVector;
+import gaj.analysis.numeric.vector.impl.VectorFactory;
 
 /**
  * Encapsulates the output of a {@link GenerativeModel}.
@@ -11,7 +13,7 @@ import gaj.analysis.numeric.vector.DataVector;
 public interface GenerativeOutput extends JointOutput {
 
     /**
-     * Obtains the prior probability p(y) for each y.
+     * Obtains the prior probability p(y) for each indexable label y.
      * 
      * @return The prior probabilities.
      */
@@ -32,7 +34,11 @@ public interface GenerativeOutput extends JointOutput {
      * @return The joint probabilities.
      */
     @Override
-    DataVector getJointProbabilities();
+    default DataVector getJointProbabilities() {
+        WritableVector probs = VectorFactory.copy(getConditionalProbabilities());
+        probs.multiply(getPriorProbabilities());
+        return probs;
+    }
 
     /**
      * Obtains the marginal probability p(x) = sum_{y} p(x|y)*p(y) of the input
@@ -41,7 +47,9 @@ public interface GenerativeOutput extends JointOutput {
      * @return The marginal probability.
      */
     @Override
-    double getDataProbability();
+    default double getDataProbability() {
+        return getJointProbabilities().sum();
+    }
 
     /**
      * Obtains the posterior probabilities p(y|x) = p(x|y)*p(y)/p(x) of the
@@ -50,6 +58,16 @@ public interface GenerativeOutput extends JointOutput {
      * @return The posterior probabilities.
      */
     @Override
-    DataVector getPosteriorProbabilities();
+    default DataVector getPosteriorProbabilities() {
+        DataVector jointProbs = getJointProbabilities();
+        double norm = jointProbs.sum();
+        if (norm == 0.0) {
+            return getPriorProbabilities();
+        } else {
+            WritableVector probs = VectorFactory.copy(jointProbs);
+            probs.multiply(1.0 / norm);
+            return probs;
+        }
+    }
 
 }
