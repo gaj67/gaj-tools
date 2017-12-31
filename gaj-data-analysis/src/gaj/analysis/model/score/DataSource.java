@@ -1,4 +1,4 @@
-package gaj.analysis.model;
+package gaj.analysis.model.score;
 
 import java.util.stream.Stream;
 

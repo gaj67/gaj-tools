@@ -1,7 +1,7 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.model.ModelScorer;
 import gaj.analysis.model.OptimisableModel;
+import gaj.analysis.model.score.ModelScorer;
 import gaj.analysis.numeric.vector.SettableVector;
 import gaj.analysis.numeric.vector.impl.VectorFactory;
 import gaj.analysis.optimiser.DirectionSearchParams;

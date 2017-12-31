@@ -23,21 +23,20 @@ public class AddableSubVector extends SubVector implements AddableVector {
 
     @Override
     public void add(double value) {
-        for (int i = start; i < end; i++) {
-            vector.add(i, value);
+        for (int pos = start; pos < end; pos++) {
+            vector.add(pos, value);
         }
     }
 
     @Override
-    public void add(int pos, double value) {
-        vector.add(start + pos, value);
+    public void add(int i, double value) {
+        vector.add(start + i, value);
     }
 
     @Override
     public void add(DataVector vector) {
-        int pos = start;
-        for (double value : vector) {
-            this.vector.add(pos++, value);
+        for (int i = 0, pos = start; pos < end; pos++, i++) {
+            this.vector.add(pos, vector.get(i));
         }
     }
 

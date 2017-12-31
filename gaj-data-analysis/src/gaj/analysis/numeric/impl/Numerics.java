@@ -1,6 +1,6 @@
 package gaj.analysis.numeric.impl;
 
-import gaj.analysis.numeric.DimensionalDataObject;
+import gaj.analysis.numeric.DataNumeric;
 import gaj.analysis.numeric.matrix.DataMatrix;
 import gaj.analysis.numeric.matrix.impl.MatrixFactory;
 import gaj.analysis.numeric.vector.DataVector;
@@ -16,7 +16,7 @@ public abstract class Numerics {
      * @param data - The numerical data object.
      * @return The norm.
      */
-    public static double norm(DimensionalDataObject data) {
+    public static double norm(DataNumeric data) {
         if (data instanceof DataVector)
             return ((DataVector) data).norm();
         if (data instanceof DataMatrix)
@@ -34,7 +34,7 @@ public abstract class Numerics {
      *            - The scaling factor.
      * @return The scaled data object.
      */
-    public static DimensionalDataObject scale(DimensionalDataObject data, double multiplier) {
+    public static DataNumeric scale(DataNumeric data, double multiplier) {
         if (data instanceof DataVector)
             return VectorFactory.scale((DataVector) data, multiplier);
         if (data instanceof DataMatrix)
@@ -42,7 +42,7 @@ public abstract class Numerics {
         throw new IllegalArgumentException("Unhandled data object: " + data);
     }
 
-    public static DimensionalDataObject add(DimensionalDataObject obj1, DimensionalDataObject obj2) {
+    public static DataNumeric add(DataNumeric obj1, DataNumeric obj2) {
         if (obj1 instanceof DataVector && obj2 instanceof DataVector)
             return VectorFactory.add((DataVector) obj1, (DataVector) obj2);
         if (obj1 instanceof DataMatrix && obj2 instanceof DataMatrix)
@@ -57,7 +57,7 @@ public abstract class Numerics {
      * @param obj2
      * @return The scalar product.
      */
-    public static double dot(DimensionalDataObject obj1, DimensionalDataObject obj2) {
+    public static double dot(DataNumeric obj1, DataNumeric obj2) {
         if (obj1 instanceof DataVector && obj2 instanceof DataVector)
             return VectorFactory.dot((DataVector) obj1, (DataVector) obj2);
         if (obj1 instanceof DataMatrix && obj2 instanceof DataMatrix)
@@ -65,7 +65,7 @@ public abstract class Numerics {
         throw new IllegalArgumentException("Unhandled data objects: " + obj1 + ", " + obj2);
     }
 
-    public static void display(String prefix, DimensionalDataObject obj, String suffix) {
+    public static void display(String prefix, DataNumeric obj, String suffix) {
         if (obj instanceof DataVector)
             VectorFactory.display(prefix, (DataVector) obj, suffix);
         else if (obj instanceof DataMatrix)

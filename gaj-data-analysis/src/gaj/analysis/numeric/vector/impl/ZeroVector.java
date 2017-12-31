@@ -2,11 +2,13 @@ package gaj.analysis.numeric.vector.impl;
 
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.SparseVector;
 import gaj.analysis.numeric.vector.SubtractableVector;
+import gaj.common.annotations.PackagePrivate;
 
-/*package-private*/class ZeroVector extends SparseVector {
+@PackagePrivate class ZeroVector extends AbstractVector implements SparseVector {
 
-    /* package-private */ZeroVector(int length) {
+    @PackagePrivate ZeroVector(int length) {
         super(length);
     }
 

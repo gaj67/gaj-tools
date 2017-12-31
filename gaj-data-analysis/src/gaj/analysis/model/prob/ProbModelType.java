@@ -11,7 +11,7 @@ public enum ProbModelType {
     /**
      * Models p(x).
      */
-    LIKELIHOOD,
+    MARGINAL,
 
     /**
      * Models p(y|x), where y is discrete and finitely countable.

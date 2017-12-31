@@ -1,5 +1,6 @@
 package gaj.analysis.numeric.matrix.impl;
 
+import java.util.function.Function;
 import gaj.analysis.numeric.matrix.WritableMatrix;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.numeric.vector.WritableVector;
@@ -7,11 +8,11 @@ import gaj.analysis.numeric.vector.WritableVector;
 /**
  * Presents a non-flat writable matrix as a flat writable vector.
  */
-public class WritableVectorMatrix extends RowMatrixVector implements WritableVector {
+public class WritableMatrixVector extends RowMatrixVector implements WritableVector {
 
     protected final int numRows;
 
-    protected WritableVectorMatrix(WritableMatrix matrix) {
+    protected WritableMatrixVector(WritableMatrix matrix) {
         super(matrix);
         this.numRows = matrix.numRows();
     }
@@ -106,6 +107,26 @@ public class WritableVectorMatrix extends RowMatrixVector implements WritableVec
             for (int column = 0; column < numColumns; column++) {
                 rowVec.multiply(column, vector.get(pos++));
             }
+        }
+    }
+
+    @Override
+    public void set(double value) {
+        // ((WritableMatrix) matrix).set(value);
+        final WritableMatrix _matrix = (WritableMatrix) matrix;
+        for (int row = 0; row < numRows; row++) {
+            WritableVector rowVec = _matrix.getRow(row);
+            rowVec.set(value);
+        }
+    }
+
+    @Override
+    public void apply(Function<Double, Double> func) {
+        // ((WritableMatrix) matrix).apply(func);
+        final WritableMatrix _matrix = (WritableMatrix) matrix;
+        for (int row = 0; row < numRows; row++) {
+            WritableVector rowVec = _matrix.getRow(row);
+            rowVec.apply(func);
         }
     }
 

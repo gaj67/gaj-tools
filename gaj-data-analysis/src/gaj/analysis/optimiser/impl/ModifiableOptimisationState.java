@@ -1,6 +1,6 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.model.ScoreInfo;
+import gaj.analysis.model.score.ScoreInfo;
 import gaj.analysis.optimiser.OptimisationState;
 import gaj.analysis.optimiser.OptimisationStatus;
 

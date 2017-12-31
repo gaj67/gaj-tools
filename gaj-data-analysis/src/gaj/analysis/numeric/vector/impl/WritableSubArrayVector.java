@@ -4,6 +4,7 @@ import java.util.function.Function;
 import gaj.analysis.numeric.vector.AddableVector;
 import gaj.analysis.numeric.vector.ArrayVector;
 import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.DenseVector;
 import gaj.analysis.numeric.vector.SubtractableVector;
 import gaj.analysis.numeric.vector.WritableVector;
 import gaj.common.annotations.PackagePrivate;
@@ -11,7 +12,7 @@ import gaj.common.annotations.PackagePrivate;
 /**
  * Provides a view onto part of another vector.
  */
-@PackagePrivate class WritableSubArrayVector extends DenseVector implements WritableVector {
+@PackagePrivate class WritableSubArrayVector extends AbstractVector implements DenseVector, WritableVector {
 
     private final double[] values;
     protected final int start;
@@ -32,8 +33,8 @@ import gaj.common.annotations.PackagePrivate;
     @Override
     protected double _norm() {
         double sum = 0;
-        for (int i = start; i < end; i++) {
-            double value = values[i];
+        for (int pos = start; pos < end; pos++) {
+            double value = values[pos];
             sum += value * value;
         }
         return Math.sqrt(sum);
@@ -42,8 +43,8 @@ import gaj.common.annotations.PackagePrivate;
     @Override
     public double sum() {
         double sum = 0;
-        for (int i = start; i < end; i++) {
-            sum += values[i];
+        for (int pos = start; pos < end; pos++) {
+            sum += values[pos];
         }
         return sum;
     }
@@ -56,18 +57,16 @@ import gaj.common.annotations.PackagePrivate;
     @Override
     public double dot(DataVector vector) {
         double sum = 0;
-        int pos = start;
-        for (double value : vector) {
-            sum += value * values[pos++];
+        for (int i = 0, pos = start; pos < end; pos++, i++) {
+            sum += vector.get(i) * values[pos];
         }
         return sum;
     }
 
     @Override
     public void addTo(AddableVector vector) {
-        int i = 0;
-        for (int pos = start; pos < end; pos++) {
-            vector.add(i++, values[pos]);
+        for (int i = 0, pos = start; pos < end; pos++, i++) {
+            vector.add(i, values[pos]);
         }
     }
 
@@ -76,6 +75,13 @@ import gaj.common.annotations.PackagePrivate;
         int i = 0;
         for (int pos = start; pos < end; pos++) {
             vector.subtract(i++, values[pos]);
+        }
+    }
+
+    @Override
+    public void set(double value) {
+        for (int pos = start; pos < end; pos++) {
+            values[pos] = value;
         }
     }
 
@@ -90,9 +96,8 @@ import gaj.common.annotations.PackagePrivate;
             double[] data = ((ArrayVector) vector).getArray();
             System.arraycopy(data, 0, values, start, length);
         } else {
-            int i = start;
-            for (double value : vector) {
-                values[i++] = value;
+            for (int i = 0, pos = start; pos < end; pos++, i++) {
+                values[pos] = vector.get(i);
             }
         }
     }
@@ -129,9 +134,8 @@ import gaj.common.annotations.PackagePrivate;
                 values[pos] += data[i];
             }
         } else {
-            int i = start;
-            for (double value : vector) {
-                values[i++] += value;
+            for (int i = 0, pos = start; pos < end; pos++, i++) {
+                values[pos] += vector.get(i);
             }
         }
     }
@@ -144,9 +148,8 @@ import gaj.common.annotations.PackagePrivate;
                 values[pos] -= data[i];
             }
         } else {
-            int i = start;
-            for (double value : vector) {
-                values[i++] -= value;
+            for (int i = 0, pos = start; pos < end; pos++, i++) {
+                values[pos] -= vector.get(i);
             }
         }
     }
@@ -158,8 +161,8 @@ import gaj.common.annotations.PackagePrivate;
 
     @Override
     public void multiply(double value) {
-        for (int i = start; i < end; i++) {
-            values[i] *= value;
+        for (int pos = start; pos < end; pos++) {
+            values[pos] *= value;
         }
     }
 
@@ -171,9 +174,8 @@ import gaj.common.annotations.PackagePrivate;
                 values[pos] *= data[i];
             }
         } else {
-            int i = start;
-            for (double value : vector) {
-                values[i++] *= value;
+            for (int i = 0, pos = start; pos < end; pos++, i++) {
+                values[pos] *= vector.get(i);
             }
         }
     }

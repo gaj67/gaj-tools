@@ -1,4 +1,6 @@
-package gaj.analysis.model;
+package gaj.analysis.model.score;
+
+import gaj.analysis.model.DataObject;
 
 /**
  * Specifies a single case or point of data in a data set.

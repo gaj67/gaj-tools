@@ -133,14 +133,14 @@ public class MatrixFactory {
      * @param matrix - The N x M matrix, A.
      * @return A length-M vector, y = x*A.
      */
-    public static DataVector multiply(DataVector vector, DataMatrix matrix) {
+    public static WritableVector multiply(DataVector vector, DataMatrix matrix) {
         if (matrix instanceof RowArrayMatrix) {
             return multiply(vector, (RowArrayMatrix) matrix);
         }
         throw new NotImplementedException();
     }
 
-    private static DataVector multiply(DataVector vector, RowArrayMatrix matrix) {
+    private static WritableVector multiply(DataVector vector, RowArrayMatrix matrix) {
         // TODO Better handle a sparse vector.
         WritableVector result = VectorFactory.newVector(matrix.numColumns());
         final int numRows = matrix.numRows();
@@ -192,7 +192,7 @@ public class MatrixFactory {
         if (matrix instanceof FlatArrayMatrix) {
             return VectorFactory.newVector(((FlatArrayMatrix) matrix).getArray());
         }
-        return new WritableVectorMatrix(matrix);
+        return new WritableMatrixVector(matrix);
     }
 
     /**
@@ -284,6 +284,24 @@ public class MatrixFactory {
             } else {
                 newMat.multiplyRow(row, 1.0 / divisor);
             }
+        }
+        return newMat;
+    }
+
+    /**
+     * Subtracts the given vector from each row of the matrix.
+     *
+     * @param matrix
+     *            - The N x M matrix.
+     * @param rowVec
+     *            - The length-M row vector.
+     * @return The computed N x M matrix.
+     */
+    public static WritableMatrix subtractFromRows(DataMatrix matrix, DataVector rowVec) {
+        WritableMatrix newMat = MatrixFactory.newMatrix(matrix);
+        final int numRows = matrix.numRows();
+        for (int row = 0; row < numRows; row++) {
+            newMat.getRow(row).subtract(rowVec);
         }
         return newMat;
     }

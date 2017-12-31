@@ -1,13 +1,13 @@
 package gaj.analysis.numeric.scalar;
 
-import gaj.analysis.numeric.DimensionalDataObject;
+import gaj.analysis.numeric.DataNumeric;
 import gaj.analysis.numeric.RepresentationType;
 import gaj.analysis.numeric.StructureType;
 
 /**
  * Provides access to numerical data as a scalar.
  */
-public interface DataScalar extends DimensionalDataObject {
+public interface DataScalar extends DataNumeric {
 
     @Override
     default StructureType structureType() {

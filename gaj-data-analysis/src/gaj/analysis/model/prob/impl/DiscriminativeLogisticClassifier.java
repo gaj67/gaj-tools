@@ -2,6 +2,7 @@ package gaj.analysis.model.prob.impl;
 
 import gaj.analysis.model.AuxiliaryInfo;
 import gaj.analysis.model.DataObject;
+import gaj.analysis.model.GradientAuxiliaryInfo;
 import gaj.analysis.model.prob.DiscriminativeModel;
 import gaj.analysis.model.prob.DiscriminativeOutput;
 import gaj.analysis.model.prob.ProbModelType;
@@ -18,7 +19,7 @@ import gaj.analysis.numeric.vector.WritableVector;
  * </pre>
  *
  */
-public class LogisticClassifier implements DiscriminativeModel {
+public class DiscriminativeLogisticClassifier implements DiscriminativeModel {
 
     private final DataMatrix params;
     private final int numClasses;
@@ -33,7 +34,7 @@ public class LogisticClassifier implements DiscriminativeModel {
      * @param numFeatures
      *            - The number of features.
      */
-    public LogisticClassifier(int numClasses, int numFeatures) {
+    public DiscriminativeLogisticClassifier(int numClasses, int numFeatures) {
         this.numClasses = numClasses;
         this.numFeatures = numFeatures;
         this.params = MatrixFactory.newMatrix(numClasses, numFeatures);
@@ -46,7 +47,7 @@ public class LogisticClassifier implements DiscriminativeModel {
      *            - The CxF logistic weights matrix, theta =
      *            [theta_{c,f}]_{c=1}^{C}_{f=1}^{F}.
      */
-    public LogisticClassifier(DataMatrix params) {
+    public DiscriminativeLogisticClassifier(DataMatrix params) {
         this.params = params;
         this.numClasses = params.numRows();
         this.numFeatures = params.numColumns();
@@ -63,11 +64,11 @@ public class LogisticClassifier implements DiscriminativeModel {
     }
 
     @Override
-    public DiscriminativeOutput process(DataObject x, AuxiliaryInfo info) {
-        if (!(x instanceof DataVector)) {
-            throw new IllegalArgumentException("DataVector input required!");
+    public DiscriminativeOutput process(DataObject input, AuxiliaryInfo info) {
+        if (!(input instanceof DataVector)) {
+            throw new IllegalArgumentException("Expected DataVector input: " + input);
         }
-        DataVector features = (DataVector) x;
+        DataVector features = (DataVector) input;
         if (features.size() != numFeatures) {
             throw new IllegalArgumentException("Expected " + numFeatures + " features!");
         }
@@ -80,7 +81,9 @@ public class LogisticClassifier implements DiscriminativeModel {
         } else {
             weights.multiply( 1.0 / sum);
         }
-        // TODO Handle gradient information.
+        if (info instanceof GradientAuxiliaryInfo) {
+            // TODO Handle gradient information.
+        }
         return new SimplePosteriors(weights, features, getProbModelType());
     }
 

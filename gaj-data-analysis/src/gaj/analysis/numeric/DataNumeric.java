@@ -6,7 +6,7 @@ import gaj.analysis.model.DataObject;
  * Indicates dimensionalised numerical data, e.g. a vector or matrix or tensor, etc., or a
  * collection of such data objects.
  */
-public interface DimensionalDataObject extends DataObject {
+public interface DataNumeric extends DataObject {
 
     /**
      * Indicates the type of data structure.

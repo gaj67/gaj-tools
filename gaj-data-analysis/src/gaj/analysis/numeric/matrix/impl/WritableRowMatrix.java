@@ -11,7 +11,7 @@ import gaj.analysis.numeric.vector.impl.VectorFactory;
 import gaj.common.annotations.PackagePrivate;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-@PackagePrivate class WritableRowMatrix extends DenseMatrix<WritableVector> implements WritableMatrix, RowArrayMatrix {
+@PackagePrivate class WritableRowMatrix extends DenseMatrixImpl<WritableVector> implements WritableMatrix, RowArrayMatrix {
 
     private final double[][] data;
 
@@ -92,9 +92,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
                 theRow[column] += values[column];
             }
         } else {
-            int column = 0;
-            for (double value : vector) {
-                theRow[column++] += value;
+            for (int column = 0; column < numColumns; column++) {
+                theRow[column] += vector.get(column);
             }
         }
     }
@@ -108,9 +107,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
                 theRow[column] -= values[column];
             }
         } else {
-            int column = 0;
-            for (double value : vector) {
-                theRow[column++] -= value;
+            for (int column = 0; column < numColumns; column++) {
+                theRow[column] -= vector.get(column);
             }
         }
     }
@@ -123,9 +121,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
                 data[row][column] += values[row];
             }
         } else {
-            int row = 0;
-            for (double value : vector) {
-                data[row++][column] += value;
+            for (int row = 0; row < numRows; row++) {
+                data[row][column] += vector.get(row);
             }
         }
     }
@@ -138,9 +135,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
                 data[row][column] -= values[row];
             }
         } else {
-            int row = 0;
-            for (double value : vector) {
-                data[row++][column] -= value;
+            for (int row = 0; row < numRows; row++) {
+                data[row][column] -= vector.get(row);
             }
         }
     }
@@ -180,9 +176,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
             double[] values = ((ArrayVector) vector).getArray();
             System.arraycopy(values, 0, theRow, 0, numColumns);
         } else {
-            int column = 0;
-            for (double value : vector) {
-                theRow[column++] = value;
+            for (int column = 0; column < numColumns; column++) {
+                theRow[column] = vector.get(column);
             }
         }
     }
@@ -195,9 +190,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
                 data[row][column] = values[row];
             }
         } else {
-            int row = 0;
-            for (double value : vector) {
-                data[row++][column] = value;
+            for (int row = 0; row < numRows; row++) {
+                data[row][column] = vector.get(row);
             }
         }
     }
@@ -211,9 +205,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
                 theRow[column] *= values[column];
             }
         } else {
-            int column = 0;
-            for (double value : vector) {
-                theRow[column++] *= value;
+            for (int column = 0; column < numColumns; column++) {
+                theRow[column] *= vector.get(column);
             }
         }
     }
@@ -234,9 +227,8 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
                 data[row][column] *= values[row];
             }
         } else {
-            int row = 0;
-            for (double value : vector) {
-                data[row++][column] *= value;
+            for (int row = 0; row < numRows; row++) {
+                data[row][column] *= vector.get(row);
             }
         }
     }

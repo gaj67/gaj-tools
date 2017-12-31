@@ -1,4 +1,4 @@
-package gaj.analysis.model;
+package gaj.analysis.model.score;
 
 /**
  * Gives a numerical score.

@@ -1,4 +1,7 @@
-package gaj.analysis.model;
+package gaj.analysis.model.score;
+
+import gaj.analysis.model.AuxiliaryInfo;
+import gaj.analysis.model.Model;
 
 /**
  * Provides a way of scoring a model.
@@ -11,13 +14,13 @@ public interface ModelScorer {
      * 
      * @param model
      *            - The model to be scored.
-     * @param includeAuxiliary
-     *            - A flag indicating whether (true) or not (false) to include
-     *            auxiliary information (e.g. gradient, Hessian, etc.) in the
-     *            output.
+     * @param info
+     *            - An object either specifying auxiliary information for the
+     *            model, or requesting auxiliary information be provided with
+     *            the score.
      * @return The score of the model, optionally with any associated
      *         information.
      */
-    ScoreInfo score(Model model, boolean includeAuxiliary);
+    ScoreInfo score(Model model, AuxiliaryInfo info);
 
 }

@@ -1,4 +1,4 @@
-package gaj.analysis.model;
+package gaj.analysis.model.score;
 
 /**
  * Provides a scorer bound to a model that can score individual cases.

@@ -1,7 +1,7 @@
-package gaj.analysis.model.impl;
+package gaj.analysis.model.score.impl;
 
-import gaj.analysis.model.ScoreInfo;
-import gaj.analysis.model.WeightedScoreInfo;
+import gaj.analysis.model.score.ScoreInfo;
+import gaj.analysis.model.score.WeightedScoreInfo;
 import gaj.common.annotations.PackagePrivate;
 
 @PackagePrivate class WeightedScoreInfoAccumulator {
@@ -12,7 +12,7 @@ import gaj.common.annotations.PackagePrivate;
     @PackagePrivate void accumulate(WeightedScoreInfo scoreInfo) {
         sumWeight += scoreInfo.getWeight();
         sumScore += scoreInfo.getWeight() * scoreInfo.getScore();
-        // TODO add in score info gradient
+        // TODO add in score info gradient if weight != 0
     }
 
     @PackagePrivate WeightedScoreInfoAccumulator combine(WeightedScoreInfoAccumulator accumulator) {

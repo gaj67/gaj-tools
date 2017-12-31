@@ -2,7 +2,7 @@ package gaj.analysis.optimiser.impl;
 
 import gaj.analysis.curves.Quadratics;
 import gaj.analysis.model.VectorGradientComputable;
-import gaj.analysis.model.ScoreInfo;
+import gaj.analysis.model.score.ScoreInfo;
 import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.optimiser.LineSearchParams;
 import gaj.analysis.optimiser.LineSearcherType;

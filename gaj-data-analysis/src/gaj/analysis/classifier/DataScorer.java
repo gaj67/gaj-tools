@@ -2,7 +2,7 @@ package gaj.analysis.classifier;
 
 import gaj.analysis.classifier.updated.Classifier;
 import gaj.analysis.classifier.updated.OptimisableClassifier;
-import gaj.analysis.model.ModelScorer;
+import gaj.analysis.model.score.ModelScorer;
 
 /**
  * Provides the means for scoring the accuracy of a classifier

@@ -1,7 +1,7 @@
 package gaj.analysis.numeric;
 
 /**
- * Indicates the underlying type of representation used to store the data elements.
+ * Indicates the underlying type of representation used to store the numerical data elements.
  */
 public enum RepresentationType {
 

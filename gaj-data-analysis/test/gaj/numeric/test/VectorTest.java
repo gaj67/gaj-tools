@@ -41,15 +41,14 @@ public class VectorTest {
             assertEquals(13, vec2.size());
             for (int i = 0; i < 13; i++)
                 assertTrue(isEqual(vec1.get(i), vec2.get(i)));
-            Iterator<Double> iter1 = vec1.iterator();
-            Iterator<Double> iter2 = vec2.iterator();
+            Iterator<Double> iter1 = VectorFactory.getIterator(vec1);
+            Iterator<Double> iter2 = VectorFactory.getIterator(vec2);
             for (int i = 0; i < 13; i++)
                 assertTrue(isEqual(iter1.next(), iter2.next()));
-            int i = 0;
             System.out.printf("vec1 = [ ");
-            for (double value : vec1) {
-                System.out.printf("%f ", value);
-                i++;
+            int i = 0;
+            for (; i < vec1.size(); i++) {
+                System.out.printf("%f ", vec1.get(i));
             }
             System.out.println("]");
             assertEquals(13, i);
@@ -67,16 +66,10 @@ public class VectorTest {
             VectorFactory.display("Reconstructed:", vecTimes2Divide2, "\n");
             for (int i = 0; i < vec.size(); i++)
                 assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
-            {
-                int i = 0;
-                for (double value : vec)
-                    assertTrue(isEqual(value, vecTimes2Divide2.get(i++)));
-            }
-            {
-                int i = 0;
-                for (double value : vecTimes2Divide2)
-                    assertTrue(isEqual(value, vec.get(i++)));
-            }
+            for (int i = 0; i < vec.size(); i++)
+                assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
+            for (int i = 0; i < vecTimes2Divide2.size(); i++)
+                assertTrue(isEqual(vecTimes2Divide2.get(i), vec.get(i)));
             System.out.printf("Norms - original: %f,  reconstructed: %f%n", vec.norm(), vecTimes2Divide2.norm());
             assertTrue(isEqual(vec.norm(), vecTimes2Divide2.norm()));
             DataVector vec2 = VectorFactory.newVector(1, 2, 3, 4);
@@ -97,16 +90,10 @@ public class VectorTest {
             VectorFactory.display("Reconstructed:", vecTimes2Divide2, "\n");
             for (int i = 0; i < vec.size(); i++)
                 assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
-            {
-                int i = 0;
-                for (double value : vec)
-                    assertTrue(isEqual(value, vecTimes2Divide2.get(i++)));
-            }
-            {
-                int i = 0;
-                for (double value : vecTimes2Divide2)
-                    assertTrue(isEqual(value, vec.get(i++)));
-            }
+            for (int i = 0; i < vec.size(); i++)
+                assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
+            for (int i = 0; i < vecTimes2Divide2.size(); i++)
+                assertTrue(isEqual(vecTimes2Divide2.get(i), vec.get(i)));
             System.out.printf("Norms - original: %f,  reconstructed: %f%n", vec.norm(), vecTimes2Divide2.norm());
             assertTrue(isEqual(vec.norm(), vecTimes2Divide2.norm()));
             DataVector vec2 = VectorFactory.newVector(1, 2, 3, 4);
@@ -129,16 +116,10 @@ public class VectorTest {
             VectorFactory.display("Reconstructed:", vecTimes2Divide2, "\n");
             for (int i = 0; i < vec.size(); i++)
                 assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
-            {
-                int i = 0;
-                for (double value : vec)
-                    assertTrue(isEqual(value, vecTimes2Divide2.get(i++)));
-            }
-            {
-                int i = 0;
-                for (double value : vecTimes2Divide2)
-                    assertTrue(isEqual(value, vec.get(i++)));
-            }
+            for (int i = 0; i < vec.size(); i++)
+                assertTrue(isEqual(vec.get(i), vecTimes2Divide2.get(i)));
+            for (int i = 0; i < vecTimes2Divide2.size(); i++)
+                assertTrue(isEqual(vecTimes2Divide2.get(i), vec.get(i)));
             System.out.printf("Norms - original: %f,  reconstructed: %f%n", vec.norm(), vecTimes2Divide2.norm());
             assertTrue(isEqual(vec.norm(), vecTimes2Divide2.norm()));
             DataVector vec3 = VectorFactory.newVector(1, 2, 3, 4, 5, 6, 7, 8);

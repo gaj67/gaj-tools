@@ -1,6 +1,6 @@
 package gaj.analysis.classifier;
 
-import gaj.analysis.model.ScoreInfo;
+import gaj.analysis.model.score.ScoreInfo;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**

@@ -1,7 +1,7 @@
 package gaj.analysis.numeric;
 
 /**
- * Indicates the type of structure used to contain data elements.
+ * Indicates the type of structure used to contain numerical data elements.
  */
 public enum StructureType {
 

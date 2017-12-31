@@ -1,6 +1,5 @@
 package gaj.analysis.numeric.matrix.impl;
 
-import gaj.analysis.numeric.StructureType;
 import gaj.analysis.numeric.matrix.AddableMatrix;
 import gaj.analysis.numeric.matrix.DataMatrix;
 import gaj.analysis.numeric.matrix.SubtractableMatrix;
@@ -33,16 +32,6 @@ public abstract class AbstractMatrix<T extends DataVector> implements DataMatrix
     @Override
     final public int size() {
         return numRows * numColumns;
-    }
-
-    @Override
-    final public int numDimensions() {
-        return 2;
-    }
-
-    @Override
-    final public StructureType structureType() {
-        return StructureType.MATRIX;
     }
 
     @Override

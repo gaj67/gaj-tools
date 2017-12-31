@@ -1,6 +1,5 @@
 package gaj.analysis.model.prob;
 
-import org.eclipse.jdt.annotation.Nullable;
 import gaj.analysis.model.AuxiliaryInfo;
 import gaj.analysis.model.DataObject;
 
@@ -17,17 +16,16 @@ public interface JointModel extends ProbDataModel {
     }
 
     /**
-     * Computes the joint probabilities p(y,x) for each y.
+     * Computes the joint probabilities p(y,x) for each discrete y.
      * 
-     * @param x
-     *            - The input data.
+     * @param input
+     *            - The input data, x.
      * @param info
-     *            - Optional object either specifying auxiliary information for
-     *            the processor, or requesting auxiliary information be
-     *            provided.
+     *            - An object either specifying auxiliary information for the
+     *            processor, or requesting auxiliary information be provided.
      * @return The output object.
      */
     @Override
-    JointOutput process(DataObject x, @Nullable AuxiliaryInfo info);
+    JointOutput process(DataObject input, AuxiliaryInfo info);
 
 }

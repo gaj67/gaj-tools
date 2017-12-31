@@ -1,12 +1,23 @@
 package gaj.analysis.numeric.matrix;
 
-import gaj.analysis.numeric.DimensionalDataObject;
+import gaj.analysis.numeric.DataNumeric;
+import gaj.analysis.numeric.StructureType;
 import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Provides access to numerical data as an array.
  */
-public interface DataMatrix extends DimensionalDataObject {
+public interface DataMatrix extends DataNumeric {
+
+    @Override
+    default StructureType structureType() {
+        return StructureType.MATRIX;
+    }
+
+    @Override
+    default int numDimensions() {
+        return 2;
+    }
 
     /**
      * @return The number of rows in the matrix.

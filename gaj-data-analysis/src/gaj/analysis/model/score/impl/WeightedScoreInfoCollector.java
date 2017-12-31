@@ -1,4 +1,4 @@
-package gaj.analysis.model.impl;
+package gaj.analysis.model.score.impl;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,8 +7,8 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-import gaj.analysis.model.ScoreInfo;
-import gaj.analysis.model.WeightedScoreInfo;
+import gaj.analysis.model.score.ScoreInfo;
+import gaj.analysis.model.score.WeightedScoreInfo;
 import gaj.common.annotations.PackagePrivate;
 
 @PackagePrivate class WeightedScoreInfoCollector implements Collector<WeightedScoreInfo, WeightedScoreInfoAccumulator, ScoreInfo>
