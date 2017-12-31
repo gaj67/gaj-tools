@@ -930,9 +930,12 @@ p(\iota_0)
 p(\tau_{n+1}\,|\,\vec{\tau}^-_{n-m+1,n},\vs_{n-m+1,n})\,,
 \label{eq:mth-ellth-order}
 \end{eqnarray}
-for $n\ge m$ and $n\ge\ell-1$.
+for $n\ge m$ and $n\ge\ell-1$. Note that adherence to the assumption of causality, and in particular the idea that
+values are driven by states, suggests that $\ell\le m+1$,
+since otherwise $X_t$ would depend upon more past states than does $S_t$. Hence, we take the model to hold for
+$n\ge m\ge\ell-1$.
 
-It is more usual to further restrict the stateful process depicted in Figure~\ref{fig:stateful-sub}
+Finally, note that it is common to further restrict the stateful process depicted in Figure~\ref{fig:stateful-sub}
 by also imposing the first-order Markov assumption at the level
 of the state--value dependencies themselves, as well as the stage-to-stage dependencies;
 this restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
@@ -966,10 +969,10 @@ this restricted process is depicted in Figure~\ref{fig:stateful-1-process}.
     \draw[->] (N) to (Nx) ;
    \end{scope}
 \end{tikzpicture}
-\caption{\em A first-order Markov process for generating complete state--value  sequences of random length $N$.}
+\caption{\em A first-order ($m=1$, $\ell=1$) Markov process for generating complete state--value  sequences of random length $N$.}
 \label{fig:stateful-1-process}
 \end{figure}
-The corresponding order-$(1,1)$ sequence model is now given by
+The corresponding order-$(1,1)$ sequence model is then given by
 \begin{eqnarray}
 p(\iota_0,\vs,\vx,\tau_{n+1}) & = &
 %p(\iota_0,\tm_1,s_1,x_1,\ldots,\tm_n,s_n,x_n,\tau_{n+1})
@@ -1002,31 +1005,99 @@ p(\ui,\uvs,\uvx,\ut)
 \,p(\iota_0,\tm_1,s_1,x_1,\ldots,\tm_n,s_n,x_n,\tau_{n+1})\,.
 \label{eq:pr:discrete:state-value}
 \end{eqnarray}
-This calculation can be simplified further under the first-order state--value model~\eqref{eq:stateful-1-model}.
-For example, the fact that an $x_t$ is unobserved, i.e.\ $\ux_t=*$, is easily handled, since $X_t$ depends only on $S_t$ in stage $t$. Specifically, the marginalisation over $x_t\in{\cal X}$ affects exactly one term in the model, and consequently we may
-define $p(*\,|\,\tm_t,s_t)=\sum_{x_t\in{\cal X}}p(X_t\!=\!x_t\,|\,\tau_t\!=\!0,S_t\!=\!s_t)=1$; hence $p(\underline{x}_t\,|\,\tm_t,s_t)$ is well defined. Note that this simplification is only applicable when
-$X_t$ does not depend upon any earlier $X_{t-k}$; such higher-order dependencies will require the more general handling of marginalisation above.
+Upon substitution of model~\eqref{eq:mth-ellth-order}, we then rearrange the order of summation to obtain
+\begin{eqnarray}
+p(\ui,\uvs,\uvx,\ut) 
+& = & 
+\sum_{s_1\in{\cal S}} \delta(s_1\!=\!\us_1)
+\cdots\sum_{s_n\in{\cal S}} \delta(s_n\!=\!\us_n)
+\nonumber\\&&
+\left[
+\sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)
+\left\{
+p(\iota_0)\prod_{t=1}^{m}p(\tm_t,s_t\,|\,\iota_0,\vec{\tau}^-_{1,t-1},\vs_{1,t-1})
+\right\}\right.
+\nonumber\\&&\times
+\left.\left\{
+\prod_{t=1}^{\ell-1}
+\sum_{x_t\in{\cal X}} \delta(x_t\!=\!\ux_t)\,
+p(x_t\,|\,\iota_0,\vec{\tau}^-_{1,t},\vs_{1,t})
+\right\}\right]
+\nonumber\\&&\times
+\left\{\prod_{t=m+1}^{n}p(\tm_t,s_t\,|\,\vec{\tau}^-_{t-m,t-1},\vs_{t-m,t-1})\right\}
+\nonumber\\&&\times
+\left\{
+\prod_{t=\ell}^{n}
+\sum_{x_t\in{\cal X}} \delta(x_t\!=\!\ux_t)\,
+p(x_t\,|\,\vec{\tau}^-_{t-\ell+1,t},\vs_{t-\ell+1,t})
+\right\}
+\nonumber\\&&\times
+\left\{
+\sum_{\tau_{n+1}=0}^{1}\delta(\tau_{n+1}\!=\!\ut)\,
+p(\tau_{n+1}\,|\,\vec{\tau}^-_{n-m+1,n},\vs_{n-m+1,n})
+\right\}\,.
+\label{eq:partial-m-ell}
+\end{eqnarray}
+Suppose now that some value $x_t$ is unobserved, i.e.\ $\ux_t=*$. This is easily handled, since variable
+$X_t$  depends only on $S_t$ and possibly earlier stages. Specifically, the marginalisation over $x_t\in{\cal X}$ affects exactly one term in the model (as shown in the derivation  above). Consequently, we use the fact that
+\begin{eqnarray}
+p(\underline{x}_t\,|\,\iota_0,\vec{\tau}^-_{1,t},\vs_{1,t}) & = & 
+\sum_{x_t\in{\cal X}} \delta(x_t\!=\!\ux_t)\,
+p(x_t\,|\,\iota_0,\vec{\tau}^-_{1,t},\vs_{1,t})\,,
+\\
+p(\underline{x}_t\,|\,\vec{\tau}^-_{t-\ell+1,t},\vs_{t-\ell+1,t}) & = &
+\sum_{x_t\in{\cal X}} \delta(x_t\!=\!\ux_t)\,
+p(x_t\,|\,\vec{\tau}^-_{t-\ell+1,t},\vs_{t-\ell+1,t})\,,
+\end{eqnarray}
+to deduce that
+$p(X_t\!=\!*\,|\,\ldots)=\sum_{x_t\in{\cal X}}p(x_t\,|\,\ldots)=1$, and so the marginalisation of each term
+ in $x_t$ is always well defined. Note that this marginalisation is only applicable when
+$X_t$ does not depend upon any earlier $X_{t-k}$; such higher-order dependencies will require the more general handling of  equation~\eqref{eq:pr:discrete:state-value}.
 
 Similarly, if the termination marker $\tau_{n+1}$ is unobserved, i.e.\ $\ut=*$, then 
- $p(\ut\,|\,\tm_n,s_n)$ is still well defined if we let
-$p(*\,|\,\tm_n,s_n)=\sum_{\tau_{n+1}=0}^{1} p(\tau_{n+1}\,|\,\tau_n\!=\!0,S_n\!=\!s_n)=1$.
+the termination probability 
+\begin{eqnarray}
+p(\ut\,|\,\vec{\tau}^-_{n-m+1,n},\vs_{n-m+1,n}) & = & 
+\sum_{\tau_{n+1}=0}^{1}\delta(\tau_{n+1}\!=\!\ut)\,
+p(\tau_{n+1}\,|\,\vec{\tau}^-_{n-m+1,n},\vs_{n-m+1,n})\,,
+\end{eqnarray}
+or more precisely
+\begin{eqnarray}
+p(\tau_{n+1}\!=\!\ut\,|\,\vec{\tau}^-_{n-m+1,n},\vs_{n-m+1,n}) & = & 
+\sum_{\tau=0}^{1}\delta(\tau\!=\!\ut)\,
+p(\tau_{n+1}\!=\!\tau\,|\,\vec{\tau}^-_{n-m+1,n},\vs_{n-m+1,n})\,,
+\end{eqnarray}
+is also well defined, since likewise  $p(\tau_{n+1}\!=\!*\,|\,\ldots)=\sum_{\tau=0}^{1} p(\tau_{n+1}\!=\!\tau\,|\,\ldots)=1$.
+
 However, if the initiation marker $\iota_0$ is unobserved, i.e.\ $\ui=*$, then the marginalisation is more difficult
-because $\iota_0$ also conditions $S_1$ via $p(S_1\,|\,\iota_0,\tau_1)$. To allow for this, we define (for order $m=1$) that
+because $\iota_0$ potentially conditions both $S_t$ and $X_t$, as shown by equation~\eqref{eq:partial-m-ell}. 
+To allow for this, note that
 \begin{eqnarray}
- p(\ui,\tm_1,s_1) & = & \sum_{\iota=0}^{1}\delta(\iota\!=\!\ui) \,p(\iota_0)\,p(\tm_1,s_1\,|\,\iota_0)\,,
+p(\iota_0,\vec{\tau}^-_{1,m},\vs_{1,m}) & = & p(\iota_0)\prod_{t=1}^{m}p(\tm_t,s_t\,|\,\iota_0,\vec{\tau}^-_{1,t-1},\vs_{1,t-1})
 \end{eqnarray}
-such that
+and
 \begin{eqnarray}
-p(\ui,\vs,\uvx,\ut) & = & 
-p(\ui,\tm_1,s_1)
-\,p(\ux_1\,|\,\tm_1,s_1)
-\left\{\prod_{t=2}^{n}p(\tm_t,s_t\,|\,\tm_{t-1},s_{t-1})
-\,p(\ux_t\,|\,\tm_t,s_t)\right\}
-\,p(\ut\,|\,\tm_t,s_n)
-\,.
-\label{eq:stateful-1-model:hidden-markers}
+p(\iota_0,\vec{\tau}^-_{1,m},\vs_{1,m},\uvx_{1,\ell-1}) & = & 
+p(\iota_0,\vec{\tau}^-_{1,m},\vs_{1,m})
+\prod_{t=1}^{\ell-1}p(\ux_t\,|\,\iota_0,\vec{\tau}^-_{1,t},\vs_{1,t})
+\,,
 \end{eqnarray}
-Hence, we obtain
+since $\ell-1\le m$. Hence we may first compute the marginal probabilities
+\begin{eqnarray}
+p(\ui,\vec{\tau}^-_{1,m},\vs_{1,m},\uvx_{1,\ell-1}) & = &
+\sum_{\iota_0=0}^{1}\delta(\iota_0\!=\!\ui)\,
+p(\iota_0,\vec{\tau}^-_{1,m},\vs_{1,m},\uvx_{1,\ell-1})
+\end{eqnarray}
+and then the joint probabilities
+\begin{eqnarray}
+p(\ui,\vs,\uvx,\ut) & = &
+p(\ui,\vec{\tau}^-_{1,m},\vs_{1,m},\uvx_{1,\ell-1})
+\left\{\prod_{t=m+1}^{n}p(\tm_t,s_t\,|\,\vec{\tau}^-_{t-m,t-1},\vs_{t-m,t-1})\right\}
+\nonumber\\&&\times
+\left\{\prod_{t=\ell}^{n}p(\ux_t\,|\,\vec{\tau}^-_{t-\ell+1,t},\vs_{t-\ell+1,t})\right\}
+\,p(\ut\,|\,\vec{\tau}^-_{n-m+1,n},\vs_{n-m+1,n})
+\end{eqnarray}
+to finally arrive at the (hidden) state marginalisation
 \begin{eqnarray}
 p(\ui,\uvs,\uvx,\ut) & = & 
 \sum_{s_1\in{\cal S}} \delta(s_1\!=\!\us_1)
@@ -1037,7 +1108,9 @@ Note that the conventional HMM formulation is obtained by dropping the $\ui$, $\
 
 \subsection{Stateful Forward--Backward Algorithm}\label{sec:forward-backward:stateful}
 
-Under the conventions discussed in the previous section, the forward--backward algorithm for order $m$ stateful Markov sequences takes the form
+Under the conventions discussed in the previous section for handling missing observations, the forward--backward algorithm for order--$(m,\ell)$ stateful Markov sequences takes the form
+
+*******************
 
 The observed sequence model~\eqref{eq:state-marg} can be efficiently evaluated by marginalising over the state of each stage
 in turn, using a modification of the {\em forward--backward algorithm} to include knowledge of
