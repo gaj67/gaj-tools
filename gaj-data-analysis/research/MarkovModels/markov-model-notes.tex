@@ -1159,188 +1159,29 @@ namely
 utilising equation~\eqref{eq:tau_np1}. Then the backward recursive relation is the analogue
 of equation~\eqref{eq:bwd-recurse}, namely
 \begin{eqnarray}
-\beta_{t}(\vs_{t-m+1,t}) & = & 
- p(\uvs_{t+1,n},\uvx_{t+1,n},\ut\,|\,\vs_{t-m+1,t})
+\beta_{t-1}(\vs_{t-m,t-1}) & = & 
+ p(\uvs_{t,n},\uvx_{t,n},\ut\,|\,\vs_{t-m,t-1})
 \nonumber\\& = &
-\sum_{s_{t+1}\in{\cal S}} \delta(s_{t+1}\!=\!\us_{t+1})\,
-p(\tm_{t+1},s_{t+1}\,|\,\vs_{t-m+1,t})\,p(\ux_{t+1}\,|\,\vs_{t-\ell+2,t+1})\,\beta_{t+1}(\vs_{t-m+2,t+1})
+\sum_{s_{t}\in{\cal S}} \delta(s_{t}\!=\!\us_{t})\,
+p(\tm_{t},s_{t}\,|\,\vs_{t-m,t-1})\,p(\ux_{t}\,|\,\vs_{t-\ell+1,t})\,\beta_{t}(\vs_{t-m+1,t})
 \,,
 \end{eqnarray}
-for $t=n-1,\ldots,m$.
-*** put back to t->t-1 ***
+for $t=n,\ldots,m+1$.
+For the special case of $m=\ell=1$, the backward pass reduces to
+\begin{eqnarray}
+\beta_n(s_{n}) & = & p(\ut\,|\,s_{n})\,,
+\nonumber\\
+\beta_{t-1}(s_{t-1}) & = & 
+\sum_{s_{t}\in{\cal S}} \delta(s_{t}\!=\!\us_{t})\,
+p(\tm_{t},s_{t}\,|\,\tm_{t-1},s_{t-1})\,p(\ux_{t}\,|\,\tm_t,s_{t})\,\beta_{t}(s_{t})
+\,\mbox{ for $t=n,\ldots,2$}
+\,.
+\end{eqnarray}
+
 *******************
-
-The observed sequence model~\eqref{eq:state-marg} can be efficiently evaluated by marginalising over the state of each stage
-in turn, using a modification of the {\em forward--backward algorithm} to include knowledge of
-sequence initiation and termination.
- The forward pass involves first summing over all terms containing $s_1$, then over all remaining terms containing $s_2$,
-and so on up to $s_n$. This is equivalent to evaluating the reordered model
-\begin{eqnarray}
-   p(\ui,\underline{\vec{s}},\underline{\vec{x}},\ut) 
-& = & 
-   \left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)
-\cdots
-\right\{\sum_{s_2\in{\cal S}}\delta(s_2\!=\!\underline{s}_2)
-\nonumber\\&&
-\hspace*{10mm}{}
-\left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
-p(\ui,\tm_1,s_1)\,p(\underline{x}_1\,|\,s_1)\,p(\tm_2\,|\,s_1)\,p(s_2\,|\,\tm_2,s_1)\right\}
-\nonumber\\&&
-\left.\rule{0pt}{6mm}
-p(\underline{x}_{2}\,|\,s_2)\,p(\tm_3\,|\,s_2)\,p(s_3\,|\,\tm_3,s_2)\right\}
-\cdots
-\left.\rule{0pt}{6mm}\,p(\underline{x}_{n}\,|\,s_n)
-\,p(\ut\,|\,s_n)\right\}
-\,.
-\label{eq:forward}
-\end{eqnarray}
- The forward pass commences with the first stage of the sequence, and includes the inner terms that are dependent on state $s_1$, namely
-\begin{eqnarray}
-  \alpha_1(s_1) & = & p(\ui,\tm_1,s_1)\,p(\underline{x}_1\,|\,s_1)
-\nonumber\\&=&
-p(\ui,\tm_1,s_1,\underline{x}_1)~\equiv~p(\ui,\underline{\vec{s}}_0\circ s_1,\underline{\vec{x}}_1)\,,
-\label{eq:alpha_1}
-\end{eqnarray}
-where the operator `$\circ$' indicates the concatenation of either two elements, two sequences or an element and a sequence, to form a longer sequence.
-Recall that $\underline{\vec{s}}_0$ is an empty sequence.
-
-The next step of the forward pass now moves on to the second stage and includes terms dependent on state $s_2$ at that stage:
-\begin{eqnarray}
-  \alpha_2(s_2) & = & 
-\left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
-\alpha_1(s_1)\,p(\tm_2\,|\,s_1)\,p(s_2\,|\,\tm_2,s_1)\right\}
-\,p(\underline{x}_2\,|\,s_2)
-\nonumber\\&=&
-\left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
-p(\ui,\tm_1,s_1,\underline{x}_1)\,p(\tm_2\,|\,s_1)\,p(s_2\,|\,\tm_2,s_1)\right\}
-\,p(\underline{x}_2\,|\,s_2)
-\nonumber\\&=&
-\left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
-p(\ui,\tm_1,s_1,\underline{x}_1,\tm_2,s_2)\right\}
-\,p(\underline{x}_2\,|\,s_2)
-\nonumber\\&=&
-p(\ui,\tm_1,\underline{s}_1,\underline{x}_1,\tm_2,s_2)\,p(\underline{x}_2\,|\,s_2)
-\nonumber\\&=&
-p(\ui,\tm_1,\underline{s}_1,\underline{x}_1,\tm_2,s_2,\underline{x}_2)
-~\equiv~p(\ui,\underline{\vec{s}}_1\circ s_2,\underline{\vec{x}}_2)
-\,.
-\label{eq:alpha_2}
-\end{eqnarray}
-Recursively, the last step of the forward pass stops at the $n$-th stage, giving
-\begin{eqnarray}
-  \alpha_n(s_n) & = & 
-\left\{\sum_{s_{n-1}\in{\cal S}}\delta(s_{n-1}\!=\!\underline{s}_{n-1})\,
-\alpha_{n-1}(s_{n-1})\,p(\tm_n\,|\,s_{n-1})\,p(s_n\,|\,\tm_n,s_{n-1})\right\}
-\,p(\underline{x}_n\,|\,s_n)
-\nonumber\\&\equiv&
-p(\ui,\underline{\vec{s}}_{n-1}\circ s_n,\underline{\vec{x}}_{n-1})\,p(\underline{x}_n\,|\,s_n)
-~=~p(\ui,\underline{\vec{s}}_{n-1}\circ s_n,\underline{\vec{x}}_n)
-\,.
-\label{eq:alpha_n}
-\end{eqnarray}
-The remaining terms then give the observed joint likelihood
-\begin{eqnarray}
-   p(\ui,\underline{\vec{s}},\underline{\vec{x}},\ut) 
-& = & 
-   \sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,\alpha_n(s_n)\,p(\ut\,|\,s_n)\,.
-\label{eq:alpha_n_beta_n}
-\end{eqnarray}
-
-Conversely, the backaward pass involves first summing over all terms containing $s_n$,
-then over all remaining terms containing $s_{n-1}$, and so on down $s_1$.
-This is equivalent to evaluating the reordered model
-\begin{eqnarray}
-   p(\ui,\underline{\vec{s}},\underline{\vec{x}},\ut) 
-& = & 
-   \left\{\sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,
-p(\ui,\tm_1,s_1)\,p(\underline{x}_1\,|\,s_1)\,p(\tm_2\,|\,s_1)\,
-\cdots\right.
-\nonumber\\&&
-\;\;\;\left\{\sum_{s_{n-1}\in{\cal S}}\delta(s_{n-1}\!=\!\underline{s}_{n-1})\,
-p(s_{n-1}\,|\,\tm_{n-1},s_{n-2})\,p(\underline{x}_{n-1}\,|\,s_{n-1})\,p(\tm_n\,|\,s_{n-1})\right.
-\nonumber\\&&
-\hspace*{4mm}
-\left.\rule{0pt}{7mm}\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
-p(s_n\,|\,\tm_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
-\,p(\ut\,|\,s_n)\right\}\right\}
-\cdots\left.\rule{0pt}{7mm}\right\}
-\,.
-\label{eq:backward}
-\end{eqnarray}
-The backward pass commences at the end of the sequence with the termination term that depends on state $s_n$, namely 
-\begin{eqnarray}
-  \beta_n(s_n) & = & p(\ut\,|\,s_n)\,.
-\label{eq:_beta_n}
-\end{eqnarray}
-The next step in the backward pass then moves backward to the $n$-th stage and incorporates the terms that depend on state $s_{n-1}$, including the
-non-terminating transition from $s_{n-1}$ to $s_n$
-\begin{eqnarray}
-  \beta_{n-1}(s_{n-1}) & = &
-p(\tm_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
-p(s_n\,|\,\tm_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
-\,\beta_n(s_n)\right\}
-\nonumber\\&=&
-p(\tm_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
-p(s_n\,|\,\tm_n,s_{n-1})\,p(\underline{x}_{n}\,|\,s_n)
-\,p(\ut\,|\,s_n)\right\}
-\nonumber\\&=&
-p(\tm_n\,|\,s_{n-1})\,\left\{\sum_{s_n\in{\cal S}}\delta(s_n\!=\!\underline{s}_n)\,
-p(s_n,\underline{x}_{n},\ut\,|\,\tm_n,s_{n-1})\right\}
-\nonumber\\&=&
-p(\tm_n\,|\,s_{n-1})\,p(\underline{s}_n,\underline{x}_n,\ut\,|\,\tm_n,s_{n-1})
-\nonumber\\&=&
-p(\tm_n,\underline{s}_n,\underline{x}_n,\ut\,|\,s_{n-1})
-~\equiv~p(\circ\underline{\rvec{s}}_n,\underline{\rvec{x}}_n,\ut\,|\,s_{n-1})\,.
-\end{eqnarray}
-Observe that we have explicitly included the concatenation operator to indicate the presence of $\tm_{n}$. 
-Symbolically, we may write $p(\vr)=p(\vr_t\circ\rvec{r}_{t+1})=p(\vr_t\circ)p(\rvec{r}_{t+1})=p(\vr_t)p(\circ\rvec{r}_{t+1})$.
-
-Recursively, the last step of the backward pass reaches the first stage, giving
-\begin{eqnarray}
-  \beta_{1}(s_{1}) & = &
-p(\tm_2\,|\,s_{1})\,\sum_{s_2\in{\cal S}}\delta(s_2\!=\!\underline{s}_2)\,
-p(s_2\,|\,\tm_2,s_{1})\,p(\underline{x}_{2}\,|\,s_2)
-\,\beta_2(s_2)
-\nonumber\\&=&
-p(\tm_2\,|\,s_{1})\,
-p(\underline{s}_2,\underline{x}_2,\tm_3,\ldots,\underline{s}_n,\underline{x}_n,\ut\,|\,\tm_2,s_{1})
-\nonumber\\&\equiv&
-p(\circ\underline{\rvec{s}}_2,\underline{\rvec{x}}_2,\ut\,|\,s_{1})\,.
-\end{eqnarray}
-The remaining terms then give the observed likelihood
-\begin{eqnarray}
-   p(\ui,\underline{\vec{s}},\underline{\vec{x}},\ut) 
-& = & 
-   \sum_{s_1\in{\cal S}}\delta(s_1\!=\!\underline{s}_1)\,p(\ui,\tm_1,s_1)\,\beta_1(s_1)\,.
-\end{eqnarray}
-In general, we obtain
-\begin{eqnarray}
-   p(\ui,\underline{\vec{s}},\underline{\vec{x}},\ut) 
-& = & 
-   \sum_{s_t\in{\cal S}}\delta(s_t\!=\!\underline{s}_t)\,
-   p(\ui,\underline{\vec{s}}_{t-1}\circ s_t\circ\underline{\rvec{s}}_{t+1},
-\underline{\vec{x}}_t\circ\underline{\rvec{x}}_{t+1},\ut) 
-\nonumber\\&=&
-   \sum_{s_t\in{\cal S}}\delta(s_t\!=\!\underline{s}_t)\,
-p(\ui,\underline{\vec{s}}_{t-1}\circ s_t,\underline{\vec{x}}_t)
-\,p(\circ\underline{\rvec{s}}_{t+1},\underline{\rvec{x}}_{t+1},\ut\,|\,s_{t})
-\nonumber\\&=&
-   \sum_{s_t\in{\cal S}}\delta(s_t\!=\!\underline{s}_t)\,\alpha_t(s_t)\,\beta_t(s_t)\,,
-\end{eqnarray}
-for all $t=1,2,\ldots,n$. The case for $t=n$ comes from equations~\eqref{eq:alpha_n_beta_n} and \eqref{eq:_beta_n}; alternatively, recall that $\rvec{r}_{n+1}$ is an empty sequence.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discrete-state Sequence Models}\label{sec:discrete-state}
-
-Consider the stateful, first-order Markov process depicted by Figure~\ref{fig:stateful-1-process}.
-Let us now restrict our attention to the class of corresponding sequence models where
-the state $S_t$ at any stage $t$ may now only take {\em discrete} values in the set 
-${\cal S}=\{\sigma_1,\sigma_2,\ldots,\sigma_S\}$.
-Hence, the sequence of states may arbitrarily be specified as $\vec{s}=(\sigma_{i_1},\sigma_{i_2},\ldots,\sigma_{i_n})$,
-where each $i_t\in\{1,2,\ldots,S\}$.
-In the event that a particular state $S_t$ is unobserved, we say that the state is {\em missing} or {\em hidden},
-and denote $i_t=*$ and $s_t=*$. In the situation where all values of $\vec{s}$ are unobserved,
-the sequence model~\eqref{eq:stateful-1-model} is known as a {\em hidden-state Markov model} (HMM).
 
 The sequence model~\eqref{eq:stateful-1-model}
 may now be explicitly conditioned on a general parameter $\theta$
@@ -1420,161 +1261,6 @@ where $\delta(\cdot)$ is an indicator function taking the value $1$ (or $0$) if 
 Note that if $S_t$ is a hidden state, then $i_t=*$ and $\delta(i_t'\!=\!*)=1$ for all $i_t'\in\{1,2,\ldots,S\}$; otherwise, the summation over $i_t'$ collapses to the observed value $i_t$.
 The observation likelihood given by model~\eqref{eq:p_s_x_g_theta:gen} can be efficiently computed by an
 extension of the forward--backward algorithm, described in the next section.
-
-\subsection{Modified Forward--Backward Algorithm}\label{sec:forward-backward}
-
-The sequence model~\eqref{eq:p_s_x_g_theta:gen} can be efficiently evaluated by marginalising over the state of each stage
-in turn, using a modification of the {\em forward--backward algorithm} to include knowledge of
-sequence initiation and termination.
- The forward pass involves first summing over all terms containing $i_1'$, then over all remaining terms containing $i_2'$,
-and so on up to summing over $i_n'$. This is equivalent to evaluating the reordered model
-\begin{eqnarray}
-   p(\ui,\vec{s},\vec{x},\ut\,|\,\theta) 
-& = & 
-   \left\{\sum_{i_n'=1}^{S}\delta(i_n'\!=\!i_n)
-%\left\{\sum_{i_{n-1}'=1}^{S}\delta(i_{n-1}'\!=\!i_{n-1})\right.
-\cdots
-\right\{\sum_{i_2'=1}^{S}\delta(i_2'\!=\!i_2)
-\nonumber\\&&
-\hspace*{10mm}{}\times
-\left\{\sum_{i_1'=1}^{S}\delta(i_1'\!=\!i_1)\,
-\pi_{\ui,1,i_1'}\,o_{1,i_1'}(x_1)\,\omega_{0,1,i_1'}\,\Gamma_{1,i_1',i_{2}'}\right\}
-\nonumber\\&&
-\left.\rule{0pt}{7mm}
-o_{2,i_{2}'}(x_{2})\omega_{0,2,i_{2}'}\,\Gamma_{2,i_{2}',i_{3}'}\right\}
-\cdots
-%\left.\rule{0pt}{7mm}\omega_{0,n-1,i_{n-1}'}\,\Gamma_{n-1,i_{n-1}',i_{n}'}\right\}
-\left.\rule{0pt}{7mm}\,o_{n,i_{n}'}(x_{n})
-\,\omega_{\ut,n,i_n'}\right\}
-\,.
-\label{eq:forward}
-\end{eqnarray}
-Conversely, the backaward pass reverses the order of evaluation, first summing over all terms containing $i_n'$,
-and then over all remaining terms containing $i_{n-1}'$, and so on down to summing over $i_1'$.
-This is equivalent to evaluating the reordered model
-\begin{eqnarray}
-   p(\ui,\vec{s},\vec{x},\ut\,|\,\theta) 
-& = & 
-   \left\{\sum_{i_1'=1}^{S}\delta(i_1'\!=\!i_1)\,
-\pi_{\ui,1,i_1'}\,o_{1,i_1'}(x_1)\,\omega_{0,1,i'_{1}}\,
-\cdots\right.
-\nonumber\\&&
-{}\times\left\{\sum_{i_{n-1}'=1}^{S}\delta(i_{n-1}'\!=\!i_{n-1})\,
-\Gamma_{n-2,i_{n-2}',i_{n-1}'}\,o_{n-1,i_{n-1}'}(x_{n-1})\,\omega_{0,n-1,i'_{n-1}}\right.
-\nonumber\\&&
-\hspace*{4mm}{}\times
-\left.\rule{0pt}{7mm}\left\{\sum_{i_n'=1}^{S}\delta(i_n'\!=\!i_n)\,
-\Gamma_{n-1,i_{n-1}',i_{n}'}\,o_{n,i_{n}'}(x_{n})
-\,\omega_{\ut,n,i_n'}\right\}\right\}
-\cdots\left.\rule{0pt}{7mm}\right\}
-\,.
-\label{eq:backward}
-\end{eqnarray}
-
-A more efficient mechanism for evaluation comes from making use of the first-order Markov dependencies.
-Notionally, from the process depicted in Figure~\ref{fig:stateful-1-process}, we may arbitrarily consider the transition from 
-some stage $t$ to stage $t+1$,
-and partition the sequence into: (i) past values from the initial node up to and including $S_t$ and $X_t$;
-and (ii) future values from $S_{t+1}$ and $X_{t+1}$ up to and including the terminal node.
-Note that the termination or non-termination of stage $t$ is governed by $\tau_{t+1}$, which is
-therefore a future value.
-The Markov dependency then implies that the future values are conditioned only on state $S_t$
-via $\tau_{t+1}$ and $S_{t+1}$.
-Hence, remembering that notionally $s_t=\sigma_{i_t}$, model~\eqref{eq:p_s_x_g_theta:gen} reduces to
-\begin{eqnarray}
-   p(\ui,\vec{s},\vec{x},\ut\,|\,\theta) 
-& = &
-   \sum_{i=1}^{S}p(S_t\!=\!\sigma_{i},\ui,\vec{s},\vec{x},\ut\,|\,\theta) 
-\nonumber\\& = & 
-   \sum_{i=1}^{S}\delta(i\!=\!i_t)\,p(\ui,\vec{s}_{t-1}\circ\sigma_{i}\circ\rvec{s}_{t+1},\vec{x},\ut\,|\,\theta) 
-\nonumber\\& = & 
-   \sum_{i=1}^{S}\delta(i\!=\!i_t)\,p(\ui,\vec{s}_{t-1}\circ\sigma_{i},\vec{x}_t\,|\,\theta) 
-\,p(\dn\rvec{s}_{t+1},\rvec{x}_{t+1},\ut\,|\,S_t=\sigma_{i},\theta) 
-\nonumber\\& = &
-  \sum_{i=1}^{S}\delta(i\!=\!i_t)\,\alpha_{t,i}\,\beta_{t,i}\,,
-\label{eq:forward-backward}
-\end{eqnarray}
-where $\circ$ represents sequence concatenation.
-The forward step $\alpha_{t,i}$ is defined as
-\begin{eqnarray}
-   \alpha_{t,i} & = & p(\ui,\vec{s}_{t-1}\circ\sigma_{i},\vec{x}_t\,|\,\theta) 
-\nonumber\\& = &
-   p(\ui,\vec{s}_{t-1}\circ\sigma_{i},\vec{x}_{t-1}\,|\,\theta) \,p(X_t\!=\!x_t\,|\,S_t\!=\!\sigma_{i_t},\theta)
-\nonumber\\& = &
-   \bar{\alpha}_{t,i}\,o_{t,i}(x_t)\,,
-\label{eq:alpha}
-\end{eqnarray}
-where $\bar{\alpha}_{t,i}$ is recursively defined as
-\begin{eqnarray}
-   \bar{\alpha}_{t,i} & = & p(\ui,\vec{s}_{t-1}\circ\sigma_{i},\vec{x}_{t-1}\,|\,\theta) 
-\nonumber\\& = &
-   \sum_{j=1}^{S}p(S_{t-1}\!=\!\sigma_j,\ui,\vec{s}_{t-1}\circ\sigma_{i},\vec{x}_{t-1}\,|\,\theta) 
-\nonumber\\& = &
-   \sum_{j=1}^{S}\delta(j=i_{t-1})\,p(\ui,\vec{s}_{t-2}\circ\sigma_{j}\circ\sigma_{i},\vec{x}_{t-1}\,|\,\theta) 
-\nonumber\\& = &
-   \sum_{j=1}^{S}\delta(j=i_{t-1})\,p(\ui,\vec{s}_{t-2}\circ\sigma_{j},\vec{x}_{t-1}\,|\,\theta) 
-      \,p(\tau_t\!=\!0\,|\,S_{t-1}\!=\!\sigma_j,\theta)
-\nonumber\\&&
-    \hspace*{5mm}{}\times\,p(S_t\!=\!\sigma_i\,|\,\tau_{t}\!=\!0,S_{t-1}\!=\!\sigma_j,\theta)
-\nonumber\\& = &
-   \sum_{j=1}^{S}\delta(j=i_{t-1})\,\alpha_{t-1,j}\,\omega_{0,t-1,j}\,\Gamma_{t-1,j,i}\,,
-\label{eq:alpha-bar}
-\end{eqnarray}
-for $t=2,3,\ldots,n$. The forward pass commences with the first step
-\begin{eqnarray}
-  \alpha_{1,i} & = & p(\ui,S_1=\sigma_{i},X_1\!=\!x_1\,|\,\theta) 
-\nonumber\\& = & 
-  p(\iota_0\!=\!\ui)\,p(\tau_1\!=\!0\,|\,\iota\!=\!\ui,\theta)
-\,p(S_1\!=\!\sigma_i\,|\,\iota_0\!=\!\ui,\tau_1\!=\!0,\theta)\,p(X_1\!=\!x_1\,|\,S_1\!=\!\sigma_i,\theta)
-\nonumber\\& = & 
-  \pi_{\ui,1,i}\,o_{1,i}(x_1)
-\,.
-\label{eq:alpha_1}
-\end{eqnarray}
-Hence, observe that $\alpha_{2,i'_2}$, is just
-the entire summation over $i'_1$ from the forward model~\eqref{eq:forward}.
-Also note that the standard forward pass derivation commences with the equivalent of $\pi_{*,1,i}$ and does not include the
-$\delta(\cdot)$ or $\omega$ terms.
-
-Conversely to the forward pass, the backward step $\beta_{t,i}$ is defined as
-\begin{eqnarray}
-   \beta_{t,i} & = & p(\dn\rvec{s}_{t+1},\rvec{x}_{t+1},\ut\,|\,S_t\!=\!\sigma_{i},\theta) 
-\nonumber\\& = &
-  p(\tau_{t+1}\!=\!0\,|\,S_t\!=\!\sigma_i,\theta)\,p(\rvec{s}_{t+1},\rvec{x}_{t+1},\ut\,|\,\tau_{t+1}\!=\!0,S_t\!=\!\sigma_{i},\theta) 
-\nonumber\\& = &
-  \omega_{0,t,i}\,\bar{\beta}_{t,i}\,,
-\label{eq:beta}
-\end{eqnarray}
-where
-\begin{eqnarray}
-   \bar{\beta}_{t,i} & = & p(\rvec{s}_{t+1},\rvec{x}_{t+1},\ut\,|\,\tau_{t+1}\!=\!0,S_t\!=\!\sigma_{i},\theta) 
-\nonumber\\& = &
-  \sum_{j=1}^{S} p(S_{t+1}\!=\!\sigma_j,\rvec{s}_{t+1},\rvec{x}_{t+1},\ut\,|\,\tau_{t+1}\!=\!0,S_t\!=\!\sigma_{i},\theta) 
-\nonumber\\& = &
-  \sum_{j=1}^{S}\delta(j\!=\!i_{t+1})\, p(\sigma_j\circ\rvec{s}_{t+2},x_{t+1}\circ\rvec{x}_{t+2},\ut\,|\,\tau_{t+1}\!=\!0,S_t\!=\!\sigma_{i},\theta) 
-%\nonumber\\& = &
- % \sum_{j=1}^{S}\delta(j\!=\!i_{t+1})\, p(S_{t+1}\!=\!\sigma_j,X_{t+1}\!=\!x_{t+1}\,|\,\tau_{t+1}\!=\!0,S_t\!=\!\sigma_{i},\theta) 
-%\,p(\dn\rvec{s}_{t+2},\rvec{x}_{t+2},\ut\,|\,S_{t+1}\!=\!\sigma_{j},\theta) 
-\nonumber\\& = & 
-   \sum_{j=1}^{S}\delta(j\!=\!i_{t+1})\, p(S_{t+1}\!=\!\sigma_j\,|\,\tau_{t+1}\!=\!0,S_t\!=\!\sigma_i,\theta)
-\,p(X_{t+1}=x_{t+1}\,|\,S_{t+1}\!=\!\sigma_j,\theta)
-\nonumber\\&&\hspace*{5mm}{}\times
-p(\dn\rvec{s}_{t+2},\rvec{x}_{t+2},\ut\,|\,S_{t+1}\!=\!\sigma_{j},\theta) 
-\nonumber\\& = & 
-	\sum_{j=1}^{S}\delta(j\!=\!i_{t+1})\,\Gamma_{t,i,j}\,o_{t+1,j}(x_{t+1})\,\beta_{t+1,j}
-\,,
-\end{eqnarray}
-for $t=n-1,n-2,\ldots,1$. The backward pass commences with the first step
-\begin{eqnarray}
-   \beta_{n,i} & = & p(\tau_{n+1}\!=\!\ut\,|\,S_n\!=\!\sigma_i,\theta)
-~=~\omega_{\ut,n,i}\,.
-\label{eq:beta_n}
-\end{eqnarray}
-Observe that $\bar{\beta}_{n-1,i'_{n-1}}$ is just
-the entire summation over $i'_n$ from the backward model~\eqref{eq:backward}.
-Also note that the standard backward pass derivation commences with the equivalent of $\omega_{*,n,i}=1$,
-and does not include the $\delta(\cdot)$ or $\omega$ terms.
-
 
 \subsection{Posterior Prediction}
 
