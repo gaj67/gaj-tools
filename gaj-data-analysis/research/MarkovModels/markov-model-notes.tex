@@ -16,6 +16,8 @@
 \Bb X\Bb S\Bb V\Bb Z
 \newcommand{\up}{\!\uparrow}
 \newcommand{\dn}{\downarrow\!}
+\newcommand{\uv}{\underline{\nu}}
+\newcommand{\vg}{\vec{\sigma}}
 \newcommand{\ui}{\underline{\iota}}
 \newcommand{\ut}{\underline{\tau}}
 \newcommand{\ur}{\underline{r}}
@@ -28,6 +30,7 @@
 \newcommand{\uvx}{\underline{\vx}}
 \newcommand{\ux}{\underline{x}}
 \newcommand{\us}{\underline{s}}
+\newcommand{\ud}{\underline{\delta}}
 
 \begin{document}
 \maketitle
@@ -324,6 +327,7 @@ p(\ui,\uvr_{1,s-1}\circ\uvr_{s,t}\circ\uvr_{t+1,n},\ut)
 \sum_{r_s\in{\cal R}} \delta(r_s\!=\!\ur_s)
 \cdots\sum_{r_t\in{\cal R}} \delta(r_t\!=\!\ur_t)
 \,\alpha_t(\vr_{s,t})\,\beta_t(\vr_{s,t})\,,
+\label{eq:alpha:beta}
 \end{eqnarray}
 where
 \begin{eqnarray}
@@ -1113,6 +1117,7 @@ p(\ui,\uvs,\uvx,\ut) & = &
 \sum_{s_1\in{\cal S}} \delta(s_1\!=\!\us_1)
 \cdots\sum_{s_n\in{\cal S}} \delta(s_n\!=\!\us_n)
 \,p(\ui,\vs,\uvx,\ut)\,.
+\label{eq:full-state}
 \end{eqnarray}
 Note that the conventional HMM formulation is obtained by dropping the $\ui$, $\uvs$ and $\ut$ terms and the $\delta(\cdot)$ indicators.
 
@@ -1134,7 +1139,7 @@ Next, the analogue of the recusive forward relation~\eqref{eq:fwd-pass-m-recursi
 \sum_{s_{t-m}\in{\cal S}} \delta(s_{t-m}\!=\!\us_{t-m})\,\alpha_{t-1}(\vs_{t-m,t-1})
 \nonumber\\&&\times
 p(\tm_{t},s_{t}\,|\,\vs_{t-m,t-1})\,p(\ux_{t}\,|\,\vs_{t-\ell+1,t})\,,
-\label{blah}
+\label{alpha_t:stateful}
 \end{eqnarray}
 for $t=m+1,\ldots,n$.
 Note that for the special case of $m=\ell=1$, the forward pass reduces to
@@ -1155,6 +1160,7 @@ Similarly, the backward pass commences with the analogue of factor~\eqref{eq:bwd
 namely
 \begin{eqnarray}
 \beta_n(\vs_{n-m+1,n}) & = & p(\ut\,|\,\vs_{n-m+1,n})\,,
+\label{eq:beta_n:s}
 \end{eqnarray}
 utilising equation~\eqref{eq:tau_np1}. Then the backward recursive relation is the analogue
 of equation~\eqref{eq:bwd-recurse}, namely
@@ -1177,6 +1183,131 @@ p(\tm_{t},s_{t}\,|\,\tm_{t-1},s_{t-1})\,p(\ux_{t}\,|\,\tm_t,s_{t})\,\beta_{t}(s_
 \,\mbox{ for $t=n,\ldots,2$}
 \,.
 \end{eqnarray}
+Finally, for the entire sequence of length $n\ge m$, we have
+\begin{eqnarray}
+p(\ui,\uvs,\uvx,\ut) & = &
+\sum_{s_{t-m+1}\in{\cal S}} \delta(s_{t-m+1}\!=\!\us_{t-m+1})
+\cdots\sum_{s_t\in{\cal S}} \delta(s_t\!=\!\us_t)
+\,\alpha_t(\vs_{t-m+1,t})\,\beta_t(\vs_{t-m+1,t})\,,
+\label{eq:alpha:beta:m}
+\end{eqnarray}
+for all $t=m,\ldots,n$,
+from equations~\eqref{eq:alpha:beta} and~\eqref{eq:full-state}.
+
+\subsection{Posterior Prediction}
+The order--$(m,\ell)$ forward--backward algorithm of the previous section can now be utilised to predict unknown states and values
+from an observed sequence.
+Let $\uv=(\ui,\uvs,\uvx,\ut)$ represent a (possibly incomplete) sequence of length $n\ge m$, such that
+equation~\eqref{eq:alpha:beta:m} becomes
+\begin{eqnarray}
+p(\uv) & = &
+\sum_{\vs_{t-m+1,t}\in{\cal S}^{m}} \ud(\vs_{t-m+1,t})
+\,\alpha_t(\vs_{t-m+1,t})\,\beta_t(\vs_{t-m+1,t})\,,
+\end{eqnarray}
+for all $t=m,\ldots,n$, where, for convenience, we now define 
+$\ud(\vs_{t_1,t_2})=\prod_{t=t_1}^{t_2}\delta(s_t\!=\!\us_t)$.
+
+Next, in order to notationally distinguish between predicted and observed states, we continue to let $s_t\in{\cal S}$ be an
+arbitrary state value of $S_t$, and $\us_t$ be the (possibly missing) observed state value; however, we now let
+$\sigma_t\in{\cal S}$ represent some specific, predicted state value. Thus, for example,
+the posterior probability of sequence $\uv$ having specific states $\vg_{t-m+1,t}$ is given by
+\begin{eqnarray}
+\gamma_t(\vg_{t-m+1,t}) & = & p(\vg_{t-m+1,t}\,|\,\uv)
+\nonumber\\& = &
+\frac{p(\vg_{t-m+1,t},\ui,\uvs,\uvx,\ut)}{p(\uv)}
+\nonumber\\& = &
+\ud(\vg_{t-m+1,t})\,\frac{p(\ui,\uvs_{1,t-m}\circ\vg_{t-m+1,t}\circ\uvs_{t+1,n},\uvx_{1,t}\circ\uvx_{t+1,n},\ut)}{p(\uv)}
+\nonumber\\& = &
+\frac{\ud(\vg_{t-m+1,t})\,\alpha_t(\vg_{t-m+1,t})\,\beta_t(\vg_{t-m+1,t})}
+{\sum_{\vs_{t-m+1,t}\in{\cal S}^{m}} \ud(\vs_{t-m+1,t})
+\,\alpha_t(\vs_{t-m+1,t})\,\beta_t(\vs_{t-m+1,t})}\,.
+\end{eqnarray}
+For the $m=\ell=1$ case, this simplifies to
+\begin{eqnarray}
+\gamma_t(\sigma_{t}) & = & 
+\frac{\delta(\sigma_{t}\!=\!\us_{t})\,\alpha_t(\sigma_{t})\,\beta_t(\sigma_{t})}
+{\sum_{s_{t}\in{\cal S}} \delta(s_{t}\!=\!\us_{t})
+\,\alpha_t(s_{t})\,\beta_t(s_{t})}\,,
+\end{eqnarray}
+which further reduces to $\gamma_t(\sigma_t)=\delta(\sigma_t\!=\!\us_t)$ if $\us_t$ is known, and to the standard
+formula if $\us_t$ is unknown (recall that $\delta(\sigma_t\!=\!*)=1$ by definition).
+
+Similarly, we may predict the next state $S_{n+1}$ in a partial sequence, provided we have not observed the sequence to terminate at stage $n$, via
+\begin{eqnarray}
+ \hspace*{-9mm} p(\tm_{n+1},\sigma_{n+1}\,|\,\uv)  
+& = &
+  \frac{p(\tm_{n+1},\sigma_{n+1},\ui,\uvs,\uvx,\ut)}
+       {p(\uv)}
+\nonumber\\& = & 
+  \delta(\ut\!=\!0)\,
+  \frac{p(\ui,\uvs\circ\sigma_{n+1},\uvx)}
+       {p(\uv)}
+\nonumber\\& = & 
+  \delta(\ut\!=\!0)\,
+  \frac{\sum_{\vs_{n-m+1,n}\in{\cal S}^{m}} \ud(\vs_{n-m+1,n})
+\,\alpha_n(\vs_{n-m+1,n})\,p(\tm_{n+1},\sigma_{n+1}\,|\,\vs_{n-m+1,n})}
+ {\sum_{\vs_{n-m+1,n}\in{\cal S}^{m}} \ud(\vs_{n-m+1,n})
+\,\alpha_n(\vs_{n-m+1,n})\,\beta_n(\vs_{n-m+1,n})}
+\nonumber\\& = & 
+  \delta(\ut\!=\!0)\,
+  \frac{\sum_{\vs_{n-m+2,n}\in{\cal S}^{m-1}} \ud(\vs_{n-m+2,n})
+\,\alpha_{n+1}(\vs_{n-m+2,n}\circ\sigma_{n+1};*)}
+ {\sum_{\vs_{n-m+1,n}\in{\cal S}^{m}} \ud(\vs_{n-m+1,n})
+\,\alpha_n(\vs_{n-m+1,n})\,\beta_n(\vs_{n-m+1,n})}
+\,,
+\end{eqnarray}
+where $\alpha_{n+1}(\vs_{n-m+2,n}\circ\sigma_{n+1};*)$ is computed from the forward relation~\eqref{alpha_t:stateful}
+by setting $\ux_{n+1}=*$, following from the fact that  $p(*\,|\,\vs_{n-\ell+2,n}\circ\sigma_{n+1})=1$ by definition.
+%where we have now defined $\vs_{n,[-m]}\equiv\vs_{n-m+1,n}$ for notational compactness.
+
+By marginalising out state $\sigma_{n+1}$, we now see that the posterior probability of sequence non-termination is 
+\begin{eqnarray}
+ p(\tm_{n+1}\,|\,\uv)  
+& = &
+ \sum_{\sigma_{n+1}\in{\cal S}} p(\tm_{n+1},\sigma_{n+1}\,|\,\uv)  
+\nonumber\\& = &
+  \delta(\ut\!=\!0)\,
+  \frac{\sum_{\vs_{n-m+1,n}\in{\cal S}^{m}} \ud(\vs_{n-m+1,n})
+\,\alpha_n(\vs_{n-m+1,n})\,p(\tm_{n+1}\,|\,\vs_{n-m+1,n})}
+ {\sum_{\vs_{n-m+1,n}\in{\cal S}^{m}} \ud(\vs_{n-m+1,n})
+\,\alpha_n(\vs_{n-m+1,n})\,p(\ut\,|\,\vs_{n-m+1,n})}
+\,,
+\end{eqnarray}
+from the backward factor~\eqref{eq:beta_n:s}.
+As expected, this reduces to $p(\tm_{n+1}\,|\,\uv)=0$ for $\ut=1$, and to $p(\tm_{n+1}\,|\,\uv)=1$ for $\ut=0$;
+recall that if $\ut=*$ then $\delta(\ut\!=\!0)=1$ by definition, and $p(*\,|\,\vs_{n-m+1,n})=1$.
+
+Similarly, we may also predict the future value of $X_{n+1}$ via
+\begin{eqnarray}
+ p(\tm_{n+1},x_{n+1}\,|\,\uv)  
+& = &
+ \sum_{\sigma_{n+1}\in{\cal S}} p(\tm_{n+1},\sigma_{n+1},x_{n+1}\,|\,\uv)  
+\nonumber\\& = &
+  \delta(\ut\!=\!0)\,
+  \frac{ \sum_{\sigma_{n+1}\in{\cal S}} p(\ui,\uvs\circ\sigma_{n+1},\uvx\circ x_{n+1})}
+       {p(\uv)}
+\nonumber\\& = & 
+%  \delta(\ut\!=\!0)\,
+% \frac{\sum_{\vs_{n-m+1,n}\in{\cal S}^{m}} \ud(\vs_{n-m+1,n})
+%\,\alpha_n(\vs_{n-m+1,n})\,
+%   \sum_{\sigma_{n+1}\in{\cal S}} p(\tm_{n+1},\sigma_{n+1}\,|\,\vs_{n-m+1,n})\,p(x_{n+1}\,|\,
+%\vs_{n-\ell+2,n}\circ\sigma_{n+1})}
+% {\sum_{\vs_{n-m+1,n}\in{\cal S}^{m}} \ud(\vs_{n-m+1,n})
+%\,\alpha_n(\vs_{n-m+1,n})\,\beta_n(\vs_{n-m+1,n})}
+%\nonumber\\& = & 
+  \delta(\ut\!=\!0)\,
+  \frac{\sum_{\vs_{n-m+2,n}\in{\cal S}^{m-1}} \ud(\vs_{n-m+2,n})
+\,\alpha_{n+1}(\vs_{n-m+2,n};x_{n+1})}
+ {\sum_{\vs_{n-m+1,n}\in{\cal S}^{m}} \ud(\vs_{n-m+1,n})
+\,\alpha_n(\vs_{n-m+1,n})\,\beta_n(\vs_{n-m+1,n})}
+\,,
+\end{eqnarray}
+where
+$\alpha_{n+1}(\vs_{n-m+2,n};x_{n+1})\equiv\sum_{\sigma_{n+1}\in{\cal S}}
+\,\alpha_{n+1}(\vs_{n-m+2,n}\circ\sigma_{n+1};x_{n+1})$,
+with
+$\alpha_{n+1}(\vs_{n-m+2,n}\circ\sigma_{n+1};x_{n+1})$ computed from the foward relation~\eqref{alpha_t:stateful}
+by setting $\ux_{n+1}=x_{n+1}$.
 
 *******************
 
