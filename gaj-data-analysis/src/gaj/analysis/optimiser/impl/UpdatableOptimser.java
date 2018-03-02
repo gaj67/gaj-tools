@@ -1,9 +1,9 @@
 package gaj.analysis.optimiser.impl;
 
+import gaj.analysis.data.numeric.vector.DataVector;
 import gaj.analysis.model.OptimisableModel;
 import gaj.analysis.model.score.ModelScorer;
 import gaj.analysis.model.score.ScoreInfo;
-import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.optimiser.BoundOptimiser;
 import gaj.analysis.optimiser.OptimisationParams;
 import gaj.analysis.optimiser.OptimisationResults;

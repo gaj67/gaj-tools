@@ -1,6 +1,6 @@
 package gaj.analysis.optimiser;
 
-import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.data.numeric.vector.DataVector;
 
 /**
  * Specifies a line search algorithm to be used in conjunction with a bound

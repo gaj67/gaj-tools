@@ -1,9 +1,14 @@
 package gaj.analysis.model;
 
+import gaj.analysis.data.DataObject;
+
 /**
  * A processor of data.
+ * 
+ * <I> - The input data type.
+ * <O> - The output data type.
  */
-public interface DataProcessor {
+public interface DataProcessor<I extends DataObject, O extends DataObject> {
 
     /**
      * Processes the input data to compute the output data.
@@ -11,10 +16,11 @@ public interface DataProcessor {
      * @param input
      *            - The input data.
      * @param info
-     *            - An object either specifying auxiliary information for the
-     *            processor, or requesting auxiliary information be provided.
+     *            - Optional objects either specifying auxiliary information for
+     *            the processor, or requesting that auxiliary information be
+     *            provided.
      * @return The output data.
      */
-    DataObject process(DataObject input, AuxiliaryInfo info);
+    O process(I input, AuxiliaryInfo... info);
 
 }

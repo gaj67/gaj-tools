@@ -1,7 +1,7 @@
 package gaj.analysis.optimiser.impl;
 
+import gaj.analysis.data.numeric.vector.DataVector;
 import gaj.analysis.model.score.ScoreInfo;
-import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.optimiser.LineSearchParams;
 import gaj.analysis.optimiser.LineSearcherType;
 

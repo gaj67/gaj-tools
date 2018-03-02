@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 import org.junit.Test;
-import gaj.analysis.numeric.vector.DataVector;
-import gaj.analysis.numeric.vector.impl.VectorFactory;
+import gaj.analysis.data.numeric.vector.DataVector;
+import gaj.analysis.data.numeric.vector.impl.VectorFactory;
 
 public class VectorTest {
 

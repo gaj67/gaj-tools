@@ -1,8 +1,8 @@
 package gaj.analysis.model.score.impl;
 
+import gaj.analysis.data.DataObject;
 import gaj.analysis.model.AuxiliaryInfo;
 import gaj.analysis.model.DataModel;
-import gaj.analysis.model.DataObject;
 import gaj.analysis.model.score.DataCase;
 import gaj.analysis.model.score.DataCaseScorer;
 import gaj.analysis.model.score.ScoreInfo;

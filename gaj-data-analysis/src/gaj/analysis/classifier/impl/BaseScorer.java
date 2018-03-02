@@ -7,10 +7,10 @@ import gaj.analysis.classifier.GoldData;
 import gaj.analysis.classifier.GoldDatum;
 import gaj.analysis.classifier.updated.Classifier;
 import gaj.analysis.classifier.updated.OptimisableClassifier;
-import gaj.analysis.numeric.vector.DataVector;
-import gaj.analysis.numeric.vector.WritableVector;
-import gaj.analysis.numeric.vector.impl.DataIterator;
-import gaj.analysis.numeric.vector.impl.VectorFactory;
+import gaj.analysis.data.numeric.vector.DataVector;
+import gaj.analysis.data.numeric.vector.WritableVector;
+import gaj.analysis.data.numeric.vector.impl.DataIterator;
+import gaj.analysis.data.numeric.vector.impl.VectorFactory;
 import java.util.Iterator;
 
 /**

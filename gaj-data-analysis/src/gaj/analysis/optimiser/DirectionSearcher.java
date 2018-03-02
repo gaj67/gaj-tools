@@ -1,6 +1,6 @@
 package gaj.analysis.optimiser;
 
-import gaj.analysis.numeric.vector.SettableVector;
+import gaj.analysis.data.numeric.vector.SettableVector;
 
 /**
  * Specifies a search algorithm to be used in conjunction with a bound

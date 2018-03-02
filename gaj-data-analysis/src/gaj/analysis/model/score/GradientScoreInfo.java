@@ -1,7 +1,7 @@
 package gaj.analysis.model.score;
 
-import gaj.analysis.model.GradientComputable;
-import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.data.numeric.GradientComputable;
+import gaj.analysis.data.numeric.vector.DataVector;
 
 /**
  * Indicates a score with additional gradient information.

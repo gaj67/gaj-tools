@@ -1,14 +1,13 @@
 package gaj.analysis.model;
 
-import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.data.numeric.DataNumeric;
 
 /**
  * Specifies a model controlled by parameters.
- * <p/>
- * Note: Internally, these parameters need not take the form of a single vector,
- * but must be representable as a vector for external use.
+ * 
+ * <T> - The numerical type of parameterisation.
  */
-public interface ParameterisedModel extends Model {
+public interface ParameterisedModel<T extends DataNumeric> extends Model {
 
     /**
      * Obtains the total number of numerical values comprising the model
@@ -23,6 +22,16 @@ public interface ParameterisedModel extends Model {
      * 
      * @return The parameter values.
      */
-    DataVector getParameters();
+    T getParameters();
+
+    /**
+     * Updates the model parameter values, if this is permitted.
+     * 
+     * @param params
+     *            - The new parameter values.
+     * @throws IllegalArgumentException
+     *             if the parameters cannot be set.
+     */
+    void setParameters(T params) throws IllegalArgumentException;
 
 }
