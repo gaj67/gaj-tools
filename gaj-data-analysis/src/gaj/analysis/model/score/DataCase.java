@@ -4,23 +4,17 @@ import gaj.analysis.data.DataObject;
 
 /**
  * Specifies a single case or point of data in a data set.
+ * 
+ * <I> - The type of input data.
  */
-public interface DataCase {
+public interface DataCase<I extends DataObject> {
 
     /**
      * Obtains the data element.
      * 
      * @return The data element.
      */
-    DataObject getData();
-
-    /**
-     * Obtains the index corresponding to the label for the data element.
-     * 
-     * @return A non-negative label (or category) index, or a negative value to
-     *         indicate that the label is missing.
-     */
-    int getIndex();
+    I getData();
 
     /**
      * Specifies the weight to attach to the data point.

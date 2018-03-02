@@ -1,7 +1,7 @@
 package gaj.analysis.optimiser;
 
 import gaj.analysis.model.OptimisableModel;
-import gaj.analysis.model.score.ModelScorer;
+import gaj.analysis.model.score.DataModelScorer;
 
 /**
  * Specifies a reusable optimiser.
@@ -21,6 +21,6 @@ public interface Optimiser {
      *            scorer is optimised.
      * @return The results of the optimisation process.
      */
-    OptimisationResults optimise(OptimisableModel model, OptimisationParams params, ModelScorer... scorers);
+    OptimisationResults optimise(OptimisableModel model, OptimisationParams params, DataModelScorer... scorers);
 
 }

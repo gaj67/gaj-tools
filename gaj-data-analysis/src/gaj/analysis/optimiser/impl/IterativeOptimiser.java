@@ -2,7 +2,7 @@ package gaj.analysis.optimiser.impl;
 
 import java.util.Arrays;
 import gaj.analysis.model.OptimisableModel;
-import gaj.analysis.model.score.ModelScorer;
+import gaj.analysis.model.score.DataModelScorer;
 import gaj.analysis.model.score.ScoreInfo;
 import gaj.analysis.optimiser.OptimisationParams;
 import gaj.analysis.optimiser.OptimisationResults;
@@ -32,7 +32,7 @@ public abstract class IterativeOptimiser extends UpdatableOptimser {
      */
     private int innerSubIterations = 0;
 
-    protected IterativeOptimiser(OptimisableModel model, ModelScorer[] scorers) {
+    protected IterativeOptimiser(OptimisableModel model, DataModelScorer[] scorers) {
         super(model, scorers);
     }
 

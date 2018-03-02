@@ -3,7 +3,7 @@ package gaj.analysis.optimiser.impl;
 import gaj.analysis.data.numeric.vector.SettableVector;
 import gaj.analysis.data.numeric.vector.impl.VectorFactory;
 import gaj.analysis.model.OptimisableModel;
-import gaj.analysis.model.score.ModelScorer;
+import gaj.analysis.model.score.DataModelScorer;
 import gaj.analysis.optimiser.DirectionSearchParams;
 import gaj.analysis.optimiser.DirectionSearchStatus;
 import gaj.analysis.optimiser.DirectionSearcher;
@@ -44,7 +44,7 @@ public class SearchOptimiser extends IterativeOptimiser {
      * @param scorers
      *            - The scorers to measure model performance.
      */
-    protected SearchOptimiser(OptimisableModel model, ModelScorer[] scorers) {
+    protected SearchOptimiser(OptimisableModel model, DataModelScorer[] scorers) {
         super(model, scorers);
         direction = VectorFactory.newVector(model.getParameters().size());
     }

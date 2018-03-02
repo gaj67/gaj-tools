@@ -2,7 +2,7 @@ package gaj.analysis.optimiser.impl;
 
 import gaj.analysis.data.numeric.vector.DataVector;
 import gaj.analysis.model.OptimisableModel;
-import gaj.analysis.model.score.ModelScorer;
+import gaj.analysis.model.score.DataModelScorer;
 import gaj.analysis.model.score.ScoreInfo;
 import gaj.analysis.optimiser.BoundOptimiser;
 import gaj.analysis.optimiser.OptimisationParams;
@@ -22,7 +22,7 @@ public abstract class UpdatableOptimser extends ModifiableOptimisationState impl
     /**
      * The optimisation and validation scorers.
      */
-    private final ModelScorer[] scorers;
+    private final DataModelScorer[] scorers;
 
     /** Indicates the number of optimisation and validation scores. */
     private final int numScores;
@@ -35,7 +35,7 @@ public abstract class UpdatableOptimser extends ModifiableOptimisationState impl
      * @param scorers
      *            - The data scorer(s) used to measure model performance.
      */
-    protected UpdatableOptimser(OptimisableModel model, ModelScorer[] scorers) {
+    protected UpdatableOptimser(OptimisableModel model, DataModelScorer[] scorers) {
         this.model = model;
         this.scorers = scorers;
         numScores = scorers.length;

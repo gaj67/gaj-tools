@@ -14,4 +14,24 @@ public interface ParameterisedDataModel<I extends DataObject, O extends DataObje
         extends DataModel<I, O>, ParameterisedModel<T>
 {
 
+    /**
+     * Determines whether or not gradient information can and should be
+     * generated.
+     * 
+     * @param info
+     *            - Optional objects either specifying auxiliary information for
+     *            the processor, or requesting that auxiliary information be
+     *            provided.
+     * @return A value of true (or false) if gradient information will (or will
+     *         not) be computed.
+     */
+    default boolean isGradientComputed(AuxiliaryInfo... info) {
+        if (this instanceof GradientAware) {
+            for (AuxiliaryInfo anInfo : info) {
+                if (anInfo instanceof GradientAware) return true;
+            }
+        }
+        return false;
+    }
+
 }
