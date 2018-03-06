@@ -285,9 +285,9 @@ public class MatrixFactory {
      * @return The length-N column vector total.
      */
     public static WritableVector sumColumns(DataMatrix matrix) {
-        final int numStates = matrix.numRows();
-        WritableVector vec = VectorFactory.newVector(numStates);
-        for (int row = 0; row < numStates; row++) {
+        final int numRows = matrix.numRows();
+        WritableVector vec = VectorFactory.newVector(numRows);
+        for (int row = 0; row < numRows; row++) {
             vec.set(row, matrix.getRow(row).sum());
         }
         return vec;
@@ -308,7 +308,7 @@ public class MatrixFactory {
         for (int row = 0; row < numRows; row++) {
             double divisor = divisors.get(row);
             if (divisor == 0.0) {
-                newMat.setRow(row, VectorFactory.newZeroVector(matrix.numColumns()));
+                newMat.getRow(row).set(0);
             } else {
                 newMat.multiplyRow(row, 1.0 / divisor);
             }
@@ -332,6 +332,22 @@ public class MatrixFactory {
             newMat.getRow(row).subtract(rowVec);
         }
         return newMat;
+    }
+
+    /**
+     * Creates a matrix by multiplying a column vector by a row vector.
+     * 
+     * @param colVec - The N x 1 column vector.
+     * @param rowVec - The 1 x M row vector.
+     * @return The N x M matrix.
+     */
+    public static WritableMatrix multiply(DataVector colVec, DataVector rowVec) {
+        final int numRows = colVec.size();
+        WritableMatrix mat = newMatrix(numRows, rowVec.size());
+        for (int row = 0; row < numRows; row++) {
+            mat.getRow(row).set(VectorFactory.scale(rowVec, colVec.get(row)));
+        }
+        return mat;
     }
 
 }

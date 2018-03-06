@@ -1,8 +1,8 @@
 package gaj.analysis.model;
 
 /**
- * Indicates either auxiliary information provided to a data processor, or a
- * request to the processor to produce auxiliary information in its output.
+ * Indicates auxiliary information, typically provided to a model, model scorer
+ * or model optimiser.
  */
 public interface AuxiliaryInfo {
 
@@ -16,5 +16,19 @@ public interface AuxiliaryInfo {
      * Indicates that gradient information should be computed, if possible.
      */
     final static AuxiliaryInfo COMPUTE_GRADIENT = new AuxiliaryInfo.GradientAware() {};
+
+    /**
+     * 
+     * @param info - Optional auxiliary information.
+     * @return A value of true (or false) if the supplied auxiliary information
+     *         indicates that gradients should (or should not) be computed.
+     */
+    static boolean isGradientAware(AuxiliaryInfo... info) {
+        for (AuxiliaryInfo infoObj : info) {
+            if (infoObj instanceof gaj.analysis.model.GradientAware)
+                return true;
+        }
+        return false;
+    }
 
 }

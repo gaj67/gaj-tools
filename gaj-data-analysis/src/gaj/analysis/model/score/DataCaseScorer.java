@@ -7,7 +7,7 @@ import gaj.analysis.data.DataObject;
  * 
  * <I> - The type of data case.
  */
-public interface DataInputScorer<I extends DataObject> {
+public interface DataCaseScorer<I extends DataObject> {
 
     /**
      * Scores the given case against the underlying model, and also computes any

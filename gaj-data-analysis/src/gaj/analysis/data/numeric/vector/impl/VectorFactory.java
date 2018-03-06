@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 import gaj.analysis.data.numeric.RepresentationType;
 import gaj.analysis.data.numeric.vector.ArrayVector;
 import gaj.analysis.data.numeric.vector.DataVector;
@@ -96,6 +97,18 @@ public abstract class VectorFactory {
             values[j++] = data[i++];
         }
         return new SparseVectorImpl(length, indices, values);
+    }
+
+    /**
+     * Creates a vector reference to a contiguous subsequence of elements in
+     * another vector.
+     * 
+     * @param vec - The main vector.
+     * @param start - The position within the main vector from which to start.
+     * @param length - The length of the sub-vector.
+     */
+    public static WritableVector newSubVector(WritableVector vec, int start, int length) {
+        return new WritableSubVector(vec, start, length);
     }
 
     /**
@@ -392,6 +405,22 @@ public abstract class VectorFactory {
             data[i] = vector.get(i);
         }
         return new WritableArrayVector(data);
+    }
+
+    /**
+     * Applies the given function to the vector elements, resulting in a new
+     * vector.
+     * 
+     * @param vec
+     *            - The input vector.
+     * @param func
+     *            - The element function.
+     * @return The output vector.
+     */
+    public static WritableVector apply(DataVector vec, Function<Double, Double> func) {
+        WritableVector newVec = copy(vec);
+        newVec.apply(func);
+        return newVec;
     }
 
     /**

@@ -4,7 +4,7 @@ import gaj.analysis.data.DataObject;
 import gaj.analysis.model.AuxiliaryInfo;
 import gaj.analysis.model.DataModel;
 import gaj.analysis.model.score.DataCase;
-import gaj.analysis.model.score.DataInputScorer;
+import gaj.analysis.model.score.DataCaseScorer;
 import gaj.analysis.model.score.DataModelScorer;
 import gaj.analysis.model.score.DataOutputScorer;
 import gaj.analysis.model.score.DataSource;
@@ -37,7 +37,7 @@ public class DataSourceModelScorer<I extends DataObject, O extends DataObject>
 
     @Override
     public ScoreInfo score(DataModel<I, O> model, AuxiliaryInfo... info) {
-        DataInputScorer<I> caseScorer = bindScorer(model, info);
+        DataCaseScorer<I> caseScorer = bindScorer(model, info);
         return source.stream().map(caseScorer::score).collect(new ScoreInfoCollector());
     }
 
@@ -52,12 +52,12 @@ public class DataSourceModelScorer<I extends DataObject, O extends DataObject>
      *            output.
      * @return A data case scorer.
      */
-    protected DataInputScorer<I> bindScorer(DataModel<I, O> model, AuxiliaryInfo... info) {
-        return new DataInputScorer<I>() {
+    protected DataCaseScorer<I> bindScorer(DataModel<I, O> model, AuxiliaryInfo... info) {
+        return new DataCaseScorer<I>() {
             @Override
             public ScoreInfo score(DataCase<I> dataCase) {
                 O output = model.process(dataCase.getData(), info);
-                return scorer.score(dataCase, output);
+                return scorer.score(dataCase, output, info);
             }
         };
     }

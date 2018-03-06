@@ -5,7 +5,9 @@ import gaj.analysis.data.numeric.matrix.WritableMatrix;
 import gaj.analysis.data.numeric.matrix.impl.MatrixFactory;
 import gaj.analysis.data.numeric.vector.DataVector;
 import gaj.analysis.data.numeric.vector.WritableVector;
+import gaj.analysis.data.numeric.vector.impl.VectorFactory;
 import gaj.analysis.model.AuxiliaryInfo;
+import gaj.analysis.model.GradientAware;
 import gaj.analysis.model.prob.discriminative.DiscriminativeDataGradient;
 import gaj.analysis.model.prob.discriminative.DiscriminativeDataModel;
 import gaj.analysis.model.prob.discriminative.DiscriminativeDataObject;
@@ -19,7 +21,8 @@ import gaj.analysis.model.prob.discriminative.DiscriminativeDataObject;
  *
  */
 public class DiscriminativeLogisticClassifier extends MatrixAsVectorModel
-        implements DiscriminativeDataModel<DataVector> {
+    implements DiscriminativeDataModel<DataVector>, GradientAware 
+{
 
     /**
      * Constructs a discriminative logistic classifier with modifiable weights
@@ -60,11 +63,31 @@ public class DiscriminativeLogisticClassifier extends MatrixAsVectorModel
             weights.multiply( 1.0 / sum);
         }
         if (isGradientComputed(info)) {
-            WritableMatrix gradient = MatrixFactory.newMatrix(params.numRows(), params.size());
-            // TODO Compute gradient information.
+            DataMatrix gradient = computeGradient(weights, features);
             return DiscriminativeDataGradient.newDataObject(weights, gradient);
         }
         return DiscriminativeDataObject.newDataObject(weights);
+    }
+
+    /*
+     * Computes the C x P gradient matrix [d q_c/d theta_p] for 
+     * q_c = ln p(c|x,theta) and theta=vec[theta_p]=matrix[theta_c'f]. 
+     * Now, q_c = exp(sum_f theta_cf*x_f) / sum_c' exp(sum_f theta_cf*x_f),
+     * so, d q_c/d theta_p = x_f [delta(c,c') - p(c'|x,theta)], where p = c'F + f.
+     */
+    private DataMatrix computeGradient(DataVector probs, DataVector features) {
+        DataVector partialGradient = MatrixFactory.asVector(MatrixFactory.multiply(VectorFactory.scale(probs, -1), features));
+        final int numClasses = params.numRows();
+        final int numFeatures = features.size();
+        WritableMatrix gradient = MatrixFactory.newMatrix(numClasses, partialGradient.size());
+        int pos = 0;
+        for (int c = 0; c < numClasses; c++) {
+            WritableVector row = gradient.getRow(c);
+            row.set(partialGradient);
+            VectorFactory.newSubVector(row, pos, numFeatures).add(features);
+            pos += numFeatures;
+        }
+        return gradient;
     }
 
 }
