@@ -1,12 +1,14 @@
 package gaj.analysis.optimiser;
 
-import gaj.analysis.model.OptimisableModel;
+import gaj.analysis.data.DataObject;
+import gaj.analysis.data.numeric.DataNumeric;
+import gaj.analysis.model.ParameterisedModel;
 import gaj.analysis.model.score.DataModelScorer;
 
 /**
  * Specifies a reusable optimiser.
  */
-public interface Optimiser {
+public interface Optimiser<I extends DataObject, O extends DataObject, T extends DataNumeric> {
 
     /**
      * Sets the model parameters to the value that optimises the score.
@@ -21,6 +23,7 @@ public interface Optimiser {
      *            scorer is optimised.
      * @return The results of the optimisation process.
      */
-    OptimisationResults optimise(OptimisableModel model, OptimisationParams params, DataModelScorer... scorers);
+    @SuppressWarnings("unchecked")
+    OptimisationResults optimise(ParameterisedModel<T> model, OptimisationParams params, DataModelScorer<I, O>... scorers);
 
 }
