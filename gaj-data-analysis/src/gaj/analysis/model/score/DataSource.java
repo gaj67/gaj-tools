@@ -1,7 +1,6 @@
 package gaj.analysis.model.score;
 
 import java.util.stream.Stream;
-import gaj.analysis.data.DataObject;
 
 /**
  * Specifies a repeatable sequence of data input cases for processing by a data
@@ -9,13 +8,13 @@ import gaj.analysis.data.DataObject;
  * 
  * <I> - The type of data case.
  */
-public interface DataSource<I extends DataObject> {
+public interface DataSource<I> {
 
     /**
      * Obtains a stream of data cases.
      * 
      * @return The data case stream.
      */
-    Stream<DataCase<I>> stream();
+    Stream<Datum<I>> stream();
 
 }

@@ -1,31 +1,25 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.data.numeric.vector.DataVector;
-import gaj.analysis.model.OptimisableModel;
-import gaj.analysis.model.score.DataModelScorer;
+import gaj.analysis.model.AuxiliaryInfo;
+import gaj.analysis.model.ParameterisedModel;
+import gaj.analysis.model.score.ModelScorer;
 import gaj.analysis.model.score.ScoreInfo;
-import gaj.analysis.optimiser.BoundOptimiser;
-import gaj.analysis.optimiser.OptimisationParams;
+import gaj.analysis.numeric.vector.DataVector;
 import gaj.analysis.optimiser.OptimisationResults;
 
 /**
- * Specifies the base form of a bound optimisation algorithm.
+ * Specifies the base form of an optimiser bound to a specific model and a
+ * specific scorer.
  */
-public abstract class UpdatableOptimser extends ModifiableOptimisationState implements BoundOptimiser {
-
-    private static final boolean WITH_AUXILIARY = true;
-    private static final boolean NO_AUXILIARY = false;
+public abstract class UpdatableOptimser<I, O> extends ModifiableOptimisationState {
 
     /** The model to be optimised. */
-    private final OptimisableModel model;
+    private final ParameterisedModel<I, O> model;
 
     /**
-     * The optimisation and validation scorers.
+     * The optimisation scorer.
      */
-    private final DataModelScorer[] scorers;
-
-    /** Indicates the number of optimisation and validation scores. */
-    private final int numScores;
+    private final ModelScorer<I, O> scorer;
 
     /**
      * Binds the optimisation algorithm to the given model and scorers.
@@ -33,16 +27,12 @@ public abstract class UpdatableOptimser extends ModifiableOptimisationState impl
      * @param model
      *            - The model to be optimised.
      * @param scorers
-     *            - The data scorer(s) used to measure model performance.
+     *            - The data scorer used to measure model performance.
      */
-    protected UpdatableOptimser(OptimisableModel model, DataModelScorer[] scorers) {
+    protected UpdatableOptimser(ParameterisedModel<I, O> model, ModelScorer<I, O> scorer) {
         this.model = model;
-        this.scorers = scorers;
-        numScores = scorers.length;
-        if (numScores <= 0)
-            throw new IllegalArgumentException("An optimisation scorer must be specified!");
-        setScores(new double[numScores]);
-        computeScores();
+        this.scorer = scorer;
+        computeScore();
     }
 
     /**
@@ -50,7 +40,7 @@ public abstract class UpdatableOptimser extends ModifiableOptimisationState impl
      * 
      * @return The model to be optimised.
      */
-    public OptimisableModel getModel() {
+    public ParameterisedModel<I, O> getModel() {
         return model;
     }
 
@@ -71,17 +61,8 @@ public abstract class UpdatableOptimser extends ModifiableOptimisationState impl
      * @return A value of true (or false) if the model parameters were (or were
      *         not) successfully updated.
      */
-    public boolean setModelParameters(DataVector params) {
-        return model.setParameters(params);
-    }
-
-    /**
-     * Indicates the number of optimisation and validation scores.
-     * 
-     * @return The length of the scores array.
-     */
-    protected int numScores() {
-        return numScores;
+    public void setModelParameters(DataVector params) {
+        model.setParameters(params);
     }
 
     // ************************************************************************
@@ -93,26 +74,17 @@ public abstract class UpdatableOptimser extends ModifiableOptimisationState impl
      * {@link #setScores}() and the number of iterations via
      * {@link #incIterations}().
      * 
-     * @param params
+     * @param info
      *            - The settings to control termination of the optimisation
      *            process.
      * @return The results of the optimisation.
      */
-    @Override
-    public abstract OptimisationResults optimise(OptimisationParams params);
+    public abstract OptimisationResults optimise(AuxiliaryInfo... info);
 
     /**
      * Computes the current optimisation and validation scores of the model.
      */
-    protected void computeScores() {
-        computeValidationScores();
-        computeOptimisationScore();
-    }
-
-    /**
-     * Computes the current optimisation score of the model.
-     */
-    protected void computeOptimisationScore() {
+    protected void computeScore() {
         ScoreInfo optimisationScore = scorers[0].score(model, WITH_AUXILIARY);
         setScoreInfo(optimisationScore);
         getScores()[0] = optimisationScore.getScore();

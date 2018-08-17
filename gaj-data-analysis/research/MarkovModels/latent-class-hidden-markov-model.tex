@@ -1,0 +1,102 @@
+\documentclass[a4paper]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{graphicx,subcaption}
+\usepackage{amsmath,amsfonts}
+\usepackage{qtree}
+\usepackage{tikz}
+\usepackage{varwidth}
+
+\title{Latent-class Hidden Markov Model}
+\author{G.A. Jarrad}
+\usepackage{accents}
+\newcommand{\rvec}[1]{\accentset{\leftarrow}{#1}}
+
+\begin{document}
+\maketitle
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+\section{Model}
+We assume that a sequence $\rvec{x}=(x_1,x_2,\ldots,x_T)\in{\cal X}^T$ of
+observations is drawn from some latent class $k\in{\cal K}=\{1,2,\ldots,K\}$
+ according to a hidden Markov model (HMM) with corresponding state sequence
+$\rvec{s}=(s_1,s_2,\ldots,s_T)\in\mathscr{S}_k$ with states 
+${\cal S}_k=\{1,2,\ldots,S_k\}$.
+The joint model then factors as
+\begin{eqnarray}
+p(k,\rvec{s},\rvec{x}\,|\,\Theta) & = &
+p(k\,|\,\Theta)\,p(\rvec{s}\,|\,k,\Theta)\,p(\rvec{x}\,|\,\rvec{s},k,\Theta)\,.
+\end{eqnarray}
+Now, since $k$ and $\rvec{s}$ are unknown, we might consider the marginal
+likelihood
+\begin{eqnarray}
+\ell(\Theta) & = & p(\rvec{x}\,|\,\Theta)
+~=~\sum_{k=1}^K\sum_{\rvec{s}\in\mathscr{S}_k}
+p(k,\rvec{s},\rvec{x}\,|\,\Theta)\,.
+\end{eqnarray}
+For a dataset $\mathbb{X}=(\rvec{x}_1,\rvec{x}_2,\ldots,\rvec{x}_D)$ of
+independent observations, we then obtain the data log-likelihood
+\begin{eqnarray}
+L(\Theta) & = & \ln p(\mathbb{X}\,|\,\Theta)
+~=~\sum_{d=1}^D \ln\ell_d(\Theta)
+\nonumber\\
+& = & \sum_{d=1}^D\ln\sum_{k=1}^K\sum_{\rvec{s}\in\mathscr{S}_k}
+p(k,\rvec{s},\rvec{x}_d\,|\,\Theta)\,;
+\end{eqnarray}
+this could, for example, be maximised to obtain the optimal parameters
+$\Theta^*$.
+
+Alternatively, we could compute the per-datum expected log-likelihood
+\begin{eqnarray}
+q(\Theta) & = & E_{k,\rvec{s}\,|\,\rvec{x},\Theta}\left[\ln
+p(k,\rvec{s},\rvec{x}\,|\,\Theta)\right]
+\nonumber\\
+& = & \sum{k=1}^K p(k\,|\,\rvec{x},\Theta)
+\sum_{\rvec{s}\in\mathscr{S}_k} p(\rvec{s}\,|\,k,\rvec{x},\Theta)
+\ln p(k,\rvec{s},\rvec{x}\,|\,\Theta)
+\,,
+\end{eqnarray}
+where
+\begin{eqnarray}
+p(k\,|\,\rvec{x},\Theta) & = & 
+\frac{p(k\,|\,\Theta)\,p(\rvec{x}\,|\,k,\Theta)}
+{\sum_{k'=1}^K p(k'\,|\,\Theta)\,p(\rvec{x}\,|\,k',\Theta)}\,,
+\\
+p(\rvec{x}\,|\,k,\Theta) & = & \sum_{\rvec{s}\in\mathscr{S}}
+p(\rvec{s}\,|\,k,\Theta)\,p(\rvec{x}\,|\,\rvec{s},k,\Theta)
+\end{eqnarray}
+and
+\begin{eqnarray}
+p(\rvec{s}\,|\,k,\rvec{x},\Theta) & = & 
+\frac{p(\rvec{s}\,|\,k,\Theta)\,p(\rvec{x}\,|\,\rvec{s},k,\Theta)}
+{p(\rvec{x}\,|\,k,\Theta)}\,.
+\end{eqnarray}
+This gives rise to the expected complete--data log-likelihood
+\begin{eqnarray}
+Q(\Theta) & = & \sum_{d=1}^D \ln q_d(\Theta)
+\nonumber\\
+& = & \sum_{d=1}^D\sum{k=1}^K p(k\,|\,\rvec{x}_d,\Theta)
+\sum_{\rvec{s}\in\mathscr{S}_k} p(\rvec{s}\,|\,k,\rvec{x}_d,\Theta)
+\ln p(k,\rvec{s},\rvec{x}_d\,|\,\Theta)
+\,.
+\end{eqnarray}
+
+As a second alternative, we might instead utilise the expectation--maximisation
+(EM) framework and compute
+\begin{eqnarray}
+Q(\Theta,\Theta') & = & \sum_{d=1}^D
+E_{k,\rvec{s}\,|\,\rvec{x}_d,\Theta'}\left[\ln
+p(k,\rvec{s},\rvec{x}_d\,|\,\Theta)\right] \nonumber\\
+& = & \sum_{d=1}^D\sum{k=1}^K p(k\,|\,\rvec{x}_d,\Theta')
+\sum_{\rvec{s}\in\mathscr{S}_k} p(\rvec{s}\,|\,k,\rvec{x}_d,\Theta')
+\ln p(k,\rvec{s},\rvec{x}_d\,|\,\Theta)
+\,,
+\end{eqnarray}
+which gives rise to the iterative sequence of parameter updates
+$\Theta^{(1)}\rightarrow\Theta^{(2)}\rightarrow\cdots\rightarrow\Theta^*$,
+where
+\begin{eqnarray}
+\Theta^{(k+1)} = \arg\max_{\Theta} Q(\Theta,\Theta^{(k)})\,.
+\end{eqnarray}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

@@ -1,9 +1,9 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.optimiser.DirectionSearchParams;
-import gaj.analysis.optimiser.DirectionSearcher;
-import gaj.analysis.optimiser.DirectionSearcherType;
-import gaj.analysis.optimiser.OptimisationParams;
+import gaj.analysis.optimiser.OptimiserInfo;
+import gaj.analysis.optimiser.searcher.DirectionSearchParams;
+import gaj.analysis.optimiser.searcher.DirectionSearcher;
+import gaj.analysis.optimiser.searcher.DirectionSearcherType;
 
 /**
  * A factory for instantiating direction searchers.
@@ -41,7 +41,7 @@ public abstract class DirectionSearcherFactory {
      *            - The optimisation parameters.
      * @return The direction search parameters.
      */
-    public static DirectionSearchParams getDirectionSearchParams(OptimisationParams params) {
+    public static DirectionSearchParams getDirectionSearchParams(OptimiserInfo params) {
         if (params instanceof DirectionSearchParams)
             return (DirectionSearchParams) params;
         final int dirSign = params.getDirectionSign();

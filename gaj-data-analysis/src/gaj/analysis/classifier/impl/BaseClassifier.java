@@ -2,7 +2,7 @@ package gaj.analysis.classifier.impl;
 
 import gaj.analysis.classifier.DatumScore;
 import gaj.analysis.classifier.updated.OptimisableClassifier;
-import gaj.analysis.data.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Offers a base class for a parameterised classifier.

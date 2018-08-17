@@ -1,11 +1,11 @@
 package gaj.analysis.optimiser.impl;
 
 import gaj.analysis.curves.Quadratics;
-import gaj.analysis.data.numeric.vector.DataVector;
 import gaj.analysis.model.VectorGradientComputable;
 import gaj.analysis.model.score.ScoreInfo;
-import gaj.analysis.optimiser.LineSearchParams;
-import gaj.analysis.optimiser.LineSearcherType;
+import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.optimiser.searcher.LineSearchParams;
+import gaj.analysis.optimiser.searcher.LineSearcherType;
 
 /**
  * Implements {@link LineSearcherType#QUADRATIC}.

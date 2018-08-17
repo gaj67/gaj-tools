@@ -1,8 +1,8 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.optimiser.DirectionSearchParams;
-import gaj.analysis.optimiser.DirectionSearcher;
-import gaj.analysis.optimiser.DirectionSearcherType;
+import gaj.analysis.optimiser.searcher.DirectionSearchParams;
+import gaj.analysis.optimiser.searcher.DirectionSearcher;
+import gaj.analysis.optimiser.searcher.DirectionSearcherType;
 
 /**
  * Implements {@link DirectionSearcherType#GRADIENT}.

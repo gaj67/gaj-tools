@@ -1,14 +1,14 @@
 package gaj.markov.test;
 
 import static org.junit.Assert.assertTrue;
-import gaj.analysis.data.numeric.matrix.DataMatrix;
-import gaj.analysis.data.numeric.matrix.impl.MatrixFactory;
-import gaj.analysis.data.numeric.vector.DataVector;
-import gaj.analysis.data.numeric.vector.IndexVector;
-import gaj.analysis.data.numeric.vector.impl.VectorFactory;
 import gaj.analysis.markov.MarkovOneStepAnalyser;
 import gaj.analysis.markov.MarkovOneStepLibrary;
 import gaj.analysis.markov.SequenceType;
+import gaj.analysis.numeric.matrix.DataMatrix;
+import gaj.analysis.numeric.matrix.impl.MatrixFactory;
+import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.IndexVector;
+import gaj.analysis.numeric.vector.impl.VectorFactory;
 import org.junit.Test;
 
 public class MarkovTest {

@@ -2,9 +2,9 @@ package gaj.analysis.optimiser.impl;
 
 import java.util.Arrays;
 import gaj.analysis.model.OptimisableModel;
-import gaj.analysis.model.score.DataModelScorer;
+import gaj.analysis.model.score.ModelScorer;
 import gaj.analysis.model.score.ScoreInfo;
-import gaj.analysis.optimiser.OptimisationParams;
+import gaj.analysis.optimiser.OptimiserInfo;
 import gaj.analysis.optimiser.OptimisationResults;
 import gaj.analysis.optimiser.OptimisationStatus;
 
@@ -32,7 +32,7 @@ public abstract class IterativeOptimiser extends UpdatableOptimser {
      */
     private int innerSubIterations = 0;
 
-    protected IterativeOptimiser(OptimisableModel model, DataModelScorer[] scorers) {
+    protected IterativeOptimiser(OptimisableModel model, ModelScorer[] scorers) {
         super(model, scorers);
     }
 
@@ -67,7 +67,7 @@ public abstract class IterativeOptimiser extends UpdatableOptimser {
     }
 
     @Override
-    public OptimisationResults optimise(OptimisationParams params) {
+    public OptimisationResults optimise(OptimiserInfo params) {
         final double[] initialScores = Arrays.copyOf(getScores(), numScores());
         outerIterations = getNumIterations();
         outerSubIterations = getNumSubIterations();
@@ -89,7 +89,7 @@ public abstract class IterativeOptimiser extends UpdatableOptimser {
      *            - The parameters controlling the optimisation process.
      * @return The status with which to start this round of optimisation.
      */
-    protected OptimisationStatus start(OptimisationParams params) {
+    protected OptimisationStatus start(OptimiserInfo params) {
         OptimisationStatus curStatus = getStatus();
         if (OptimisationStatus.MAX_ITERATIONS_EXCEEDED == curStatus || OptimisationStatus.MAX_SUB_ITERATIONS_EXCEEDED == curStatus)
             return OptimisationStatus.RUNNING;
@@ -104,7 +104,7 @@ public abstract class IterativeOptimiser extends UpdatableOptimser {
      *            - The parameters controlling the optimisation process.
      * @return The status of the optimiser after the iteration.
      */
-    protected OptimisationStatus iterate(OptimisationParams params) {
+    protected OptimisationStatus iterate(OptimiserInfo params) {
         innerSubIterations = getNumSubIterations();
         OptimisationStatus status = preUpdate(params);
         if (status != OptimisationStatus.RUNNING)
@@ -126,7 +126,7 @@ public abstract class IterativeOptimiser extends UpdatableOptimser {
      *            - The parameters controlling the optimisation process.
      * @return The status of the optimiser before commencing an update.
      */
-    protected OptimisationStatus preUpdate(OptimisationParams params) {
+    protected OptimisationStatus preUpdate(OptimiserInfo params) {
         if (params.getMaxIterations() > 0 && getRelativeNumIterations() >= params.getMaxIterations())
             return OptimisationStatus.MAX_ITERATIONS_EXCEEDED;
         return OptimisationStatus.RUNNING;
@@ -141,7 +141,7 @@ public abstract class IterativeOptimiser extends UpdatableOptimser {
      *            - The parameters controlling the optimisation process.
      * @return The status of the optimiser after attempting an update.
      */
-    protected abstract OptimisationStatus update(OptimisationParams params);
+    protected abstract OptimisationStatus update(OptimiserInfo params);
 
     /**
      * Checks whether or not optimisation should cease based on the change in
@@ -155,7 +155,7 @@ public abstract class IterativeOptimiser extends UpdatableOptimser {
      * @return The status of the optimiser after successfully performing an
      *         update.
      */
-    protected OptimisationStatus postUpdate(OptimisationParams params, double[] prevScores) {
+    protected OptimisationStatus postUpdate(OptimiserInfo params, double[] prevScores) {
         final double diffScore = params.getDirectionSign() * (getScores()[0] - prevScores[0]);
         if (diffScore <= 0)
             return OptimisationStatus.SCORE_NOT_IMPROVED;

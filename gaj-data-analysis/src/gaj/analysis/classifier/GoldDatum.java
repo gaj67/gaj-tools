@@ -1,6 +1,6 @@
 package gaj.analysis.classifier;
 
-import gaj.analysis.data.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Represents a single data point, comprising a feature

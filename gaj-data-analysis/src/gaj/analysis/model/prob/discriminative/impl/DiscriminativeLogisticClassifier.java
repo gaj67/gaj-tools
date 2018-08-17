@@ -1,16 +1,16 @@
 package gaj.analysis.model.prob.discriminative.impl;
 
-import gaj.analysis.data.numeric.matrix.DataMatrix;
-import gaj.analysis.data.numeric.matrix.WritableMatrix;
-import gaj.analysis.data.numeric.matrix.impl.MatrixFactory;
-import gaj.analysis.data.numeric.vector.DataVector;
-import gaj.analysis.data.numeric.vector.WritableVector;
-import gaj.analysis.data.numeric.vector.impl.VectorFactory;
 import gaj.analysis.model.AuxiliaryInfo;
 import gaj.analysis.model.GradientAware;
-import gaj.analysis.model.prob.discriminative.DiscriminativeDataGradient;
-import gaj.analysis.model.prob.discriminative.DiscriminativeDataModel;
-import gaj.analysis.model.prob.discriminative.DiscriminativeDataObject;
+import gaj.analysis.model.prob.discriminative.DiscriminativeProbsGradient;
+import gaj.analysis.model.prob.discriminative.DiscriminativeProbModel;
+import gaj.analysis.model.prob.discriminative.DiscriminativeProbs;
+import gaj.analysis.numeric.matrix.DataMatrix;
+import gaj.analysis.numeric.matrix.WritableMatrix;
+import gaj.analysis.numeric.matrix.impl.MatrixFactory;
+import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.WritableVector;
+import gaj.analysis.numeric.vector.impl.VectorFactory;
 
 /**
  * Implements a discriminative logistic classifier of the form
@@ -21,7 +21,7 @@ import gaj.analysis.model.prob.discriminative.DiscriminativeDataObject;
  *
  */
 public class DiscriminativeLogisticClassifier extends MatrixAsVectorModel
-    implements DiscriminativeDataModel<DataVector>, GradientAware 
+    implements DiscriminativeProbModel<DataVector>, GradientAware 
 {
 
     /**
@@ -49,7 +49,7 @@ public class DiscriminativeLogisticClassifier extends MatrixAsVectorModel
     }
 
     @Override
-    public DiscriminativeDataObject process(DataVector features, AuxiliaryInfo... info) {
+    public DiscriminativeProbs process(DataVector features, AuxiliaryInfo... info) {
         if (features.size() != params.numColumns()) {
             throw new IllegalArgumentException("Expected " + params.numColumns() + " features");
         }
@@ -62,11 +62,11 @@ public class DiscriminativeLogisticClassifier extends MatrixAsVectorModel
         } else {
             weights.multiply( 1.0 / sum);
         }
-        if (isGradientComputed(info)) {
+        if (computeGradient(info)) {
             DataMatrix gradient = computeGradient(weights, features);
-            return DiscriminativeDataGradient.newDataObject(weights, gradient);
+            return DiscriminativeProbsGradient.newDataObject(weights, gradient);
         }
-        return DiscriminativeDataObject.newDataObject(weights);
+        return DiscriminativeProbs.newDataObject(weights);
     }
 
     /*

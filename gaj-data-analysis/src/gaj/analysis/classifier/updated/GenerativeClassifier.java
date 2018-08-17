@@ -1,6 +1,6 @@
 package gaj.analysis.classifier.updated;
 
-import gaj.analysis.data.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Specifies a probabilistic classifier of numerical data that uses a generative class/data model.

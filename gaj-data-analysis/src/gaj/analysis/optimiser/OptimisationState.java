@@ -22,20 +22,12 @@ public interface OptimisationState {
     int getNumSubIterations();
 
     /**
-     * Indicates the optimisation and (optionally) validation scores of the
-     * model.
-     * 
-     * @return The model score(s).
-     */
-    double[] getScores();
-
-    /**
      * Indicates the full information associated with the optimisation score,
      * e.g. possibly including gradient information, etc.
      * 
      * @return The optimisation score information.
      */
-    ScoreInfo getScoreInfo();
+    ScoreInfo getScore();
 
     /**
      * Indicates the status of the optimisation process.

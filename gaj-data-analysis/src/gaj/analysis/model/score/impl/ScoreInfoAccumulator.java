@@ -1,9 +1,9 @@
 package gaj.analysis.model.score.impl;
 
-import gaj.analysis.data.numeric.vector.DataVector;
-import gaj.analysis.data.numeric.vector.impl.VectorFactory;
 import gaj.analysis.model.score.GradientScoreInfo;
 import gaj.analysis.model.score.ScoreInfo;
+import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.impl.VectorFactory;
 import gaj.common.annotations.PackagePrivate;
 
 @PackagePrivate class ScoreInfoAccumulator {

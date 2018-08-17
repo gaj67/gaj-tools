@@ -1,15 +1,15 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.data.numeric.vector.DataVector;
-import gaj.analysis.data.numeric.vector.SettableVector;
-import gaj.analysis.data.numeric.vector.WritableVector;
-import gaj.analysis.data.numeric.vector.impl.VectorFactory;
 import gaj.analysis.model.VectorGradientComputable;
 import gaj.analysis.model.score.ScoreInfo;
-import gaj.analysis.optimiser.DirectionSearchParams;
-import gaj.analysis.optimiser.DirectionSearchStatus;
-import gaj.analysis.optimiser.DirectionSearcherType;
-import gaj.analysis.optimiser.LBFGSDirectionSearchParams;
+import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.SettableVector;
+import gaj.analysis.numeric.vector.WritableVector;
+import gaj.analysis.numeric.vector.impl.VectorFactory;
+import gaj.analysis.optimiser.searcher.DirectionSearchParams;
+import gaj.analysis.optimiser.searcher.DirectionSearchStatus;
+import gaj.analysis.optimiser.searcher.DirectionSearcherType;
+import gaj.analysis.optimiser.searcher.LBFGSDirectionSearchParams;
 
 /**
  * Implements {@link DirectionSearcherType#LBFGS}.

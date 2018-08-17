@@ -1,16 +1,16 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.data.numeric.vector.SettableVector;
-import gaj.analysis.data.numeric.vector.impl.VectorFactory;
 import gaj.analysis.model.OptimisableModel;
-import gaj.analysis.model.score.DataModelScorer;
-import gaj.analysis.optimiser.DirectionSearchParams;
-import gaj.analysis.optimiser.DirectionSearchStatus;
-import gaj.analysis.optimiser.DirectionSearcher;
-import gaj.analysis.optimiser.LineSearchParams;
-import gaj.analysis.optimiser.LineSearchStatus;
-import gaj.analysis.optimiser.LineSearcher;
-import gaj.analysis.optimiser.OptimisationParams;
+import gaj.analysis.model.score.ModelScorer;
+import gaj.analysis.numeric.vector.SettableVector;
+import gaj.analysis.numeric.vector.impl.VectorFactory;
+import gaj.analysis.optimiser.OptimiserInfo;
+import gaj.analysis.optimiser.searcher.DirectionSearchParams;
+import gaj.analysis.optimiser.searcher.DirectionSearchStatus;
+import gaj.analysis.optimiser.searcher.DirectionSearcher;
+import gaj.analysis.optimiser.searcher.LineSearchParams;
+import gaj.analysis.optimiser.searcher.LineSearchStatus;
+import gaj.analysis.optimiser.searcher.LineSearcher;
 import gaj.analysis.optimiser.OptimisationResults;
 import gaj.analysis.optimiser.OptimisationStatus;
 
@@ -44,13 +44,13 @@ public class SearchOptimiser extends IterativeOptimiser {
      * @param scorers
      *            - The scorers to measure model performance.
      */
-    protected SearchOptimiser(OptimisableModel model, DataModelScorer[] scorers) {
+    protected SearchOptimiser(OptimisableModel model, ModelScorer[] scorers) {
         super(model, scorers);
         direction = VectorFactory.newVector(model.getParameters().size());
     }
 
     @Override
-    public OptimisationResults optimise(OptimisationParams params) {
+    public OptimisationResults optimise(OptimiserInfo params) {
         DirectionSearchParams dirSearchParams = DirectionSearcherFactory.getDirectionSearchParams(params);
         dirSearcher = DirectionSearcherFactory.newDirectionSearcher(this, dirSearchParams);
         LineSearchParams lineSearchParams = LineSearcherFactory.getLineSearchParams(params);
@@ -59,7 +59,7 @@ public class SearchOptimiser extends IterativeOptimiser {
     }
 
     @Override
-    protected OptimisationStatus update(OptimisationParams params) {
+    protected OptimisationStatus update(OptimiserInfo params) {
         DirectionSearchStatus dsStatus = dirSearcher.search(direction);
         if (dsStatus != DirectionSearchStatus.AVAILABLE) return dsStatus.getOptimisationStatus();
         LineSearchStatus lsStatus = lineSearcher.search(direction);

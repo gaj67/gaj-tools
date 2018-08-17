@@ -4,7 +4,7 @@ import gaj.analysis.classifier.ClassifierScoreInfo;
 import gaj.analysis.classifier.DataScorer;
 import gaj.analysis.classifier.updated.OptimisableClassifier;
 import gaj.analysis.curves.Quadratics;
-import gaj.analysis.data.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Implements a classifier trainer using

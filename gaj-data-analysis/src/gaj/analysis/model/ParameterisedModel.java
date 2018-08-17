@@ -1,13 +1,15 @@
 package gaj.analysis.model;
 
-import gaj.analysis.data.numeric.DataNumeric;
+import gaj.analysis.numeric.vector.DataVector;
 
 /**
- * Specifies a model controlled by parameters.
+ * A data model is a data processor that internally encapsulates detailed
+ * knowledge about the interpretation and structure of the data.
  * 
- * <T> - The numerical type of parameterisation.
+ * <I> - The input data type.
+ * <O> - The output data type.
  */
-public interface ParameterisedModel<T extends DataNumeric> extends Model {
+public interface ParameterisedModel<I, O> extends Model<I, O> {
 
     /**
      * Obtains the total number of numerical values comprising the model
@@ -22,7 +24,7 @@ public interface ParameterisedModel<T extends DataNumeric> extends Model {
      * 
      * @return The parameter values.
      */
-    T getParameters();
+    DataVector getParameters();
 
     /**
      * Updates the model parameter values, if this is permitted.
@@ -32,6 +34,19 @@ public interface ParameterisedModel<T extends DataNumeric> extends Model {
      * @throws IllegalArgumentException
      *             if the parameters cannot be set.
      */
-    void setParameters(T params) throws IllegalArgumentException;
+    void setParameters(DataVector params) throws IllegalArgumentException;
+
+    /**
+     * Determines whether or not gradient information can and should be
+     * generated.
+     * 
+     * @param info
+     *            - Optional auxiliary information.
+     * @return A value of true (or false) if gradient information is (or is not)
+     *         requested to be computed.
+     */
+    default boolean computeGradient(AuxiliaryInfo... info) {
+        return this instanceof GradientAware && AuxiliaryInfo.isGradientAware(info);
+    }
 
 }

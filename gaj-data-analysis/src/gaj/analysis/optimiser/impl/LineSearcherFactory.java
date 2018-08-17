@@ -1,9 +1,9 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.optimiser.LineSearchParams;
-import gaj.analysis.optimiser.LineSearcher;
-import gaj.analysis.optimiser.LineSearcherType;
-import gaj.analysis.optimiser.OptimisationParams;
+import gaj.analysis.optimiser.OptimiserInfo;
+import gaj.analysis.optimiser.searcher.LineSearchParams;
+import gaj.analysis.optimiser.searcher.LineSearcher;
+import gaj.analysis.optimiser.searcher.LineSearcherType;
 
 /**
  * A factory for instantiating line searchers.
@@ -43,7 +43,7 @@ public abstract class LineSearcherFactory {
      *            - The optimisation parameters.
      * @return The line search parameters.
      */
-    public static LineSearchParams getLineSearchParams(OptimisationParams params) {
+    public static LineSearchParams getLineSearchParams(OptimiserInfo params) {
         if (params instanceof LineSearchParams) return (LineSearchParams) params;
         final int dirSign = params.getDirectionSign();
         final LineSearcherType type = (params.getLineSearcherType() == null) ? LineSearcherType.LINEAR : params.getLineSearcherType();

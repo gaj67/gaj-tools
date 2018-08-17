@@ -1,10 +1,10 @@
 package gaj.analysis.model.prob.discriminative.impl;
 
-import gaj.analysis.data.numeric.matrix.DataMatrix;
-import gaj.analysis.data.numeric.matrix.WritableMatrix;
-import gaj.analysis.data.numeric.matrix.impl.MatrixFactory;
-import gaj.analysis.data.numeric.vector.DataVector;
 import gaj.analysis.model.ParameterisedModel;
+import gaj.analysis.numeric.matrix.DataMatrix;
+import gaj.analysis.numeric.matrix.WritableMatrix;
+import gaj.analysis.numeric.matrix.impl.MatrixFactory;
+import gaj.analysis.numeric.vector.DataVector;
 
 /**
  * Implements a parameterised model where the parameters internally take the

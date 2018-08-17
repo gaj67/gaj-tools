@@ -1,12 +1,12 @@
 package gaj.analysis.markov;
 
 import java.util.List;
-import gaj.analysis.data.numeric.matrix.DataMatrix;
-import gaj.analysis.data.numeric.matrix.WritableMatrix;
-import gaj.analysis.data.numeric.matrix.impl.MatrixFactory;
-import gaj.analysis.data.numeric.vector.DataVector;
-import gaj.analysis.data.numeric.vector.IndexVector;
-import gaj.analysis.data.numeric.vector.impl.VectorFactory;
+import gaj.analysis.numeric.matrix.DataMatrix;
+import gaj.analysis.numeric.matrix.WritableMatrix;
+import gaj.analysis.numeric.matrix.impl.MatrixFactory;
+import gaj.analysis.numeric.vector.DataVector;
+import gaj.analysis.numeric.vector.IndexVector;
+import gaj.analysis.numeric.vector.impl.VectorFactory;
 
 /**
  * Provides the basic methods for analysing one-step Markov sequences.

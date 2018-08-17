@@ -1,11 +1,11 @@
 package gaj.analysis.optimiser.impl;
 
-import gaj.analysis.data.numeric.vector.SettableVector;
 import gaj.analysis.model.VectorGradientComputable;
 import gaj.analysis.model.score.ScoreInfo;
-import gaj.analysis.optimiser.DirectionSearchParams;
-import gaj.analysis.optimiser.DirectionSearchStatus;
-import gaj.analysis.optimiser.DirectionSearcherType;
+import gaj.analysis.numeric.vector.SettableVector;
+import gaj.analysis.optimiser.searcher.DirectionSearchParams;
+import gaj.analysis.optimiser.searcher.DirectionSearchStatus;
+import gaj.analysis.optimiser.searcher.DirectionSearcherType;
 
 /**
  * Implements {@link DirectionSearcherType#GRADIENT}.
