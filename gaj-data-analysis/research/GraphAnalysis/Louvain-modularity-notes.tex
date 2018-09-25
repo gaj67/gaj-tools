@@ -1,4 +1,5 @@
 \documentclass[a4paper]{article}
+\usepackage[a4paper,margin=25mm]{geometry}
 \usepackage{graphicx,subcaption}
 \usepackage{amsmath,amsfonts}
 \title{Notes on Louvain Modularity}
@@ -9,10 +10,11 @@
 \numberwithin{figure}{section}
 \numberwithin{table}{section}
 \section{Modularity}\label{sec:Q}
-Let $D_{ij}$ represent the non-negative weight of a directed edge $i\rightarrow j$ (if one exists) 
-from vertex $i\in{\cal V}$ to vertex $j\in{\cal V}$. Then the equivalent undirected edge is represented
-by $A_{ij}=D_{ij}+D_{ji}-D_{ii}$, such that $A_{ij}=A_{ji}$. The total weight of all 
-edges for vertex i (its so-called {\em vertex weight}) is then given by
+Let $D_{ij}\ge 0$ represent the weight of a directed edge
+$i\rightarrow j$ (if one exists) from vertex $i\in{\cal V}$ to vertex $j\in{\cal V}$. 
+Then the equivalent undirected edge has weight
+$A_{ij}=D_{ij}+D_{ji}-\delta_{ij}D_{ii}$, such that $A_{ij}=A_{ji}$. The total
+weight of all edges for vertex i (its so-called {\em vertex weight}) is then given by
 \begin{eqnarray}
   A_{i\cdot} & = & \sum_{j\in{\cal V}} A_{ij}~=~\sum_{j\in{\cal V}} A_{ji}~=~A_{\cdot i}\,.
 \end{eqnarray}
@@ -21,7 +23,7 @@ The sum of all vertex weights is then given by
   A_{\cdot\cdot} & = & \sum_{i\in{\cal V}} A_{i\cdot}
   ~=~\sum_{i\in{\cal V}}\sum_{j\in{\cal V}} A_{ij}\,.
 \end{eqnarray}
-Note that this counts self edges (i.e.\ $i -- i$) once and all other edges (i.e.\ $i -- j$, 
+Note that this counts self edges (i.e.\ $i$ -- $i$) once and all other edges (i.e.\ $i$ -- $j$, 
 $i\ne j$) twice. The Louvain modularity algorithm in fact assumes that there are no self edges, but we
 shall include them here for completeness.
 
@@ -39,11 +41,11 @@ partitioned by cluster as
   Q & = & \sum_{g=1}^G\sum_{i\in{\cal V}_g}\sum_{j\in{\cal V}_g} \left[
   \frac{A_{ij}}{A_{\cdot\cdot}}-
   \frac{A_{i\cdot}A_{\cdot j}}{A_{\cdot\cdot}^2}
-  \right]~=~\sum_{g=1}^G Q_g\,,
+  \right]~\doteq~\sum_{g=1}^G Q_g\,,
 \label{eq:Qg}
 \end{eqnarray}
-where the $g$-th cluster contains vertices ${\cal V}_g=\{i\in{\cal V}\;|\;c_i=g\}$,
-and thus ${\cal V}=\bigcup_{g=1}^G {\cal V}_g$.
+where the $g$-th cluster contains vertices ${\cal V}_g=\{i\!\in\!{\cal V}\;|\;c_i\!=\!g\}$,
+and therefore ${\cal V}=\bigcup_{g=1}^G {\cal V}_g$.
 
 We now observe that the sum of edge weights of vertex $i$ for all edges to and from cluster $g$
 is given by
@@ -57,27 +59,29 @@ cluster $g$, is given by
    ~=~\sum_{i\in{\cal V}_g} A_{i,g}\,.
 \label{eq:sig:int}
 \end{eqnarray}
-Note that this value, like $A_{\cdot\cdot}$, also counts self edges ($i -- i$) once and other edges 
-($i -- j$) twice.
+Note that this value, like $A_{\cdot\cdot}$, also counts self edges ($i$ -- $i$) once and all other edges 
+($i$ -- $j$) twice.
 Conversely, the {\em external} cluster weight, namely the total weight of all edges from vertices
 in cluster $g$ to and from vertices in other clusters, is given by
 \begin{eqnarray}
-   \Sigma_g^{\tt ext} & = & \sum_{i\in{\cal V}_g}\sum_{j\nin{\cal V}_g} A_{ij}
-   ~=~\sum_{j\nin{\cal V}_g} A_{j,g}\,.
+   \Sigma_g^{\tt ext} & = & \sum_{i\in{\cal V}_g}\sum_{j\in\bar{\cal V}_g}
+   A_{ij} ~=~\sum_{j\in\bar{\cal V}_g} A_{j,g}\,,
 \end{eqnarray}
-Note that these edge weights are only counted once per cluster, but the edge $i -- j$ is 
-counted for both the cluster containing vertex $i$ and the cluster containing vertex $j$.
+where $\bar{\cal V}_g={\cal V}-{\cal V}_g$.
+Note that these external edge weights are only counted once per cluster, but the
+edge $i$ -- $j$ is counted separately for both the cluster containing vertex $i$
+and the other cluster containing vertex $j$.
 
 The total weight of cluster $g$ is then given by
 \begin{eqnarray}
    \Sigma_g^{\tt tot} & = & \Sigma_g^{\tt int} + \Sigma_g^{\tt ext}
 \nonumber\\&=&
    \sum_{i\in{\cal V}_g}\sum_{j\in{\cal V}_g} A_{ij} 
-   + \sum_{i\in{\cal V}_g}\sum_{j\nin{\cal V}_g} A_{ij}
+   + \sum_{i\in{\cal V}_g}\sum_{j\in\bar{\cal V}_g} A_{ij}
 \nonumber\\&=&
    \sum_{i\in{\cal V}_g}\sum_{j\in{\cal V}} A_{ij}~=~\sum_{i\in{\cal V}_g}A_{i\cdot}\,.
 \label{eq:sig:tot}
- end{eqnarray}
+\end{eqnarray}
 We now observe that
 \begin{eqnarray}
     \sum_{i\in{\cal V}_g}\sum_{j\in{\cal V}_g} A_{i\cdot}A_{\cdot j}
@@ -86,6 +90,7 @@ We now observe that
     \left(\sum_{i\in{\cal V}_g}A_{i\cdot}\right)\left(\sum_{j\in{\cal V}_g} A_{j\cdot}\right)
 \nonumber\\&=&
     \left(\sum_{i\in{\cal V}_g}A_{i\cdot}\right)^2 ~=~ \left(\Sigma_g^{\tt tot}\right)^2\,.
+\label{eq:sum:sq}
 \end{eqnarray}
 Hence, from equation~\eqref{eq:Qg}, we see that the modularity score of the $g$-th cluster
 simplifies to become
@@ -94,14 +99,15 @@ simplifies to become
   \frac{A_{ij}}{A_{\cdot\cdot}}-
   \frac{A_{i\cdot}A_{\cdot j}}{A_{\cdot\cdot}^2}
   \right]
-\nonumber\\&=&
-    \frac{\Sigma_g^{\tt int}}{A_{\cdot\cdot}}
-    -\left(\frac{\Sigma_g^{\tt tot}}{A_{\cdot\cdot}}\right)^2\,.
+~=~    \frac{\Sigma_g^{\tt int}}{A_{\cdot\cdot}}
+    -\left(\frac{\Sigma_g^{\tt tot}}{A_{\cdot\cdot}}\right)^2\,,
+\label{eq:Qg:only}
 \end{eqnarray}
+from equations~\eqref{eq:sig:int} and~\eqref{eq:sum:sq}.
+
 This cluster modularity score $Q_g$ now gives us a handle on how to compute changes in score
 due to changes in the graph clustering, with the aim of choosing a clustering that maximises
 the total modularity score $Q$.
-
 Suppose we merge a singleton cluster containing only vertex $k$ with another cluster $g$ to form a new
 cluster $g\oplus k$. Then, from equation~\eqref{eq:sig:int}, the new internal cluster weight is
 given by
@@ -118,17 +124,30 @@ given by
 Similarly, the new total cluster weight is given by
 \begin{eqnarray}
     \Sigma_{g\oplus k}^{\tt tot} & = & \sum_{i\in{\cal V}_g\bigcup\{k\}} A_{i\cdot}
-\nonumber\\&=&
-    \sum_{i\in{\cal V}_g A_{i\cdot}+A_{k\cdot}
+~=~
+    \sum_{i\in{\cal V}_g} A_{i\cdot}+A_{k\cdot}
     ~=~\Sigma_{g}^{\tt tot}+A_{k\cdot}\,,
 \label{eq:sig:tot:add}
 \end{eqnarray}
 from equation~\eqref{eq:sig:tot}.
-By extension, the singleton cluster for vertex $k$ was formed by merging with an empty cluster
-with zero cluster weights, and so the modularity score of the singelton cluster is just
+Consequently, the modularity score of the new cluster is given by
+\begin{eqnarray}
+Q_{g\oplus k} & = & 
+\frac{\Sigma_{g\oplus k}^{\tt int}}{A_{\cdot\cdot}}
+    -\left(\frac{\Sigma_{g\oplus k}^{\tt tot}}{A_{\cdot\cdot}}\right)^2
+\nonumber\\& = &
+\frac{\Sigma_{g}^{\tt int}+2A_{k,g}+A_{kk}}{A_{\cdot\cdot}}
+    -\left(\frac{\Sigma_{g}^{\tt tot}+A_{k\cdot}}{A_{\cdot\cdot}}\right)^2\,,
+\label{eq:Qgpk}
+\end{eqnarray}
+from equations~\eqref{eq:Qg:only}--\eqref{eq:sig:tot:add}.
+By extension, a singleton cluster containing only vertex $k$ is notionally
+formed by merging the vertex with an empty cluster having zero cluster weights, and so the
+modularity score of the singelton cluster is just
 \begin{eqnarray}
     Q_k & = & \frac{A_{kk}}{A_{\cdot\cdot}}
     -\left(\frac{A_{k\cdot}}{A_{\cdot\cdot}}\right)^2\,.
+\label{eq:Qk}
 \end{eqnarray}
 Note that the Louvain modularity algorithm starts by placing every vertex $k\in{\cal V}$ into
 its own singleton cluster, and so initially there are $G=|{\cal V}|$ such clusters.
@@ -137,40 +156,56 @@ Also note that, as mentioned above, the published Louvain algorithm assumes that
 We can now compute the total change in modularity caused by adding singleton vertex $k$
 to cluster $g$, namely
 \begin{eqnarray}
-    \Delta Q_{g\oplus k} & = & Q_{g\oplus k}-(Q_g+Q_k)
+    \Delta Q_{(g,k)\rightarrow g\oplus k} & = & Q_{g\oplus k}-Q_g-Q_k
 \nonumber\\&=&
     \left[\frac{\Sigma_{g}^{\tt int}+2A_{k,g}+A_{kk}}{A_{\cdot\cdot}}
     -\left(\frac{\Sigma_{g}^{\tt tot}+A_{k\cdot}}{A_{\cdot\cdot}}\right)^2\right]
-    -\left[\frac{\Sigma_{g}^{\tt int}}
-    -\left(\frac{\Sigma_{g}^{\tt tot}}{A_{\cdot\cdot}}\right^2\right]
+-\left[\frac{\Sigma_{g}^{\tt int}}{A_{\cdot\cdot}}
+    -\left(\frac{\Sigma_{g}^{\tt tot}}{A_{\cdot\cdot}}\right)^2\right]
     -\left[\frac{A_{kk}}{A_{\cdot\cdot}}
     -\left(\frac{A_{k\cdot}}{A_{\cdot\cdot}}\right)^2\right]
 \nonumber\\&=&
+\frac{\Sigma_{g}^{\tt int}+2A_{k,g}+A_{kk}}{A_{\cdot\cdot}}
+-\frac{(\Sigma_{g}^{\tt tot})^2+2\Sigma_{g}^{\tt tot}
+A_{k\cdot}+A_{k\cdot}^2}{A_{\cdot\cdot}^2} 
+-\frac{\Sigma_{g}^{\tt int}+A_{kk}}{A_{\cdot\cdot}}
++\frac{(\Sigma_{g}^{\tt tot})^2+A_{k\cdot}^2}{A_{\cdot\cdot}^2}
+\nonumber\\&=&
     \frac{2A_{k,g}}{A_{\cdot\cdot}}-\frac{2\Sigma_g^{\tt tot}A_{k\cdot}}{A_{\cdot\cdot}^2}\,,
+\label{eq:delta:Q:plus}
 \end{eqnarray}
-from equations~\eqref{eq:sig:in:add} and~\eqref{eq:sig:tot:add}.
+from equations~\eqref{eq:Qg:only} and \eqref{eq:Qgpk}--\eqref{eq:Qk}.
+Conceptually, this is just the score change upon destroying clusters $k$ and $g$ and then creating a new cluster $g\oplus k$.
 
 In the converse situation, we instead want to remove vertex $k$ from the cluster $g\oplus k$
-that contains vertex $k$, and restore it to its singleton cluster. Since the action of 
-adding the vertex (above) is reversible, then removing the vertex must result in a change of 
-modularity score opposite to the change in score caused by adding the vertex. Hence, we obtain
+ and restore $k$ to its singleton cluster. Since the
+action of adding vertex $k$ to group $g$ (above) is reversible, then removing the vertex must result in a change of 
+modularity score opposite to the change in score caused by adding the vertex.
+This is just the score change involved in destroying cluster $g\oplus k$ and creating clusters $g$ and $k$.
+ Hence, we obtain
 \begin{eqnarray}
-    \Delta Q_{(g\oplus k)\ominus k} & = & (Q_g+Q_k)-Q_{g\oplus k}
-\nonumber\\&=&
-    -\frac{2A_{k,g}}{A_{\cdot\cdot}}-\frac{2\Sigma_g^{\tt tot}A_{k\cdot}}{A_{\cdot\cdot}^2}\,,
+    \Delta Q_{g\oplus k\rightarrow(g,k)} & = & Q_g+Q_k-Q_{g\oplus k}
+~=~    -\frac{2A_{k,g}}{A_{\cdot\cdot}}+\frac{2\Sigma_g^{\tt tot}A_{k\cdot}}{A_{\cdot\cdot}^2}\,,
+\label{eq:delta:Q:minus}
 \end{eqnarray}
 where now $A_{k,g}$ is computed from $A_{k,g\oplus k}$ via
 \begin{eqnarray}
     A_{k,g\oplus k} & = & \sum_{j\in{\cal V}_g\bigcup\{k\}}A_{kj}
-    ~=~\sum_{j\in{\cal V}_g}A_{kj}+A_{kk}~=~A_{k,g}+A_{kk}\,,
+    ~=~\sum_{j\in{\cal V}_g}A_{kj}+A_{kk}~=~A_{k,g}+A_{kk}
+\nonumber\\
+\Rightarrow A_{k,g} & = & A_{k,g\oplus k} - A_{kk}\,,
 \end{eqnarray}
-and $\Sigma_g^{\tt tot}$ is computed from $\Sigma_{g\oplus k}^{\tt tot}$ via
-equation~\eqref{eq:sig:tot:add}.
+and $\Sigma_g^{\tt tot}$ is computed from $\Sigma_{g\oplus k}^{\tt tot}$ as
+\begin{eqnarray}
+    \Sigma_{g}^{\tt tot} & = & \Sigma_{g\oplus k}^{\tt tot}-A_{k\cdot}\,,
+\end{eqnarray}
+from equation~\eqref{eq:sig:tot:add}.
 Hence, the combined action of removing vertex $k$ from cluster $g\oplus k$ (to form cluster $g$)
 and adding it to cluster $g'$ (to form cluster $g'\oplus k$) gives rise to the total change of score
 \begin{eqnarray}
-    \Delta Q_{(g\oplus k)\ominus k,g'\oplus k} & = & \Delta Q_{(g\oplus k)\ominus k} + 
-    \Delta Q_{g'\oplus k}
+    \Delta Q_{(g\oplus k,g')\rightarrow(g,g'\oplus k)} & = & \Delta Q_{g\oplus k\rightarrow(g,k)} + 
+    \Delta Q_{(g',k)\rightarrow g'\oplus k}\,,
 \end{eqnarray}
+utilising equations~\eqref{eq:delta:Q:plus}--\eqref{eq:delta:Q:minus}.
 
 \end{document}
