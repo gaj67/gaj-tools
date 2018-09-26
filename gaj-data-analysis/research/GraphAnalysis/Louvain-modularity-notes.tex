@@ -186,7 +186,6 @@ This is just the score change involved in destroying cluster $g\oplus k$ and cre
 \begin{eqnarray}
     \Delta Q_{g\oplus k\rightarrow(g,k)} & = & Q_g+Q_k-Q_{g\oplus k}
 ~=~    -\frac{2A_{k,g}}{A_{\cdot\cdot}}+\frac{2\Sigma_g^{\tt tot}A_{k\cdot}}{A_{\cdot\cdot}^2}\,,
-\label{eq:delta:Q:minus}
 \end{eqnarray}
 where now $A_{k,g}$ is computed from $A_{k,g\oplus k}$ via
 \begin{eqnarray}
@@ -200,12 +199,19 @@ and $\Sigma_g^{\tt tot}$ is computed from $\Sigma_{g\oplus k}^{\tt tot}$ as
     \Sigma_{g}^{\tt tot} & = & \Sigma_{g\oplus k}^{\tt tot}-A_{k\cdot}\,,
 \end{eqnarray}
 from equation~\eqref{eq:sig:tot:add}.
+In terms of the existing cluster $g\oplus k$, the score change is thus
+\begin{eqnarray}
+    \Delta Q_{g\oplus k\rightarrow(g,k)} & = &
+    -\frac{2(A_{k,g\oplus k}-A_{kk})}{A_{\cdot\cdot}}
+    +\frac{2(\Sigma_{g\oplus k}^{\tt tot}-A_{k\cdot})A_{k\cdot}}{A_{\cdot\cdot}^2}\,.
+\label{eq:delta:Q:minus}
+\end{eqnarray}
 Hence, the combined action of removing vertex $k$ from cluster $g\oplus k$ (to form cluster $g$)
 and adding it to cluster $g'$ (to form cluster $g'\oplus k$) gives rise to the total change of score
 \begin{eqnarray}
     \Delta Q_{(g\oplus k,g')\rightarrow(g,g'\oplus k)} & = & \Delta Q_{g\oplus k\rightarrow(g,k)} + 
     \Delta Q_{(g',k)\rightarrow g'\oplus k}\,,
 \end{eqnarray}
-utilising equations~\eqref{eq:delta:Q:plus}--\eqref{eq:delta:Q:minus}.
+utilising equations~\eqref{eq:delta:Q:plus} and~\eqref{eq:delta:Q:minus}.
 
 \end{document}
