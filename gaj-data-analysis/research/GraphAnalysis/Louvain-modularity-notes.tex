@@ -227,7 +227,7 @@ In distinction from the case of Section~\ref{sec:Q}, we now take $A_{ij}=D_{j}\g
 edge exists), such that $A_{ij}\ne A_{ji}$ in general; this breaks a number of assumptions used in Section\ref{sec:Q}.
 For example, equation~\eqref{eq:in:out} now becomes
 \begin{eqnarray}
-  s^{\tt out}_i~=~A_{i\cdot}~=~sum_{j\in{\cal V}} A_{ij}\,,&&
+  s^{\tt out}_i~=~A_{i\cdot}~=~\sum_{j\in{\cal V}} A_{ij}\,,&&
   s^{\tt in}_j~=~\sum_{i\in{\cal V}} A_{ij}~=~A_{\cdot j}\,,
 \end{eqnarray}
 mixing in some of the notation from \cite{browet14}.
@@ -254,7 +254,7 @@ It follows that the modularity score $Q_g$ of the $g$-th cluster becomes
 ~=~    \frac{\Sigma_g^{\tt int}}{A_{\cdot\cdot}}
     -\frac{S_g^{\tt out}S_g^{\tt in}}{A_{\cdot\cdot}^2}\,,
 \end{eqnarray}
-instead of equation~\eqref{Qg:only}.
+instead of equation~\eqref{eq:Qg:only}.
 
 We now consider the effect of merging the $g$-th cluster with the singleton cluster containing only vertex $k$, resulting
 in a new cluster $g\oplus k$.
@@ -319,7 +319,8 @@ Finally, the change in score due to merging clusters $g$ and $k$ is
 \nonumber\\&=&
     \left[\frac{\Sigma_{g}^{\tt int}+W(g,k)+W(k,g)+A_{kk}}{A_{\cdot\cdot}}
     -\frac{\left(S_{g}^{\tt out}+A_{k\cdot}\right)\left(S_{g}^{\tt in}+A_{\cdot k}\right)}{A_{\cdot\cdot}^2}\right]
--\left[\frac{\Sigma_{g}^{\tt int}}{A_{\cdot\cdot}}
+\nonumber\\&&
+{}-\left[\frac{\Sigma_{g}^{\tt int}}{A_{\cdot\cdot}}
     -\frac{S_{g}^{\tt out}S_{g}^{\tt in}}{A_{\cdot\cdot}^2}\right]
     -\left[\frac{A_{kk}}{A_{\cdot\cdot}}
     -\frac{A_{k\cdot}A_{\cdot k}}{A_{\cdot\cdot}^2}\right]
@@ -346,7 +347,8 @@ The total change in modularity score involved in moving vertex $k$ from cluster 
 \nonumber\\
 & = &
 \frac{W(g',k)+W(k,g')-W(g\oplus k,k)-W(k,g\oplus k)}{A_{\cdot\cdot}}
--\frac{(S_{g'}^{\tt out}-S_{g\oplus k}^{\tt out}+A_{k\cdot})A_{\cdot k}+(S_{g'}^{\tt in}-S_{g\oplus k}^{\tt in}+A_{\cdot k})A_{k\cdot}}
+\nonumber\\&&
+{}-\frac{(S_{g'}^{\tt out}-S_{g\oplus k}^{\tt out}+A_{k\cdot})A_{\cdot k}+(S_{g'}^{\tt in}-S_{g\oplus k}^{\tt in}+A_{\cdot k})A_{k\cdot}}
 {A_{\cdot\cdot}^2}
 \,.
 \end{eqnarray}
