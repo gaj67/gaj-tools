@@ -242,7 +242,7 @@ such that
 \end{eqnarray}
 and
 \begin{eqnarray}
-   S^{\tt in}_g & = & \sum_{j\in{\cal V}_g} s^{\tt in}_j~=~\sum_{i\in{\cal V}}\sum_{j\in{\cal V}_g}A_{ij}~=~\Sigma_g^{\tt int}+\Sigma_g^{\tt out}\,,
+   S^{\tt in}_g & = & \sum_{j\in{\cal V}_g} s^{\tt in}_j~=~\sum_{i\in{\cal V}}\sum_{j\in{\cal V}_g}A_{ij}~=~\Sigma_g^{\tt int}+\Sigma_g^{\tt in}\,,
 \end{eqnarray}
 using equation~\eqref{eq:sig:int}.
 It follows that the modularity score $Q_g$ of the $g$-th cluster becomes
@@ -269,15 +269,15 @@ no longer given by equation~\eqref{eq:sig:int:add}, but instead by
 \nonumber\\&=&
     \Sigma_g^{\tt int}+W(g,k)+W(k,g)+A_{kk}\,.
 \end{eqnarray}
-More generally, $W(g,k)$ is the edge weight from all vertices in the $g$-th cluster to vertex $k$, excluding any self edge
+More generally \cite{browet14}, $W(g,k)$ is the edge weight from all vertices in the $g$-th cluster to vertex $k$, excluding any self edge
 $k\rightarrow k$ if $k$ happens to be a member of the $g$-th cluster.  Thus
 \begin{eqnarray}
-  W(g,k) & = & \sum_{\underset{i\ne k}{i\in{\cal V}_g}}A_{ik}\,,
+  W(g,k) & = & \sum_{i\in{\cal V}_g\backslash\{k\}}A_{ik}\,,
 \label{eq:W:g:k}
 \end{eqnarray}
 and conversely
 \begin{eqnarray}
-  W(k,g) & = & \sum_{\underset{j\ne k}{j\in{\cal V}_g}}A_{kj}\,,
+  W(k,g) & = & \sum_{j\in{\cal V}_g\backslash\{k\}}A_{kj}\,,
 \label{eq:W:k:g}
 \end{eqnarray}
 which is the edge weight from vertex $k$ to all vertices (except $k$) in the $g$-th cluster.
@@ -352,7 +352,9 @@ The total change in modularity score involved in moving vertex $k$ from cluster 
 {A_{\cdot\cdot}^2}
 \,.
 \end{eqnarray}
-This is essentially equation~(3.26) of \cite{browet14} (with $\Delta Q$ scaled by $A_{\cdot\cdot}$), except that their use of $m$ 
+Multiplying $\Delta Q$ by $A_{\cdot\cdot}$ gives equation~(3.26) of \cite{browet14}
+with $c_1=g\oplus k$, $c_2=g'$, $s_k^{\tt out}=A_{k\cdot}$ and $s_k^{\tt in}=A_{\cdot k}$,
+except that their use of $m$ 
 (the total number of edges) should be
 replaced with $m_w=A_{\cdot\cdot}$ (the total weight of all edges).
 
