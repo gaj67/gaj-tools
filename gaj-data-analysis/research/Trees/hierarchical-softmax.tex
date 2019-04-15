@@ -5,6 +5,7 @@
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{tikz}
 \usepackage{accents}
+\usepackage{cite}
 \newcommand{\rvec}[1]{\accentset{\rightarrow}{#1}}
 \title{Notes on Hierarchical Softmax}
 \author{G.A. Jarrad}
@@ -39,6 +40,8 @@ Alternatively, we can utilise the word frequency $f_i$ of each token $w_i$ to pr
 $p_i=f_i/\sum_{i'=1}^V f_{i'}$, that a word randomly sampled from the training corpora matches $w_i$.
 Using these probabilities, one can then partition ${\cal V}$ into nested groups, e.g.\ according to
 either Huffman or Fano coding (the latter method being simpler but producing less optimal code lengths).
+Alternatively, Mnih and Hinton~\cite{NIPS2008_3583} discuss some feature-driven algorithms for constructing
+binary vocabulary trees.
 Figure~\ref{fig:catdog} shows a (rather unbalanced) binary tree representation of the example vocabulary. 
 \begin{figure}[hbt]
 \centering
@@ -204,13 +207,7 @@ how to insert a node ranked by score;
 where to insert a node into a batch of equally-scored nodes; etc. These issues will not be addressed here.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{thebibliography}{9}
-
-%\bibitem{blondel08}
-%  Vincent D Blondel, Jean-Loup Guillaume, Renaud Lambiotte, Etienne Lefebvre,
-%  \textit{Fast unfolding of communities in large networks},
-%  Journal of Statistical Mechanics: Theory and Experiment 2008 (10), P10008; ArXiv: https://arxiv.org/abs/0803.0476.
-
-\end{thebibliography}
+\bibliography{hierarchical-softmax}{}
+\bibliographystyle{plain}
 
 \end{document}
