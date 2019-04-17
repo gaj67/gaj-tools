@@ -40,9 +40,11 @@ Alternatively, we can utilise the word frequency $f_i$ of each token $w_i$ to pr
 $p_i=f_i/\sum_{i'=1}^V f_{i'}$, that a word randomly sampled from the training corpora matches $w_i$.
 Using these probabilities, one can then partition ${\cal V}$ into nested groups, e.g.\ according to
 either Huffman or Fano coding (the latter method being simpler but producing less optimal code lengths).
+Morin and Bengio\cite{Morin+Bengio-2005} indicate that the mean path length when taking word frequencies into account
+is typically smaller than that for trees balanced equally across all words.
 Alternatively, Mnih and Hinton~\cite{NIPS2008_3583} discuss some feature-driven algorithms for constructing
 binary vocabulary trees.
-Figure~\ref{fig:catdog} shows a (rather unbalanced) binary tree representation of the example vocabulary. 
+Figure~\ref{fig:catdog} shows a simple (but unbalanced) binary tree representation of the example vocabulary. 
 \begin{figure}[hbt]
 \centering
 \begin{tikzpicture}[cnode/.style={draw,circle,minimum size=3em,inner sep=3pt}, rnode/.style={draw,rectangle,minimum size=3em,inner sep=3pt}]
